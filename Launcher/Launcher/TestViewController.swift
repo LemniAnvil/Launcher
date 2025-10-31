@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import SnapKit
 
 // swiftlint:disable:next type_body_length
 class TestViewController: NSViewController {
@@ -26,7 +27,6 @@ class TestViewController: NSViewController {
       action: #selector(testRefreshVersions)
     )
     button.bezelStyle = .rounded
-    button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
 
@@ -37,7 +37,6 @@ class TestViewController: NSViewController {
       action: #selector(testGetVersionDetails)
     )
     button.bezelStyle = .rounded
-    button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
 
@@ -48,7 +47,6 @@ class TestViewController: NSViewController {
       action: #selector(testDownloadFile)
     )
     button.bezelStyle = .rounded
-    button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
 
@@ -59,7 +57,6 @@ class TestViewController: NSViewController {
       action: #selector(testCheckInstalled)
     )
     button.bezelStyle = .rounded
-    button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
 
@@ -70,7 +67,6 @@ class TestViewController: NSViewController {
       action: #selector(testDownloadVersion)
     )
     button.bezelStyle = .rounded
-    button.translatesAutoresizingMaskIntoConstraints = false
     button.contentTintColor = .systemGreen
     return button
   }()
@@ -82,7 +78,6 @@ class TestViewController: NSViewController {
       action: #selector(clearLog)
     )
     button.bezelStyle = .rounded
-    button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
 
@@ -142,7 +137,6 @@ class TestViewController: NSViewController {
     scrollView.hasHorizontalScroller = false
     scrollView.autohidesScrollers = true
     scrollView.borderType = .bezelBorder
-    scrollView.translatesAutoresizingMaskIntoConstraints = false
     return scrollView
   }()
   
@@ -154,28 +148,24 @@ class TestViewController: NSViewController {
   private lazy var releaseCheckbox: NSButton = {
     let checkbox = NSButton(checkboxWithTitle: Localized.TestWindow.checkboxRelease, target: self, action: #selector(filterVersions))
     checkbox.state = .off
-    checkbox.translatesAutoresizingMaskIntoConstraints = false
     return checkbox
   }()
   
   private lazy var snapshotCheckbox: NSButton = {
     let checkbox = NSButton(checkboxWithTitle: Localized.TestWindow.checkboxSnapshot, target: self, action: #selector(filterVersions))
     checkbox.state = .off
-    checkbox.translatesAutoresizingMaskIntoConstraints = false
     return checkbox
   }()
   
   private lazy var betaCheckbox: NSButton = {
     let checkbox = NSButton(checkboxWithTitle: Localized.TestWindow.checkboxBeta, target: self, action: #selector(filterVersions))
     checkbox.state = .off
-    checkbox.translatesAutoresizingMaskIntoConstraints = false
     return checkbox
   }()
   
   private lazy var alphaCheckbox: NSButton = {
     let checkbox = NSButton(checkboxWithTitle: Localized.TestWindow.checkboxAlpha, target: self, action: #selector(filterVersions))
     checkbox.state = .off
-    checkbox.translatesAutoresizingMaskIntoConstraints = false
     return checkbox
   }()
   
@@ -187,14 +177,12 @@ class TestViewController: NSViewController {
       action: #selector(proxyEnableChanged)
     )
     checkbox.state = proxyManager.proxyEnabled ? .on : .off
-    checkbox.translatesAutoresizingMaskIntoConstraints = false
     return checkbox
   }()
   
   private lazy var proxyHostField: NSTextField = {
     let field = NSTextField(string: proxyManager.proxyHost)
     field.placeholderString = Localized.Proxy.hostPlaceholder
-    field.translatesAutoresizingMaskIntoConstraints = false
     field.isEnabled = proxyManager.proxyEnabled
     field.setContentCompressionResistancePriority(.required, for: .horizontal)
     field.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -204,7 +192,6 @@ class TestViewController: NSViewController {
   private lazy var proxyPortField: NSTextField = {
     let field = NSTextField(string: proxyManager.proxyPort > 0 ? "\(proxyManager.proxyPort)" : "")
     field.placeholderString = Localized.Proxy.portPlaceholder
-    field.translatesAutoresizingMaskIntoConstraints = false
     field.isEnabled = proxyManager.proxyEnabled
     field.setContentCompressionResistancePriority(.required, for: .horizontal)
     field.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -215,7 +202,6 @@ class TestViewController: NSViewController {
     let popup = NSPopUpButton()
     popup.addItems(withTitles: ProxyManager.ProxyType.allCases.map { $0.displayName })
     popup.selectItem(at: ProxyManager.ProxyType.allCases.firstIndex(of: proxyManager.proxyType) ?? 0)
-    popup.translatesAutoresizingMaskIntoConstraints = false
     popup.isEnabled = proxyManager.proxyEnabled
     popup.setContentCompressionResistancePriority(.required, for: .horizontal)
     return popup
@@ -228,7 +214,6 @@ class TestViewController: NSViewController {
       action: #selector(applyProxy)
     )
     button.bezelStyle = .rounded
-    button.translatesAutoresizingMaskIntoConstraints = false
     button.contentTintColor = .systemBlue
     button.setContentCompressionResistancePriority(.required, for: .horizontal)
     return button
@@ -241,7 +226,6 @@ class TestViewController: NSViewController {
       action: #selector(testProxy)
     )
     button.bezelStyle = .rounded
-    button.translatesAutoresizingMaskIntoConstraints = false
     button.setContentCompressionResistancePriority(.required, for: .horizontal)
     return button
   }()
@@ -253,7 +237,6 @@ class TestViewController: NSViewController {
     bar.minValue = 0
     bar.maxValue = 1
     bar.doubleValue = 0
-    bar.translatesAutoresizingMaskIntoConstraints = false
     return bar
   }()
 
@@ -261,7 +244,6 @@ class TestViewController: NSViewController {
     let label = NSTextField(labelWithString: Localized.TestWindow.statusReady)
     label.font = .systemFont(ofSize: 11)
     label.textColor = .secondaryLabelColor
-    label.translatesAutoresizingMaskIntoConstraints = false
     return label
   }()
 
@@ -429,7 +411,6 @@ class TestViewController: NSViewController {
     scrollView.hasHorizontalScroller = false
     scrollView.autohidesScrollers = false
     scrollView.borderType = .bezelBorder
-    scrollView.translatesAutoresizingMaskIntoConstraints = false
 
     // Create button container
     let buttonStack = NSStackView(views: [
@@ -441,11 +422,9 @@ class TestViewController: NSViewController {
     buttonStack.orientation = .horizontal
     buttonStack.spacing = 10
     buttonStack.distribution = .fillEqually
-    buttonStack.translatesAutoresizingMaskIntoConstraints = false
 
     // Create filter control row
     let filterLabel = NSTextField(labelWithString: Localized.TestWindow.filterLabel)
-    filterLabel.translatesAutoresizingMaskIntoConstraints = false
 
     let checkboxStack = NSStackView(views: [
       releaseCheckbox,
@@ -455,7 +434,6 @@ class TestViewController: NSViewController {
     ])
     checkboxStack.orientation = .horizontal
     checkboxStack.spacing = 15
-    checkboxStack.translatesAutoresizingMaskIntoConstraints = false
 
     let filterStack = NSStackView(views: [
       filterLabel,
@@ -465,29 +443,16 @@ class TestViewController: NSViewController {
     ])
     filterStack.orientation = .horizontal
     filterStack.spacing = 10
-    filterStack.translatesAutoresizingMaskIntoConstraints = false
     
     // Create proxy settings row
     let proxyHostLabel = NSTextField(labelWithString: Localized.Proxy.hostLabel)
-    proxyHostLabel.translatesAutoresizingMaskIntoConstraints = false
     proxyHostLabel.alignment = .right
     
     let proxyPortLabel = NSTextField(labelWithString: Localized.Proxy.portLabel)
-    proxyPortLabel.translatesAutoresizingMaskIntoConstraints = false
     proxyPortLabel.alignment = .right
     
     let proxyTypeLabel = NSTextField(labelWithString: Localized.Proxy.typeLabel)
-    proxyTypeLabel.translatesAutoresizingMaskIntoConstraints = false
     proxyTypeLabel.alignment = .right
-    
-    // Set fixed widths for input controls
-    NSLayoutConstraint.activate([
-      proxyTypePopup.widthAnchor.constraint(equalToConstant: 90),
-      proxyHostField.widthAnchor.constraint(equalToConstant: 140),
-      proxyPortField.widthAnchor.constraint(equalToConstant: 60),
-      applyProxyButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100),
-      testProxyButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 90),
-    ])
     
     let proxyStack = NSStackView(views: [
       proxyEnableCheckbox,
@@ -504,7 +469,6 @@ class TestViewController: NSViewController {
     proxyStack.spacing = 6
     proxyStack.alignment = .centerY
     proxyStack.distribution = .gravityAreas
-    proxyStack.translatesAutoresizingMaskIntoConstraints = false
 
     // Add to view
     view.addSubview(buttonStack)
@@ -515,112 +479,74 @@ class TestViewController: NSViewController {
     view.addSubview(progressBar)
     view.addSubview(statusLabel)
 
-    // Layout
-    NSLayoutConstraint.activate([
-      // First row buttons
-      buttonStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-      buttonStack.leadingAnchor.constraint(
-        equalTo: view.leadingAnchor,
-        constant: 20
-      ),
-      buttonStack.trailingAnchor.constraint(
-        equalTo: view.trailingAnchor,
-        constant: -20
-      ),
-      buttonStack.heightAnchor.constraint(equalToConstant: 32),
-
-      // Filter row
-      filterStack.topAnchor.constraint(
-        equalTo: buttonStack.bottomAnchor,
-        constant: 10
-      ),
-      filterStack.leadingAnchor.constraint(
-        equalTo: view.leadingAnchor,
-        constant: 20
-      ),
-      filterStack.trailingAnchor.constraint(
-        equalTo: view.trailingAnchor,
-        constant: -20
-      ),
-      filterStack.heightAnchor.constraint(equalToConstant: 32),
-      
-      // Proxy settings row
-      proxyStack.topAnchor.constraint(
-        equalTo: filterStack.bottomAnchor,
-        constant: 10
-      ),
-      proxyStack.leadingAnchor.constraint(
-        equalTo: view.leadingAnchor,
-        constant: 20
-      ),
-      proxyStack.trailingAnchor.constraint(
-        equalTo: view.trailingAnchor,
-        constant: -20
-      ),
-      proxyStack.heightAnchor.constraint(equalToConstant: 32),
-
-      // Version table view
-      versionScrollView.topAnchor.constraint(
-        equalTo: proxyStack.bottomAnchor,
-        constant: 10
-      ),
-      versionScrollView.leadingAnchor.constraint(
-        equalTo: view.leadingAnchor,
-        constant: 20
-      ),
-      versionScrollView.widthAnchor.constraint(equalToConstant: 730),
-      versionScrollView.bottomAnchor.constraint(
-        equalTo: progressBar.topAnchor,
-        constant: -15
-      ),
-
-      // Log view
-      scrollView.topAnchor.constraint(
-        equalTo: filterStack.bottomAnchor,
-        constant: 10
-      ),
-      scrollView.leadingAnchor.constraint(
-        equalTo: versionScrollView.trailingAnchor,
-        constant: 10
-      ),
-      scrollView.trailingAnchor.constraint(
-        equalTo: view.trailingAnchor,
-        constant: -20
-      ),
-      scrollView.bottomAnchor.constraint(
-        equalTo: progressBar.topAnchor,
-        constant: -15
-      ),
-
-      // Progress bar
-      progressBar.leadingAnchor.constraint(
-        equalTo: view.leadingAnchor,
-        constant: 20
-      ),
-      progressBar.trailingAnchor.constraint(
-        equalTo: view.trailingAnchor,
-        constant: -20
-      ),
-      progressBar.bottomAnchor.constraint(
-        equalTo: statusLabel.topAnchor,
-        constant: -8
-      ),
-      progressBar.heightAnchor.constraint(equalToConstant: 20),
-
-      // Status label
-      statusLabel.leadingAnchor.constraint(
-        equalTo: view.leadingAnchor,
-        constant: 20
-      ),
-      statusLabel.trailingAnchor.constraint(
-        equalTo: view.trailingAnchor,
-        constant: -20
-      ),
-      statusLabel.bottomAnchor.constraint(
-        equalTo: view.bottomAnchor,
-        constant: -10
-      ),
-    ])
+    // Layout using SnapKit
+    proxyTypePopup.snp.makeConstraints { make in
+      make.width.equalTo(90)
+    }
+    
+    proxyHostField.snp.makeConstraints { make in
+      make.width.equalTo(140)
+    }
+    
+    proxyPortField.snp.makeConstraints { make in
+      make.width.equalTo(60)
+    }
+    
+    applyProxyButton.snp.makeConstraints { make in
+      make.width.greaterThanOrEqualTo(100)
+    }
+    
+    testProxyButton.snp.makeConstraints { make in
+      make.width.greaterThanOrEqualTo(90)
+    }
+    
+    buttonStack.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(20)
+      make.left.equalToSuperview().offset(20)
+      make.right.equalToSuperview().offset(-20)
+      make.height.equalTo(32)
+    }
+    
+    filterStack.snp.makeConstraints { make in
+      make.top.equalTo(buttonStack.snp.bottom).offset(10)
+      make.left.equalToSuperview().offset(20)
+      make.right.equalToSuperview().offset(-20)
+      make.height.equalTo(32)
+    }
+    
+    proxyStack.snp.makeConstraints { make in
+      make.top.equalTo(filterStack.snp.bottom).offset(10)
+      make.left.equalToSuperview().offset(20)
+      make.right.equalToSuperview().offset(-20)
+      make.height.equalTo(32)
+    }
+    
+    versionScrollView.snp.makeConstraints { make in
+      make.top.equalTo(proxyStack.snp.bottom).offset(10)
+      make.left.equalToSuperview().offset(20)
+      make.width.equalTo(730)
+      make.bottom.equalTo(progressBar.snp.top).offset(-15)
+    }
+    
+    scrollView.snp.makeConstraints { make in
+      make.top.equalTo(filterStack.snp.bottom).offset(10)
+      make.left.equalTo(versionScrollView.snp.right).offset(10)
+      make.right.equalToSuperview().offset(-20)
+      make.bottom.equalTo(progressBar.snp.top).offset(-15)
+    }
+    
+    progressBar.snp.makeConstraints { make in
+      make.left.equalToSuperview().offset(20)
+      make.right.equalToSuperview().offset(-20)
+      make.bottom.equalTo(statusLabel.snp.top).offset(-8)
+      make.height.equalTo(20)
+    }
+    
+    statusLabel.snp.makeConstraints { make in
+      make.left.equalToSuperview().offset(20)
+      make.right.equalToSuperview().offset(-20)
+      make.bottom.equalToSuperview().offset(-10)
+    }
   }
 
   private func setupLogObserver() {
@@ -1126,7 +1052,6 @@ extension TestViewController: NSTableViewDelegate {
       textField.usesSingleLineMode = true
       textField.cell?.wraps = false
       textField.cell?.isScrollable = false
-      textField.translatesAutoresizingMaskIntoConstraints = false
       
       // Set content hugging and compression resistance
       textField.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -1135,12 +1060,12 @@ extension TestViewController: NSTableViewDelegate {
       cell?.textField = textField
       cell?.addSubview(textField)
       
-      // Pin to edges with proper priorities
-      NSLayoutConstraint.activate([
-        textField.leadingAnchor.constraint(equalTo: cell!.leadingAnchor, constant: 2),
-        textField.trailingAnchor.constraint(equalTo: cell!.trailingAnchor, constant: -2),
-        textField.centerYAnchor.constraint(equalTo: cell!.centerYAnchor)
-      ])
+      // Pin to edges with SnapKit
+      textField.snp.makeConstraints { make in
+        make.left.equalToSuperview().offset(2)
+        make.right.equalToSuperview().offset(-2)
+        make.centerY.equalToSuperview()
+      }
     }
     
     // Configure the text field for this specific cell
