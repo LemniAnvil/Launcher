@@ -8,6 +8,12 @@
 import Combine
 import Foundation
 
+/// Centralized API endpoints
+enum APIEndpoints {
+  static let versionManifestOfficial = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+  static let versionManifestV2 = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
+}
+
 /// Version Manager
 @MainActor
 class VersionManager: ObservableObject {
@@ -23,7 +29,7 @@ class VersionManager: ObservableObject {
 
   // MARK: - Private Properties
 
-  private let versionManifestURL = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+  private let versionManifestURL = APIEndpoints.versionManifestOfficial
   private let logger = Logger.shared
   private let parser = VersionManifestParser()
   private var cachedManifest: VersionManifest?

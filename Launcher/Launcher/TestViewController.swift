@@ -713,7 +713,7 @@ class TestViewController: NSViewController {
         logMessage(Localized.LogMessages.saveLocation(destination.path))
 
         try await downloadManager.downloadFile(
-          from: "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+          from: APIEndpoints.versionManifestOfficial,
           to: destination,
           expectedSize: 500000
         )

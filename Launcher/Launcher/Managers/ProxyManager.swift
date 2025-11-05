@@ -147,7 +147,7 @@ class ProxyManager {
     
     let session = URLSession(configuration: config)
     
-    let testURL = URL(string: "https://launchermeta.mojang.com/mc/game/version_manifest.json")!
+    let testURL = URL(string: APIEndpoints.versionManifestOfficial)!
     
     do {
       let (_, response) = try await session.data(from: testURL)
