@@ -131,7 +131,8 @@ class Logger {
       in: .userDomainMask,
       appropriateFor: nil,
       create: true
-    ).appendingPathComponent("Launcher/logs", isDirectory: true)
+    )
+      .appendingPathComponent("Launcher/logs", isDirectory: true)
 
     try fileManager.createDirectory(
       at: logsDirectory,
@@ -147,7 +148,8 @@ class Logger {
       let timestamp = ISO8601DateFormatter().string(from: entry.timestamp)
       return
         "[\(timestamp)] [\(entry.level.rawValue)] [\(entry.category)] \(entry.message)"
-    }.joined(separator: "\n")
+    }
+      .joined(separator: "\n")
 
     try logContent.write(to: fileURL, atomically: true, encoding: .utf8)
 

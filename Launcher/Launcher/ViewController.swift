@@ -9,6 +9,7 @@ import SnapKit
 class ViewController: NSViewController {
 
   private var testWindowController: TestWindowController?
+  private var windowObserver: NSObjectProtocol?
 
   // UI elements
   private let titleLabel: NSTextField = {
@@ -130,13 +131,17 @@ class ViewController: NSViewController {
     statusLabel.stringValue = Localized.MainWindow.testWindowOpened
 
     // Window close callback
-    NotificationCenter.default.addObserver(
+    windowObserver = NotificationCenter.default.addObserver(
       forName: NSWindow.willCloseNotification,
       object: testWindowController?.window,
       queue: .main
     ) { [weak self] _ in
       self?.testWindowController = nil
       self?.statusLabel.stringValue = Localized.MainWindow.testWindowClosed
+      if let observer = self?.windowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        self?.windowObserver = nil
+      }
     }
   }
 

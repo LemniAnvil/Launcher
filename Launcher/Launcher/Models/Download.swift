@@ -100,7 +100,7 @@ enum DownloadPriority: Int, Comparable {
   case high = 2
   case critical = 3
 
-  static func < (lhs: DownloadPriority, rhs: DownloadPriority) -> Bool {
+  static func < (lhs: Self, rhs: Self) -> Bool {
     return lhs.rawValue < rhs.rawValue
   }
 }

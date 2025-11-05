@@ -8,8 +8,8 @@
 import CryptoKit
 import Foundation
 
-/// File utility class
-class FileUtils {
+/// File utility enum
+enum FileUtils {
 
   /// Get Minecraft directory
   static func getMinecraftDirectory() -> URL {
@@ -183,11 +183,11 @@ enum FileUtilsError: LocalizedError {
 
   var errorDescription: String? {
     switch self {
-    case .notADirectory(let url):
+    case let .notADirectory(url):
       return "Path is not a directory: \(url.path)"
-    case .fileNotFound(let url):
+    case let .fileNotFound(url):
       return "File not found: \(url.path)"
-    case .sha1Mismatch(let expected, let actual):
+    case let .sha1Mismatch(expected, actual):
       return "SHA1 mismatch: expected \(expected), got \(actual)"
     }
   }

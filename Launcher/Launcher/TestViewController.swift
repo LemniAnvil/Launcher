@@ -411,7 +411,6 @@ class TestViewController: NSViewController {
     }
   }
 
-  // swiftlint:disable:next function_body_length
   private func setupUI() {
     // Setup log text view
     logTextView.isEditable = false

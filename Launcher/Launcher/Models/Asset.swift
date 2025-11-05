@@ -10,8 +10,10 @@ import Foundation
 /// Asset index file (assets/indexes/xxx.json)
 struct AssetIndexData: Codable {
   let objects: [String: AssetObject]
+  // swiftlint:disable discouraged_optional_boolean
   let virtual: Bool?
   let mapToResources: Bool?
+  // swiftlint:enable discouraged_optional_boolean
 
   enum CodingKeys: String, CodingKey {
     case objects

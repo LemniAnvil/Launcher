@@ -5,6 +5,7 @@
 
 import Foundation
 
+// swiftlint:disable type_body_length
 enum Localized {
   // MARK: - Main Window
   enum MainWindow {
@@ -419,5 +420,5 @@ enum Localized {
       String(localized: "File not found: \(path)", comment: "[Error] File not found.")
     }
   }
-  // swiftlint:disable:next file_length
 }
+// swiftlint:enable type_body_length

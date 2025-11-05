@@ -10,8 +10,8 @@ import Foundation
 
 /// Download Manager
 @MainActor
-// swiftlint:disable:next type_body_length
 class DownloadManager: NSObject, ObservableObject {
+  // swiftlint:disable:previous type_body_length
   static let shared = DownloadManager()
 
   // MARK: - Published Properties
@@ -23,7 +23,7 @@ class DownloadManager: NSObject, ObservableObject {
   // MARK: - Private Properties
 
   private let logger = Logger.shared
-  private var session: URLSession!
+  private var session: URLSession?
   private var downloadTasks: [UUID: DownloadTask] = [:]
   private var taskQueue: [DownloadQueueItem] = []
   private let maxConcurrentDownloads = 8
@@ -39,7 +39,7 @@ class DownloadManager: NSObject, ObservableObject {
 
   // MARK: - Initialization
 
-  private override init() {
+  override private init() {
     self.currentProgress = DownloadProgress(
       totalTasks: 0,
       completedTasks: 0,
@@ -65,7 +65,8 @@ class DownloadManager: NSObject, ObservableObject {
     // Apply proxy configuration if enabled
     if let proxyDict = ProxyManager.shared.getProxyConfigurationForBoth() {
       config.connectionProxyDictionary = proxyDict
-      logger.info("Proxy enabled for downloads: \(ProxyManager.shared.proxyType.rawValue) \(ProxyManager.shared.proxyHost):\(ProxyManager.shared.proxyPort)",
+      logger.info(
+        "Proxy enabled for downloads: \(ProxyManager.shared.proxyType.rawValue) \(ProxyManager.shared.proxyHost):\(ProxyManager.shared.proxyPort)",
         category: "DownloadManager"
       )
     } else {
@@ -123,9 +124,7 @@ class DownloadManager: NSObject, ObservableObject {
           )
           try? FileManager.default.removeItem(at: destination)
         }
-      } else if let size = FileUtils.getFileSize(at: destination),
-        size == expectedSize
-      {
+      } else if let size = FileUtils.getFileSize(at: destination), size == expectedSize {
         logger.debug(
           "File exists with matching size, skipping: \(destination.lastPathComponent)",
           category: "DownloadManager"
@@ -135,6 +134,9 @@ class DownloadManager: NSObject, ObservableObject {
     }
 
     // Download file
+    guard let session = session else {
+      throw DownloadError.downloadCancelled
+    }
     let (tempURL, response) = try await session.download(from: url)
 
     guard let httpResponse = response as? HTTPURLResponse,
@@ -248,7 +250,7 @@ class DownloadManager: NSObject, ObservableObject {
         }
 
         // Control concurrency
-        if group.isEmpty == false && completed % maxConcurrentDownloads == 0 {
+        if group.isEmpty == false && completed.isMultiple(of: maxConcurrentDownloads) {
           try await group.next()
           completed += 1
         }
@@ -362,7 +364,7 @@ class DownloadManager: NSObject, ObservableObject {
     )
     var downloadItems: [DownloadQueueItem] = []
 
-    for (name, object) in assetIndex.objects {
+    for (_, object) in assetIndex.objects {
       let destination = objectsDir.appendingPathComponent(object.getPath())
 
       downloadItems.append(
@@ -462,8 +464,7 @@ class DownloadManager: NSObject, ObservableObject {
       // Download native library
       if let nativeName = library.getNativeName(),
         let classifiers = library.downloads?.classifiers,
-        let nativeArtifact = classifiers[nativeName]
-      {
+        let nativeArtifact = classifiers[nativeName] {
         let destination = librariesDir.appendingPathComponent(
           nativeArtifact.path
         )

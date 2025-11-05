@@ -17,6 +17,7 @@ enum APIEndpoints {
 /// Version Manager
 @MainActor
 class VersionManager: ObservableObject {
+  // swiftlint:disable:previous type_body_length
   static let shared = VersionManager()
 
   // MARK: - Published Properties
@@ -215,15 +216,17 @@ class VersionManager: ObservableObject {
       return []
     }
 
-    return contents.filter { url in
-      var isDirectory: ObjCBool = false
-      FileManager.default.fileExists(
-        atPath: url.path,
-        isDirectory: &isDirectory
-      )
-      return isDirectory.boolValue
-        && isVersionInstalled(versionId: url.lastPathComponent)
-    }.map { $0.lastPathComponent }
+    return contents
+      .filter { url in
+        var isDirectory: ObjCBool = false
+        FileManager.default.fileExists(
+          atPath: url.path,
+          isDirectory: &isDirectory
+        )
+        return isDirectory.boolValue
+          && isVersionInstalled(versionId: url.lastPathComponent)
+      }
+      .map { $0.lastPathComponent }
   }
 
   // MARK: - Private Methods

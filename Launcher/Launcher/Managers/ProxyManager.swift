@@ -87,21 +87,21 @@ class ProxyManager {
       return [
         kCFNetworkProxiesHTTPEnable as String: true,
         kCFNetworkProxiesHTTPProxy as String: proxyHost,
-        kCFNetworkProxiesHTTPPort as String: proxyPort
+        kCFNetworkProxiesHTTPPort as String: proxyPort,
       ]
 
     case .https:
       return [
         kCFNetworkProxiesHTTPSEnable as String: true,
         kCFNetworkProxiesHTTPSProxy as String: proxyHost,
-        kCFNetworkProxiesHTTPSPort as String: proxyPort
+        kCFNetworkProxiesHTTPSPort as String: proxyPort,
       ]
 
     case .socks5:
       return [
         kCFNetworkProxiesSOCKSEnable as String: true,
         kCFNetworkProxiesSOCKSProxy as String: proxyHost,
-        kCFNetworkProxiesSOCKSPort as String: proxyPort
+        kCFNetworkProxiesSOCKSPort as String: proxyPort,
       ]
     }
   }
@@ -120,14 +120,14 @@ class ProxyManager {
         kCFNetworkProxiesHTTPPort as String: proxyPort,
         kCFNetworkProxiesHTTPSEnable as String: true,
         kCFNetworkProxiesHTTPSProxy as String: proxyHost,
-        kCFNetworkProxiesHTTPSPort as String: proxyPort
+        kCFNetworkProxiesHTTPSPort as String: proxyPort,
       ]
 
     case .socks5:
       return [
         kCFNetworkProxiesSOCKSEnable as String: true,
         kCFNetworkProxiesSOCKSProxy as String: proxyHost,
-        kCFNetworkProxiesSOCKSPort as String: proxyPort
+        kCFNetworkProxiesSOCKSPort as String: proxyPort,
       ]
     }
   }
