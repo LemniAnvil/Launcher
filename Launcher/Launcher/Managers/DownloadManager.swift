@@ -54,19 +54,18 @@ class DownloadManager: NSObject, ObservableObject {
 
     logger.info("Download manager initialized", category: "DownloadManager")
   }
-  
+
   /// Configure URLSession with proxy settings
   private func configureSession() {
     let config = URLSessionConfiguration.default
     config.timeoutIntervalForRequest = 30
     config.timeoutIntervalForResource = 300
     config.httpMaximumConnectionsPerHost = maxConcurrentDownloads
-    
+
     // Apply proxy configuration if enabled
     if let proxyDict = ProxyManager.shared.getProxyConfigurationForBoth() {
       config.connectionProxyDictionary = proxyDict
-      logger.info(
-        "Proxy enabled for downloads: \(ProxyManager.shared.proxyType.rawValue) \(ProxyManager.shared.proxyHost):\(ProxyManager.shared.proxyPort)",
+      logger.info("Proxy enabled for downloads: \(ProxyManager.shared.proxyType.rawValue) \(ProxyManager.shared.proxyHost):\(ProxyManager.shared.proxyPort)",
         category: "DownloadManager"
       )
     } else {
@@ -79,7 +78,7 @@ class DownloadManager: NSObject, ObservableObject {
       delegateQueue: nil
     )
   }
-  
+
   /// Reconfigure session with updated proxy settings
   func reconfigureSession() {
     logger.info("Reconfiguring download session with updated proxy settings", category: "DownloadManager")

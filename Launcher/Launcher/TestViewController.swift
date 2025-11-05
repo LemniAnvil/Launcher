@@ -92,44 +92,44 @@ class TestViewController: NSViewController {
     table.target = self
     table.doubleAction = #selector(versionDoubleClicked)
     table.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
-    
+
     // Add columns
     let versionColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("version"))
     versionColumn.title = Localized.TestWindow.columnVersion
     versionColumn.width = 150
     versionColumn.minWidth = 120
     table.addTableColumn(versionColumn)
-    
+
     let typeColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("type"))
     typeColumn.title = Localized.TestWindow.columnType
     typeColumn.width = 90
     typeColumn.minWidth = 70
     table.addTableColumn(typeColumn)
-    
+
     let dateColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("releaseTime"))
     dateColumn.title = Localized.TestWindow.columnReleaseTime
     dateColumn.width = 180
     dateColumn.minWidth = 140
     table.addTableColumn(dateColumn)
-    
+
     let timeColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("time"))
     timeColumn.title = Localized.TestWindow.columnUpdateTime
     timeColumn.width = 180
     timeColumn.minWidth = 140
     table.addTableColumn(timeColumn)
-    
+
     let statusColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("status"))
     statusColumn.title = Localized.TestWindow.columnStatus
     statusColumn.width = 80
     statusColumn.minWidth = 60
     table.addTableColumn(statusColumn)
-    
+
     table.dataSource = self
     table.delegate = self
-    
+
     return table
   }()
-  
+
   private lazy var versionScrollView: NSScrollView = {
     let scrollView = NSScrollView()
     scrollView.documentView = versionTableView
@@ -139,36 +139,52 @@ class TestViewController: NSViewController {
     scrollView.borderType = .bezelBorder
     return scrollView
   }()
-  
+
   // Filtered versions for display
   private var displayedVersions: [MinecraftVersion] = []
   private var selectedVersion: MinecraftVersion?
 
   // Version type filter checkboxes
   private lazy var releaseCheckbox: NSButton = {
-    let checkbox = NSButton(checkboxWithTitle: Localized.TestWindow.checkboxRelease, target: self, action: #selector(filterVersions))
+    let checkbox = NSButton(
+      checkboxWithTitle: Localized.TestWindow.checkboxRelease,
+      target: self,
+      action: #selector(filterVersions)
+    )
     checkbox.state = .off
     return checkbox
   }()
-  
+
   private lazy var snapshotCheckbox: NSButton = {
-    let checkbox = NSButton(checkboxWithTitle: Localized.TestWindow.checkboxSnapshot, target: self, action: #selector(filterVersions))
+    let checkbox = NSButton(
+      checkboxWithTitle: Localized.TestWindow.checkboxSnapshot,
+      target: self,
+      action: #selector(filterVersions)
+    )
     checkbox.state = .off
     return checkbox
   }()
-  
+
   private lazy var betaCheckbox: NSButton = {
-    let checkbox = NSButton(checkboxWithTitle: Localized.TestWindow.checkboxBeta, target: self, action: #selector(filterVersions))
+    let checkbox = NSButton(
+      checkboxWithTitle: Localized.TestWindow.checkboxBeta,
+      target: self,
+      action: #selector(filterVersions)
+    )
     checkbox.state = .off
     return checkbox
   }()
-  
+
   private lazy var alphaCheckbox: NSButton = {
-    let checkbox = NSButton(checkboxWithTitle: Localized.TestWindow.checkboxAlpha, target: self, action: #selector(filterVersions))
+    let checkbox = NSButton(
+      checkboxWithTitle: Localized.TestWindow.checkboxAlpha,
+      target: self,
+      action: #selector(filterVersions)
+    )
     checkbox.state = .off
     return checkbox
   }()
-  
+
   // Proxy Settings UI
   private lazy var proxyEnableCheckbox: NSButton = {
     let checkbox = NSButton(
@@ -179,7 +195,7 @@ class TestViewController: NSViewController {
     checkbox.state = proxyManager.proxyEnabled ? .on : .off
     return checkbox
   }()
-  
+
   private lazy var proxyHostField: NSTextField = {
     let field = NSTextField(string: proxyManager.proxyHost)
     field.placeholderString = Localized.Proxy.hostPlaceholder
@@ -188,7 +204,7 @@ class TestViewController: NSViewController {
     field.setContentHuggingPriority(.defaultLow, for: .horizontal)
     return field
   }()
-  
+
   private lazy var proxyPortField: NSTextField = {
     let field = NSTextField(string: proxyManager.proxyPort > 0 ? "\(proxyManager.proxyPort)" : "")
     field.placeholderString = Localized.Proxy.portPlaceholder
@@ -197,7 +213,7 @@ class TestViewController: NSViewController {
     field.setContentHuggingPriority(.defaultLow, for: .horizontal)
     return field
   }()
-  
+
   private lazy var proxyTypePopup: NSPopUpButton = {
     let popup = NSPopUpButton()
     popup.addItems(withTitles: ProxyManager.ProxyType.allCases.map { $0.displayName })
@@ -206,7 +222,7 @@ class TestViewController: NSViewController {
     popup.setContentCompressionResistancePriority(.required, for: .horizontal)
     return popup
   }()
-  
+
   private lazy var applyProxyButton: NSButton = {
     let button = NSButton(
       title: Localized.Proxy.applyButton,
@@ -218,7 +234,7 @@ class TestViewController: NSViewController {
     button.setContentCompressionResistancePriority(.required, for: .horizontal)
     return button
   }()
-  
+
   private lazy var testProxyButton: NSButton = {
     let button = NSButton(
       title: Localized.Proxy.testButton,
@@ -266,7 +282,7 @@ class TestViewController: NSViewController {
       // Load cached versions if available
       logMessage(Localized.LogMessages.checkingVersionManager)
       logMessage(Localized.LogMessages.currentLoadedVersions(versionManager.versions.count))
-      
+
       if versionManager.versions.isEmpty {
         logMessage(Localized.LogMessages.loadingCachedVersions)
       } else {
@@ -276,14 +292,14 @@ class TestViewController: NSViewController {
       }
     }
   }
-  
+
   /// Log version statistics by type
   private func logVersionStatistics() {
     let releases = versionManager.getFilteredVersions(type: .release)
     let snapshots = versionManager.getFilteredVersions(type: .snapshot)
     let betas = versionManager.getFilteredVersions(type: .oldBeta)
     let alphas = versionManager.getFilteredVersions(type: .oldAlpha)
-    
+
     logMessage(Localized.LogMessages.versionStatisticsTitle())
     logMessage(Localized.LogMessages.releaseCount(releases.count))
     logMessage(Localized.LogMessages.snapshotCount(snapshots.count))
@@ -294,7 +310,7 @@ class TestViewController: NSViewController {
 
   private func updateVersionTable(filterTypes: [VersionType]? = nil) {
     let versions: [MinecraftVersion]
-    
+
     if let filterTypes = filterTypes, !filterTypes.isEmpty {
       // Filter versions by selected types
       versions = versionManager.versions.filter { version in
@@ -315,24 +331,22 @@ class TestViewController: NSViewController {
     }
 
     displayedVersions = versions
-    
+
     // Reload data and force refresh all visible cells to update installation status
     versionTableView.reloadData()
-    
+
     // Force refresh all visible rows to ensure status column is updated
     let visibleRange = versionTableView.rows(in: versionTableView.visibleRect)
     if visibleRange.length > 0 {
       let indexSet = IndexSet(integersIn: visibleRange.location..<(visibleRange.location + visibleRange.length))
       versionTableView.reloadData(forRowIndexes: indexSet, columnIndexes: IndexSet(integer: 4)) // Column 4 is status
     }
-    
+
     logMessage(Localized.LogMessages.versionListUpdated)
     logMessage(Localized.LogMessages.displayedVersionsCount(displayedVersions.count))
-    
+
     // Select latest release by default if it's in the filtered list
-    if let latestRelease = versionManager.latestRelease,
-      let index = displayedVersions.firstIndex(where: { $0.id == latestRelease })
-    {
+    if let latestRelease = versionManager.latestRelease, let index = displayedVersions.firstIndex(where: { $0.id == latestRelease }) {
       versionTableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
       versionTableView.scrollRowToVisible(index)
       selectedVersion = displayedVersions[index]
@@ -356,10 +370,10 @@ class TestViewController: NSViewController {
   @objc private func versionDoubleClicked() {
     let row = versionTableView.clickedRow
     guard row >= 0, row < displayedVersions.count else { return }
-    
+
     let version = displayedVersions[row]
     logMessage("\(Localized.LogMessages.mouseDoubleClickVersion) \(version.id)")
-    
+
     // Trigger version download
     testDownloadVersion()
   }
@@ -367,12 +381,12 @@ class TestViewController: NSViewController {
   @objc private func filterVersions() {
     applyCurrentFilter()
   }
-  
+
   /// Apply current filter based on checkbox states
   private func applyCurrentFilter() {
     // Collect selected version types
     var selectedTypes: [VersionType] = []
-    
+
     if releaseCheckbox.state == .on {
       selectedTypes.append(.release)
     }
@@ -385,7 +399,7 @@ class TestViewController: NSViewController {
     if alphaCheckbox.state == .on {
       selectedTypes.append(.oldAlpha)
     }
-    
+
     // If no types selected, show all versions
     if selectedTypes.isEmpty {
       updateVersionTable(filterTypes: nil)
@@ -443,17 +457,17 @@ class TestViewController: NSViewController {
     ])
     filterStack.orientation = .horizontal
     filterStack.spacing = 10
-    
+
     // Create proxy settings row
     let proxyHostLabel = NSTextField(labelWithString: Localized.Proxy.hostLabel)
     proxyHostLabel.alignment = .right
-    
+
     let proxyPortLabel = NSTextField(labelWithString: Localized.Proxy.portLabel)
     proxyPortLabel.alignment = .right
-    
+
     let proxyTypeLabel = NSTextField(labelWithString: Localized.Proxy.typeLabel)
     proxyTypeLabel.alignment = .right
-    
+
     let proxyStack = NSStackView(views: [
       proxyEnableCheckbox,
       proxyTypeLabel,
@@ -483,65 +497,65 @@ class TestViewController: NSViewController {
     proxyTypePopup.snp.makeConstraints { make in
       make.width.equalTo(90)
     }
-    
+
     proxyHostField.snp.makeConstraints { make in
       make.width.equalTo(140)
     }
-    
+
     proxyPortField.snp.makeConstraints { make in
       make.width.equalTo(60)
     }
-    
+
     applyProxyButton.snp.makeConstraints { make in
       make.width.greaterThanOrEqualTo(100)
     }
-    
+
     testProxyButton.snp.makeConstraints { make in
       make.width.greaterThanOrEqualTo(90)
     }
-    
+
     buttonStack.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
       make.height.equalTo(32)
     }
-    
+
     filterStack.snp.makeConstraints { make in
       make.top.equalTo(buttonStack.snp.bottom).offset(10)
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
       make.height.equalTo(32)
     }
-    
+
     proxyStack.snp.makeConstraints { make in
       make.top.equalTo(filterStack.snp.bottom).offset(10)
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
       make.height.equalTo(32)
     }
-    
+
     versionScrollView.snp.makeConstraints { make in
       make.top.equalTo(proxyStack.snp.bottom).offset(10)
       make.left.equalToSuperview().offset(20)
       make.width.equalTo(730)
       make.bottom.equalTo(progressBar.snp.top).offset(-15)
     }
-    
+
     scrollView.snp.makeConstraints { make in
       make.top.equalTo(filterStack.snp.bottom).offset(10)
       make.left.equalTo(versionScrollView.snp.right).offset(10)
       make.right.equalToSuperview().offset(-20)
       make.bottom.equalTo(progressBar.snp.top).offset(-15)
     }
-    
+
     progressBar.snp.makeConstraints { make in
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
       make.bottom.equalTo(statusLabel.snp.top).offset(-8)
       make.height.equalTo(20)
     }
-    
+
     statusLabel.snp.makeConstraints { make in
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
@@ -551,8 +565,7 @@ class TestViewController: NSViewController {
 
   private func setupLogObserver() {
     // Monitor download progress updates
-    Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) {
-      [weak self] _ in
+    Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
       guard let self = self else { return }
 
       Task { @MainActor in
@@ -599,7 +612,7 @@ class TestViewController: NSViewController {
 
           // Show version statistics
           logVersionStatistics()
-          
+
           // Show first 10 releases
           let releases = versionManager.getFilteredVersions(type: .release)
             .prefix(10)
@@ -622,7 +635,7 @@ class TestViewController: NSViewController {
         await MainActor.run {
           logMessage(Localized.LogMessages.error(error.localizedDescription))
           statusLabel.stringValue =
-            Localized.TestWindow.statusRefreshFailed(error.localizedDescription)
+          Localized.TestWindow.statusRefreshFailed(error.localizedDescription)
           disableButtons(false)
         }
       }
@@ -635,7 +648,7 @@ class TestViewController: NSViewController {
       logMessage(Localized.LogMessages.pleaseSelectVersion)
       return
     }
-    
+
     let versionId = displayedVersions[row].id
 
     logMessage("\n" + String(repeating: "=", count: 60))
@@ -769,8 +782,8 @@ class TestViewController: NSViewController {
       Localized.LogMessages.minecraftDirectory(FileUtils.getMinecraftDirectory().path)
     )
     statusLabel.stringValue =
-      Localized.TestWindow.statusCheckCompleted(installed.count)
-    
+    Localized.TestWindow.statusCheckCompleted(installed.count)
+
     // Refresh version table to update installation status display
     logMessage(Localized.LogMessages.refreshVersionListToUpdate)
     applyCurrentFilter()
@@ -782,7 +795,7 @@ class TestViewController: NSViewController {
       logMessage(Localized.LogMessages.pleaseSelectVersion)
       return
     }
-    
+
     let versionId = displayedVersions[row].id
 
     logMessage("\n" + String(repeating: "=", count: 60))
@@ -849,11 +862,11 @@ class TestViewController: NSViewController {
 
           progressBar.doubleValue = 1.0
           statusLabel.stringValue = Localized.TestWindow.statusDownloadCompleted
-          
+
           // Refresh version table to show updated installation status
           logMessage(Localized.LogMessages.refreshVersionListToShow)
           applyCurrentFilter()
-          
+
           disableButtons(false)
 
           // Show success dialog
@@ -921,15 +934,15 @@ class TestViewController: NSViewController {
     checkInstalledButton.isEnabled = !disabled
     downloadVersionButton.isEnabled = !disabled
   }
-  
+
   // MARK: - Proxy Methods
-  
+
   @objc private func proxyEnableChanged() {
     let enabled = proxyEnableCheckbox.state == .on
     proxyHostField.isEnabled = enabled
     proxyPortField.isEnabled = enabled
     proxyTypePopup.isEnabled = enabled
-    
+
     if !enabled {
       proxyManager.disableProxy()
       downloadManager.reconfigureSession()
@@ -937,12 +950,12 @@ class TestViewController: NSViewController {
       statusLabel.stringValue = Localized.Proxy.statusDisabled
     }
   }
-  
+
   @objc private func applyProxy() {
     let enabled = proxyEnableCheckbox.state == .on
     let host = proxyHostField.stringValue.trimmingCharacters(in: .whitespaces)
     let port = Int(proxyPortField.stringValue) ?? 0
-    
+
     // Validate input
     if enabled && (host.isEmpty || port <= 0 || port > 65535) {
       let alert = NSAlert()
@@ -952,17 +965,17 @@ class TestViewController: NSViewController {
       alert.runModal()
       return
     }
-    
+
     // Get proxy type
     let selectedIndex = proxyTypePopup.indexOfSelectedItem
     let proxyType = ProxyManager.ProxyType.allCases[safe: selectedIndex] ?? .http
-    
+
     // Configure proxy
     proxyManager.configureProxy(enabled: enabled, host: host, port: port, type: proxyType)
-    
+
     // Reconfigure download manager
     downloadManager.reconfigureSession()
-    
+
     if enabled {
       logMessage(Localized.Proxy.logEnabled(proxyType.displayName, host, port))
       statusLabel.stringValue = Localized.Proxy.statusApplied(host, port)
@@ -971,20 +984,20 @@ class TestViewController: NSViewController {
       statusLabel.stringValue = Localized.Proxy.statusDisabled
     }
   }
-  
+
   @objc private func testProxy() {
     logMessage(Localized.Proxy.logTesting)
     statusLabel.stringValue = Localized.Proxy.statusTesting
-    
+
     Task {
       do {
         let success = try await proxyManager.testProxyConnection()
-        
+
         await MainActor.run {
           if success {
             logMessage(Localized.Proxy.logTestSuccess)
             statusLabel.stringValue = Localized.Proxy.statusTestSuccess
-            
+
             let alert = NSAlert()
             alert.messageText = Localized.Proxy.alertTestSuccessTitle
             alert.informativeText = Localized.Proxy.alertTestSuccessMessage
@@ -996,7 +1009,7 @@ class TestViewController: NSViewController {
         await MainActor.run {
           logMessage(Localized.Proxy.logTestFailed(error.localizedDescription))
           statusLabel.stringValue = Localized.Proxy.statusTestFailed
-          
+
           let alert = NSAlert()
           alert.messageText = Localized.Proxy.alertTestFailedTitle
           alert.informativeText = Localized.Proxy.alertTestFailedMessage(error.localizedDescription)
@@ -1029,19 +1042,19 @@ extension TestViewController: NSTableViewDataSource {
 extension TestViewController: NSTableViewDelegate {
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
     guard row >= 0 && row < displayedVersions.count else { return nil }
-    
+
     let version = displayedVersions[row]
     let identifier = tableColumn?.identifier ?? NSUserInterfaceItemIdentifier("")
-    
+
     // Use standard table cell view with identifier
     let cellIdentifier = NSUserInterfaceItemIdentifier("DataCell")
     var cell = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSTableCellView
-    
+
     if cell == nil {
       // Create new cell
       cell = NSTableCellView()
       cell?.identifier = cellIdentifier
-      
+
       // Create writable text field (NOT label)
       let textField = NSTextField()
       textField.isBordered = false
@@ -1052,14 +1065,14 @@ extension TestViewController: NSTableViewDelegate {
       textField.usesSingleLineMode = true
       textField.cell?.wraps = false
       textField.cell?.isScrollable = false
-      
+
       // Set content hugging and compression resistance
       textField.setContentHuggingPriority(.defaultLow, for: .horizontal)
       textField.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-      
+
       cell?.textField = textField
       cell?.addSubview(textField)
-      
+
       // Pin to edges with SnapKit
       textField.snp.makeConstraints { make in
         make.left.equalToSuperview().offset(2)
@@ -1067,76 +1080,77 @@ extension TestViewController: NSTableViewDelegate {
         make.centerY.equalToSuperview()
       }
     }
-    
+
     // Configure the text field for this specific cell
     guard let textField = cell?.textField else { return cell }
-    
+
     // Reset to defaults
     textField.font = .systemFont(ofSize: 11)
     textField.textColor = .labelColor
     textField.alignment = .left
-    
+
     // Set content based on column
     switch identifier.rawValue {
     case "version":
       let emoji = getVersionEmoji(for: version.type)
       textField.stringValue = "\(emoji) \(version.id)"
       textField.font = .systemFont(ofSize: 11, weight: .medium)
-      
+
     case "type":
       textField.stringValue = version.type.displayName
       textField.textColor = getTypeColor(for: version.type)
       textField.font = .systemFont(ofSize: 11, weight: .semibold)
-      
+
     case "releaseTime":
       textField.stringValue = formatDateTime(version.releaseTime)
       textField.textColor = .secondaryLabelColor
-      
+
     case "time":
       textField.stringValue = formatDateTime(version.time)
       textField.textColor = NSColor.secondaryLabelColor.withAlphaComponent(0.8)
-      
+
     case "status":
       let isInstalled = versionManager.isVersionInstalled(versionId: version.id)
       textField.stringValue = isInstalled ? Localized.TestWindow.statusInstalled : ""
       textField.textColor = .systemGreen
       textField.font = .systemFont(ofSize: 10, weight: .medium)
-      
+
     default:
       textField.stringValue = ""
     }
-    
+
     return cell
   }
-  
+
   func tableViewSelectionDidChange(_ notification: Notification) {
     let row = versionTableView.selectedRow
     if row >= 0 && row < displayedVersions.count {
-      selectedVersion = displayedVersions[row]
-      logMessage(Localized.LogMessages.selectedVersion(selectedVersion!.id))
+      let version = displayedVersions[row]
+      selectedVersion = version
+      logMessage(Localized.LogMessages.selectedVersion(version.id))
     }
   }
-  
+
   private func formatDate(_ dateString: String) -> String {
     let formatter = ISO8601DateFormatter()
     formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    
+
     guard let date = formatter.date(from: dateString) else {
       return dateString
     }
-    
+
     let displayFormatter = DateFormatter()
     displayFormatter.dateStyle = .medium
     displayFormatter.timeStyle = .none
     displayFormatter.locale = Locale(identifier: "zh_CN")
-    
+
     return displayFormatter.string(from: date)
   }
-  
+
   private func formatDateTime(_ dateString: String) -> String {
     let formatter = ISO8601DateFormatter()
     formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    
+
     guard let date = formatter.date(from: dateString) else {
       // Try format without milliseconds
       formatter.formatOptions = [.withInternetDateTime]
@@ -1145,10 +1159,10 @@ extension TestViewController: NSTableViewDelegate {
       }
       return formatDateDisplay(date)
     }
-    
+
     return formatDateDisplay(date)
   }
-  
+
   private func formatDateDisplay(_ date: Date) -> String {
     let displayFormatter = DateFormatter()
     displayFormatter.dateFormat = "yyyy-MM-dd HH:mm"
@@ -1156,7 +1170,7 @@ extension TestViewController: NSTableViewDelegate {
     displayFormatter.timeZone = TimeZone.current
     return displayFormatter.string(from: date)
   }
-  
+
   private func getTypeColor(for type: VersionType) -> NSColor {
     switch type {
     case .release:
@@ -1169,4 +1183,5 @@ extension TestViewController: NSTableViewDelegate {
       return .systemPurple
     }
   }
+  // swiftlint:disable:next file_length
 }

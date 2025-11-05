@@ -12,21 +12,21 @@ import Foundation
 /// Minecraft version-related namespace
 /// Using enum as namespace to avoid polluting global namespace
 enum Minecraft {
-  
+
   // MARK: - Version Manifest Types
-  
+
   /// Version manifest root object
   struct VersionManifest: Codable {
     let latest: Latest
     let versions: [Version]
-    
+
     /// Latest version information
     struct Latest: Codable {
       let release: String
       let snapshot: String
     }
   }
-  
+
   /// Minecraft version basic information
   struct Version: Codable, Identifiable {
     let id: String
@@ -36,24 +36,24 @@ enum Minecraft {
     let releaseTime: String
     let sha1: String?
     let complianceLevel: Int?
-    
+
     var displayName: String {
       return id
     }
-    
+
     var releaseDate: Date? {
       let formatter = ISO8601DateFormatter()
       return formatter.date(from: releaseTime)
     }
   }
-  
+
   /// Version type
   enum VersionType: String, Codable, CaseIterable {
     case release  = "release"
     case snapshot = "snapshot"
     case oldBeta  = "old_beta"
     case oldAlpha = "old_alpha"
-    
+
     var displayName: String {
       switch self {
       case .release:  return "Release"
@@ -62,7 +62,7 @@ enum Minecraft {
       case .oldAlpha: return "Alpha"
       }
     }
-    
+
     var color: String {
       switch self {
       case .release:  return "green"
@@ -72,9 +72,9 @@ enum Minecraft {
       }
     }
   }
-  
+
   // MARK: - Version Details Types
-  
+
   /// Version details (version.json)
   struct VersionDetails: Codable {
     let id: String
@@ -92,7 +92,7 @@ enum Minecraft {
     let javaVersion: JavaVersion?
     let logging: Logging?
     let complianceLevel: Int?
-    
+
     /// Get merged launch arguments (handles inheritance)
     func getMergedArguments() -> Arguments {
       if let args = arguments {
@@ -106,20 +106,20 @@ enum Minecraft {
       return Arguments(game: nil, jvm: nil)
     }
   }
-  
+
   // MARK: - Arguments Types
-  
+
   /// Launch arguments
   struct Arguments: Codable {
     let game: [ArgumentValue]?
     let jvm: [ArgumentValue]?
   }
-  
+
   /// Argument value (can be string or rule object)
   enum ArgumentValue: Codable {
     case string(String)
     case rule(ArgumentRule)
-    
+
     init(from decoder: Decoder) throws {
       let container = try decoder.singleValueContainer()
       if let string = try? container.decode(String.self) {
@@ -133,7 +133,7 @@ enum Minecraft {
         )
       }
     }
-    
+
     func encode(to encoder: Encoder) throws {
       var container = encoder.singleValueContainer()
       switch self {
@@ -144,18 +144,18 @@ enum Minecraft {
       }
     }
   }
-  
+
   /// Argument with rules
   struct ArgumentRule: Codable {
     let rules: [Rule]?
     let value: ArgumentRuleValue
   }
-  
+
   /// Argument rule value
   enum ArgumentRuleValue: Codable {
     case string(String)
     case array([String])
-    
+
     init(from decoder: Decoder) throws {
       let container = try decoder.singleValueContainer()
       if let string = try? container.decode(String.self) {
@@ -169,7 +169,7 @@ enum Minecraft {
         )
       }
     }
-    
+
     func encode(to encoder: Encoder) throws {
       var container = encoder.singleValueContainer()
       switch self {
@@ -180,31 +180,31 @@ enum Minecraft {
       }
     }
   }
-  
+
   // MARK: - Rule Types
-  
+
   /// Rule
   struct Rule: Codable {
     let action: RuleAction
     let os: OSRule?
     let features: [String: Bool]?
   }
-  
+
   /// Rule action
   enum RuleAction: String, Codable {
     case allow = "allow"
     case disallow = "disallow"
   }
-  
+
   /// Operating system rule
   struct OSRule: Codable {
     let name: String?
     let version: String?
     let arch: String?
   }
-  
+
   // MARK: - Asset Types
-  
+
   /// Asset index
   struct AssetIndex: Codable {
     let id: String
@@ -213,16 +213,16 @@ enum Minecraft {
     let totalSize: Int
     let url: String
   }
-  
+
   // MARK: - Download Types
-  
+
   /// Version download information
   struct Downloads: Codable {
     let client: DownloadInfo?
     let server: DownloadInfo?
     let clientMappings: DownloadInfo?
     let serverMappings: DownloadInfo?
-    
+
     enum CodingKeys: String, CodingKey {
       case client
       case server
@@ -230,35 +230,35 @@ enum Minecraft {
       case serverMappings = "server_mappings"
     }
   }
-  
+
   /// Download information
   struct DownloadInfo: Codable {
     let sha1: String
     let size: Int
     let url: String
   }
-  
+
   // MARK: - Java Types
-  
+
   /// Java version requirement
   struct JavaVersion: Codable {
     let component: String
     let majorVersion: Int
   }
-  
+
   // MARK: - Logging Types
-  
+
   /// Logging configuration
   struct Logging: Codable {
     let client: LoggingClient?
-    
+
     /// Logging client configuration
     struct LoggingClient: Codable {
       let argument: String
       let file: LoggingFile
       let type: String
     }
-    
+
     /// Logging file information
     struct LoggingFile: Codable {
       let id: String

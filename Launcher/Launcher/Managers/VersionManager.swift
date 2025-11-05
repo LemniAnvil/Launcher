@@ -34,18 +34,18 @@ class VersionManager: ObservableObject {
   private let parser = VersionManifestParser()
   private var cachedManifest: VersionManifest?
   private let cacheURL: URL
-  
+
   // URLSession with proxy support
   private var urlSession: URLSession {
     let config = URLSessionConfiguration.default
     config.timeoutIntervalForRequest = 30
     config.timeoutIntervalForResource = 300
-    
+
     // Apply proxy configuration if enabled
     if let proxyDict = ProxyManager.shared.getProxyConfigurationForBoth() {
       config.connectionProxyDictionary = proxyDict
     }
-    
+
     return URLSession(configuration: config)
   }
 
@@ -57,10 +57,10 @@ class VersionManager: ObservableObject {
 
     logger.info("VersionManager initializing...", category: "VersionManager")
     logger.info("Cache path: \(cacheURL.path)", category: "VersionManager")
-    
+
     // Try to load cache
     loadCachedManifest()
-    
+
     logger.info("VersionManager initialized with \(versions.count) versions", category: "VersionManager")
   }
 
@@ -231,7 +231,7 @@ class VersionManager: ObservableObject {
   /// Download version manifest
   private func fetchVersionManifest() async throws -> VersionManifest {
     logger.info("🌐 Attempting to download version manifest from network...", category: "VersionManager")
-    
+
     // Try to download from network
     do {
       guard let url = URL(string: versionManifestURL) else {
@@ -250,7 +250,7 @@ class VersionManager: ObservableObject {
       }
 
       logger.info("Downloaded \(data.count) bytes from network", category: "VersionManager")
-      
+
       // Use parser to decode manifest
       let manifest = try parser.parseManifest(from: data)
 
@@ -269,15 +269,15 @@ class VersionManager: ObservableObject {
         category: "VersionManager"
       )
       logger.info("📦 Attempting to load local versions.json as fallback...", category: "VersionManager")
-      
+
       return try loadLocalBackupManifest()
     }
   }
-  
+
   /// Load local backup version manifest
   private func loadLocalBackupManifest() throws -> VersionManifest {
     logger.info("Searching for versions.json in bundle resources...", category: "VersionManager")
-    
+
     // Try to load from bundle resources
     guard let backupURL = Bundle.main.url(
       forResource: "versions",
@@ -287,27 +287,27 @@ class VersionManager: ObservableObject {
       logger.error("Please ensure versions.json is added to Xcode project", category: "VersionManager")
       throw VersionManagerError.parseFailed("Local versions.json not found")
     }
-    
+
     logger.info("✅ Found versions.json at: \(backupURL.path)", category: "VersionManager")
-    
+
     do {
       let data = try Data(contentsOf: backupURL)
       logger.info("Read \(data.count) bytes from versions.json", category: "VersionManager")
-      
+
       let manifest = try parser.parseManifest(from: data)
       logger.info("Parsed manifest with \(manifest.versions.count) versions", category: "VersionManager")
-      
+
       // Validate manifest
       guard parser.validateManifest(manifest) else {
         logger.error("Manifest validation failed", category: "VersionManager")
         throw VersionManagerError.parseFailed("Local versions.json validation failed")
       }
-      
+
       logger.info("✅ Loaded local versions.json successfully", category: "VersionManager")
       logger.info("Local manifest contains \(manifest.versions.count) versions", category: "VersionManager")
       logger.info("Latest release: \(manifest.latest.release)", category: "VersionManager")
       logger.info("Latest snapshot: \(manifest.latest.snapshot)", category: "VersionManager")
-      
+
       return manifest
     } catch {
       logger.error(
@@ -372,12 +372,11 @@ class VersionManager: ObservableObject {
     logger.info("Checking for cached version manifest...", category: "VersionManager")
     logger.info("Cache file path: \(cacheURL.path)", category: "VersionManager")
     logger.info("Cache file exists: \(FileManager.default.fileExists(atPath: cacheURL.path))", category: "VersionManager")
-    
+
     // Try to load from cache first
     if FileManager.default.fileExists(atPath: cacheURL.path),
       let data = try? Data(contentsOf: cacheURL),
-      let manifest = try? JSONDecoder().decode(VersionManifest.self, from: data)
-    {
+      let manifest = try? JSONDecoder().decode(VersionManifest.self, from: data) {
       self.cachedManifest = manifest
       self.versions = manifest.versions
       self.latestRelease = manifest.latest.release
@@ -395,15 +394,15 @@ class VersionManager: ObservableObject {
     // Cache not found or invalid, try to load local backup
     logger.warning("❌ No cached version manifest found or cache is invalid", category: "VersionManager")
     logger.info("📦 Attempting to load local versions.json...", category: "VersionManager")
-    
+
     do {
       let manifest = try loadLocalBackupManifestSync()
-      
+
       self.cachedManifest = manifest
       self.versions = manifest.versions
       self.latestRelease = manifest.latest.release
       self.latestSnapshot = manifest.latest.snapshot
-      
+
       logger.info(
         "✅ Loaded local versions.json, total \(manifest.versions.count) versions",
         category: "VersionManager"
@@ -419,11 +418,11 @@ class VersionManager: ObservableObject {
       // No data available, versions will remain empty
     }
   }
-  
+
   /// Load local backup manifest (synchronous version for init)
   private func loadLocalBackupManifestSync() throws -> VersionManifest {
     logger.info("Looking for versions.json in bundle resources...", category: "VersionManager")
-    
+
     guard let backupURL = Bundle.main.url(
       forResource: "versions",
       withExtension: "json"
@@ -431,20 +430,20 @@ class VersionManager: ObservableObject {
       logger.error("versions.json not found in bundle", category: "VersionManager")
       throw VersionManagerError.parseFailed("Local versions.json not found in bundle")
     }
-    
+
     logger.info("Found versions.json at: \(backupURL.path)", category: "VersionManager")
-    
+
     let data = try Data(contentsOf: backupURL)
     logger.info("Read \(data.count) bytes from versions.json", category: "VersionManager")
-    
+
     let manifest = try parser.parseManifest(from: data)
     logger.info("Parsed manifest with \(manifest.versions.count) versions", category: "VersionManager")
-    
+
     guard parser.validateManifest(manifest) else {
       logger.error("Manifest validation failed", category: "VersionManager")
       throw VersionManagerError.parseFailed("Local versions.json validation failed")
     }
-    
+
     logger.info("✅ Manifest validation passed", category: "VersionManager")
     return manifest
   }

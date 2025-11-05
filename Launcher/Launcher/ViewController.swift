@@ -83,28 +83,28 @@ class ViewController: NSViewController {
       make.centerY.equalToSuperview().offset(-120)
       make.width.height.equalTo(80)
     }
-    
+
     titleLabel.snp.makeConstraints { make in
       make.top.equalTo(iconImageView.snp.bottom).offset(20)
       make.centerX.equalToSuperview()
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
     }
-    
+
     subtitleLabel.snp.makeConstraints { make in
       make.top.equalTo(titleLabel.snp.bottom).offset(8)
       make.centerX.equalToSuperview()
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
     }
-    
+
     testButton.snp.makeConstraints { make in
       make.top.equalTo(subtitleLabel.snp.bottom).offset(40)
       make.centerX.equalToSuperview()
       make.width.equalTo(200)
       make.height.equalTo(36)
     }
-    
+
     statusLabel.snp.makeConstraints { make in
       make.top.equalTo(testButton.snp.bottom).offset(20)
       make.centerX.equalToSuperview()
