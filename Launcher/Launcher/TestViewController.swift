@@ -18,7 +18,26 @@ class TestViewController: NSViewController {
 
   // UI elements
   private let scrollView = NSScrollView()
-  private let logTextView = NSTextView()
+  private lazy var logTextView: NSTextView = {
+    let textView = NSTextView(frame: .zero)
+    textView.isEditable = false
+    textView.isSelectable = true
+    textView.font = .monospacedSystemFont(ofSize: 11, weight: .regular)
+    textView.textColor = .labelColor
+    textView.backgroundColor = .textBackgroundColor
+    textView.minSize = NSSize(width: 0, height: 0)
+    textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+    textView.isVerticallyResizable = true
+    textView.isHorizontallyResizable = false
+    textView.autoresizingMask = [.width]
+
+    if let textContainer = textView.textContainer {
+      textContainer.containerSize = NSSize(width: 200, height: CGFloat.greatestFiniteMagnitude)
+      textContainer.widthTracksTextView = true
+    }
+
+    return textView
+  }()
 
   private lazy var refreshVersionButton: NSButton = {
     let button = NSButton(
@@ -277,6 +296,13 @@ class TestViewController: NSViewController {
     logMessage(Localized.LogMessages.pleaseClickButtons)
   }
 
+  override func viewDidAppear() {
+    super.viewDidAppear()
+    // Force layout update for text view after layout is complete
+    logTextView.needsLayout = true
+    logTextView.layoutManager?.ensureLayout(for: logTextView.textContainer!)
+  }
+
   private func loadVersionsToTable() {
     Task {
       // Load cached versions if available
@@ -412,13 +438,7 @@ class TestViewController: NSViewController {
   }
 
   private func setupUI() {
-    // Setup log text view
-    logTextView.isEditable = false
-    logTextView.isSelectable = true
-    logTextView.font = .monospacedSystemFont(ofSize: 11, weight: .regular)
-    logTextView.textColor = .labelColor
-    logTextView.backgroundColor = .textBackgroundColor
-
+    // Setup scroll view for log text view
     scrollView.documentView = logTextView
     scrollView.hasVerticalScroller = true
     scrollView.hasHorizontalScroller = false
@@ -542,7 +562,7 @@ class TestViewController: NSViewController {
     }
 
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(filterStack.snp.bottom).offset(10)
+      make.top.equalTo(proxyStack.snp.bottom).offset(10)
       make.left.equalTo(versionScrollView.snp.right).offset(10)
       make.right.equalToSuperview().offset(-20)
       make.bottom.equalTo(progressBar.snp.top).offset(-15)
