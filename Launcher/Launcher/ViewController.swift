@@ -12,9 +12,11 @@ class ViewController: NSViewController {
   private var testWindowController: TestWindowController?
   private var javaDetectionWindowController: JavaDetectionWindowController?
   private var accountWindowController: AccountWindowController?
+  private var settingsWindowController: SettingsWindowController?
   private var windowObserver: NSObjectProtocol?
   private var javaWindowObserver: NSObjectProtocol?
   private var accountWindowObserver: NSObjectProtocol?
+  private var settingsWindowObserver: NSObjectProtocol?
 
   // Version management
   private let versionManager = VersionManager.shared
@@ -90,6 +92,23 @@ class ViewController: NSViewController {
     )
     button.target = self
     button.action = #selector(openAccountWindow)
+    return button
+  }()
+
+  private lazy var settingsButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "gearshape.fill",
+      cornerRadius: 6,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+        ? NSColor.white.withAlphaComponent(0.1)
+        : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemGray,
+      accessibilityLabel: Localized.Settings.openSettingsButton
+    )
+    button.target = self
+    button.action = #selector(openSettingsWindow)
     return button
   }()
 
@@ -183,6 +202,7 @@ class ViewController: NSViewController {
     view.addSubview(testButton)
     view.addSubview(javaDetectionButton)
     view.addSubview(accountButton)
+    view.addSubview(settingsButton)
     view.addSubview(headerSeparator)
     view.addSubview(scrollView)
     view.addSubview(emptyLabel)
@@ -193,17 +213,23 @@ class ViewController: NSViewController {
     // Top-right button group
     testButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-104)
+      make.right.equalToSuperview().offset(-148)
       make.width.height.equalTo(36)
     }
 
     javaDetectionButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-60)
+      make.right.equalToSuperview().offset(-104)
       make.width.height.equalTo(36)
     }
 
     accountButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalToSuperview().offset(-60)
+      make.width.height.equalTo(36)
+    }
+
+    settingsButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-16)
       make.width.height.equalTo(36)
@@ -364,6 +390,33 @@ extension ViewController {
       if let observer = self?.accountWindowObserver {
         NotificationCenter.default.removeObserver(observer)
         self?.accountWindowObserver = nil
+      }
+    }
+  }
+
+  @objc private func openSettingsWindow() {
+    // If window already exists, show it
+    if let existingController = settingsWindowController {
+      existingController.showWindow(nil)
+      existingController.window?.makeKeyAndOrderFront(nil)
+      return
+    }
+
+    // Create new settings window
+    settingsWindowController = SettingsWindowController()
+    settingsWindowController?.showWindow(nil)
+    settingsWindowController?.window?.makeKeyAndOrderFront(nil)
+
+    // Window close callback
+    settingsWindowObserver = NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification,
+      object: settingsWindowController?.window,
+      queue: .main
+    ) { [weak self] _ in
+      self?.settingsWindowController = nil
+      if let observer = self?.settingsWindowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        self?.settingsWindowObserver = nil
       }
     }
   }

@@ -564,6 +564,51 @@ enum Localized {
     static let duplicateUsernameMessage = String(localized: "This username already exists.", comment: "[Alert] Duplicate username error.")
   }
 
+  // MARK: - Settings
+  enum Settings {
+    // Window & Labels
+    static let windowTitle = String(localized: "Settings", comment: "[Text] Settings window title.")
+    static let title = String(localized: "Settings", comment: "[Text] Settings title.")
+    static let subtitle = String(localized: "Configure application settings", comment: "[Text] Settings subtitle.")
+    static let openSettingsButton = String(localized: "Settings", comment: "[Button] Open settings window.")
+
+    // Proxy Section
+    static let proxySectionTitle = String(localized: "Network Proxy", comment: "[Text] Proxy section title.")
+    static let enableProxy = String(localized: "Enable Proxy", comment: "[Checkbox] Enable proxy checkbox.")
+    static let proxyTypeLabel = String(localized: "Type:", comment: "[Label] Proxy type label.")
+    static let proxyHostLabel = String(localized: "Host:", comment: "[Label] Proxy host label.")
+    static let proxyPortLabel = String(localized: "Port:", comment: "[Label] Proxy port label.")
+    static let hostPlaceholder = String(localized: "e.g., 127.0.0.1", comment: "[Placeholder] Proxy host placeholder.")
+    static let portPlaceholder = String(localized: "e.g., 7890", comment: "[Placeholder] Proxy port placeholder.")
+
+    // Buttons
+    static let applyButton = String(localized: "Apply Settings", comment: "[Button] Apply settings button.")
+    static let testButton = String(localized: "Test Proxy", comment: "[Button] Test proxy button.")
+    static let okButton = String(localized: "OK", comment: "[Button] OK button.")
+
+    // Status Messages
+    static let statusReady = String(localized: "Ready", comment: "[Status] Ready status.")
+    static let statusDisabled = String(localized: "Proxy disabled", comment: "[Status] Proxy disabled.")
+    static let statusTesting = String(localized: "Testing proxy connection...", comment: "[Status] Testing proxy.")
+    static let statusTestSuccess = String(localized: "Proxy connection test successful", comment: "[Status] Proxy test success.")
+    static let statusTestFailed = String(localized: "Proxy connection test failed", comment: "[Status] Proxy test failed.")
+
+    static func statusApplied(_ host: String, _ port: Int) -> String {
+      String(localized: "Proxy applied: \(host):\(port)", comment: "[Status] Proxy applied.")
+    }
+
+    // Alerts
+    static let alertInvalidConfigTitle = String(localized: "Invalid Configuration", comment: "[Alert] Invalid proxy configuration title.")
+    static let alertInvalidConfigMessage = String(localized: "Please enter valid host and port.", comment: "[Alert] Invalid proxy configuration message.")
+    static let alertTestSuccessTitle = String(localized: "Proxy Test Successful", comment: "[Alert] Proxy test successful title.")
+    static let alertTestSuccessMessage = String(localized: "Proxy connection is working correctly.", comment: "[Alert] Proxy test successful message.")
+    static let alertTestFailedTitle = String(localized: "Proxy Test Failed", comment: "[Alert] Proxy test failed title.")
+
+    static func alertTestFailedMessage(_ error: String) -> String {
+      String(localized: "Failed to connect through proxy:\n\(error)", comment: "[Alert] Proxy test failed message.")
+    }
+  }
+
   // MARK: - Errors
   enum Errors {
     // VersionManager Errors

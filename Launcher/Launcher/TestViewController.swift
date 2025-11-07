@@ -15,7 +15,6 @@ class TestViewController: NSViewController {
   private let logger = Logger.shared
   private let versionManager = VersionManager.shared
   private let downloadManager = DownloadManager.shared
-  private let proxyManager = ProxyManager.shared
 
   // UI elements
   private let scrollView = NSScrollView()
@@ -224,80 +223,6 @@ class TestViewController: NSViewController {
     )
     checkbox.state = .off
     return checkbox
-  }()
-
-  // Proxy Settings UI
-  private lazy var proxyEnableCheckbox: NSButton = {
-    let checkbox = NSButton(
-      checkboxWithTitle: Localized.Proxy.enableProxy,
-      target: self,
-      action: #selector(proxyEnableChanged)
-    )
-    checkbox.state = proxyManager.proxyEnabled ? .on : .off
-    return checkbox
-  }()
-
-  private lazy var proxyHostField: NSTextField = {
-    let field = NSTextField(string: proxyManager.proxyHost)
-    field.placeholderString = Localized.Proxy.hostPlaceholder
-    field.isEnabled = proxyManager.proxyEnabled
-    field.setContentCompressionResistancePriority(.required, for: .horizontal)
-    field.setContentHuggingPriority(.defaultLow, for: .horizontal)
-    return field
-  }()
-
-  private lazy var proxyPortField: NSTextField = {
-    let field = NSTextField(string: proxyManager.proxyPort > 0 ? "\(proxyManager.proxyPort)" : "")
-    field.placeholderString = Localized.Proxy.portPlaceholder
-    field.isEnabled = proxyManager.proxyEnabled
-    field.setContentCompressionResistancePriority(.required, for: .horizontal)
-    field.setContentHuggingPriority(.defaultLow, for: .horizontal)
-    return field
-  }()
-
-  private lazy var proxyTypePopup: NSPopUpButton = {
-    let popup = NSPopUpButton()
-    popup.addItems(withTitles: ProxyManager.ProxyType.allCases.map { $0.displayName })
-    popup.selectItem(at: ProxyManager.ProxyType.allCases.firstIndex(of: proxyManager.proxyType) ?? 0)
-    popup.isEnabled = proxyManager.proxyEnabled
-    popup.setContentCompressionResistancePriority(.required, for: .horizontal)
-    return popup
-  }()
-
-  private lazy var applyProxyButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "checkmark",
-      cornerRadius: 8,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-          ? NSColor.white.withAlphaComponent(0.1)
-          : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemBlue,
-      accessibilityLabel: Localized.Proxy.applyButton
-    )
-    button.target = self
-    button.action = #selector(applyProxy)
-    button.setContentCompressionResistancePriority(.required, for: .horizontal)
-    return button
-  }()
-
-  private lazy var testProxyButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "network",
-      cornerRadius: 8,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-          ? NSColor.white.withAlphaComponent(0.1)
-          : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemBlue,
-      accessibilityLabel: Localized.Proxy.testButton
-    )
-    button.target = self
-    button.action = #selector(testProxy)
-    button.setContentCompressionResistancePriority(.required, for: .horizontal)
-    return button
   }()
 
   private let progressBar: NSProgressIndicator = {
@@ -522,74 +447,15 @@ class TestViewController: NSViewController {
     filterStack.orientation = .horizontal
     filterStack.spacing = 10
 
-    // Create proxy settings row
-    let proxyHostLabel = BRLabel(
-      text: Localized.Proxy.hostLabel,
-      font: .systemFont(ofSize: 12),
-      textColor: .labelColor,
-      alignment: .right
-    )
-
-    let proxyPortLabel = BRLabel(
-      text: Localized.Proxy.portLabel,
-      font: .systemFont(ofSize: 12),
-      textColor: .labelColor,
-      alignment: .right
-    )
-
-    let proxyTypeLabel = BRLabel(
-      text: Localized.Proxy.typeLabel,
-      font: .systemFont(ofSize: 12),
-      textColor: .labelColor,
-      alignment: .right
-    )
-
-    // Add visual separator before proxy buttons
-    let separator2 = BRSeparator.vertical()
-    separator2.snp.makeConstraints { make in
-      make.width.equalTo(1)
-      make.height.equalTo(24)
-    }
-
-    let proxyStack = NSStackView(views: [
-      proxyEnableCheckbox,
-      proxyTypeLabel,
-      proxyTypePopup,
-      proxyHostLabel,
-      proxyHostField,
-      proxyPortLabel,
-      proxyPortField,
-      separator2,
-      applyProxyButton,
-      testProxyButton,
-    ])
-    proxyStack.orientation = .horizontal
-    proxyStack.spacing = 8
-    proxyStack.alignment = .centerY
-    proxyStack.distribution = .gravityAreas
-
     // Add to view
     view.addSubview(buttonStack)
     view.addSubview(filterStack)
-    view.addSubview(proxyStack)
     view.addSubview(versionScrollView)
     view.addSubview(scrollView)
     view.addSubview(progressBar)
     view.addSubview(statusLabel)
 
     // Layout using SnapKit
-    proxyTypePopup.snp.makeConstraints { make in
-      make.width.equalTo(90)
-    }
-
-    proxyHostField.snp.makeConstraints { make in
-      make.width.equalTo(140)
-    }
-
-    proxyPortField.snp.makeConstraints { make in
-      make.width.equalTo(60)
-    }
-
     // Set button sizes - using standard image button size
     let buttonSize: CGFloat = 32
     [
@@ -598,8 +464,6 @@ class TestViewController: NSViewController {
       downloadTestFileButton,
       downloadVersionButton,
       clearLogButton,
-      applyProxyButton,
-      testProxyButton,
     ].forEach { button in
       button.snp.makeConstraints { make in
         make.width.height.equalTo(buttonSize)
@@ -619,22 +483,15 @@ class TestViewController: NSViewController {
       make.height.equalTo(32)
     }
 
-    proxyStack.snp.makeConstraints { make in
-      make.top.equalTo(filterStack.snp.bottom).offset(10)
-      make.left.equalToSuperview().offset(20)
-      make.right.equalToSuperview().offset(-20)
-      make.height.equalTo(32)
-    }
-
     versionScrollView.snp.makeConstraints { make in
-      make.top.equalTo(proxyStack.snp.bottom).offset(10)
+      make.top.equalTo(filterStack.snp.bottom).offset(10)
       make.left.equalToSuperview().offset(20)
       make.width.equalTo(730)
       make.bottom.equalTo(progressBar.snp.top).offset(-15)
     }
 
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(proxyStack.snp.bottom).offset(10)
+      make.top.equalTo(filterStack.snp.bottom).offset(10)
       make.left.equalTo(versionScrollView.snp.right).offset(10)
       make.right.equalToSuperview().offset(-20)
       make.bottom.equalTo(progressBar.snp.top).offset(-15)
@@ -982,91 +839,6 @@ class TestViewController: NSViewController {
     getVersionDetailsButton.isEnabled = !disabled
     downloadTestFileButton.isEnabled = !disabled
     downloadVersionButton.isEnabled = !disabled
-  }
-
-  // MARK: - Proxy Methods
-
-  @objc private func proxyEnableChanged() {
-    let enabled = proxyEnableCheckbox.state == .on
-    proxyHostField.isEnabled = enabled
-    proxyPortField.isEnabled = enabled
-    proxyTypePopup.isEnabled = enabled
-
-    if !enabled {
-      proxyManager.disableProxy()
-      downloadManager.reconfigureSession()
-      logMessage(Localized.Proxy.logDisabled)
-      statusLabel.stringValue = Localized.Proxy.statusDisabled
-    }
-  }
-
-  @objc private func applyProxy() {
-    let enabled = proxyEnableCheckbox.state == .on
-    let host = proxyHostField.stringValue.trimmingCharacters(in: .whitespaces)
-    let port = Int(proxyPortField.stringValue) ?? 0
-
-    // Validate input
-    if enabled && (host.isEmpty || port <= 0 || port > 65535) {
-      let alert = NSAlert()
-      alert.messageText = Localized.Proxy.alertInvalidConfigTitle
-      alert.informativeText = Localized.Proxy.alertInvalidConfigMessage
-      alert.alertStyle = .warning
-      alert.runModal()
-      return
-    }
-
-    // Get proxy type
-    let selectedIndex = proxyTypePopup.indexOfSelectedItem
-    let proxyType = ProxyManager.ProxyType.allCases[safe: selectedIndex] ?? .http
-
-    // Configure proxy
-    proxyManager.configureProxy(enabled: enabled, host: host, port: port, type: proxyType)
-
-    // Reconfigure download manager
-    downloadManager.reconfigureSession()
-
-    if enabled {
-      logMessage(Localized.Proxy.logEnabled(proxyType.displayName, host, port))
-      statusLabel.stringValue = Localized.Proxy.statusApplied(host, port)
-    } else {
-      logMessage(Localized.Proxy.logDisabled)
-      statusLabel.stringValue = Localized.Proxy.statusDisabled
-    }
-  }
-
-  @objc private func testProxy() {
-    logMessage(Localized.Proxy.logTesting)
-    statusLabel.stringValue = Localized.Proxy.statusTesting
-
-    Task {
-      do {
-        let success = try await proxyManager.testProxyConnection()
-
-        await MainActor.run {
-          if success {
-            logMessage(Localized.Proxy.logTestSuccess)
-            statusLabel.stringValue = Localized.Proxy.statusTestSuccess
-
-            let alert = NSAlert()
-            alert.messageText = Localized.Proxy.alertTestSuccessTitle
-            alert.informativeText = Localized.Proxy.alertTestSuccessMessage
-            alert.alertStyle = .informational
-            alert.runModal()
-          }
-        }
-      } catch {
-        await MainActor.run {
-          logMessage(Localized.Proxy.logTestFailed(error.localizedDescription))
-          statusLabel.stringValue = Localized.Proxy.statusTestFailed
-
-          let alert = NSAlert()
-          alert.messageText = Localized.Proxy.alertTestFailedTitle
-          alert.informativeText = Localized.Proxy.alertTestFailedMessage(error.localizedDescription)
-          alert.alertStyle = .critical
-          alert.runModal()
-        }
-      }
-    }
   }
 }
 

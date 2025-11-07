@@ -1152,6 +1152,17 @@
         }
       }
     },
+    "Apply Settings": {
+      "comment": "[Button] Apply settings button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "应用设置"
+          }
+        }
+      }
+    },
     "Are you sure you want to download %@?\nThis will download game core, libraries and assets.": {
       "comment": "[Alert] Confirm download message.",
       "localizations": {
@@ -1225,6 +1236,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "点击按钮开始测试"
+          }
+        }
+      }
+    },
+    "Configure application settings": {
+      "comment": "[Text] Settings subtitle.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配置应用程序设置"
           }
         }
       }
@@ -1895,6 +1917,17 @@
         }
       }
     },
+    "Network Proxy": {
+      "comment": "[Text] Proxy section title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "网络代理"
+          }
+        }
+      }
+    },
     "No accounts saved yet": {
       "comment": "[Text] No accounts message.",
       "localizations": {
@@ -2083,7 +2116,7 @@
       }
     },
     "Proxy applied: %@:%lld": {
-      "comment": "[Status] Proxy applied with host and port.",
+      "comment": "[Status] Proxy applied with host and port.\n[Status] Proxy applied.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -2122,7 +2155,7 @@
       }
     },
     "Proxy connection test failed": {
-      "comment": "[Status] Proxy connection test failed.",
+      "comment": "[Status] Proxy connection test failed.\n[Status] Proxy test failed.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2133,7 +2166,7 @@
       }
     },
     "Proxy connection test successful": {
-      "comment": "[Status] Proxy connection test successful.",
+      "comment": "[Status] Proxy connection test successful.\n[Status] Proxy test success.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2199,7 +2232,7 @@
       }
     },
     "Ready": {
-      "comment": "[Text] Ready status.",
+      "comment": "[Status] Ready status.\n[Text] Ready status.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2308,6 +2341,17 @@
         }
       }
     },
+    "Settings": {
+      "comment": "[Button] Open settings window.\n[Text] Settings title.\n[Text] Settings window title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "设置"
+          }
+        }
+      }
+    },
     "SHA1 verification failed": {
       "comment": "[Error] SHA1 verification failed.",
       "localizations": {
@@ -2386,7 +2430,7 @@
       }
     },
     "Test Proxy": {
-      "comment": "[Button] Test proxy connection.",
+      "comment": "[Button] Test proxy button.\n[Button] Test proxy connection.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2419,7 +2463,7 @@
       }
     },
     "Testing proxy connection...": {
-      "comment": "[Status] Testing proxy connection.",
+      "comment": "[Status] Testing proxy connection.\n[Status] Testing proxy.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
