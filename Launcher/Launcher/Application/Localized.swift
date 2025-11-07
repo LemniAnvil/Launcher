@@ -16,6 +16,8 @@ enum Localized {
     static let initialStatus = String(localized: "Click button to start testing", comment: "[Text] Initial status message.")
     static let testWindowOpened = String(localized: "Test window opened", comment: "[Text] Test window opened status.")
     static let testWindowClosed = String(localized: "Test window closed, click button to reopen", comment: "[Text] Test window closed status.")
+    static let javaWindowOpened = String(localized: "Java detection window opened", comment: "[Text] Java window opened status.")
+    static let javaWindowClosed = String(localized: "Java detection window closed, click button to reopen", comment: "[Text] Java window closed status.")
     static let minecraftAccessibility = String(localized: "Minecraft", comment: "[Accessibility] Minecraft icon description.")
   }
 
@@ -382,6 +384,40 @@ enum Localized {
         String(localized: "Proxy connection failed: \(reason)", comment: "[Error] Proxy connection failed.")
       }
     }
+  }
+
+  // MARK: - Java Detection
+  enum JavaDetection {
+    static let windowTitle = String(localized: "Java Detection", comment: "[Text] Java detection window title.")
+    static let title = String(localized: "Java Installation Detection", comment: "[Text] Java detection title.")
+    static let subtitle = String(localized: "Detect and manage Java installations for running Minecraft", comment: "[Text] Java detection subtitle.")
+
+    // Buttons
+    static let detectButton = String(localized: "Detect Java", comment: "[Button] Detect Java installations.")
+    static let refreshButton = String(localized: "Refresh", comment: "[Button] Refresh Java detection.")
+    static let openJavaDetectionButton = String(localized: "Java Detection", comment: "[Button] Open Java detection window.")
+
+    // Table Columns
+    static let columnPath = String(localized: "Installation Path", comment: "[Table] Java installation path column.")
+    static let columnVersion = String(localized: "Version", comment: "[Table] Java version column.")
+    static let columnType = String(localized: "Type", comment: "[Table] Java type column.")
+    static let columnStatus = String(localized: "Status", comment: "[Table] Java status column.")
+
+    // Status Messages
+    static let statusReady = String(localized: "Ready to detect Java installations", comment: "[Status] Ready to detect Java.")
+    static let statusDetecting = String(localized: "Detecting Java installations...", comment: "[Status] Detecting Java installations.")
+    static let statusNoJavaFound = String(localized: "No Java installations found", comment: "[Status] No Java found.")
+
+    static func statusFoundJava(_ count: Int) -> String {
+      String(localized: "Found \(count) Java installation(s)", comment: "[Status] Found Java installations.")
+    }
+
+    // Messages
+    static let noJavaMessage = String(localized: "No Java installations were detected on your system. Please install Java to run Minecraft.", comment: "[Message] No Java installations found message.")
+
+    // Java Home
+    static let javaHomeLabel = String(localized: "JAVA_HOME:", comment: "[Label] JAVA_HOME environment variable label.")
+    static let javaHomeNotSet = String(localized: "Not set", comment: "[Text] JAVA_HOME not set.")
   }
 
   // MARK: - Errors

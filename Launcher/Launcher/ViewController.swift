@@ -10,7 +10,9 @@ import Yatagarasu
 class ViewController: NSViewController {
 
   private var testWindowController: TestWindowController?
+  private var javaDetectionWindowController: JavaDetectionWindowController?
   private var windowObserver: NSObjectProtocol?
+  private var javaWindowObserver: NSObjectProtocol?
 
   // UI elements
   private let titleLabel: NSTextField = {
@@ -35,8 +37,8 @@ class ViewController: NSViewController {
       symbolName: "play.circle.fill",
       cornerRadius: 8,
       highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua 
-          ? NSColor.white.withAlphaComponent(0.1) 
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
           : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
@@ -44,6 +46,23 @@ class ViewController: NSViewController {
     )
     button.target = self
     button.action = #selector(openTestWindow)
+    return button
+  }()
+
+  private lazy var javaDetectionButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "cup.and.saucer.fill",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemOrange,
+      accessibilityLabel: Localized.JavaDetection.openJavaDetectionButton
+    )
+    button.target = self
+    button.action = #selector(openJavaDetectionWindow)
     return button
   }()
 
@@ -82,6 +101,7 @@ class ViewController: NSViewController {
     view.addSubview(titleLabel)
     view.addSubview(subtitleLabel)
     view.addSubview(testButton)
+    view.addSubview(javaDetectionButton)
     view.addSubview(statusLabel)
 
     // Layout constraints using SnapKit
@@ -105,14 +125,28 @@ class ViewController: NSViewController {
       make.right.equalToSuperview().offset(-20)
     }
 
+    // Create button container for horizontal layout
+    let buttonStack = NSStackView(views: [testButton, javaDetectionButton])
+    buttonStack.orientation = .horizontal
+    buttonStack.spacing = 16
+    buttonStack.distribution = .gravityAreas
+    view.addSubview(buttonStack)
+
     testButton.snp.makeConstraints { make in
-      make.top.equalTo(subtitleLabel.snp.bottom).offset(40)
-      make.centerX.equalToSuperview()
       make.width.height.equalTo(44)
     }
 
+    javaDetectionButton.snp.makeConstraints { make in
+      make.width.height.equalTo(44)
+    }
+
+    buttonStack.snp.makeConstraints { make in
+      make.top.equalTo(subtitleLabel.snp.bottom).offset(40)
+      make.centerX.equalToSuperview()
+    }
+
     statusLabel.snp.makeConstraints { make in
-      make.top.equalTo(testButton.snp.bottom).offset(20)
+      make.top.equalTo(buttonStack.snp.bottom).offset(20)
       make.centerX.equalToSuperview()
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
@@ -146,6 +180,37 @@ class ViewController: NSViewController {
       if let observer = self?.windowObserver {
         NotificationCenter.default.removeObserver(observer)
         self?.windowObserver = nil
+      }
+    }
+  }
+
+  @objc private func openJavaDetectionWindow() {
+    // If window already exists, show it
+    if let existingController = javaDetectionWindowController {
+      existingController.showWindow(nil)
+      existingController.window?.makeKeyAndOrderFront(nil)
+      return
+    }
+
+    // Create new Java detection window
+    javaDetectionWindowController = JavaDetectionWindowController()
+    javaDetectionWindowController?.showWindow(nil)
+    javaDetectionWindowController?.window?.makeKeyAndOrderFront(nil)
+
+    // Update status
+    statusLabel.stringValue = Localized.MainWindow.javaWindowOpened
+
+    // Window close callback
+    javaWindowObserver = NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification,
+      object: javaDetectionWindowController?.window,
+      queue: .main
+    ) { [weak self] _ in
+      self?.javaDetectionWindowController = nil
+      self?.statusLabel.stringValue = Localized.MainWindow.javaWindowClosed
+      if let observer = self?.javaWindowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        self?.javaWindowObserver = nil
       }
     }
   }

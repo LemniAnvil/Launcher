@@ -1168,6 +1168,15 @@
         }
       }
     },
+    "Detect and manage Java installations for running Minecraft" : {
+      "comment" : "[Text] Java detection subtitle."
+    },
+    "Detect Java" : {
+      "comment" : "[Button] Detect Java installations."
+    },
+    "Detecting Java installations..." : {
+      "comment" : "[Status] Detecting Java installations."
+    },
     "Download cancelled" : {
       "comment" : "[Error] Download cancelled.",
       "localizations" : {
@@ -1350,6 +1359,9 @@
         }
       }
     },
+    "Found %lld Java installation(s)" : {
+      "comment" : "[Status] Found Java installations."
+    },
     "Function Test Window" : {
       "comment" : "[Text] Test window title.",
       "localizations" : {
@@ -1416,6 +1428,9 @@
         }
       }
     },
+    "Installation Path" : {
+      "comment" : "[Table] Java installation path column."
+    },
     "Invalid Configuration" : {
       "comment" : "[Alert] Invalid proxy configuration title.",
       "localizations" : {
@@ -1449,6 +1464,21 @@
         }
       }
     },
+    "Java Detection" : {
+      "comment" : "[Button] Open Java detection window.\n[Text] Java detection window title."
+    },
+    "Java detection window closed, click button to reopen" : {
+      "comment" : "[Text] Java window closed status."
+    },
+    "Java detection window opened" : {
+      "comment" : "[Text] Java window opened status."
+    },
+    "Java Installation Detection" : {
+      "comment" : "[Text] Java detection title."
+    },
+    "JAVA_HOME:" : {
+      "comment" : "[Label] JAVA_HOME environment variable label."
+    },
     "Minecraft" : {
       "comment" : "[Accessibility] Minecraft icon description.",
       "localizations" : {
@@ -1471,6 +1501,12 @@
         }
       }
     },
+    "No Java installations found" : {
+      "comment" : "[Status] No Java found."
+    },
+    "No Java installations were detected on your system. Please install Java to run Minecraft." : {
+      "comment" : "[Message] No Java installations found message."
+    },
     "No versions loaded" : {
       "comment" : "[Text] No versions loaded message.",
       "localizations" : {
@@ -1481,6 +1517,9 @@
           }
         }
       }
+    },
+    "Not set" : {
+      "comment" : "[Text] JAVA_HOME not set."
     },
     "Open Test Window" : {
       "comment" : "[Button] Open test window.",
@@ -1653,6 +1692,12 @@
         }
       }
     },
+    "Ready to detect Java installations" : {
+      "comment" : "[Status] Ready to detect Java."
+    },
+    "Refresh" : {
+      "comment" : "[Button] Refresh Java detection."
+    },
     "Refresh failed: %@" : {
       "comment" : "[Status] Refresh failed with error.",
       "localizations" : {
@@ -1731,7 +1776,7 @@
       }
     },
     "Status" : {
-      "comment" : "[Table] Status column header.",
+      "comment" : "[Table] Java status column.\n[Table] Status column header.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1797,7 +1842,7 @@
       }
     },
     "Type" : {
-      "comment" : "[Table] Type column header.",
+      "comment" : "[Table] Java type column.\n[Table] Type column header.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1830,7 +1875,7 @@
       }
     },
     "Version" : {
-      "comment" : "[Table] Version column header.",
+      "comment" : "[Table] Java version column.\n[Table] Version column header.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

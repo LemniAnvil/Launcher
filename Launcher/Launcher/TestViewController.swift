@@ -355,7 +355,9 @@ class TestViewController: NSViewController {
     super.viewDidAppear()
     // Force layout update for text view after layout is complete
     logTextView.needsLayout = true
-    logTextView.layoutManager?.ensureLayout(for: logTextView.textContainer!)
+    if let textContainer = logTextView.textContainer {
+      logTextView.layoutManager?.ensureLayout(for: textContainer)
+    }
   }
 
   private func loadVersionsToTable() {
@@ -508,7 +510,7 @@ class TestViewController: NSViewController {
       make.width.equalTo(1)
       make.height.equalTo(24)
     }
-    
+
     let buttonStack = NSStackView(views: [
       refreshVersionButton,
       getVersionDetailsButton,
@@ -600,9 +602,16 @@ class TestViewController: NSViewController {
 
     // Set button sizes - using standard image button size
     let buttonSize: CGFloat = 32
-    [refreshVersionButton, getVersionDetailsButton, downloadTestFileButton, 
-     checkInstalledButton, downloadVersionButton, clearLogButton,
-     applyProxyButton, testProxyButton].forEach { button in
+    [
+      refreshVersionButton,
+      getVersionDetailsButton,
+      downloadTestFileButton,
+      checkInstalledButton,
+      downloadVersionButton,
+      clearLogButton,
+      applyProxyButton,
+      testProxyButton,
+    ].forEach { button in
       button.snp.makeConstraints { make in
         make.width.height.equalTo(buttonSize)
       }
