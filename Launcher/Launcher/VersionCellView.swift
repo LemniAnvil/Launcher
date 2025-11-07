@@ -2,7 +2,7 @@
 //  VersionCellView.swift
 //  Launcher
 //
-//  自定义版本单元格视图
+//  Custom version cell view
 //
 
 import AppKit

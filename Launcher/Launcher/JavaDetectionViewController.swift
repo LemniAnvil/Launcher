@@ -10,7 +10,7 @@ import SnapKit
 import Yatagarasu
 
 class JavaDetectionViewController: NSViewController {
-
+  // swiftlint:disable:previous type_body_length
   private let javaManager = JavaManager.shared
   private let logger = Logger.shared
 

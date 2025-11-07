@@ -133,6 +133,17 @@
         }
       }
     },
+    "☕️ Using Java: %@ at %@": {
+      "comment": "[Log] Java detected.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "☕️ Using Java: %1$@ at %2$@"
+          }
+        }
+      }
+    },
     "⚠️ Latest release not found, selected first item": {
       "comment": "[Log] Latest release not found.",
       "localizations": {
@@ -198,6 +209,9 @@
           }
         }
       }
+    },
+    "✅ Game process started (PID: %d)": {
+      "comment": "[Log] Game process started."
     },
     "✅ Installed versions (%lld):": {
       "comment": "[Log] Installed versions count.",
@@ -948,6 +962,9 @@
         }
       }
     },
+    "🚀 Launching version: %@": {
+      "comment": "[Log] Launching version."
+    },
     "🚀 Test 5: Download full version - %@": {
       "comment": "[Log] Test 5 title.",
       "localizations": {
@@ -1289,6 +1306,9 @@
         }
       }
     },
+    "Detecting Java installation...": {
+      "comment": "[Status] Detecting Java installation."
+    },
     "Detecting Java installations...": {
       "comment": "[Status] Detecting Java installations.",
       "localizations": {
@@ -1438,6 +1458,15 @@
         }
       }
     },
+    "Enter username (3-16 characters)": {
+      "comment": "[Placeholder] Username placeholder."
+    },
+    "Enter your username to launch the game in offline mode.": {
+      "comment": "[Text] Offline mode description."
+    },
+    "Extracting native libraries...": {
+      "comment": "[Status] Extracting native libraries."
+    },
     "Failed to connect through proxy:\n%@": {
       "comment": "[Alert] Proxy test failed message.",
       "localizations": {
@@ -1459,6 +1488,9 @@
           }
         }
       }
+    },
+    "Failed to launch game: %@": {
+      "comment": "[Alert] Launch failed message."
     },
     "File not found: %@": {
       "comment": "[Error] File not found.",
@@ -1503,6 +1535,9 @@
           }
         }
       }
+    },
+    "Game launched successfully!": {
+      "comment": "[Status] Game launched successfully."
     },
     "Getting version details...": {
       "comment": "[Status] Getting version details.",
@@ -1614,6 +1649,9 @@
         }
       }
     },
+    "Invalid Username": {
+      "comment": "[Alert] Invalid username title."
+    },
     "Java Detection": {
       "comment": "[Button] Open Java detection window.\n[Text] Java detection window title.",
       "localizations": {
@@ -1658,6 +1696,9 @@
         }
       }
     },
+    "Java Not Found": {
+      "comment": "[Alert] Java not found title."
+    },
     "JAVA_HOME:": {
       "comment": "[Label] JAVA_HOME environment variable label.",
       "localizations": {
@@ -1668,6 +1709,18 @@
           }
         }
       }
+    },
+    "Launch": {
+      "comment": "[Button] Launch button.\n[Button] Launch game button."
+    },
+    "Launch Failed": {
+      "comment": "[Alert] Launch failed title."
+    },
+    "Launch Game": {
+      "comment": "[Menu] Launch game."
+    },
+    "Launching game...": {
+      "comment": "[Status] Launching game."
     },
     "Minecraft": {
       "comment": "[Accessibility] Minecraft icon description.",
@@ -1690,6 +1743,9 @@
           }
         }
       }
+    },
+    "No compatible Java installation found. Please install Java to run Minecraft.": {
+      "comment": "[Alert] Java not found message."
     },
     "No installed versions": {
       "comment": "[Text] No installed versions message.",
@@ -1757,6 +1813,12 @@
         }
       }
     },
+    "Offline Launch": {
+      "comment": "[Text] Offline launch window title."
+    },
+    "Offline Mode": {
+      "comment": "[Text] Offline mode title."
+    },
     "OK": {
       "comment": "[Button] OK button.",
       "localizations": {
@@ -1811,6 +1873,9 @@
           }
         }
       }
+    },
+    "Preparing to launch game...": {
+      "comment": "[Status] Preparing to launch game."
     },
     "Proxy applied: %@:%lld": {
       "comment": "[Status] Proxy applied with host and port.",
@@ -2197,6 +2262,15 @@
           }
         }
       }
+    },
+    "Username cannot be empty.": {
+      "comment": "[Alert] Empty username error."
+    },
+    "Username must be 3-16 characters long and contain only letters, numbers, and underscores.": {
+      "comment": "[Alert] Invalid username error."
+    },
+    "Username:": {
+      "comment": "[Label] Username label."
     },
     "Version": {
       "comment": "[Table] Java version column.\n[Table] Version column header.",

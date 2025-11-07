@@ -14,8 +14,9 @@ class ViewController: NSViewController {
   private var windowObserver: NSObjectProtocol?
   private var javaWindowObserver: NSObjectProtocol?
 
-  // 版本管理
+  // Version management
   private let versionManager = VersionManager.shared
+  private let gameLauncher = GameLauncher.shared
   private var installedVersions: [String] = []
 
   // UI elements
@@ -106,7 +107,7 @@ class ViewController: NSViewController {
     collectionView.isSelectable = true
     collectionView.allowsMultipleSelection = false
 
-    // 创建流式布局
+    // Create flow layout
     let flowLayout = NSCollectionViewFlowLayout()
     flowLayout.itemSize = NSSize(width: 160, height: 180)
     flowLayout.sectionInset = NSEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -114,7 +115,7 @@ class ViewController: NSViewController {
     flowLayout.minimumLineSpacing = 16
     collectionView.collectionViewLayout = flowLayout
 
-    // 注册 item
+    // Register item
     collectionView.register(
       VersionCollectionViewItem.self,
       forItemWithIdentifier: VersionCollectionViewItem.identifier
@@ -169,7 +170,7 @@ class ViewController: NSViewController {
     scrollView.documentView = collectionView
 
     // Layout constraints using SnapKit
-    // 右上角按钮组
+    // Top-right button group
     testButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-60)
@@ -182,7 +183,7 @@ class ViewController: NSViewController {
       make.width.height.equalTo(36)
     }
 
-    // 标题和计数
+    // Title and count
     titleLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
       make.left.equalToSuperview().offset(20)
@@ -206,7 +207,7 @@ class ViewController: NSViewController {
       make.height.equalTo(1)
     }
 
-    // 版本列表
+    // Version list
     scrollView.snp.makeConstraints { make in
       make.top.equalTo(headerSeparator.snp.bottom).offset(12)
       make.left.right.bottom.equalToSuperview().inset(20)
@@ -223,7 +224,7 @@ class ViewController: NSViewController {
   private func loadInstalledVersions() {
     installedVersions = versionManager.getInstalledVersions()
 
-    // 按版本号排序（降序）
+    // Sort by version number (descending)
     installedVersions.sort { version1, version2 in
       return version1.compare(version2, options: .numeric) == .orderedDescending
     }
@@ -326,6 +327,16 @@ extension ViewController {
   func createContextMenu() -> NSMenu {
     let menu = NSMenu()
 
+    let launchItem = NSMenuItem(
+      title: Localized.InstalledVersions.menuLaunchGame,
+      action: #selector(launchGame(_:)),
+      keyEquivalent: ""
+    )
+    launchItem.target = self
+    menu.addItem(launchItem)
+
+    menu.addItem(NSMenuItem.separator())
+
     let openFolderItem = NSMenuItem(
       title: Localized.InstalledVersions.menuShowInFinder,
       action: #selector(openVersionFolder(_:)),
@@ -345,6 +356,73 @@ extension ViewController {
     menu.addItem(deleteItem)
 
     return menu
+  }
+
+  @objc func launchGame(_ sender: Any?) {
+    guard let versionId = getClickedItem() else { return }
+
+    // Show offline launch window
+    let windowController = OfflineLaunchWindowController()
+    if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
+      viewController.onLaunch = { [weak self] username in
+        self?.performLaunch(versionId: versionId, username: username)
+      }
+    }
+    windowController.showWindow(nil)
+  }
+
+  func performLaunch(versionId: String, username: String) {
+    Task { @MainActor in
+      do {
+        Logger.shared.info(Localized.GameLauncher.logLaunchingVersion(versionId), category: "MainWindow")
+
+        // Detect Java
+        Logger.shared.info(Localized.GameLauncher.statusDetectingJava, category: "MainWindow")
+
+        let versionDetails = try await versionManager.getVersionDetails(versionId: versionId)
+        guard let javaInstallation = await gameLauncher.getBestJavaForVersion(versionDetails) else {
+          showAlert(
+            title: Localized.GameLauncher.alertNoJavaTitle,
+            message: Localized.GameLauncher.alertNoJavaMessage
+          )
+          return
+        }
+
+        Logger.shared.info(
+          Localized.GameLauncher.logJavaDetected(javaInstallation.path, javaInstallation.version),
+          category: "MainWindow"
+        )
+
+        // Create launch configuration with username
+        let config = GameLauncher.LaunchConfig.default(
+          versionId: versionId,
+          javaPath: javaInstallation.path,
+          username: username
+        )
+
+        // Launch game
+        Logger.shared.info(Localized.GameLauncher.statusLaunching, category: "MainWindow")
+        try await gameLauncher.launchGame(config: config)
+
+        Logger.shared.info(Localized.GameLauncher.statusLaunched, category: "MainWindow")
+
+        // Show success notification
+        showNotification(
+          title: Localized.GameLauncher.statusLaunched,
+          message: "Version: \(versionId), User: \(username)"
+        )
+      } catch {
+        Logger.shared.error(
+          "Failed to launch game: \(error.localizedDescription)",
+          category: "MainWindow"
+        )
+
+        showAlert(
+          title: Localized.GameLauncher.alertLaunchFailedTitle,
+          message: Localized.GameLauncher.alertLaunchFailedMessage(error.localizedDescription)
+        )
+      }
+    }
   }
 
   @objc func openVersionFolder(_ sender: Any?) {
@@ -408,12 +486,26 @@ extension ViewController {
     Logger.shared.info("\(title): \(message)", category: "MainWindow")
   }
 
-  // 获取右键点击的项目
+  func showAlert(title: String, message: String) {
+    let alert = NSAlert()
+    alert.messageText = title
+    alert.informativeText = message
+    alert.alertStyle = .warning
+    alert.addButton(withTitle: Localized.InstalledVersions.okButton)
+
+    if let window = view.window {
+      alert.beginSheetModal(for: window)
+    } else {
+      alert.runModal()
+    }
+  }
+
+  // Get clicked item
   func getClickedItem() -> String? {
     let point = collectionView.convert(view.window?.mouseLocationOutsideOfEventStream ?? .zero, from: nil)
     guard let indexPath = collectionView.indexPathForItem(at: point),
           indexPath.item < installedVersions.count else {
-      // 如果没有点击到具体项目，尝试获取选中的项目
+      // If no item clicked, try to get selected item
       guard let selectedIndexPath = collectionView.selectionIndexPaths.first,
             selectedIndexPath.item < installedVersions.count else {
         return nil
@@ -454,6 +546,10 @@ extension ViewController: NSCollectionViewDelegate {
   func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
     guard let indexPath = indexPaths.first else { return }
     let selectedVersion = installedVersions[indexPath.item]
-    Logger.shared.info("选中版本: \(selectedVersion)", category: "MainWindow")
+    Logger.shared.info("Selected version: \(selectedVersion)", category: "MainWindow")
+  }
+
+  func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
+    // Handle deselection if needed
   }
 }

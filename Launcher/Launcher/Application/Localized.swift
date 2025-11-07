@@ -438,6 +438,7 @@ enum Localized {
 
     // Context Menu
     static let menuShowInFinder = String(localized: "Show in Finder", comment: "[Menu] Show version in Finder.")
+    static let menuLaunchGame = String(localized: "Launch Game", comment: "[Menu] Launch game.")
     static let menuDelete = String(localized: "Delete Version", comment: "[Menu] Delete version.")
 
     // Delete Confirmation
@@ -470,6 +471,63 @@ enum Localized {
     static let typeAlpha = String(localized: "Alpha", comment: "[Text] Alpha version type.")
     static let typeBeta = String(localized: "Beta", comment: "[Text] Beta version type.")
     static let typeUnknown = String(localized: "Unknown", comment: "[Text] Unknown version type.")
+  }
+
+  // MARK: - Game Launcher
+  enum GameLauncher {
+    // Status Messages
+    static let statusPreparing = String(localized: "Preparing to launch game...", comment: "[Status] Preparing to launch game.")
+    static let statusDetectingJava = String(localized: "Detecting Java installation...", comment: "[Status] Detecting Java installation.")
+    static let statusExtractingNatives = String(localized: "Extracting native libraries...", comment: "[Status] Extracting native libraries.")
+    static let statusLaunching = String(localized: "Launching game...", comment: "[Status] Launching game.")
+    static let statusLaunched = String(localized: "Game launched successfully!", comment: "[Status] Game launched successfully.")
+
+    // Buttons
+    static let launchButton = String(localized: "Launch", comment: "[Button] Launch game button.")
+
+    // Alerts
+    static let alertNoJavaTitle = String(localized: "Java Not Found", comment: "[Alert] Java not found title.")
+    static let alertNoJavaMessage = String(localized: "No compatible Java installation found. Please install Java to run Minecraft.", comment: "[Alert] Java not found message.")
+    static let alertLaunchFailedTitle = String(localized: "Launch Failed", comment: "[Alert] Launch failed title.")
+
+    static func alertLaunchFailedMessage(_ error: String) -> String {
+      String(localized: "Failed to launch game: \(error)", comment: "[Alert] Launch failed message.")
+    }
+
+    // Log Messages
+    static func logLaunchingVersion(_ version: String) -> String {
+      String(localized: "🚀 Launching version: \(version)", comment: "[Log] Launching version.")
+    }
+
+    static func logJavaDetected(_ path: String, _ version: String) -> String {
+      String(localized: "☕️ Using Java: \(version) at \(path)", comment: "[Log] Java detected.")
+    }
+
+    static func logGameStarted(_ pid: Int32) -> String {
+      String(localized: "✅ Game process started (PID: \(pid))", comment: "[Log] Game process started.")
+    }
+  }
+
+  // MARK: - Offline Launch
+  enum OfflineLaunch {
+    // Window
+    static let windowTitle = String(localized: "Offline Launch", comment: "[Text] Offline launch window title.")
+    static let title = String(localized: "Offline Mode", comment: "[Text] Offline mode title.")
+    static let description = String(localized: "Enter your username to launch the game in offline mode.", comment: "[Text] Offline mode description.")
+
+    // Labels
+    static let usernameLabel = String(localized: "Username:", comment: "[Label] Username label.")
+    static let usernamePlaceholder = String(localized: "Enter username (3-16 characters)", comment: "[Placeholder] Username placeholder.")
+
+    // Buttons
+    static let launchButton = String(localized: "Launch", comment: "[Button] Launch button.")
+    static let cancelButton = String(localized: "Cancel", comment: "[Button] Cancel button.")
+    static let okButton = String(localized: "OK", comment: "[Button] OK button.")
+
+    // Errors
+    static let errorTitle = String(localized: "Invalid Username", comment: "[Alert] Invalid username title.")
+    static let errorEmptyUsername = String(localized: "Username cannot be empty.", comment: "[Alert] Empty username error.")
+    static let errorInvalidUsername = String(localized: "Username must be 3-16 characters long and contain only letters, numbers, and underscores.", comment: "[Alert] Invalid username error.")
   }
 
   // MARK: - Errors

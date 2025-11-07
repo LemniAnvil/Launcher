@@ -2,7 +2,7 @@
 //  InstalledVersionsViewController.swift
 //  Launcher
 //
-//  已安装版本列表视图控制器
+//  Installed versions list view controller
 //
 
 import AppKit
@@ -10,10 +10,11 @@ import SnapKit
 import Yatagarasu
 
 class InstalledVersionsViewController: NSViewController {
-
+  // swiftlint:disable:previous type_body_length
   // MARK: - Properties
 
   private let versionManager = VersionManager.shared
+  private let gameLauncher = GameLauncher.shared
   private var installedVersions: [String] = []
 
   // UI components
@@ -46,16 +47,16 @@ class InstalledVersionsViewController: NSViewController {
     tableView.usesAlternatingRowBackgroundColors = false
     tableView.intercellSpacing = NSSize(width: 0, height: 0)
 
-    // 设置数据源和代理
+    // Set data source and delegate
     tableView.dataSource = self
     tableView.delegate = self
 
-    // 添加列
+    // Add column
     let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("VersionColumn"))
     column.width = 300
     tableView.addTableColumn(column)
 
-    // 设置右键菜单
+    // Set context menu
     tableView.menu = createContextMenu()
 
     return tableView
@@ -119,7 +120,7 @@ class InstalledVersionsViewController: NSViewController {
   // MARK: - Setup
 
   private func setupUI() {
-    // 添加子视图
+    // Add subviews
     view.addSubview(titleLabel)
     view.addSubview(refreshButton)
     view.addSubview(countLabel)
@@ -129,7 +130,7 @@ class InstalledVersionsViewController: NSViewController {
 
     scrollView.documentView = tableView
 
-    // 布局
+    // Layout
     titleLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
       make.left.equalToSuperview().offset(20)
@@ -169,7 +170,7 @@ class InstalledVersionsViewController: NSViewController {
   private func loadInstalledVersions() {
     installedVersions = versionManager.getInstalledVersions()
 
-    // 按版本号排序（降序）
+    // Sort by version number (descending)
     installedVersions.sort { version1, version2 in
       return version1.compare(version2, options: .numeric) == .orderedDescending
     }
@@ -206,6 +207,16 @@ class InstalledVersionsViewController: NSViewController {
   private func createContextMenu() -> NSMenu {
     let menu = NSMenu()
 
+    let launchItem = NSMenuItem(
+      title: Localized.InstalledVersions.menuLaunchGame,
+      action: #selector(launchGame(_:)),
+      keyEquivalent: ""
+    )
+    launchItem.target = self
+    menu.addItem(launchItem)
+
+    menu.addItem(NSMenuItem.separator())
+
     let openFolderItem = NSMenuItem(
       title: Localized.InstalledVersions.menuShowInFinder,
       action: #selector(openVersionFolder(_:)),
@@ -225,6 +236,78 @@ class InstalledVersionsViewController: NSViewController {
     menu.addItem(deleteItem)
 
     return menu
+  }
+
+  @objc private func launchGame(_ sender: Any?) {
+    guard tableView.clickedRow >= 0,
+          tableView.clickedRow < installedVersions.count else {
+      return
+    }
+
+    let versionId = installedVersions[tableView.clickedRow]
+
+    // Show offline launch window
+    let windowController = OfflineLaunchWindowController()
+    if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
+      viewController.onLaunch = { [weak self] username in
+        self?.performLaunch(versionId: versionId, username: username)
+      }
+    }
+    windowController.showWindow(nil)
+  }
+
+  private func performLaunch(versionId: String, username: String) {
+    Task { @MainActor in
+      do {
+        Logger.shared.info(Localized.GameLauncher.logLaunchingVersion(versionId), category: "InstalledVersions")
+
+        // Detect Java
+        Logger.shared.info(Localized.GameLauncher.statusDetectingJava, category: "InstalledVersions")
+
+        let versionDetails = try await versionManager.getVersionDetails(versionId: versionId)
+        guard let javaInstallation = await gameLauncher.getBestJavaForVersion(versionDetails) else {
+          showAlert(
+            title: Localized.GameLauncher.alertNoJavaTitle,
+            message: Localized.GameLauncher.alertNoJavaMessage
+          )
+          return
+        }
+
+        Logger.shared.info(
+          Localized.GameLauncher.logJavaDetected(javaInstallation.path, javaInstallation.version),
+          category: "InstalledVersions"
+        )
+
+        // Create launch configuration with username
+        let config = GameLauncher.LaunchConfig.default(
+          versionId: versionId,
+          javaPath: javaInstallation.path,
+          username: username
+        )
+
+        // Launch game
+        Logger.shared.info(Localized.GameLauncher.statusLaunching, category: "InstalledVersions")
+        try await gameLauncher.launchGame(config: config)
+
+        Logger.shared.info(Localized.GameLauncher.statusLaunched, category: "InstalledVersions")
+
+        // Show success notification
+        showNotification(
+          title: Localized.GameLauncher.statusLaunched,
+          message: "Version: \(versionId), User: \(username)"
+        )
+      } catch {
+        Logger.shared.error(
+          "Failed to launch game: \(error.localizedDescription)",
+          category: "InstalledVersions"
+        )
+
+        showAlert(
+          title: Localized.GameLauncher.alertLaunchFailedTitle,
+          message: Localized.GameLauncher.alertLaunchFailedMessage(error.localizedDescription)
+        )
+      }
+    }
   }
 
   @objc private func openVersionFolder(_ sender: Any?) {
@@ -297,6 +380,20 @@ class InstalledVersionsViewController: NSViewController {
     // Simplified notification, removed deprecated API
     Logger.shared.info("\(title): \(message)", category: "InstalledVersions")
   }
+
+  private func showAlert(title: String, message: String) {
+    let alert = NSAlert()
+    alert.messageText = title
+    alert.informativeText = message
+    alert.alertStyle = .warning
+    alert.addButton(withTitle: Localized.InstalledVersions.okButton)
+
+    if let window = view.window {
+      alert.beginSheetModal(for: window)
+    } else {
+      alert.runModal()
+    }
+  }
 }
 
 // MARK: - NSTableViewDataSource
@@ -315,7 +412,7 @@ extension InstalledVersionsViewController: NSTableViewDelegate {
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
     let versionId = installedVersions[row]
 
-    // 创建自定义单元格视图
+    // Create custom cell view
     let cellView = VersionCellView()
     cellView.configure(with: versionId)
 
@@ -330,6 +427,10 @@ extension InstalledVersionsViewController: NSTableViewDelegate {
     guard tableView.selectedRow >= 0 else { return }
 
     let selectedVersion = installedVersions[tableView.selectedRow]
-    Logger.shared.info("选中版本: \(selectedVersion)", category: "InstalledVersions")
+    Logger.shared.info("Selected version: \(selectedVersion)", category: "InstalledVersions")
+  }
+
+  func tableView(_ tableView: NSTableView, shouldTypeSelectFor event: NSEvent, withCurrentSearch searchString: String?) -> Bool {
+    return true
   }
 }

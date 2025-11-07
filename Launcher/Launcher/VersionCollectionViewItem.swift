@@ -2,7 +2,7 @@
 //  VersionCollectionViewItem.swift
 //  Launcher
 //
-//  版本网格项视图
+//  Version collection view item
 //
 
 import AppKit

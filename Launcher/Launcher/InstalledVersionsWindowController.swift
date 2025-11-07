@@ -2,7 +2,7 @@
 //  InstalledVersionsWindowController.swift
 //  Launcher
 //
-//  已安装版本列表窗口控制器
+//  Installed versions list window controller
 //
 
 import AppKit
@@ -23,7 +23,7 @@ class InstalledVersionsWindowController: NSWindowController {
     window.isReleasedWhenClosed = false
     window.minSize = NSSize(width: 350, height: 400)
 
-    // 设置内容视图控制器
+    // Set content view controller
     let viewController = InstalledVersionsViewController()
     window.contentViewController = viewController
 
@@ -33,7 +33,7 @@ class InstalledVersionsWindowController: NSWindowController {
   override func windowDidLoad() {
     super.windowDidLoad()
 
-    // 窗口配置
+    // Window configuration
     window?.makeKeyAndOrderFront(nil)
   }
 }
