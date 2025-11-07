@@ -7,6 +7,7 @@
 
 import AppKit
 import SnapKit
+import Yatagarasu
 
 class VersionCellView: NSView {
 
@@ -17,30 +18,31 @@ class VersionCellView: NSView {
     return imageView
   }()
 
-  private let versionLabel: NSTextField = {
-    let label = NSTextField(labelWithString: "")
-    label.font = .systemFont(ofSize: 14, weight: .medium)
-    label.isEditable = false
-    label.isBordered = false
-    label.backgroundColor = .clear
+  private let versionLabel: BRLabel = {
+    let label = BRLabel(
+      text: "",
+      font: .systemFont(ofSize: 14, weight: .medium),
+      textColor: .labelColor,
+      alignment: .left
+    )
     return label
   }()
 
-  private let typeLabel: NSTextField = {
-    let label = NSTextField(labelWithString: "")
-    label.font = .systemFont(ofSize: 11)
-    label.textColor = .secondaryLabelColor
-    label.isEditable = false
-    label.isBordered = false
-    label.backgroundColor = .clear
+  private let typeLabel: BRLabel = {
+    let label = BRLabel(
+      text: "",
+      font: .systemFont(ofSize: 11),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
     return label
   }()
 
-  private let containerView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.cornerRadius = 8
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+  private let containerView: BRNSView = {
+    let view = BRNSView(
+      backgroundColor: .controlBackgroundColor,
+      cornerRadius: 8
+    )
     return view
   }()
 

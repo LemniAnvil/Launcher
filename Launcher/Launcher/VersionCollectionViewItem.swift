@@ -7,18 +7,19 @@
 
 import AppKit
 import SnapKit
+import Yatagarasu
 
 class VersionCollectionViewItem: NSCollectionViewItem {
 
   static let identifier = NSUserInterfaceItemIdentifier("VersionCollectionViewItem")
 
-  private let containerView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.cornerRadius = 12
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.borderWidth = 1
-    view.layer?.borderColor = NSColor.separatorColor.withAlphaComponent(0.1).cgColor
+  private let containerView: BRNSView = {
+    let view = BRNSView(
+      backgroundColor: .controlBackgroundColor,
+      cornerRadius: 12,
+      borderWidth: 1,
+      borderColor: .separatorColor.withAlphaComponent(0.1)
+    )
     return view
   }()
 
@@ -30,25 +31,24 @@ class VersionCollectionViewItem: NSCollectionViewItem {
     return imageView
   }()
 
-  private let versionLabel: NSTextField = {
-    let label = NSTextField(labelWithString: "")
-    label.font = .systemFont(ofSize: 15, weight: .semibold)
-    label.isEditable = false
-    label.isBordered = false
-    label.backgroundColor = .clear
-    label.alignment = .center
-    label.lineBreakMode = .byTruncatingTail
+  private let versionLabel: BRLabel = {
+    let label = BRLabel(
+      text: "",
+      font: .systemFont(ofSize: 15, weight: .semibold),
+      textColor: .labelColor,
+      alignment: .center,
+      lineBreakMode: .byTruncatingTail
+    )
     return label
   }()
 
-  private let typeLabel: NSTextField = {
-    let label = NSTextField(labelWithString: "")
-    label.font = .systemFont(ofSize: 11)
-    label.textColor = .secondaryLabelColor
-    label.isEditable = false
-    label.isBordered = false
-    label.backgroundColor = .clear
-    label.alignment = .center
+  private let typeLabel: BRLabel = {
+    let label = BRLabel(
+      text: "",
+      font: .systemFont(ofSize: 11),
+      textColor: .secondaryLabelColor,
+      alignment: .center
+    )
     return label
   }()
 

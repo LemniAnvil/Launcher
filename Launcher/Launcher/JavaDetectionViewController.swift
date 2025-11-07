@@ -26,18 +26,23 @@ class JavaDetectionViewController: NSViewController {
 
   // MARK: - UI Elements
 
-  private let titleLabel: NSTextField = {
-    let label = NSTextField(labelWithString: Localized.JavaDetection.title)
-    label.font = .systemFont(ofSize: 20, weight: .semibold)
-    label.alignment = .left
+  private let titleLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.JavaDetection.title,
+      font: .systemFont(ofSize: 20, weight: .semibold),
+      textColor: .labelColor,
+      alignment: .left
+    )
     return label
   }()
 
-  private let subtitleLabel: NSTextField = {
-    let label = NSTextField(labelWithString: Localized.JavaDetection.subtitle)
-    label.font = .systemFont(ofSize: 12, weight: .regular)
-    label.textColor = .secondaryLabelColor
-    label.alignment = .left
+  private let subtitleLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.JavaDetection.subtitle,
+      font: .systemFont(ofSize: 12, weight: .regular),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
     return label
   }()
 
@@ -128,29 +133,44 @@ class JavaDetectionViewController: NSViewController {
     return scrollView
   }()
 
-  private let statusLabel: NSTextField = {
-    let label = NSTextField(labelWithString: Localized.JavaDetection.statusReady)
-    label.font = .systemFont(ofSize: 11)
-    label.textColor = .secondaryLabelColor
+  private let statusLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.JavaDetection.statusReady,
+      font: .systemFont(ofSize: 11),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
     return label
   }()
 
-  private let detailsLabel: NSTextField = {
-    let label = NSTextField(labelWithString: "")
-    label.font = .systemFont(ofSize: 11)
-    label.textColor = .labelColor
-    label.alignment = .left
-    label.maximumNumberOfLines = 3
-    label.lineBreakMode = .byWordWrapping
+  private let detailsLabel: BRLabel = {
+    let label = BRLabel(
+      text: "",
+      font: .systemFont(ofSize: 11),
+      textColor: .labelColor,
+      alignment: .left,
+      lineBreakMode: .byWordWrapping,
+      maximumNumberOfLines: 3
+    )
     return label
   }()
 
-  private let javaHomeLabel: NSTextField = {
-    let label = NSTextField(labelWithString: "")
-    label.font = .monospacedSystemFont(ofSize: 10, weight: .regular)
-    label.textColor = .secondaryLabelColor
-    label.alignment = .left
+  private let javaHomeLabel: BRLabel = {
+    let label = BRLabel(
+      text: "",
+      font: .monospacedSystemFont(ofSize: 10, weight: .regular),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
     return label
+  }()
+
+  private let headerSeparator: BRSeparator = {
+    return BRSeparator.horizontal()
+  }()
+
+  private let detailsSeparator: BRSeparator = {
+    return BRSeparator.horizontal()
   }()
 
   // MARK: - Lifecycle
@@ -180,10 +200,12 @@ class JavaDetectionViewController: NSViewController {
     view.addSubview(subtitleLabel)
     view.addSubview(detectButton)
     view.addSubview(refreshButton)
+    view.addSubview(headerSeparator)
     view.addSubview(tableScrollView)
-    view.addSubview(statusLabel)
+    view.addSubview(detailsSeparator)
     view.addSubview(detailsLabel)
     view.addSubview(javaHomeLabel)
+    view.addSubview(statusLabel)
 
     // Layout constraints
     titleLabel.snp.makeConstraints { make in
@@ -209,15 +231,27 @@ class JavaDetectionViewController: NSViewController {
       make.width.height.equalTo(32)
     }
 
+    headerSeparator.snp.makeConstraints { make in
+      make.top.equalTo(subtitleLabel.snp.bottom).offset(12)
+      make.left.right.equalToSuperview().inset(20)
+      make.height.equalTo(1)
+    }
+
     tableScrollView.snp.makeConstraints { make in
-      make.top.equalTo(subtitleLabel.snp.bottom).offset(16)
+      make.top.equalTo(headerSeparator.snp.bottom).offset(12)
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
       make.height.equalTo(300)
     }
 
+    detailsSeparator.snp.makeConstraints { make in
+      make.top.equalTo(tableScrollView.snp.bottom).offset(12)
+      make.left.right.equalToSuperview().inset(20)
+      make.height.equalTo(1)
+    }
+
     detailsLabel.snp.makeConstraints { make in
-      make.top.equalTo(tableScrollView.snp.bottom).offset(16)
+      make.top.equalTo(detailsSeparator.snp.bottom).offset(12)
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
     }

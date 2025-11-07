@@ -19,18 +19,23 @@ class ViewController: NSViewController {
   private var installedVersions: [String] = []
 
   // UI elements
-  private let titleLabel: NSTextField = {
-    let label = NSTextField(labelWithString: Localized.InstalledVersions.title)
-    label.font = .systemFont(ofSize: 20, weight: .semibold)
-    label.alignment = .left
+  private let titleLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.InstalledVersions.title,
+      font: .systemFont(ofSize: 20, weight: .semibold),
+      textColor: .labelColor,
+      alignment: .left
+    )
     return label
   }()
 
-  private let countLabel: NSTextField = {
-    let label = NSTextField(labelWithString: "")
-    label.font = .systemFont(ofSize: 12)
-    label.textColor = .secondaryLabelColor
-    label.alignment = .left
+  private let countLabel: BRLabel = {
+    let label = BRLabel(
+      text: "",
+      font: .systemFont(ofSize: 12),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
     return label
   }()
 
@@ -68,11 +73,20 @@ class ViewController: NSViewController {
     return button
   }()
 
-  private let refreshButton: NSButton = {
-    let button = NSButton()
-    button.title = Localized.InstalledVersions.refreshButton
-    button.bezelStyle = .rounded
-    button.setButtonType(.momentaryPushIn)
+  private lazy var refreshButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "arrow.clockwise",
+      cornerRadius: 6,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+        ? NSColor.white.withAlphaComponent(0.1)
+        : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemBlue,
+      accessibilityLabel: Localized.InstalledVersions.refreshButton
+    )
+    button.target = self
+    button.action = #selector(refreshVersionList)
     return button
   }()
 
@@ -114,13 +128,19 @@ class ViewController: NSViewController {
     return collectionView
   }()
 
-  private let emptyLabel: NSTextField = {
-    let label = NSTextField(labelWithString: Localized.InstalledVersions.emptyMessage)
-    label.font = .systemFont(ofSize: 14)
-    label.textColor = .secondaryLabelColor
-    label.alignment = .center
+  private let emptyLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.InstalledVersions.emptyMessage,
+      font: .systemFont(ofSize: 14),
+      textColor: .secondaryLabelColor,
+      alignment: .center
+    )
     label.isHidden = true
     return label
+  }()
+
+  private let headerSeparator: BRSeparator = {
+    return BRSeparator.horizontal()
   }()
 
   override func loadView() {
@@ -142,14 +162,11 @@ class ViewController: NSViewController {
     view.addSubview(refreshButton)
     view.addSubview(testButton)
     view.addSubview(javaDetectionButton)
+    view.addSubview(headerSeparator)
     view.addSubview(scrollView)
     view.addSubview(emptyLabel)
 
     scrollView.documentView = collectionView
-
-    // 按钮动作
-    refreshButton.target = self
-    refreshButton.action = #selector(refreshVersionList)
 
     // Layout constraints using SnapKit
     // 右上角按钮组
@@ -174,6 +191,7 @@ class ViewController: NSViewController {
     refreshButton.snp.makeConstraints { make in
       make.centerY.equalTo(titleLabel)
       make.left.equalTo(titleLabel.snp.right).offset(16)
+      make.width.height.equalTo(36)
     }
 
     countLabel.snp.makeConstraints { make in
@@ -182,9 +200,15 @@ class ViewController: NSViewController {
       make.right.equalTo(testButton.snp.left).offset(-10)
     }
 
+    headerSeparator.snp.makeConstraints { make in
+      make.top.equalTo(countLabel.snp.bottom).offset(12)
+      make.left.right.equalToSuperview().inset(20)
+      make.height.equalTo(1)
+    }
+
     // 版本列表
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(countLabel.snp.bottom).offset(12)
+      make.top.equalTo(headerSeparator.snp.bottom).offset(12)
       make.left.right.bottom.equalToSuperview().inset(20)
     }
 

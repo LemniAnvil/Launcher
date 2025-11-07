@@ -330,10 +330,13 @@ class TestViewController: NSViewController {
     return bar
   }()
 
-  private let statusLabel: NSTextField = {
-    let label = NSTextField(labelWithString: Localized.TestWindow.statusReady)
-    label.font = .systemFont(ofSize: 11)
-    label.textColor = .secondaryLabelColor
+  private let statusLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.TestWindow.statusReady,
+      font: .systemFont(ofSize: 11),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
     return label
   }()
 
@@ -504,8 +507,7 @@ class TestViewController: NSViewController {
 
     // Create main button container with all action buttons
     // Add visual separator between button groups
-    let separator1 = NSBox()
-    separator1.boxType = .separator
+    let separator1 = BRSeparator.vertical()
     separator1.snp.makeConstraints { make in
       make.width.equalTo(1)
       make.height.equalTo(24)
@@ -525,7 +527,12 @@ class TestViewController: NSViewController {
     buttonStack.distribution = .gravityAreas
 
     // Create filter control row
-    let filterLabel = NSTextField(labelWithString: Localized.TestWindow.filterLabel)
+    let filterLabel = BRLabel(
+      text: Localized.TestWindow.filterLabel,
+      font: .systemFont(ofSize: 12),
+      textColor: .labelColor,
+      alignment: .left
+    )
 
     let checkboxStack = NSStackView(views: [
       releaseCheckbox,
@@ -544,18 +551,29 @@ class TestViewController: NSViewController {
     filterStack.spacing = 10
 
     // Create proxy settings row
-    let proxyHostLabel = NSTextField(labelWithString: Localized.Proxy.hostLabel)
-    proxyHostLabel.alignment = .right
+    let proxyHostLabel = BRLabel(
+      text: Localized.Proxy.hostLabel,
+      font: .systemFont(ofSize: 12),
+      textColor: .labelColor,
+      alignment: .right
+    )
 
-    let proxyPortLabel = NSTextField(labelWithString: Localized.Proxy.portLabel)
-    proxyPortLabel.alignment = .right
+    let proxyPortLabel = BRLabel(
+      text: Localized.Proxy.portLabel,
+      font: .systemFont(ofSize: 12),
+      textColor: .labelColor,
+      alignment: .right
+    )
 
-    let proxyTypeLabel = NSTextField(labelWithString: Localized.Proxy.typeLabel)
-    proxyTypeLabel.alignment = .right
+    let proxyTypeLabel = BRLabel(
+      text: Localized.Proxy.typeLabel,
+      font: .systemFont(ofSize: 12),
+      textColor: .labelColor,
+      alignment: .right
+    )
 
     // Add visual separator before proxy buttons
-    let separator2 = NSBox()
-    separator2.boxType = .separator
+    let separator2 = BRSeparator.vertical()
     separator2.snp.makeConstraints { make in
       make.width.equalTo(1)
       make.height.equalTo(24)
