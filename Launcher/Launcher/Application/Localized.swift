@@ -30,7 +30,6 @@ enum Localized {
     static let columnType = String(localized: "Type", comment: "[Table] Type column header.")
     static let columnReleaseTime = String(localized: "Release Time", comment: "[Table] Release time column header.")
     static let columnUpdateTime = String(localized: "Update Time", comment: "[Table] Update time column header.")
-    static let columnStatus = String(localized: "Status", comment: "[Table] Status column header.")
 
     // Filter Checkboxes
     static let checkboxRelease = String(localized: "🟢 Release", comment: "[Checkbox] Release filter.")
@@ -38,14 +37,10 @@ enum Localized {
     static let checkboxBeta = String(localized: "🔵 Beta", comment: "[Checkbox] Beta filter.")
     static let checkboxAlpha = String(localized: "🟣 Alpha", comment: "[Checkbox] Alpha filter.")
 
-    // Status Text
-    static let statusInstalled = String(localized: "✓ Installed", comment: "[Text] Installed status.")
-
     // Buttons
     static let refreshVersionsButton = String(localized: "1. Refresh Versions", comment: "[Button] Refresh versions list.")
     static let getVersionDetailsButton = String(localized: "2. Get Version Details", comment: "[Button] Get version details.")
     static let downloadTestFileButton = String(localized: "3. Download Test File", comment: "[Button] Download test file.")
-    static let checkInstalledButton = String(localized: "4. Check Installed", comment: "[Button] Check installed versions.")
     static let downloadVersionButton = String(localized: "5. Download Version", comment: "[Button] Download version.")
     static let clearLogButton = String(localized: "Clear Log", comment: "[Button] Clear log.")
 
@@ -81,10 +76,6 @@ enum Localized {
     // Format strings
     static func statusRefreshFailed(_ error: String) -> String {
       String(localized: "Refresh failed: \(error)", comment: "[Status] Refresh failed with error.")
-    }
-
-    static func statusCheckCompleted(_ count: Int) -> String {
-      String(localized: "Check completed, \(count) installed versions", comment: "[Status] Check completed with count.")
     }
   }
 

@@ -141,6 +141,12 @@
             "state": "new",
             "value": "☕️ Using Java: %1$@ at %2$@"
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "☕️ 使用 Java：%1$@ 位于 %2$@"
+          }
         }
       }
     },
@@ -211,7 +217,15 @@
       }
     },
     "✅ Game process started (PID: %d)": {
-      "comment": "[Log] Game process started."
+      "comment": "[Log] Game process started.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "✅ 游戏进程已启动（PID：%d）"
+          }
+        }
+      }
     },
     "✅ Installed versions (%lld):": {
       "comment": "[Log] Installed versions count.",
@@ -292,17 +306,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "✅ 版本列表刷新成功"
-          }
-        }
-      }
-    },
-    "✓ Installed": {
-      "comment": "[Text] Installed status.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✓ 已安装"
           }
         }
       }
@@ -963,7 +966,15 @@
       }
     },
     "🚀 Launching version: %@": {
-      "comment": "[Log] Launching version."
+      "comment": "[Log] Launching version.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🚀 启动版本：%@"
+          }
+        }
+      }
     },
     "🚀 Test 5: Download full version - %@": {
       "comment": "[Log] Test 5 title.",
@@ -1049,17 +1060,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "3. 下载测试文件"
-          }
-        }
-      }
-    },
-    "4. Check Installed": {
-      "comment": "[Button] Check installed versions.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "4. 检查已安装"
           }
         }
       }
@@ -1207,17 +1207,6 @@
         }
       }
     },
-    "Check completed, %lld installed versions": {
-      "comment": "[Status] Check completed with count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "检查完成，%lld 个已安装版本"
-          }
-        }
-      }
-    },
     "Clear Log": {
       "comment": "[Button] Clear log.",
       "localizations": {
@@ -1351,7 +1340,15 @@
       }
     },
     "Detecting Java installation...": {
-      "comment": "[Status] Detecting Java installation."
+      "comment": "[Status] Detecting Java installation.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在检测 Java 安装..."
+          }
+        }
+      }
     },
     "Detecting Java installations...": {
       "comment": "[Status] Detecting Java installations.",
@@ -1514,54 +1511,26 @@
       }
     },
     "Enter username (3-16 characters)": {
-      "comment": "[Placeholder] Account username placeholder.\n[Placeholder] Username placeholder."
-    },
-    "Manual Input...": {
-      "comment": "[Option] Manual input option.",
+      "comment": "[Placeholder] Account username placeholder.\n[Placeholder] Username placeholder.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "手动输入..."
-          }
-        }
-      }
-    },
-    "No saved accounts": {
-      "comment": "[Message] No saved accounts message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "没有保存的账号"
-          }
-        }
-      }
-    },
-    "Select a saved account to launch in offline mode.": {
-      "comment": "[Text] Offline mode description.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选择已保存的账号以离线模式启动。"
-          }
-        }
-      }
-    },
-    "Select Account:": {
-      "comment": "[Label] Select account label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选择账号："
+            "value": "输入用户名（3-16个字符）"
           }
         }
       }
     },
     "Extracting native libraries...": {
-      "comment": "[Status] Extracting native libraries."
+      "comment": "[Status] Extracting native libraries.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在提取本地库..."
+          }
+        }
+      }
     },
     "Failed to connect through proxy:\n%@": {
       "comment": "[Alert] Proxy test failed message.",
@@ -1586,7 +1555,15 @@
       }
     },
     "Failed to launch game: %@": {
-      "comment": "[Alert] Launch failed message."
+      "comment": "[Alert] Launch failed message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启动游戏失败：%@"
+          }
+        }
+      }
     },
     "File not found: %@": {
       "comment": "[Error] File not found.",
@@ -1633,7 +1610,15 @@
       }
     },
     "Game launched successfully!": {
-      "comment": "[Status] Game launched successfully."
+      "comment": "[Status] Game launched successfully.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "游戏启动成功！"
+          }
+        }
+      }
     },
     "Getting version details...": {
       "comment": "[Status] Getting version details.",
@@ -1746,7 +1731,15 @@
       }
     },
     "Invalid Username": {
-      "comment": "[Alert] Invalid username title."
+      "comment": "[Alert] Invalid username title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户名无效"
+          }
+        }
+      }
     },
     "Java Detection": {
       "comment": "[Button] Open Java detection window.\n[Text] Java detection window title.",
@@ -1793,7 +1786,15 @@
       }
     },
     "Java Not Found": {
-      "comment": "[Alert] Java not found title."
+      "comment": "[Alert] Java not found title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到 Java"
+          }
+        }
+      }
     },
     "JAVA_HOME:": {
       "comment": "[Label] JAVA_HOME environment variable label.",
@@ -1807,16 +1808,48 @@
       }
     },
     "Launch": {
-      "comment": "[Button] Launch button.\n[Button] Launch game button."
+      "comment": "[Button] Launch button.\n[Button] Launch game button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启动"
+          }
+        }
+      }
     },
     "Launch Failed": {
-      "comment": "[Alert] Launch failed title."
+      "comment": "[Alert] Launch failed title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启动失败"
+          }
+        }
+      }
     },
     "Launch Game": {
-      "comment": "[Menu] Launch game."
+      "comment": "[Menu] Launch game.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启动游戏"
+          }
+        }
+      }
     },
     "Launching game...": {
-      "comment": "[Status] Launching game."
+      "comment": "[Status] Launching game.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在启动游戏..."
+          }
+        }
+      }
     },
     "Manage offline mode usernames for quick launch": {
       "comment": "[Text] Account management subtitle.",
@@ -1825,6 +1858,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "管理离线模式用户名以便快速启动"
+          }
+        }
+      }
+    },
+    "Manual Input...": {
+      "comment": "[Option] Manual input option.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "手动输入..."
           }
         }
       }
@@ -1863,7 +1907,15 @@
       }
     },
     "No compatible Java installation found. Please install Java to run Minecraft.": {
-      "comment": "[Alert] Java not found message."
+      "comment": "[Alert] Java not found message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到兼容的 Java 安装。请安装 Java 以运行 Minecraft。"
+          }
+        }
+      }
     },
     "No installed versions": {
       "comment": "[Text] No installed versions message.",
@@ -1894,6 +1946,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "系统中未检测到 Java 安装。请安装 Java 以运行 Minecraft。"
+          }
+        }
+      }
+    },
+    "No saved accounts": {
+      "comment": "[Message] No saved accounts message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有保存的账号"
           }
         }
       }
@@ -1932,10 +1995,26 @@
       }
     },
     "Offline Launch": {
-      "comment": "[Text] Offline launch window title."
+      "comment": "[Text] Offline launch window title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "离线启动"
+          }
+        }
+      }
     },
     "Offline Mode": {
-      "comment": "[Text] Offline mode title."
+      "comment": "[Text] Offline mode title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "离线模式"
+          }
+        }
+      }
     },
     "OK": {
       "comment": "[Button] OK button.",
@@ -1993,7 +2072,15 @@
       }
     },
     "Preparing to launch game...": {
-      "comment": "[Status] Preparing to launch game."
+      "comment": "[Status] Preparing to launch game.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在准备启动游戏..."
+          }
+        }
+      }
     },
     "Proxy applied: %@:%lld": {
       "comment": "[Status] Proxy applied with host and port.",
@@ -2199,6 +2286,28 @@
         }
       }
     },
+    "Select a saved account to launch in offline mode.": {
+      "comment": "[Text] Offline mode description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择已保存的账号以离线模式启动。"
+          }
+        }
+      }
+    },
+    "Select Account:": {
+      "comment": "[Label] Select account label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择账号："
+          }
+        }
+      }
+    },
     "SHA1 verification failed": {
       "comment": "[Error] SHA1 verification failed.",
       "localizations": {
@@ -2255,7 +2364,7 @@
       }
     },
     "Status": {
-      "comment": "[Table] Java status column.\n[Table] Status column header.",
+      "comment": "[Table] Java status column.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2404,10 +2513,26 @@
       }
     },
     "Username cannot be empty.": {
-      "comment": "[Alert] Empty username error."
+      "comment": "[Alert] Empty username error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户名不能为空。"
+          }
+        }
+      }
     },
     "Username must be 3-16 characters long and contain only letters, numbers, and underscores.": {
-      "comment": "[Alert] Invalid username error."
+      "comment": "[Alert] Invalid username error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户名长度必须为 3-16 个字符，且只能包含字母、数字和下划线。"
+          }
+        }
+      }
     },
     "Username must be 3-16 characters long.": {
       "comment": "[Alert] Invalid username length error.",
@@ -2421,7 +2546,15 @@
       }
     },
     "Username:": {
-      "comment": "[Label] Username label."
+      "comment": "[Label] Username label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户名："
+          }
+        }
+      }
     },
     "Version": {
       "comment": "[Table] Java version column.\n[Table] Version column header.",

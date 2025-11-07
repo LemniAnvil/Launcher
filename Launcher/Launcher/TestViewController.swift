@@ -91,23 +91,6 @@ class TestViewController: NSViewController {
     return button
   }()
 
-  private lazy var checkInstalledButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "checkmark.circle",
-      cornerRadius: 8,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-          ? NSColor.white.withAlphaComponent(0.1)
-          : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemBlue,
-      accessibilityLabel: Localized.TestWindow.checkInstalledButton
-    )
-    button.target = self
-    button.action = #selector(testCheckInstalled)
-    return button
-  }()
-
   private lazy var downloadVersionButton: BRImageButton = {
     let button = BRImageButton(
       symbolName: "arrow.down.circle.fill",
@@ -179,12 +162,6 @@ class TestViewController: NSViewController {
     timeColumn.minWidth = 140
     table.addTableColumn(timeColumn)
 
-    let statusColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("status"))
-    statusColumn.title = Localized.TestWindow.columnStatus
-    statusColumn.width = 80
-    statusColumn.minWidth = 60
-    table.addTableColumn(statusColumn)
-
     table.dataSource = self
     table.delegate = self
 
@@ -212,7 +189,7 @@ class TestViewController: NSViewController {
       target: self,
       action: #selector(filterVersions)
     )
-    checkbox.state = .off
+    checkbox.state = .on
     return checkbox
   }()
 
@@ -374,7 +351,7 @@ class TestViewController: NSViewController {
       } else {
         logMessage(Localized.LogMessages.versionDataLoaded)
         logVersionStatistics()
-        updateVersionTable()
+        applyCurrentFilter()
       }
     }
   }
@@ -418,15 +395,8 @@ class TestViewController: NSViewController {
 
     displayedVersions = versions
 
-    // Reload data and force refresh all visible cells to update installation status
+    // Reload data
     versionTableView.reloadData()
-
-    // Force refresh all visible rows to ensure status column is updated
-    let visibleRange = versionTableView.rows(in: versionTableView.visibleRect)
-    if visibleRange.length > 0 {
-      let indexSet = IndexSet(integersIn: visibleRange.location..<(visibleRange.location + visibleRange.length))
-      versionTableView.reloadData(forRowIndexes: indexSet, columnIndexes: IndexSet(integer: 4)) // Column 4 is status
-    }
 
     logMessage(Localized.LogMessages.versionListUpdated)
     logMessage(Localized.LogMessages.displayedVersionsCount(displayedVersions.count))
@@ -517,7 +487,6 @@ class TestViewController: NSViewController {
       refreshVersionButton,
       getVersionDetailsButton,
       downloadTestFileButton,
-      checkInstalledButton,
       separator1,
       downloadVersionButton,
       clearLogButton,
@@ -624,7 +593,6 @@ class TestViewController: NSViewController {
       refreshVersionButton,
       getVersionDetailsButton,
       downloadTestFileButton,
-      checkInstalledButton,
       downloadVersionButton,
       clearLogButton,
       applyProxyButton,
@@ -872,43 +840,6 @@ class TestViewController: NSViewController {
     }
   }
 
-  @objc private func testCheckInstalled() {
-    logMessage("\n" + String(repeating: "=", count: 60))
-    logMessage(Localized.LogMessages.test4Title)
-    logMessage(String(repeating: "=", count: 60))
-
-    let installed = versionManager.getInstalledVersions()
-
-    if installed.isEmpty {
-      logMessage(Localized.LogMessages.noInstalledVersions)
-    } else {
-      logMessage(Localized.LogMessages.installedVersions(installed.count))
-      for (index, version) in installed.enumerated() {
-        let versionDir = FileUtils.getVersionsDirectory()
-          .appendingPathComponent(version)
-        let jarFile = versionDir.appendingPathComponent("\(version).jar")
-
-        if let size = FileUtils.getFileSize(at: jarFile) {
-          logMessage(
-            "  \(index + 1). \(version) - \(FileUtils.formatBytes(size))"
-          )
-        } else {
-          logMessage("  \(index + 1). \(version)")
-        }
-      }
-    }
-
-    logMessage(
-      Localized.LogMessages.minecraftDirectory(FileUtils.getMinecraftDirectory().path)
-    )
-    statusLabel.stringValue =
-    Localized.TestWindow.statusCheckCompleted(installed.count)
-
-    // Refresh version table to update installation status display
-    logMessage(Localized.LogMessages.refreshVersionListToUpdate)
-    applyCurrentFilter()
-  }
-
   @objc private func testDownloadVersion() {
     let row = versionTableView.selectedRow
     guard row >= 0, row < displayedVersions.count else {
@@ -983,10 +914,6 @@ class TestViewController: NSViewController {
           progressBar.doubleValue = 1.0
           statusLabel.stringValue = Localized.TestWindow.statusDownloadCompleted
 
-          // Refresh version table to show updated installation status
-          logMessage(Localized.LogMessages.refreshVersionListToShow)
-          applyCurrentFilter()
-
           disableButtons(false)
 
           // Show success dialog
@@ -1051,7 +978,6 @@ class TestViewController: NSViewController {
     refreshVersionButton.isEnabled = !disabled
     getVersionDetailsButton.isEnabled = !disabled
     downloadTestFileButton.isEnabled = !disabled
-    checkInstalledButton.isEnabled = !disabled
     downloadVersionButton.isEnabled = !disabled
   }
 
@@ -1228,12 +1154,6 @@ extension TestViewController: NSTableViewDelegate {
     case "time":
       textField.stringValue = formatDateTime(version.time)
       textField.textColor = NSColor.secondaryLabelColor.withAlphaComponent(0.8)
-
-    case "status":
-      let isInstalled = versionManager.isVersionInstalled(versionId: version.id)
-      textField.stringValue = isInstalled ? Localized.TestWindow.statusInstalled : ""
-      textField.textColor = .systemGreen
-      textField.font = .systemFont(ofSize: 10, weight: .medium)
 
     default:
       textField.stringValue = ""
