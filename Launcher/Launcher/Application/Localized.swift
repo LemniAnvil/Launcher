@@ -420,6 +420,58 @@ enum Localized {
     static let javaHomeNotSet = String(localized: "Not set", comment: "[Text] JAVA_HOME not set.")
   }
 
+  // MARK: - Installed Versions
+  enum InstalledVersions {
+    // Window & Labels
+    static let windowTitle = String(localized: "Installed Versions", comment: "[Text] Installed versions window title.")
+    static let title = String(localized: "Installed Versions", comment: "[Text] Installed versions title.")
+    static let refreshButton = String(localized: "Refresh", comment: "[Button] Refresh versions list.")
+    static let emptyMessage = String(localized: "No installed versions", comment: "[Text] No installed versions message.")
+
+    // Count Labels
+    static let countNone = String(localized: "No versions installed yet", comment: "[Text] No versions installed.")
+    static let countOne = String(localized: "1 installed version", comment: "[Text] One installed version.")
+
+    static func countMultiple(_ count: Int) -> String {
+      String(localized: "\(count) installed versions", comment: "[Text] Multiple installed versions count.")
+    }
+
+    // Context Menu
+    static let menuShowInFinder = String(localized: "Show in Finder", comment: "[Menu] Show version in Finder.")
+    static let menuDelete = String(localized: "Delete Version", comment: "[Menu] Delete version.")
+
+    // Delete Confirmation
+    static let deleteConfirmTitle = String(localized: "Confirm Deletion", comment: "[Alert] Delete confirmation title.")
+
+    static func deleteConfirmMessage(_ version: String) -> String {
+      String(localized: "Version \(version) will be permanently deleted. This action cannot be undone.", comment: "[Alert] Delete confirmation message.")
+    }
+
+    static let deleteButton = String(localized: "Delete", comment: "[Button] Delete button.")
+    static let cancelButton = String(localized: "Cancel", comment: "[Button] Cancel button.")
+    static let okButton = String(localized: "OK", comment: "[Button] OK button.")
+
+    // Notifications
+    static let deleteSuccessTitle = String(localized: "Deletion Successful", comment: "[Notification] Delete success title.")
+
+    static func deleteSuccessMessage(_ version: String) -> String {
+      String(localized: "Version \(version) has been deleted", comment: "[Notification] Delete success message.")
+    }
+
+    static let deleteFailedTitle = String(localized: "Deletion Failed", comment: "[Alert] Delete failed title.")
+
+    static func deleteFailedMessage(_ version: String, _ error: String) -> String {
+      String(localized: "Unable to delete version \(version): \(error)", comment: "[Alert] Delete failed message.")
+    }
+
+    // Version Types
+    static let typeRelease = String(localized: "Release", comment: "[Text] Release version type.")
+    static let typeSnapshot = String(localized: "Snapshot", comment: "[Text] Snapshot version type.")
+    static let typeAlpha = String(localized: "Alpha", comment: "[Text] Alpha version type.")
+    static let typeBeta = String(localized: "Beta", comment: "[Text] Beta version type.")
+    static let typeUnknown = String(localized: "Unknown", comment: "[Text] Unknown version type.")
+  }
+
   // MARK: - Errors
   enum Errors {
     // VersionManager Errors

@@ -14,32 +14,34 @@ class ViewController: NSViewController {
   private var windowObserver: NSObjectProtocol?
   private var javaWindowObserver: NSObjectProtocol?
 
+  // 版本管理
+  private let versionManager = VersionManager.shared
+  private var installedVersions: [String] = []
+
   // UI elements
   private let titleLabel: NSTextField = {
-    let label = NSTextField(labelWithString: Localized.MainWindow.titleLabel)
-    label.font = .systemFont(ofSize: 28, weight: .bold)
-    label.alignment = .center
+    let label = NSTextField(labelWithString: Localized.InstalledVersions.title)
+    label.font = .systemFont(ofSize: 20, weight: .semibold)
+    label.alignment = .left
     return label
   }()
 
-  private let subtitleLabel: NSTextField = {
-    let label = NSTextField(
-      labelWithString: Localized.MainWindow.subtitle
-    )
-    label.font = .systemFont(ofSize: 14, weight: .regular)
+  private let countLabel: NSTextField = {
+    let label = NSTextField(labelWithString: "")
+    label.font = .systemFont(ofSize: 12)
     label.textColor = .secondaryLabelColor
-    label.alignment = .center
+    label.alignment = .left
     return label
   }()
 
   private lazy var testButton: BRImageButton = {
     let button = BRImageButton(
       symbolName: "play.circle.fill",
-      cornerRadius: 8,
+      cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-          ? NSColor.white.withAlphaComponent(0.1)
-          : NSColor.black.withAlphaComponent(0.06)
+        ? NSColor.white.withAlphaComponent(0.1)
+        : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
       accessibilityLabel: Localized.MainWindow.openTestWindowButton
@@ -52,11 +54,11 @@ class ViewController: NSViewController {
   private lazy var javaDetectionButton: BRImageButton = {
     let button = BRImageButton(
       symbolName: "cup.and.saucer.fill",
-      cornerRadius: 8,
+      cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-          ? NSColor.white.withAlphaComponent(0.1)
-          : NSColor.black.withAlphaComponent(0.06)
+        ? NSColor.white.withAlphaComponent(0.1)
+        : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemOrange,
       accessibilityLabel: Localized.JavaDetection.openJavaDetectionButton
@@ -66,22 +68,59 @@ class ViewController: NSViewController {
     return button
   }()
 
-  private let statusLabel: NSTextField = {
-    let label = NSTextField(labelWithString: Localized.MainWindow.initialStatus)
-    label.font = .systemFont(ofSize: 12)
-    label.textColor = .secondaryLabelColor
-    label.alignment = .center
-    return label
+  private let refreshButton: NSButton = {
+    let button = NSButton()
+    button.title = Localized.InstalledVersions.refreshButton
+    button.bezelStyle = .rounded
+    button.setButtonType(.momentaryPushIn)
+    return button
   }()
 
-  private let iconImageView: NSImageView = {
-    let imageView = NSImageView()
-    imageView.image = NSImage(
-      systemSymbolName: "cube.box.fill",
-      accessibilityDescription: Localized.MainWindow.minecraftAccessibility
+  private let scrollView: NSScrollView = {
+    let scrollView = NSScrollView()
+    scrollView.hasVerticalScroller = true
+    scrollView.hasHorizontalScroller = false
+    scrollView.autohidesScrollers = true
+    scrollView.borderType = .noBorder
+    scrollView.drawsBackground = false
+    return scrollView
+  }()
+
+  private lazy var collectionView: NSCollectionView = {
+    let collectionView = NSCollectionView()
+    collectionView.backgroundColors = [.clear]
+    collectionView.isSelectable = true
+    collectionView.allowsMultipleSelection = false
+
+    // 创建流式布局
+    let flowLayout = NSCollectionViewFlowLayout()
+    flowLayout.itemSize = NSSize(width: 160, height: 180)
+    flowLayout.sectionInset = NSEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    flowLayout.minimumInteritemSpacing = 16
+    flowLayout.minimumLineSpacing = 16
+    collectionView.collectionViewLayout = flowLayout
+
+    // 注册 item
+    collectionView.register(
+      VersionCollectionViewItem.self,
+      forItemWithIdentifier: VersionCollectionViewItem.identifier
     )
-    imageView.contentTintColor = .systemBlue
-    return imageView
+
+    collectionView.dataSource = self
+    collectionView.delegate = self
+
+    collectionView.menu = createContextMenu()
+
+    return collectionView
+  }()
+
+  private let emptyLabel: NSTextField = {
+    let label = NSTextField(labelWithString: Localized.InstalledVersions.emptyMessage)
+    label.font = .systemFont(ofSize: 14)
+    label.textColor = .secondaryLabelColor
+    label.alignment = .center
+    label.isHidden = true
+    return label
   }()
 
   override func loadView() {
@@ -93,67 +132,111 @@ class ViewController: NSViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
+    loadInstalledVersions()
   }
 
   private func setupUI() {
     // Add all UI elements
-    view.addSubview(iconImageView)
     view.addSubview(titleLabel)
-    view.addSubview(subtitleLabel)
+    view.addSubview(countLabel)
+    view.addSubview(refreshButton)
     view.addSubview(testButton)
     view.addSubview(javaDetectionButton)
-    view.addSubview(statusLabel)
+    view.addSubview(scrollView)
+    view.addSubview(emptyLabel)
+
+    scrollView.documentView = collectionView
+
+    // 按钮动作
+    refreshButton.target = self
+    refreshButton.action = #selector(refreshVersionList)
 
     // Layout constraints using SnapKit
-    iconImageView.snp.makeConstraints { make in
-      make.centerX.equalToSuperview()
-      make.centerY.equalToSuperview().offset(-120)
-      make.width.height.equalTo(80)
-    }
-
-    titleLabel.snp.makeConstraints { make in
-      make.top.equalTo(iconImageView.snp.bottom).offset(20)
-      make.centerX.equalToSuperview()
-      make.left.equalToSuperview().offset(20)
-      make.right.equalToSuperview().offset(-20)
-    }
-
-    subtitleLabel.snp.makeConstraints { make in
-      make.top.equalTo(titleLabel.snp.bottom).offset(8)
-      make.centerX.equalToSuperview()
-      make.left.equalToSuperview().offset(20)
-      make.right.equalToSuperview().offset(-20)
-    }
-
-    // Create button container for horizontal layout
-    let buttonStack = NSStackView(views: [testButton, javaDetectionButton])
-    buttonStack.orientation = .horizontal
-    buttonStack.spacing = 16
-    buttonStack.distribution = .gravityAreas
-    view.addSubview(buttonStack)
-
+    // 右上角按钮组
     testButton.snp.makeConstraints { make in
-      make.width.height.equalTo(44)
+      make.top.equalToSuperview().offset(16)
+      make.right.equalToSuperview().offset(-60)
+      make.width.height.equalTo(36)
     }
 
     javaDetectionButton.snp.makeConstraints { make in
-      make.width.height.equalTo(44)
+      make.top.equalToSuperview().offset(16)
+      make.right.equalToSuperview().offset(-16)
+      make.width.height.equalTo(36)
     }
 
-    buttonStack.snp.makeConstraints { make in
-      make.top.equalTo(subtitleLabel.snp.bottom).offset(40)
-      make.centerX.equalToSuperview()
-    }
-
-    statusLabel.snp.makeConstraints { make in
-      make.top.equalTo(buttonStack.snp.bottom).offset(20)
-      make.centerX.equalToSuperview()
+    // 标题和计数
+    titleLabel.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(20)
       make.left.equalToSuperview().offset(20)
-      make.right.equalToSuperview().offset(-20)
+    }
+
+    refreshButton.snp.makeConstraints { make in
+      make.centerY.equalTo(titleLabel)
+      make.left.equalTo(titleLabel.snp.right).offset(16)
+    }
+
+    countLabel.snp.makeConstraints { make in
+      make.top.equalTo(titleLabel.snp.bottom).offset(8)
+      make.left.equalToSuperview().offset(20)
+      make.right.equalTo(testButton.snp.left).offset(-10)
+    }
+
+    // 版本列表
+    scrollView.snp.makeConstraints { make in
+      make.top.equalTo(countLabel.snp.bottom).offset(12)
+      make.left.right.bottom.equalToSuperview().inset(20)
+    }
+
+    emptyLabel.snp.makeConstraints { make in
+      make.center.equalTo(scrollView)
+      make.left.right.equalToSuperview().inset(40)
     }
   }
 
-  @objc private func openTestWindow() {
+  // MARK: - Data Loading
+
+  private func loadInstalledVersions() {
+    installedVersions = versionManager.getInstalledVersions()
+
+    // 按版本号排序（降序）
+    installedVersions.sort { version1, version2 in
+      return version1.compare(version2, options: .numeric) == .orderedDescending
+    }
+
+    collectionView.reloadData()
+    updateEmptyState()
+    updateCountLabel()
+  }
+
+  private func updateEmptyState() {
+    emptyLabel.isHidden = !installedVersions.isEmpty
+    scrollView.isHidden = installedVersions.isEmpty
+  }
+
+  private func updateCountLabel() {
+    let count = installedVersions.count
+    if count == 0 {
+      countLabel.stringValue = Localized.InstalledVersions.countNone
+    } else if count == 1 {
+      countLabel.stringValue = Localized.InstalledVersions.countOne
+    } else {
+      countLabel.stringValue = Localized.InstalledVersions.countMultiple(count)
+    }
+  }
+
+  override var representedObject: Any? {
+    didSet {
+      // Update the view, if already loaded.
+    }
+  }
+}
+
+// MARK: - Actions
+
+extension ViewController {
+
+  @objc func openTestWindow() {
     // If window already exists, show it
     if let existingController = testWindowController {
       existingController.showWindow(nil)
@@ -166,9 +249,6 @@ class ViewController: NSViewController {
     testWindowController?.showWindow(nil)
     testWindowController?.window?.makeKeyAndOrderFront(nil)
 
-    // Update status
-    statusLabel.stringValue = Localized.MainWindow.testWindowOpened
-
     // Window close callback
     windowObserver = NotificationCenter.default.addObserver(
       forName: NSWindow.willCloseNotification,
@@ -176,7 +256,6 @@ class ViewController: NSViewController {
       queue: .main
     ) { [weak self] _ in
       self?.testWindowController = nil
-      self?.statusLabel.stringValue = Localized.MainWindow.testWindowClosed
       if let observer = self?.windowObserver {
         NotificationCenter.default.removeObserver(observer)
         self?.windowObserver = nil
@@ -197,9 +276,6 @@ class ViewController: NSViewController {
     javaDetectionWindowController?.showWindow(nil)
     javaDetectionWindowController?.window?.makeKeyAndOrderFront(nil)
 
-    // Update status
-    statusLabel.stringValue = Localized.MainWindow.javaWindowOpened
-
     // Window close callback
     javaWindowObserver = NotificationCenter.default.addObserver(
       forName: NSWindow.willCloseNotification,
@@ -207,7 +283,6 @@ class ViewController: NSViewController {
       queue: .main
     ) { [weak self] _ in
       self?.javaDetectionWindowController = nil
-      self?.statusLabel.stringValue = Localized.MainWindow.javaWindowClosed
       if let observer = self?.javaWindowObserver {
         NotificationCenter.default.removeObserver(observer)
         self?.javaWindowObserver = nil
@@ -215,9 +290,146 @@ class ViewController: NSViewController {
     }
   }
 
-  override var representedObject: Any? {
-    didSet {
-      // Update the view, if already loaded.
+  @objc func refreshVersionList() {
+    loadInstalledVersions()
+  }
+}
+
+// MARK: - Context Menu
+
+extension ViewController {
+
+  func createContextMenu() -> NSMenu {
+    let menu = NSMenu()
+
+    let openFolderItem = NSMenuItem(
+      title: Localized.InstalledVersions.menuShowInFinder,
+      action: #selector(openVersionFolder(_:)),
+      keyEquivalent: ""
+    )
+    openFolderItem.target = self
+    menu.addItem(openFolderItem)
+
+    menu.addItem(NSMenuItem.separator())
+
+    let deleteItem = NSMenuItem(
+      title: Localized.InstalledVersions.menuDelete,
+      action: #selector(deleteVersion(_:)),
+      keyEquivalent: ""
+    )
+    deleteItem.target = self
+    menu.addItem(deleteItem)
+
+    return menu
+  }
+
+  @objc func openVersionFolder(_ sender: Any?) {
+    guard let clickedItem = getClickedItem() else { return }
+
+    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(clickedItem)
+    NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: versionDir.path)
+  }
+
+  @objc func deleteVersion(_ sender: Any?) {
+    guard let versionId = getClickedItem() else { return }
+
+    // Show confirmation dialog
+    let alert = NSAlert()
+    alert.messageText = Localized.InstalledVersions.deleteConfirmTitle
+    alert.informativeText = Localized.InstalledVersions.deleteConfirmMessage(versionId)
+    alert.alertStyle = .warning
+    alert.addButton(withTitle: Localized.InstalledVersions.deleteButton)
+    alert.addButton(withTitle: Localized.InstalledVersions.cancelButton)
+
+    guard let window = view.window else { return }
+    alert.beginSheetModal(for: window) { [weak self] response in
+      guard response == .alertFirstButtonReturn else { return }
+      self?.performDelete(versionId: versionId)
     }
+  }
+
+  func performDelete(versionId: String) {
+    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(versionId)
+
+    do {
+      try FileManager.default.removeItem(at: versionDir)
+      Logger.shared.info("Deleted version: \(versionId)", category: "InstalledVersions")
+
+      // Refresh list
+      loadInstalledVersions()
+
+      // Show success notification
+      showNotification(
+        title: Localized.InstalledVersions.deleteSuccessTitle,
+        message: Localized.InstalledVersions.deleteSuccessMessage(versionId)
+      )
+    } catch {
+      Logger.shared.error("Failed to delete version: \(error.localizedDescription)", category: "InstalledVersions")
+
+      // Show error dialog
+      let alert = NSAlert()
+      alert.messageText = Localized.InstalledVersions.deleteFailedTitle
+      alert.informativeText = Localized.InstalledVersions.deleteFailedMessage(versionId, error.localizedDescription)
+      alert.alertStyle = .critical
+      alert.addButton(withTitle: Localized.InstalledVersions.okButton)
+
+      if let window = view.window {
+        alert.beginSheetModal(for: window)
+      }
+    }
+  }
+
+  func showNotification(title: String, message: String) {
+    // Simplified notification, removed deprecated API
+    Logger.shared.info("\(title): \(message)", category: "MainWindow")
+  }
+
+  // 获取右键点击的项目
+  func getClickedItem() -> String? {
+    let point = collectionView.convert(view.window?.mouseLocationOutsideOfEventStream ?? .zero, from: nil)
+    guard let indexPath = collectionView.indexPathForItem(at: point),
+          indexPath.item < installedVersions.count else {
+      // 如果没有点击到具体项目，尝试获取选中的项目
+      guard let selectedIndexPath = collectionView.selectionIndexPaths.first,
+            selectedIndexPath.item < installedVersions.count else {
+        return nil
+      }
+      return installedVersions[selectedIndexPath.item]
+    }
+    return installedVersions[indexPath.item]
+  }
+}
+
+// MARK: - NSCollectionViewDataSource
+
+extension ViewController: NSCollectionViewDataSource {
+
+  func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+    return installedVersions.count
+  }
+
+  func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+    guard let item = collectionView.makeItem(
+      withIdentifier: VersionCollectionViewItem.identifier,
+      for: indexPath
+    ) as? VersionCollectionViewItem else {
+      return NSCollectionViewItem()
+    }
+
+    let versionId = installedVersions[indexPath.item]
+    item.configure(with: versionId)
+
+    return item
+  }
+}
+
+// MARK: - NSCollectionViewDelegate
+
+extension ViewController: NSCollectionViewDelegate {
+
+  func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
+    guard let indexPath = indexPaths.first else { return }
+    let selectedVersion = installedVersions[indexPath.item]
+    Logger.shared.info("选中版本: \(selectedVersion)", category: "MainWindow")
   }
 }
