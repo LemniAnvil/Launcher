@@ -1,8 +1,8 @@
 //
-//  TestViewController.swift
+//  VersionListViewController.swift
 //  Launcher
 //
-//  Test function view controller
+//  Version list and download management view controller
 //
 
 import AppKit
@@ -10,7 +10,7 @@ import SnapKit
 import Yatagarasu
 
 // swiftlint:disable:next type_body_length
-class TestViewController: NSViewController {
+class VersionListViewController: NSViewController {
 
   private let logger = Logger.shared
   private let versionManager = VersionManager.shared
@@ -49,7 +49,7 @@ class TestViewController: NSViewController {
           : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
-      accessibilityLabel: Localized.TestWindow.refreshVersionsButton
+      accessibilityLabel: Localized.VersionListWindow.refreshVersionsButton
     )
     button.target = self
     button.action = #selector(testRefreshVersions)
@@ -66,7 +66,7 @@ class TestViewController: NSViewController {
           : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
-      accessibilityLabel: Localized.TestWindow.getVersionDetailsButton
+      accessibilityLabel: Localized.VersionListWindow.getVersionDetailsButton
     )
     button.target = self
     button.action = #selector(testGetVersionDetails)
@@ -83,7 +83,7 @@ class TestViewController: NSViewController {
           : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
-      accessibilityLabel: Localized.TestWindow.downloadTestFileButton
+      accessibilityLabel: Localized.VersionListWindow.downloadTestFileButton
     )
     button.target = self
     button.action = #selector(testDownloadFile)
@@ -100,7 +100,7 @@ class TestViewController: NSViewController {
           : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemGreen,
-      accessibilityLabel: Localized.TestWindow.downloadVersionButton
+      accessibilityLabel: Localized.VersionListWindow.downloadVersionButton
     )
     button.target = self
     button.action = #selector(testDownloadVersion)
@@ -117,7 +117,7 @@ class TestViewController: NSViewController {
           : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemRed,
-      accessibilityLabel: Localized.TestWindow.clearLogButton
+      accessibilityLabel: Localized.VersionListWindow.clearLogButton
     )
     button.target = self
     button.action = #selector(clearLog)
@@ -141,25 +141,25 @@ class TestViewController: NSViewController {
 
     // Add columns
     let versionColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("version"))
-    versionColumn.title = Localized.TestWindow.columnVersion
+    versionColumn.title = Localized.VersionListWindow.columnVersion
     versionColumn.width = 160
     versionColumn.minWidth = 120
     table.addTableColumn(versionColumn)
 
     let typeColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("type"))
-    typeColumn.title = Localized.TestWindow.columnType
+    typeColumn.title = Localized.VersionListWindow.columnType
     typeColumn.width = 100
     typeColumn.minWidth = 80
     table.addTableColumn(typeColumn)
 
     let dateColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("releaseTime"))
-    dateColumn.title = Localized.TestWindow.columnReleaseTime
+    dateColumn.title = Localized.VersionListWindow.columnReleaseTime
     dateColumn.width = 180
     dateColumn.minWidth = 140
     table.addTableColumn(dateColumn)
 
     let timeColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("time"))
-    timeColumn.title = Localized.TestWindow.columnUpdateTime
+    timeColumn.title = Localized.VersionListWindow.columnUpdateTime
     timeColumn.width = 180
     timeColumn.minWidth = 140
     table.addTableColumn(timeColumn)
@@ -187,7 +187,7 @@ class TestViewController: NSViewController {
   // Version type filter checkboxes
   private lazy var releaseCheckbox: NSButton = {
     let checkbox = NSButton(
-      checkboxWithTitle: Localized.TestWindow.checkboxRelease,
+      checkboxWithTitle: Localized.VersionListWindow.checkboxRelease,
       target: self,
       action: #selector(filterVersions)
     )
@@ -197,7 +197,7 @@ class TestViewController: NSViewController {
 
   private lazy var snapshotCheckbox: NSButton = {
     let checkbox = NSButton(
-      checkboxWithTitle: Localized.TestWindow.checkboxSnapshot,
+      checkboxWithTitle: Localized.VersionListWindow.checkboxSnapshot,
       target: self,
       action: #selector(filterVersions)
     )
@@ -207,7 +207,7 @@ class TestViewController: NSViewController {
 
   private lazy var betaCheckbox: NSButton = {
     let checkbox = NSButton(
-      checkboxWithTitle: Localized.TestWindow.checkboxBeta,
+      checkboxWithTitle: Localized.VersionListWindow.checkboxBeta,
       target: self,
       action: #selector(filterVersions)
     )
@@ -217,7 +217,7 @@ class TestViewController: NSViewController {
 
   private lazy var alphaCheckbox: NSButton = {
     let checkbox = NSButton(
-      checkboxWithTitle: Localized.TestWindow.checkboxAlpha,
+      checkboxWithTitle: Localized.VersionListWindow.checkboxAlpha,
       target: self,
       action: #selector(filterVersions)
     )
@@ -237,7 +237,7 @@ class TestViewController: NSViewController {
 
   private let statusLabel: BRLabel = {
     let label = BRLabel(
-      text: Localized.TestWindow.statusReady,
+      text: Localized.VersionListWindow.statusReady,
       font: .systemFont(ofSize: 11),
       textColor: .secondaryLabelColor,
       alignment: .left
@@ -425,7 +425,7 @@ class TestViewController: NSViewController {
 
     // Create filter control row
     let filterLabel = BRLabel(
-      text: Localized.TestWindow.filterLabel,
+      text: Localized.VersionListWindow.filterLabel,
       font: .systemFont(ofSize: 12),
       textColor: .labelColor,
       alignment: .left
@@ -524,7 +524,7 @@ class TestViewController: NSViewController {
           let speed = FileUtils.formatBytes(
             Int64(self.downloadManager.downloadSpeed)
           )
-          self.statusLabel.stringValue = Localized.TestWindow.statusDownloading(
+          self.statusLabel.stringValue = Localized.VersionListWindow.statusDownloading(
             progress: progress.displayProgress,
             speed: speed,
             bytes: progress.bytesDisplay
@@ -542,7 +542,7 @@ class TestViewController: NSViewController {
     logMessage(String(repeating: "=", count: 60))
 
     disableButtons(true)
-    statusLabel.stringValue = Localized.TestWindow.statusRefreshing
+    statusLabel.stringValue = Localized.VersionListWindow.statusRefreshing
 
     Task {
       do {
@@ -576,14 +576,14 @@ class TestViewController: NSViewController {
             Localized.LogMessages.versionDropdownUpdated(versionManager.versions.count)
           )
 
-          statusLabel.stringValue = Localized.TestWindow.statusRefreshCompleted
+          statusLabel.stringValue = Localized.VersionListWindow.statusRefreshCompleted
           disableButtons(false)
         }
       } catch {
         await MainActor.run {
           logMessage(Localized.LogMessages.error(error.localizedDescription))
           statusLabel.stringValue =
-          Localized.TestWindow.statusRefreshFailed(error.localizedDescription)
+          Localized.VersionListWindow.statusRefreshFailed(error.localizedDescription)
           disableButtons(false)
         }
       }
@@ -604,7 +604,7 @@ class TestViewController: NSViewController {
     logMessage(String(repeating: "=", count: 60))
 
     disableButtons(true)
-    statusLabel.stringValue = Localized.TestWindow.statusGettingDetails
+    statusLabel.stringValue = Localized.VersionListWindow.statusGettingDetails
 
     Task {
       do {
@@ -643,13 +643,13 @@ class TestViewController: NSViewController {
             logMessage(Localized.LogMessages.clientSHA1(clientDownload.sha1))
           }
 
-          statusLabel.stringValue = Localized.TestWindow.statusDetailsCompleted
+          statusLabel.stringValue = Localized.VersionListWindow.statusDetailsCompleted
           disableButtons(false)
         }
       } catch {
         await MainActor.run {
           logMessage(Localized.LogMessages.error(error.localizedDescription))
-          statusLabel.stringValue = Localized.TestWindow.statusDetailsFailed
+          statusLabel.stringValue = Localized.VersionListWindow.statusDetailsFailed
           disableButtons(false)
         }
       }
@@ -662,7 +662,7 @@ class TestViewController: NSViewController {
     logMessage(String(repeating: "=", count: 60))
 
     disableButtons(true)
-    statusLabel.stringValue = Localized.TestWindow.statusDownloadingTestFile
+    statusLabel.stringValue = Localized.VersionListWindow.statusDownloadingTestFile
     progressBar.doubleValue = 0
 
     Task {
@@ -687,13 +687,13 @@ class TestViewController: NSViewController {
           }
 
           progressBar.doubleValue = 1.0
-          statusLabel.stringValue = Localized.TestWindow.statusTestFileCompleted
+          statusLabel.stringValue = Localized.VersionListWindow.statusTestFileCompleted
           disableButtons(false)
         }
       } catch {
         await MainActor.run {
           logMessage(Localized.LogMessages.error(error.localizedDescription))
-          statusLabel.stringValue = Localized.TestWindow.statusDownloadFailed
+          statusLabel.stringValue = Localized.VersionListWindow.statusDownloadFailed
           disableButtons(false)
         }
       }
@@ -729,7 +729,7 @@ class TestViewController: NSViewController {
     }
 
     disableButtons(true)
-    statusLabel.stringValue = Localized.TestWindow.statusDownloadingVersion
+    statusLabel.stringValue = Localized.VersionListWindow.statusDownloadingVersion
     progressBar.doubleValue = 0
 
     Task {
@@ -772,7 +772,7 @@ class TestViewController: NSViewController {
           logMessage(String(repeating: "=", count: 60))
 
           progressBar.doubleValue = 1.0
-          statusLabel.stringValue = Localized.TestWindow.statusDownloadCompleted
+          statusLabel.stringValue = Localized.VersionListWindow.statusDownloadCompleted
 
           disableButtons(false)
 
@@ -786,7 +786,7 @@ class TestViewController: NSViewController {
       } catch {
         await MainActor.run {
           logMessage(Localized.LogMessages.downloadFailed(error.localizedDescription))
-          statusLabel.stringValue = Localized.TestWindow.statusDownloadFailed
+          statusLabel.stringValue = Localized.VersionListWindow.statusDownloadFailed
           disableButtons(false)
 
           let errorAlert = NSAlert()
@@ -852,7 +852,7 @@ extension Array {
 
 // MARK: - NSTableViewDataSource
 
-extension TestViewController: NSTableViewDataSource {
+extension VersionListViewController: NSTableViewDataSource {
   func numberOfRows(in tableView: NSTableView) -> Int {
     return displayedVersions.count
   }
@@ -860,7 +860,7 @@ extension TestViewController: NSTableViewDataSource {
 
 // MARK: - NSTableViewDelegate
 
-extension TestViewController: NSTableViewDelegate {
+extension VersionListViewController: NSTableViewDelegate {
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
     guard row >= 0 && row < displayedVersions.count else { return nil }
 
