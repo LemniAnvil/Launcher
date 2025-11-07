@@ -9,7 +9,7 @@ import Yatagarasu
 
 class ViewController: NSViewController {
 
-  private var testWindowController: TestWindowController?
+  private var versionListWindowController: VersionListWindowController?
   private var javaDetectionWindowController: JavaDetectionWindowController?
   private var accountWindowController: AccountWindowController?
   private var settingsWindowController: SettingsWindowController?
@@ -54,10 +54,10 @@ class ViewController: NSViewController {
         : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
-      accessibilityLabel: Localized.MainWindow.openTestWindowButton
+      accessibilityLabel: Localized.MainWindow.openVersionListWindowButton
     )
     button.target = self
-    button.action = #selector(openTestWindow)
+    button.action = #selector(openVersionListWindow)
     return button
   }()
 
@@ -313,26 +313,26 @@ class ViewController: NSViewController {
 
 extension ViewController {
 
-  @objc func openTestWindow() {
+  @objc func openVersionListWindow() {
     // If window already exists, show it
-    if let existingController = testWindowController {
+    if let existingController = versionListWindowController {
       existingController.showWindow(nil)
       existingController.window?.makeKeyAndOrderFront(nil)
       return
     }
 
-    // Create new test window
-    testWindowController = TestWindowController()
-    testWindowController?.showWindow(nil)
-    testWindowController?.window?.makeKeyAndOrderFront(nil)
+    // Create new version list window
+    versionListWindowController = VersionListWindowController()
+    versionListWindowController?.showWindow(nil)
+    versionListWindowController?.window?.makeKeyAndOrderFront(nil)
 
     // Window close callback
     windowObserver = NotificationCenter.default.addObserver(
       forName: NSWindow.willCloseNotification,
-      object: testWindowController?.window,
+      object: versionListWindowController?.window,
       queue: .main
     ) { [weak self] _ in
-      self?.testWindowController = nil
+      self?.versionListWindowController = nil
       if let observer = self?.windowObserver {
         NotificationCenter.default.removeObserver(observer)
         self?.windowObserver = nil

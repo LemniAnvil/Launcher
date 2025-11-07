@@ -1,13 +1,13 @@
 //
-//  TestWindowController.swift
+//  VersionListWindowController.swift
 //  Launcher
 //
-//  Test window controller
+//  Version list window controller
 //
 
 import AppKit
 
-class TestWindowController: NSWindowController {
+class VersionListWindowController: NSWindowController {
 
   convenience init() {
     let window = NSWindow(
@@ -17,13 +17,13 @@ class TestWindowController: NSWindowController {
       defer: false
     )
 
-    window.title = Localized.TestWindow.windowTitle
+    window.title = Localized.VersionListWindow.windowTitle
     window.center()
     window.minSize = NSSize(width: 800, height: 600)
 
     // Set content view controller
-    let testViewController = TestViewController()
-    window.contentViewController = testViewController
+    let versionListViewController = VersionListViewController()
+    window.contentViewController = versionListViewController
 
     self.init(window: window)
   }

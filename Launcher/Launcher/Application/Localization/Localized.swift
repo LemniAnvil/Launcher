@@ -12,18 +12,18 @@ enum Localized {
     static let windowTitle = String(localized: "Minecraft Launcher", comment: "[Text] Main window title.")
     static let titleLabel = String(localized: "Minecraft Launcher", comment: "[Text] Main window title label.")
     static let subtitle = String(localized: "Version Management & Download Testing", comment: "[Text] Main window subtitle.")
-    static let openTestWindowButton = String(localized: "Open Test Window", comment: "[Button] Open test window.")
-    static let initialStatus = String(localized: "Click button to start testing", comment: "[Text] Initial status message.")
-    static let testWindowOpened = String(localized: "Test window opened", comment: "[Text] Test window opened status.")
-    static let testWindowClosed = String(localized: "Test window closed, click button to reopen", comment: "[Text] Test window closed status.")
+    static let openVersionListWindowButton = String(localized: "Open Version List", comment: "[Button] Open version list window.")
+    static let initialStatus = String(localized: "Click button to start", comment: "[Text] Initial status message.")
+    static let versionListWindowOpened = String(localized: "Version list window opened", comment: "[Text] Version list window opened status.")
+    static let versionListWindowClosed = String(localized: "Version list window closed, click button to reopen", comment: "[Text] Version list window closed status.")
     static let javaWindowOpened = String(localized: "Java detection window opened", comment: "[Text] Java window opened status.")
     static let javaWindowClosed = String(localized: "Java detection window closed, click button to reopen", comment: "[Text] Java window closed status.")
     static let minecraftAccessibility = String(localized: "Minecraft", comment: "[Accessibility] Minecraft icon description.")
   }
 
-  // MARK: - Test Window
-  enum TestWindow {
-    static let windowTitle = String(localized: "Function Test Window", comment: "[Text] Test window title.")
+  // MARK: - Version List Window
+  enum VersionListWindow {
+    static let windowTitle = String(localized: "Version List", comment: "[Text] Version list window title.")
 
     // Table Column Headers
     static let columnVersion = String(localized: "Version", comment: "[Table] Version column header.")
@@ -82,7 +82,7 @@ enum Localized {
   // MARK: - Log Messages
   enum LogMessages {
     // Initialization
-    static let initialized = String(localized: "✅ Test window initialized", comment: "[Log] Test window initialized.")
+    static let initialized = String(localized: "✅ Version list window initialized", comment: "[Log] Version list window initialized.")
     static let pleaseClickButtons = String(localized: "📝 Please click buttons in order to test functions", comment: "[Log] Please click buttons in order.")
     static let logCleared = String(localized: "📝 Log cleared", comment: "[Log] Log cleared.")
 

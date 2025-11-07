@@ -1,2704 +1,2776 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "\n📊 Version type statistics:": {
-      "comment": "[Log] Version statistics title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "\n📊 版本类型统计："
+  "sourceLanguage" : "en",
+  "strings" : {
+    "\n📊 Version type statistics:" : {
+      "comment" : "[Log] Version statistics title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\n📊 版本类型统计："
           }
         }
       }
     },
-    "  📋 Total: %lld": {
-      "comment": "[Log] Total version count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "  📋 总计：%lld"
+    "  📋 Total: %lld" : {
+      "comment" : "[Log] Total version count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  📋 总计：%lld"
           }
         }
       }
     },
-    "  🔵 Beta: %lld": {
-      "comment": "[Log] Beta version count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "  🔵 Beta：%lld"
+    "  🔵 Beta: %lld" : {
+      "comment" : "[Log] Beta version count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  🔵 Beta：%lld"
           }
         }
       }
     },
-    "  🟡 Snapshot: %lld": {
-      "comment": "[Log] Snapshot version count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "  🟡 快照版：%lld"
+    "  🟡 Snapshot: %lld" : {
+      "comment" : "[Log] Snapshot version count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  🟡 快照版：%lld"
           }
         }
       }
     },
-    "  🟢 Release: %lld": {
-      "comment": "[Log] Release version count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "  🟢 正式版：%lld"
+    "  🟢 Release: %lld" : {
+      "comment" : "[Log] Release version count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  🟢 正式版：%lld"
           }
         }
       }
     },
-    "  🟣 Alpha: %lld": {
-      "comment": "[Log] Alpha version count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "  🟣 Alpha：%lld"
+    "  🟣 Alpha: %lld" : {
+      "comment" : "[Log] Alpha version count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  🟣 Alpha：%lld"
           }
         }
       }
     },
-    "  Applicable to macOS: %lld": {
-      "comment": "[Log] Applicable libraries for macOS.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "  适用于 macOS：%lld"
+    "  Applicable to macOS: %lld" : {
+      "comment" : "[Log] Applicable libraries for macOS.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  适用于 macOS：%lld"
           }
         }
       }
     },
-    "  SHA1: %@": {
-      "comment": "[Log] Client file SHA1.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "  SHA1：%@"
+    "  SHA1: %@" : {
+      "comment" : "[Log] Client file SHA1.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  SHA1：%@"
           }
         }
       }
     },
-    "  Size: %@": {
-      "comment": "[Log] Client file size.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "  大小：%@"
+    "  Size: %@" : {
+      "comment" : "[Log] Client file size.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  大小：%@"
           }
         }
       }
     },
-    "  Total: %lld": {
-      "comment": "[Log] Total libraries.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "  总计：%lld"
+    "  Total: %lld" : {
+      "comment" : "[Log] Total libraries.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  总计：%lld"
           }
         }
       }
     },
-    "%lld installed versions": {
-      "comment": "[Text] Multiple installed versions count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "共 %lld 个已安装版本"
+    "%lld installed versions" : {
+      "comment" : "[Text] Multiple installed versions count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共 %lld 个已安装版本"
           }
         }
       }
     },
-    "☕️ Java version: %lld": {
-      "comment": "[Log] Java version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "☕️ Java 版本：%lld"
+    "☕️ Java version: %lld" : {
+      "comment" : "[Log] Java version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☕️ Java 版本：%lld"
           }
         }
       }
     },
-    "☕️ Using Java: %@ at %@": {
-      "comment": "[Log] Java detected.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "☕️ Using Java: %1$@ at %2$@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "☕️ 使用 Java：%1$@ 位于 %2$@"
-          }
-        }
-      }
-    },
-    "⚠️ Latest release not found, selected first item": {
-      "comment": "[Log] Latest release not found.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⚠️ 未找到最新正式版，已选择第一项"
-          }
-        }
-      }
-    },
-    "⚠️ Note: This will download complete game files, may take a while": {
-      "comment": "[Log] Download warning.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⚠️ 注意：这将下载完整的游戏文件，可能需要一段时间"
-          }
-        }
-      }
-    },
-    "⚠️ Version list is empty": {
-      "comment": "[Log] Version list is empty.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⚠️ 版本列表为空"
-          }
-        }
-      }
-    },
-    "✅ File downloaded successfully": {
-      "comment": "[Log] File downloaded successfully.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 文件下载成功"
-          }
-        }
-      }
-    },
-    "✅ Game assets download completed": {
-      "comment": "[Log] Game assets download completed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 游戏资源下载完成"
-          }
-        }
-      }
-    },
-    "✅ Game core and library files download completed": {
-      "comment": "[Log] Game core and library files download completed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 游戏核心和库文件下载完成"
-          }
-        }
-      }
-    },
-    "✅ Game process started (PID: %d)": {
-      "comment": "[Log] Game process started.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 游戏进程已启动（PID：%d）"
-          }
-        }
-      }
-    },
-    "✅ Installed versions (%lld):": {
-      "comment": "[Log] Installed versions count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 已安装版本（%lld）："
-          }
-        }
-      }
-    },
-    "✅ Proxy enabled: %@ %@:%lld": {
-      "comment": "[Log] Proxy enabled.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "✅ Proxy enabled: %1$@ %2$@:%3$lld"
+    "☕️ Using Java: %@ at %@" : {
+      "comment" : "[Log] Java detected.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "☕️ Using Java: %1$@ at %2$@"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 代理已启用：%1$@ %2$@:%3$lld"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☕️ 使用 Java：%1$@ 位于 %2$@"
           }
         }
       }
     },
-    "✅ Proxy test successful": {
-      "comment": "[Log] Proxy test successful.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 代理测试成功"
+    "⚠️ Latest release not found, selected first item" : {
+      "comment" : "[Log] Latest release not found.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ 未找到最新正式版，已选择第一项"
           }
         }
       }
     },
-    "✅ Test window initialized": {
-      "comment": "[Log] Test window initialized.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 测试窗口已初始化"
+    "⚠️ Note: This will download complete game files, may take a while" : {
+      "comment" : "[Log] Download warning.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ 注意：这将下载完整的游戏文件，可能需要一段时间"
           }
         }
       }
     },
-    "✅ Version data loaded, updating version list...": {
-      "comment": "[Log] Version data loaded.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 版本数据已加载，正在更新版本列表..."
+    "⚠️ Version list is empty" : {
+      "comment" : "[Log] Version list is empty.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ 版本列表为空"
           }
         }
       }
     },
-    "✅ Version details retrieved successfully": {
-      "comment": "[Log] Version details retrieved successfully.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 版本详情获取成功"
+    "✅ File downloaded successfully" : {
+      "comment" : "[Log] File downloaded successfully.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 文件下载成功"
           }
         }
       }
     },
-    "✅ Version list refreshed successfully": {
-      "comment": "[Log] Version list refreshed successfully.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅ 版本列表刷新成功"
+    "✅ Game assets download completed" : {
+      "comment" : "[Log] Game assets download completed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 游戏资源下载完成"
           }
         }
       }
     },
-    "❌ Download failed: %@": {
-      "comment": "[Log] Download failed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "❌ 下载失败：%@"
+    "✅ Game core and library files download completed" : {
+      "comment" : "[Log] Game core and library files download completed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 游戏核心和库文件下载完成"
           }
         }
       }
     },
-    "❌ Error: %@": {
-      "comment": "[Log] Error message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "❌ 错误：%@"
+    "✅ Game process started (PID: %d)" : {
+      "comment" : "[Log] Game process started.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 游戏进程已启动（PID：%d）"
           }
         }
       }
     },
-    "❌ Please select a version from dropdown": {
-      "comment": "[Log] Please select a version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "❌ 请从下拉列表中选择一个版本"
+    "✅ Installed versions (%lld):" : {
+      "comment" : "[Log] Installed versions count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 已安装版本（%lld）："
           }
         }
       }
     },
-    "❌ Proxy disabled": {
-      "comment": "[Log] Proxy disabled.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "❌ 代理已禁用"
-          }
-        }
-      }
-    },
-    "❌ Proxy test failed: %@": {
-      "comment": "[Log] Proxy test failed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "❌ 代理测试失败：%@"
-          }
-        }
-      }
-    },
-    "❌ User cancelled download": {
-      "comment": "[Log] User cancelled download.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "❌ 用户取消了下载"
-          }
-        }
-      }
-    },
-    "⬇️ Step 1: Downloading game core and libraries...": {
-      "comment": "[Log] Downloading game core and libraries.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⬇️ 步骤 1：下载游戏核心和库文件..."
-          }
-        }
-      }
-    },
-    "⬇️ Step 2: Downloading game assets...": {
-      "comment": "[Log] Downloading game assets.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⬇️ 步骤 2：下载游戏资源..."
-          }
-        }
-      }
-    },
-    "⬇️ Test 3: Download test file": {
-      "comment": "[Log] Test 3 title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⬇️ 测试 3：下载测试文件"
-          }
-        }
-      }
-    },
-    "🎉 Version %@ download completed!": {
-      "comment": "[Log] Version download completed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 版本 %@ 下载完成！"
-          }
-        }
-      }
-    },
-    "🎯 Default selected latest release:": {
-      "comment": "[Log] Default selected latest release.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎯 默认选择最新正式版："
-          }
-        }
-      }
-    },
-    "🎯 Default selected latest release: %@ (index: %lld)": {
-      "comment": "[Log] Default selected with index.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "🎯 Default selected latest release: %1$@ (index: %2$lld)"
+    "✅ Proxy enabled: %@ %@:%lld" : {
+      "comment" : "[Log] Proxy enabled.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "✅ Proxy enabled: %1$@ %2$@:%3$lld"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎯 默认选择最新正式版：%1$@ (索引：%2$lld)"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 代理已启用：%1$@ %2$@:%3$lld"
           }
         }
       }
     },
-    "💾 Client file:": {
-      "comment": "[Log] Client file title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "💾 客户端文件："
+    "✅ Proxy test successful" : {
+      "comment" : "[Log] Proxy test successful.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 代理测试成功"
           }
         }
       }
     },
-    "💾 File size: %@": {
-      "comment": "[Log] File size.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "💾 文件大小：%@"
+    "✅ Test window initialized" : {
+      "comment" : "[Log] Test window initialized.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 测试窗口已初始化"
           }
         }
       }
     },
-    "📁 Minecraft directory: %@": {
-      "comment": "[Log] Minecraft directory path.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📁 Minecraft 目录：%@"
+    "✅ Version data loaded, updating version list..." : {
+      "comment" : "[Log] Version data loaded.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 版本数据已加载，正在更新版本列表..."
           }
         }
       }
     },
-    "📂 File path: %@": {
-      "comment": "[Log] File path.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📂 文件路径：%@"
+    "✅ Version details retrieved successfully" : {
+      "comment" : "[Log] Version details retrieved successfully.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 版本详情获取成功"
           }
         }
       }
     },
-    "📊 Currently loaded versions: %lld": {
-      "comment": "[Log] Currently loaded versions count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📊 当前已加载版本：%lld"
+    "✅ Version list refreshed successfully" : {
+      "comment" : "[Log] Version list refreshed successfully.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 版本列表刷新成功"
           }
         }
       }
     },
-    "📊 Displayed versions: %lld": {
-      "comment": "[Log] Displayed versions count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📊 显示版本：%lld"
+    "✅ Version list window initialized" : {
+      "comment" : "[Log] Version list window initialized.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 版本列表窗口已初始化"
           }
         }
       }
     },
-    "📊 Latest release: %@": {
-      "comment": "[Log] Latest release version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📊 最新正式版：%@"
+    "❌ Download failed: %@" : {
+      "comment" : "[Log] Download failed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "❌ 下载失败：%@"
           }
         }
       }
     },
-    "📊 Latest snapshot: %@": {
-      "comment": "[Log] Latest snapshot version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📊 最新快照版：%@"
+    "❌ Error: %@" : {
+      "comment" : "[Log] Error message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "❌ 错误：%@"
           }
         }
       }
     },
-    "📊 Need to download %lld libraries": {
-      "comment": "[Log] Need to download libraries count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📊 需要下载 %lld 个库文件"
+    "❌ Please select a version from dropdown" : {
+      "comment" : "[Log] Please select a version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "❌ 请从下拉列表中选择一个版本"
           }
         }
       }
     },
-    "📊 Total versions: %lld": {
-      "comment": "[Log] Total versions count.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📊 总版本数：%lld"
+    "❌ Proxy disabled" : {
+      "comment" : "[Log] Proxy disabled.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "❌ 代理已禁用"
           }
         }
       }
     },
-    "📋 Filter cleared, showing all version types": {
-      "comment": "[Log] Filter cleared.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📋 筛选已清除，显示所有版本类型"
+    "❌ Proxy test failed: %@" : {
+      "comment" : "[Log] Proxy test failed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "❌ 代理测试失败：%@"
           }
         }
       }
     },
-    "📋 First 10 releases:": {
-      "comment": "[Log] First 10 releases title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📋 前 10 个正式版："
+    "❌ User cancelled download" : {
+      "comment" : "[Log] User cancelled download.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "❌ 用户取消了下载"
           }
         }
       }
     },
-    "📋 Loading cached versions...": {
-      "comment": "[Log] Loading cached versions.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📋 正在加载缓存的版本..."
+    "⬇️ Step 1: Downloading game core and libraries..." : {
+      "comment" : "[Log] Downloading game core and libraries.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⬇️ 步骤 1：下载游戏核心和库文件..."
           }
         }
       }
     },
-    "📋 Refreshing version list...": {
-      "comment": "[Log] Refreshing version list.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📋 正在刷新版本列表..."
+    "⬇️ Step 2: Downloading game assets..." : {
+      "comment" : "[Log] Downloading game assets.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⬇️ 步骤 2：下载游戏资源..."
           }
         }
       }
     },
-    "📋 Showing all versions, total: %lld": {
-      "comment": "[Log] Showing all versions.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📋 显示所有版本，总计：%lld"
+    "⬇️ Test 3: Download test file" : {
+      "comment" : "[Log] Test 3 title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⬇️ 测试 3：下载测试文件"
           }
         }
       }
     },
-    "📋 Updating version list...": {
-      "comment": "[Log] Updating version list.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📋 正在更新版本列表..."
+    "🎉 Version %@ download completed!" : {
+      "comment" : "[Log] Version download completed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎉 版本 %@ 下载完成！"
           }
         }
       }
     },
-    "📋 Version dropdown updated with %lld versions": {
-      "comment": "[Log] Version dropdown updated.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📋 版本下拉列表已更新，共 %lld 个版本"
+    "🎯 Default selected latest release:" : {
+      "comment" : "[Log] Default selected latest release.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎯 默认选择最新正式版："
           }
         }
       }
     },
-    "📋 Version list empty, refreshing...": {
-      "comment": "[Log] Version list empty, refreshing.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📋 版本列表为空，正在刷新..."
-          }
-        }
-      }
-    },
-    "📌 Asset index: %@": {
-      "comment": "[Log] Asset index.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📌 资源索引：%@"
-          }
-        }
-      }
-    },
-    "📌 Main class: %@": {
-      "comment": "[Log] Main class.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📌 主类：%@"
-          }
-        }
-      }
-    },
-    "📌 Selected version: %@": {
-      "comment": "[Log] Selected version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📌 已选择版本：%@"
-          }
-        }
-      }
-    },
-    "📌 Type: %@": {
-      "comment": "[Log] Version type.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📌 类型：%@"
-          }
-        }
-      }
-    },
-    "📌 Version ID: %@": {
-      "comment": "[Log] Version ID.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📌 版本 ID：%@"
-          }
-        }
-      }
-    },
-    "📍 Save location: %@": {
-      "comment": "[Log] Save location.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📍 保存位置：%@"
-          }
-        }
-      }
-    },
-    "📚 Library information:": {
-      "comment": "[Log] Library information title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📚 库文件信息："
-          }
-        }
-      }
-    },
-    "📝 Log cleared": {
-      "comment": "[Log] Log cleared.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📝 日志已清除"
-          }
-        }
-      }
-    },
-    "📝 Please click buttons in order to test functions": {
-      "comment": "[Log] Please click buttons in order.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📝 请按顺序点击按钮以测试功能"
-          }
-        }
-      }
-    },
-    "📝 Version list updated": {
-      "comment": "[Log] Version list updated.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📝 版本列表已更新"
-          }
-        }
-      }
-    },
-    "📥 Starting download of version manifest...": {
-      "comment": "[Log] Starting download of version manifest.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📥 开始下载版本清单..."
-          }
-        }
-      }
-    },
-    "📦 Getting version details...": {
-      "comment": "[Log] Getting version details.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📦 正在获取版本详情..."
-          }
-        }
-      }
-    },
-    "📦 Test 2: Get version details - %@": {
-      "comment": "[Log] Test 2 title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📦 测试 2：获取版本详情 - %@"
-          }
-        }
-      }
-    },
-    "📭 No installed versions": {
-      "comment": "[Log] No installed versions.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📭 没有已安装的版本"
-          }
-        }
-      }
-    },
-    "🔄 Refresh version list to show installed status...": {
-      "comment": "[Log] Refresh version list to show status.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔄 刷新版本列表以显示已安装状态..."
-          }
-        }
-      }
-    },
-    "🔄 Refresh version list to update installation status...": {
-      "comment": "[Log] Refresh version list.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔄 刷新版本列表以更新安装状态..."
-          }
-        }
-      }
-    },
-    "🔄 Test 1: Refresh version list": {
-      "comment": "[Log] Test 1 title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔄 测试 1：刷新版本列表"
-          }
-        }
-      }
-    },
-    "🔄 Testing proxy connection...": {
-      "comment": "[Log] Testing proxy connection.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔄 正在测试代理连通性。。。"
-          }
-        }
-      }
-    },
-    "🔍 Applying filter: %@, filtered count: %lld": {
-      "comment": "[Log] Filtering results.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔍 正在应用筛选：%@，筛选结果：%lld"
-          }
-        }
-      }
-    },
-    "🔍 Checking version manager status...": {
-      "comment": "[Log] Checking version manager status.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔍 正在检查版本管理器状态..."
-          }
-        }
-      }
-    },
-    "🔍 Filter applied: %@": {
-      "comment": "[Log] Filter applied.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔍 筛选器已应用：%@"
-          }
-        }
-      }
-    },
-    "🔍 Filter: All versions": {
-      "comment": "[Log] Filter all versions.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔍 筛选：所有版本"
-          }
-        }
-      }
-    },
-    "🔍 Filter: Alpha only": {
-      "comment": "[Log] Filter alpha only.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔍 筛选：仅 Alpha 版"
-          }
-        }
-      }
-    },
-    "🔍 Filter: Beta only": {
-      "comment": "[Log] Filter beta only.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔍 筛选：仅 Beta 版"
-          }
-        }
-      }
-    },
-    "🔍 Filter: Releases only": {
-      "comment": "[Log] Filter releases only.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔍 筛选：仅正式版"
-          }
-        }
-      }
-    },
-    "🔍 Filter: Snapshots only": {
-      "comment": "[Log] Filter snapshots only.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔍 筛选：仅快照版"
-          }
-        }
-      }
-    },
-    "🔍 Test 4: Check installed versions": {
-      "comment": "[Log] Test 4 title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔍 测试 4：检查已安装版本"
-          }
-        }
-      }
-    },
-    "🔵 Beta": {
-      "comment": "[Checkbox] Beta filter.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔵 Beta"
-          }
-        }
-      }
-    },
-    "🖱️ Double-clicked version:": {
-      "comment": "[Log] Double-clicked version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🖱️ 双击版本："
-          }
-        }
-      }
-    },
-    "🚀 Launching version: %@": {
-      "comment": "[Log] Launching version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🚀 启动版本：%@"
-          }
-        }
-      }
-    },
-    "🚀 Test 5: Download full version - %@": {
-      "comment": "[Log] Test 5 title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🚀 测试 5：下载完整版本 - %@"
-          }
-        }
-      }
-    },
-    "🟡 Snapshot": {
-      "comment": "[Checkbox] Snapshot filter.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🟡 快照版"
-          }
-        }
-      }
-    },
-    "🟢 Release": {
-      "comment": "[Checkbox] Release filter.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🟢 正式版"
-          }
-        }
-      }
-    },
-    "🟣 Alpha": {
-      "comment": "[Checkbox] Alpha filter.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🟣 Alpha"
-          }
-        }
-      }
-    },
-    "1 installed version": {
-      "comment": "[Text] One installed version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "共 1 个已安装版本"
-          }
-        }
-      }
-    },
-    "1. Refresh Versions": {
-      "comment": "[Button] Refresh versions list.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1. 刷新版本列表"
-          }
-        }
-      }
-    },
-    "2. Get Version Details": {
-      "comment": "[Button] Get version details.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "2. 获取版本详情"
-          }
-        }
-      }
-    },
-    "3. Download Test File": {
-      "comment": "[Button] Download test file.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "3. 下载测试文件"
-          }
-        }
-      }
-    },
-    "5. Download Version": {
-      "comment": "[Button] Download version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "5. 下载版本"
-          }
-        }
-      }
-    },
-    "Account \"%@\" will be permanently deleted. This action cannot be undone.": {
-      "comment": "[Alert] Delete account confirmation message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "账号 \"%@\" 将被永久删除，此操作无法撤销。"
-          }
-        }
-      }
-    },
-    "Account Management": {
-      "comment": "[Button] Open account management window.\n[Text] Account management title.\n[Text] Account management window title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "账号管理"
-          }
-        }
-      }
-    },
-    "Add Account": {
-      "comment": "[Button] Add account button.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加账号"
-          }
-        }
-      }
-    },
-    "All Versions": {
-      "comment": "[Filter] All versions option.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "所有版本"
-          }
-        }
-      }
-    },
-    "Alpha": {
-      "comment": "[Text] Alpha version type.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alpha"
-          }
-        }
-      }
-    },
-    "Alpha Only": {
-      "comment": "[Filter] Alpha only option.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "仅 Alpha 版"
-          }
-        }
-      }
-    },
-    "Apply Proxy": {
-      "comment": "[Button] Apply proxy settings.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "应用代理"
-          }
-        }
-      }
-    },
-    "Apply Settings": {
-      "comment": "[Button] Apply settings button.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "应用设置"
-          }
-        }
-      }
-    },
-    "Are you sure you want to download %@?\nThis will download game core, libraries and assets.": {
-      "comment": "[Alert] Confirm download message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "确定要下载 %@ 吗？\n这将下载游戏核心、库文件和资源。"
-          }
-        }
-      }
-    },
-    "Asset index not found: %@": {
-      "comment": "[Error] Asset index not found.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "资源索引未找到：%@"
-          }
-        }
-      }
-    },
-    "Beta": {
-      "comment": "[Text] Beta version type.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Beta"
-          }
-        }
-      }
-    },
-    "Beta Only": {
-      "comment": "[Filter] Beta only option.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "仅 Beta 版"
-          }
-        }
-      }
-    },
-    "Cancel": {
-      "comment": "[Button] Cancel button.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "取消"
-          }
-        }
-      }
-    },
-    "Clear Log": {
-      "comment": "[Button] Clear log.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "清除日志"
-          }
-        }
-      }
-    },
-    "Click button to start testing": {
-      "comment": "[Text] Initial status message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "点击按钮开始测试"
-          }
-        }
-      }
-    },
-    "Configure application settings": {
-      "comment": "[Text] Settings subtitle.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "配置应用程序设置"
-          }
-        }
-      }
-    },
-    "Confirm": {
-      "comment": "[Button] Confirm button.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "确认"
-          }
-        }
-      }
-    },
-    "Confirm Deletion": {
-      "comment": "[Alert] Delete account confirmation title.\n[Alert] Delete confirmation title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "确定要删除版本吗？"
-          }
-        }
-      }
-    },
-    "Confirm Download": {
-      "comment": "[Alert] Confirm download title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "确认下载"
-          }
-        }
-      }
-    },
-    "Delete": {
-      "comment": "[Button] Delete button.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "删除"
-          }
-        }
-      }
-    },
-    "Delete Account": {
-      "comment": "[Menu] Delete account.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "删除账号"
-          }
-        }
-      }
-    },
-    "Delete Version": {
-      "comment": "[Menu] Delete version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "删除版本"
-          }
-        }
-      }
-    },
-    "Deletion Failed": {
-      "comment": "[Alert] Delete failed title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "删除失败"
-          }
-        }
-      }
-    },
-    "Deletion Successful": {
-      "comment": "[Notification] Delete success title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "删除成功"
-          }
-        }
-      }
-    },
-    "Detect and manage Java installations for running Minecraft": {
-      "comment": "[Text] Java detection subtitle.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "检测和管理用于运行 Minecraft 的 Java 安装"
-          }
-        }
-      }
-    },
-    "Detect Java": {
-      "comment": "[Button] Detect Java installations.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "检测 Java"
-          }
-        }
-      }
-    },
-    "Detecting Java installation...": {
-      "comment": "[Status] Detecting Java installation.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在检测 Java 安装..."
-          }
-        }
-      }
-    },
-    "Detecting Java installations...": {
-      "comment": "[Status] Detecting Java installations.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在检测 Java 安装..."
-          }
-        }
-      }
-    },
-    "Download cancelled": {
-      "comment": "[Error] Download cancelled.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下载已取消"
-          }
-        }
-      }
-    },
-    "Download Completed": {
-      "comment": "[Alert] Download completed title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下载完成"
-          }
-        }
-      }
-    },
-    "Download completed!": {
-      "comment": "[Status] Download completed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下载完成！"
-          }
-        }
-      }
-    },
-    "Download failed": {
-      "comment": "[Status] Download failed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下载失败"
-          }
-        }
-      }
-    },
-    "Download Failed": {
-      "comment": "[Alert] Download failed title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下载失败"
-          }
-        }
-      }
-    },
-    "Download failed: %@": {
-      "comment": "[Error] Download failed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下载失败：%@"
-          }
-        }
-      }
-    },
-    "Downloading test file...": {
-      "comment": "[Status] Downloading test file.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在下载测试文件..."
-          }
-        }
-      }
-    },
-    "Downloading version...": {
-      "comment": "[Status] Downloading version.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在下载版本..."
-          }
-        }
-      }
-    },
-    "Downloading: %@ | Speed: %@/s | %@": {
-      "comment": "[Status] Downloading with progress.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "Downloading: %1$@ | Speed: %2$@/s | %3$@"
+    "🎯 Default selected latest release: %@ (index: %lld)" : {
+      "comment" : "[Log] Default selected with index.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "🎯 Default selected latest release: %1$@ (index: %2$lld)"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在下载：%1$@ | 速度：%2$@/s | %3$@"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎯 默认选择最新正式版：%1$@ (索引：%2$lld)"
           }
         }
       }
     },
-    "Duplicate Username": {
-      "comment": "[Alert] Duplicate username title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用户名重复"
+    "💾 Client file:" : {
+      "comment" : "[Log] Client file title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💾 客户端文件："
           }
         }
       }
     },
-    "e.g., 127.0.0.1": {
-      "comment": "[Placeholder] Proxy host placeholder.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "例如：127.0.0.1"
+    "💾 File size: %@" : {
+      "comment" : "[Log] File size.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💾 文件大小：%@"
           }
         }
       }
     },
-    "e.g., 7890": {
-      "comment": "[Placeholder] Proxy port placeholder.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "例如：7890"
+    "📁 Minecraft directory: %@" : {
+      "comment" : "[Log] Minecraft directory path.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📁 Minecraft 目录：%@"
           }
         }
       }
     },
-    "Enable Proxy": {
-      "comment": "[Checkbox] Enable proxy checkbox.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启用代理"
+    "📂 File path: %@" : {
+      "comment" : "[Log] File path.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📂 文件路径：%@"
           }
         }
       }
     },
-    "Enter username (3-16 characters)": {
-      "comment": "[Placeholder] Account username placeholder.\n[Placeholder] Username placeholder.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "输入用户名（3-16个字符）"
+    "📊 Currently loaded versions: %lld" : {
+      "comment" : "[Log] Currently loaded versions count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📊 当前已加载版本：%lld"
           }
         }
       }
     },
-    "Extracting native libraries...": {
-      "comment": "[Status] Extracting native libraries.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在提取本地库..."
+    "📊 Displayed versions: %lld" : {
+      "comment" : "[Log] Displayed versions count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📊 显示版本：%lld"
           }
         }
       }
     },
-    "Failed to connect through proxy:\n%@": {
-      "comment": "[Alert] Proxy test failed message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通过代理连接失败：\n%@"
+    "📊 Latest release: %@" : {
+      "comment" : "[Log] Latest release version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📊 最新正式版：%@"
           }
         }
       }
     },
-    "Failed to get details": {
-      "comment": "[Status] Failed to get details.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "获取详情失败"
+    "📊 Latest snapshot: %@" : {
+      "comment" : "[Log] Latest snapshot version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📊 最新快照版：%@"
           }
         }
       }
     },
-    "Failed to launch game: %@": {
-      "comment": "[Alert] Launch failed message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启动游戏失败：%@"
+    "📊 Need to download %lld libraries" : {
+      "comment" : "[Log] Need to download libraries count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📊 需要下载 %lld 个库文件"
           }
         }
       }
     },
-    "File not found: %@": {
-      "comment": "[Error] File not found.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "文件未找到：%@"
+    "📊 Total versions: %lld" : {
+      "comment" : "[Log] Total versions count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📊 总版本数：%lld"
           }
         }
       }
     },
-    "Filter:": {
-      "comment": "[Label] Filter label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "筛选："
+    "📋 Filter cleared, showing all version types" : {
+      "comment" : "[Log] Filter cleared.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 筛选已清除，显示所有版本类型"
           }
         }
       }
     },
-    "Found %lld Java installation(s)": {
-      "comment": "[Status] Found Java installations.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "找到 %lld 个 Java 安装"
+    "📋 First 10 releases:" : {
+      "comment" : "[Log] First 10 releases title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 前 10 个正式版："
           }
         }
       }
     },
-    "Function Test Window": {
-      "comment": "[Text] Test window title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "功能测试窗口"
+    "📋 Loading cached versions..." : {
+      "comment" : "[Log] Loading cached versions.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 正在加载缓存的版本..."
           }
         }
       }
     },
-    "Game launched successfully!": {
-      "comment": "[Status] Game launched successfully.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "游戏启动成功！"
+    "📋 Refreshing version list..." : {
+      "comment" : "[Log] Refreshing version list.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 正在刷新版本列表..."
           }
         }
       }
     },
-    "Getting version details...": {
-      "comment": "[Status] Getting version details.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在获取版本详情..."
+    "📋 Showing all versions, total: %lld" : {
+      "comment" : "[Log] Showing all versions.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 显示所有版本，总计：%lld"
           }
         }
       }
     },
-    "Host:": {
-      "comment": "[Label] Proxy host label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "主机："
+    "📋 Updating version list..." : {
+      "comment" : "[Log] Updating version list.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 正在更新版本列表..."
           }
         }
       }
     },
-    "HTTP": {
-      "comment": "[Text] HTTP proxy type.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "HTTP"
+    "📋 Version dropdown updated with %lld versions" : {
+      "comment" : "[Log] Version dropdown updated.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 版本下拉列表已更新，共 %lld 个版本"
           }
         }
       }
     },
-    "HTTP error: %lld": {
-      "comment": "[Error] HTTP error.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "HTTP 错误：%lld"
+    "📋 Version list empty, refreshing..." : {
+      "comment" : "[Log] Version list empty, refreshing.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 版本列表为空，正在刷新..."
           }
         }
       }
     },
-    "HTTPS": {
-      "comment": "[Text] HTTPS proxy type.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "HTTPS"
+    "📌 Asset index: %@" : {
+      "comment" : "[Log] Asset index.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📌 资源索引：%@"
           }
         }
       }
     },
-    "Installation Path": {
-      "comment": "[Table] Java installation path column.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "安装路径"
+    "📌 Main class: %@" : {
+      "comment" : "[Log] Main class.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📌 主类：%@"
           }
         }
       }
     },
-    "Installed Versions": {
-      "comment": "[Text] Installed versions title.\n[Text] Installed versions window title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已安装的版本"
+    "📌 Selected version: %@" : {
+      "comment" : "[Log] Selected version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📌 已选择版本：%@"
           }
         }
       }
     },
-    "Invalid Configuration": {
-      "comment": "[Alert] Invalid proxy configuration title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无效配置"
+    "📌 Type: %@" : {
+      "comment" : "[Log] Version type.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📌 类型：%@"
           }
         }
       }
     },
-    "Invalid proxy configuration": {
-      "comment": "[Error] Invalid proxy configuration.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无效的代理配置"
+    "📌 Version ID: %@" : {
+      "comment" : "[Log] Version ID.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📌 版本 ID：%@"
           }
         }
       }
     },
-    "Invalid URL: %@": {
-      "comment": "[Error] Invalid URL.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无效的 URL：%@"
+    "📍 Save location: %@" : {
+      "comment" : "[Log] Save location.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📍 保存位置：%@"
           }
         }
       }
     },
-    "Invalid Username": {
-      "comment": "[Alert] Invalid username title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用户名无效"
+    "📚 Library information:" : {
+      "comment" : "[Log] Library information title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📚 库文件信息："
           }
         }
       }
     },
-    "Java Detection": {
-      "comment": "[Button] Open Java detection window.\n[Text] Java detection window title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Java 检测"
+    "📝 Log cleared" : {
+      "comment" : "[Log] Log cleared.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📝 日志已清除"
           }
         }
       }
     },
-    "Java detection window closed, click button to reopen": {
-      "comment": "[Text] Java window closed status.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Java 检测窗口已关闭，点击按钮重新打开"
+    "📝 Please click buttons in order to test functions" : {
+      "comment" : "[Log] Please click buttons in order.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📝 请按顺序点击按钮以测试功能"
           }
         }
       }
     },
-    "Java detection window opened": {
-      "comment": "[Text] Java window opened status.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Java 检测窗口已打开"
+    "📝 Version list updated" : {
+      "comment" : "[Log] Version list updated.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📝 版本列表已更新"
           }
         }
       }
     },
-    "Java Installation Detection": {
-      "comment": "[Text] Java detection title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Java 安装检测"
+    "📥 Starting download of version manifest..." : {
+      "comment" : "[Log] Starting download of version manifest.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📥 开始下载版本清单..."
           }
         }
       }
     },
-    "Java Not Found": {
-      "comment": "[Alert] Java not found title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到 Java"
+    "📦 Getting version details..." : {
+      "comment" : "[Log] Getting version details.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📦 正在获取版本详情..."
           }
         }
       }
     },
-    "JAVA_HOME:": {
-      "comment": "[Label] JAVA_HOME environment variable label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "JAVA_HOME："
+    "📦 Test 2: Get version details - %@" : {
+      "comment" : "[Log] Test 2 title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📦 测试 2：获取版本详情 - %@"
           }
         }
       }
     },
-    "Launch": {
-      "comment": "[Button] Launch button.\n[Button] Launch game button.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启动"
+    "📭 No installed versions" : {
+      "comment" : "[Log] No installed versions.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📭 没有已安装的版本"
           }
         }
       }
     },
-    "Launch Failed": {
-      "comment": "[Alert] Launch failed title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启动失败"
+    "🔄 Refresh version list to show installed status..." : {
+      "comment" : "[Log] Refresh version list to show status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔄 刷新版本列表以显示已安装状态..."
           }
         }
       }
     },
-    "Launch Game": {
-      "comment": "[Menu] Launch game.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启动游戏"
+    "🔄 Refresh version list to update installation status..." : {
+      "comment" : "[Log] Refresh version list.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔄 刷新版本列表以更新安装状态..."
           }
         }
       }
     },
-    "Launching game...": {
-      "comment": "[Status] Launching game.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在启动游戏..."
+    "🔄 Test 1: Refresh version list" : {
+      "comment" : "[Log] Test 1 title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔄 测试 1：刷新版本列表"
           }
         }
       }
     },
-    "Manage offline mode usernames for quick launch": {
-      "comment": "[Text] Account management subtitle.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "管理离线模式用户名以便快速启动"
+    "🔄 Testing proxy connection..." : {
+      "comment" : "[Log] Testing proxy connection.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔄 正在测试代理连通性。。。"
           }
         }
       }
     },
-    "Manual Input...": {
-      "comment": "[Option] Manual input option.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "手动输入..."
+    "🔍 Applying filter: %@, filtered count: %lld" : {
+      "comment" : "[Log] Filtering results.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 正在应用筛选：%@，筛选结果：%lld"
           }
         }
       }
     },
-    "Minecraft": {
-      "comment": "[Accessibility] Minecraft icon description.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minecraft"
+    "🔍 Checking version manager status..." : {
+      "comment" : "[Log] Checking version manager status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 正在检查版本管理器状态..."
           }
         }
       }
     },
-    "Minecraft Launcher": {
-      "comment": "[Text] Main window title label.\n[Text] Main window title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minecraft 启动器"
+    "🔍 Filter applied: %@" : {
+      "comment" : "[Log] Filter applied.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 筛选器已应用：%@"
           }
         }
       }
     },
-    "Network Proxy": {
-      "comment": "[Text] Proxy section title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "网络代理"
+    "🔍 Filter: All versions" : {
+      "comment" : "[Log] Filter all versions.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 筛选：所有版本"
           }
         }
       }
     },
-    "No accounts saved yet": {
-      "comment": "[Text] No accounts message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "还没有保存任何账号"
+    "🔍 Filter: Alpha only" : {
+      "comment" : "[Log] Filter alpha only.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 筛选：仅 Alpha 版"
           }
         }
       }
     },
-    "No compatible Java installation found. Please install Java to run Minecraft.": {
-      "comment": "[Alert] Java not found message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到兼容的 Java 安装。请安装 Java 以运行 Minecraft。"
+    "🔍 Filter: Beta only" : {
+      "comment" : "[Log] Filter beta only.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 筛选：仅 Beta 版"
           }
         }
       }
     },
-    "No installed versions": {
-      "comment": "[Text] No installed versions message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暂无已安装的版本"
+    "🔍 Filter: Releases only" : {
+      "comment" : "[Log] Filter releases only.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 筛选：仅正式版"
           }
         }
       }
     },
-    "No Java installations found": {
-      "comment": "[Status] No Java found.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到 Java 安装"
+    "🔍 Filter: Snapshots only" : {
+      "comment" : "[Log] Filter snapshots only.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 筛选：仅快照版"
           }
         }
       }
     },
-    "No Java installations were detected on your system. Please install Java to run Minecraft.": {
-      "comment": "[Message] No Java installations found message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "系统中未检测到 Java 安装。请安装 Java 以运行 Minecraft。"
+    "🔍 Test 4: Check installed versions" : {
+      "comment" : "[Log] Test 4 title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 测试 4：检查已安装版本"
           }
         }
       }
     },
-    "No saved accounts": {
-      "comment": "[Message] No saved accounts message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "没有保存的账号"
+    "🔵 Beta" : {
+      "comment" : "[Checkbox] Beta filter.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔵 Beta"
           }
         }
       }
     },
-    "No versions installed yet": {
-      "comment": "[Text] No versions installed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "还没有安装任何版本"
+    "🖱️ Double-clicked version:" : {
+      "comment" : "[Log] Double-clicked version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🖱️ 双击版本："
           }
         }
       }
     },
-    "No versions loaded": {
-      "comment": "[Text] No versions loaded message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "没有加载版本"
+    "🚀 Launching version: %@" : {
+      "comment" : "[Log] Launching version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🚀 启动版本：%@"
           }
         }
       }
     },
-    "Not set": {
-      "comment": "[Text] JAVA_HOME not set.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未设置"
+    "🚀 Test 5: Download full version - %@" : {
+      "comment" : "[Log] Test 5 title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🚀 测试 5：下载完整版本 - %@"
           }
         }
       }
     },
-    "Offline Launch": {
-      "comment": "[Text] Offline launch window title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "离线启动"
+    "🟡 Snapshot" : {
+      "comment" : "[Checkbox] Snapshot filter.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🟡 快照版"
           }
         }
       }
     },
-    "Offline Mode": {
-      "comment": "[Text] Offline mode title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "离线模式"
+    "🟢 Release" : {
+      "comment" : "[Checkbox] Release filter.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🟢 正式版"
           }
         }
       }
     },
-    "OK": {
-      "comment": "[Button] OK button.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "确定"
+    "🟣 Alpha" : {
+      "comment" : "[Checkbox] Alpha filter.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🟣 Alpha"
           }
         }
       }
     },
-    "Open Test Window": {
-      "comment": "[Button] Open test window.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开测试窗口"
+    "1 installed version" : {
+      "comment" : "[Text] One installed version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共 1 个已安装版本"
           }
         }
       }
     },
-    "Parse failed: %@": {
-      "comment": "[Error] Parse failed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "解析失败：%@"
+    "1. Refresh Versions" : {
+      "comment" : "[Button] Refresh versions list.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. 刷新版本列表"
           }
         }
       }
     },
-    "Please enter valid host and port.": {
-      "comment": "[Alert] Invalid proxy configuration message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请输入有效的主机和端口。"
+    "2. Get Version Details" : {
+      "comment" : "[Button] Get version details.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. 获取版本详情"
           }
         }
       }
     },
-    "Port:": {
-      "comment": "[Label] Proxy port label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "端口："
+    "3. Download Test File" : {
+      "comment" : "[Button] Download test file.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. 下载测试文件"
           }
         }
       }
     },
-    "Preparing to launch game...": {
-      "comment": "[Status] Preparing to launch game.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在准备启动游戏..."
+    "5. Download Version" : {
+      "comment" : "[Button] Download version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5. 下载版本"
           }
         }
       }
     },
-    "Proxy applied: %@:%lld": {
-      "comment": "[Status] Proxy applied with host and port.\n[Status] Proxy applied.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "Proxy applied: %1$@:%2$lld"
+    "Account \"%@\" will be permanently deleted. This action cannot be undone." : {
+      "comment" : "[Alert] Delete account confirmation message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "账号 \"%@\" 将被永久删除，此操作无法撤销。"
+          }
+        }
+      }
+    },
+    "Account Management" : {
+      "comment" : "[Button] Open account management window.\n[Text] Account management title.\n[Text] Account management window title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "账号管理"
+          }
+        }
+      }
+    },
+    "Add Account" : {
+      "comment" : "[Button] Add account button.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加账号"
+          }
+        }
+      }
+    },
+    "All Versions" : {
+      "comment" : "[Filter] All versions option.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有版本"
+          }
+        }
+      }
+    },
+    "Alpha" : {
+      "comment" : "[Text] Alpha version type.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alpha"
+          }
+        }
+      }
+    },
+    "Alpha Only" : {
+      "comment" : "[Filter] Alpha only option.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅 Alpha 版"
+          }
+        }
+      }
+    },
+    "Apply Proxy" : {
+      "comment" : "[Button] Apply proxy settings.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用代理"
+          }
+        }
+      }
+    },
+    "Apply Settings" : {
+      "comment" : "[Button] Apply settings button.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用设置"
+          }
+        }
+      }
+    },
+    "Are you sure you want to download %@?\nThis will download game core, libraries and assets." : {
+      "comment" : "[Alert] Confirm download message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要下载 %@ 吗？\n这将下载游戏核心、库文件和资源。"
+          }
+        }
+      }
+    },
+    "Asset index not found: %@" : {
+      "comment" : "[Error] Asset index not found.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "资源索引未找到：%@"
+          }
+        }
+      }
+    },
+    "Beta" : {
+      "comment" : "[Text] Beta version type.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beta"
+          }
+        }
+      }
+    },
+    "Beta Only" : {
+      "comment" : "[Filter] Beta only option.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅 Beta 版"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "comment" : "[Button] Cancel button.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        }
+      }
+    },
+    "Clear Log" : {
+      "comment" : "[Button] Clear log.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除日志"
+          }
+        }
+      }
+    },
+    "Click button to start" : {
+      "comment" : "[Text] Initial status message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击按钮开始"
+          }
+        }
+      }
+    },
+    "Click button to start testing" : {
+      "comment" : "[Text] Initial status message.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击按钮开始测试"
+          }
+        }
+      }
+    },
+    "Configure application settings" : {
+      "comment" : "[Text] Settings subtitle.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配置应用程序设置"
+          }
+        }
+      }
+    },
+    "Confirm" : {
+      "comment" : "[Button] Confirm button.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认"
+          }
+        }
+      }
+    },
+    "Confirm Deletion" : {
+      "comment" : "[Alert] Delete account confirmation title.\n[Alert] Delete confirmation title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除版本吗？"
+          }
+        }
+      }
+    },
+    "Confirm Download" : {
+      "comment" : "[Alert] Confirm download title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认下载"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "comment" : "[Button] Delete button.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
+        }
+      }
+    },
+    "Delete Account" : {
+      "comment" : "[Menu] Delete account.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除账号"
+          }
+        }
+      }
+    },
+    "Delete Version" : {
+      "comment" : "[Menu] Delete version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除版本"
+          }
+        }
+      }
+    },
+    "Deletion Failed" : {
+      "comment" : "[Alert] Delete failed title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除失败"
+          }
+        }
+      }
+    },
+    "Deletion Successful" : {
+      "comment" : "[Notification] Delete success title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除成功"
+          }
+        }
+      }
+    },
+    "Detect and manage Java installations for running Minecraft" : {
+      "comment" : "[Text] Java detection subtitle.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "检测和管理用于运行 Minecraft 的 Java 安装"
+          }
+        }
+      }
+    },
+    "Detect Java" : {
+      "comment" : "[Button] Detect Java installations.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "检测 Java"
+          }
+        }
+      }
+    },
+    "Detecting Java installation..." : {
+      "comment" : "[Status] Detecting Java installation.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在检测 Java 安装..."
+          }
+        }
+      }
+    },
+    "Detecting Java installations..." : {
+      "comment" : "[Status] Detecting Java installations.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在检测 Java 安装..."
+          }
+        }
+      }
+    },
+    "Download cancelled" : {
+      "comment" : "[Error] Download cancelled.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载已取消"
+          }
+        }
+      }
+    },
+    "Download Completed" : {
+      "comment" : "[Alert] Download completed title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载完成"
+          }
+        }
+      }
+    },
+    "Download completed!" : {
+      "comment" : "[Status] Download completed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载完成！"
+          }
+        }
+      }
+    },
+    "Download failed" : {
+      "comment" : "[Status] Download failed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载失败"
+          }
+        }
+      }
+    },
+    "Download Failed" : {
+      "comment" : "[Alert] Download failed title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载失败"
+          }
+        }
+      }
+    },
+    "Download failed: %@" : {
+      "comment" : "[Error] Download failed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载失败：%@"
+          }
+        }
+      }
+    },
+    "Downloading test file..." : {
+      "comment" : "[Status] Downloading test file.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载测试文件..."
+          }
+        }
+      }
+    },
+    "Downloading version..." : {
+      "comment" : "[Status] Downloading version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载版本..."
+          }
+        }
+      }
+    },
+    "Downloading: %@ | Speed: %@/s | %@" : {
+      "comment" : "[Status] Downloading with progress.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Downloading: %1$@ | Speed: %2$@/s | %3$@"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "代理已应用：%1$@:%2$lld"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载：%1$@ | 速度：%2$@/s | %3$@"
           }
         }
       }
     },
-    "Proxy connection failed: %@": {
-      "comment": "[Error] Proxy connection failed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "代理连接失败：%@"
+    "Duplicate Username" : {
+      "comment" : "[Alert] Duplicate username title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户名重复"
           }
         }
       }
     },
-    "Proxy connection is working correctly.": {
-      "comment": "[Alert] Proxy test successful message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "代理连接正常工作。"
+    "e.g., 127.0.0.1" : {
+      "comment" : "[Placeholder] Proxy host placeholder.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "例如：127.0.0.1"
           }
         }
       }
     },
-    "Proxy connection test failed": {
-      "comment": "[Status] Proxy connection test failed.\n[Status] Proxy test failed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "代理连接测试失败"
+    "e.g., 7890" : {
+      "comment" : "[Placeholder] Proxy port placeholder.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "例如：7890"
           }
         }
       }
     },
-    "Proxy connection test successful": {
-      "comment": "[Status] Proxy connection test successful.\n[Status] Proxy test success.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "代理连接测试成功"
+    "Enable Proxy" : {
+      "comment" : "[Checkbox] Enable proxy checkbox.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用代理"
           }
         }
       }
     },
-    "Proxy disabled": {
-      "comment": "[Status] Proxy disabled.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "代理已禁用"
+    "Enter username (3-16 characters)" : {
+      "comment" : "[Placeholder] Account username placeholder.\n[Placeholder] Username placeholder.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入用户名（3-16个字符）"
           }
         }
       }
     },
-    "Proxy enabled": {
-      "comment": "[Status] Proxy enabled.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "代理已启用"
+    "Extracting native libraries..." : {
+      "comment" : "[Status] Extracting native libraries.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在提取本地库..."
           }
         }
       }
     },
-    "Proxy Settings": {
-      "comment": "[Label] Proxy settings section title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "代理设置"
+    "Failed to connect through proxy:\n%@" : {
+      "comment" : "[Alert] Proxy test failed message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通过代理连接失败：\n%@"
           }
         }
       }
     },
-    "Proxy Test Failed": {
-      "comment": "[Alert] Proxy test failed title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "代理测试失败"
+    "Failed to get details" : {
+      "comment" : "[Status] Failed to get details.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "获取详情失败"
           }
         }
       }
     },
-    "Proxy Test Successful": {
-      "comment": "[Alert] Proxy test successful title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "代理测试成功"
+    "Failed to launch game: %@" : {
+      "comment" : "[Alert] Launch failed message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动游戏失败：%@"
           }
         }
       }
     },
-    "Ready": {
-      "comment": "[Status] Ready status.\n[Text] Ready status.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "就绪"
+    "File not found: %@" : {
+      "comment" : "[Error] File not found.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件未找到：%@"
           }
         }
       }
     },
-    "Ready to detect Java installations": {
-      "comment": "[Status] Ready to detect Java.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "准备检测 Java 安装"
+    "Filter:" : {
+      "comment" : "[Label] Filter label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "筛选："
           }
         }
       }
     },
-    "Refresh": {
-      "comment": "[Button] Refresh Java detection.\n[Button] Refresh versions list.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "刷新"
+    "Found %lld Java installation(s)" : {
+      "comment" : "[Status] Found Java installations.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "找到 %lld 个 Java 安装"
           }
         }
       }
     },
-    "Refresh failed: %@": {
-      "comment": "[Status] Refresh failed with error.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "刷新失败：%@"
+    "Function Test Window" : {
+      "comment" : "[Text] Test window title.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "功能测试窗口"
           }
         }
       }
     },
-    "Refreshing version list...": {
-      "comment": "[Status] Refreshing version list.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在刷新版本列表..."
+    "Game launched successfully!" : {
+      "comment" : "[Status] Game launched successfully.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "游戏启动成功！"
           }
         }
       }
     },
-    "Release": {
-      "comment": "[Text] Release version type.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正式版本"
+    "Getting version details..." : {
+      "comment" : "[Status] Getting version details.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在获取版本详情..."
           }
         }
       }
     },
-    "Release Time": {
-      "comment": "[Table] Release time column header.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "发布时间"
+    "Host:" : {
+      "comment" : "[Label] Proxy host label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主机："
           }
         }
       }
     },
-    "Releases Only": {
-      "comment": "[Filter] Releases only option.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "仅正式版"
+    "HTTP" : {
+      "comment" : "[Text] HTTP proxy type.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTP"
           }
         }
       }
     },
-    "Select a saved account to launch in offline mode.": {
-      "comment": "[Text] Offline mode description.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选择已保存的账号以离线模式启动。"
+    "HTTP error: %lld" : {
+      "comment" : "[Error] HTTP error.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTP 错误：%lld"
           }
         }
       }
     },
-    "Select Account:": {
-      "comment": "[Label] Select account label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选择账号："
+    "HTTPS" : {
+      "comment" : "[Text] HTTPS proxy type.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTPS"
           }
         }
       }
     },
-    "Settings": {
-      "comment": "[Button] Open settings window.\n[Text] Settings title.\n[Text] Settings window title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "设置"
+    "Installation Path" : {
+      "comment" : "[Table] Java installation path column.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安装路径"
           }
         }
       }
     },
-    "SHA1 verification failed": {
-      "comment": "[Error] SHA1 verification failed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SHA1 校验失败"
+    "Installed Versions" : {
+      "comment" : "[Text] Installed versions title.\n[Text] Installed versions window title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已安装的版本"
           }
         }
       }
     },
-    "Show in Finder": {
-      "comment": "[Menu] Show version in Finder.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 Finder 中显示"
+    "Invalid Configuration" : {
+      "comment" : "[Alert] Invalid proxy configuration title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效配置"
           }
         }
       }
     },
-    "Snapshot": {
-      "comment": "[Text] Snapshot version type.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "快照版本"
+    "Invalid proxy configuration" : {
+      "comment" : "[Error] Invalid proxy configuration.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效的代理配置"
           }
         }
       }
     },
-    "Snapshots Only": {
-      "comment": "[Filter] Snapshots only option.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "仅快照版"
+    "Invalid URL: %@" : {
+      "comment" : "[Error] Invalid URL.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效的 URL：%@"
           }
         }
       }
     },
-    "SOCKS5": {
-      "comment": "[Text] SOCKS5 proxy type.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SOCKS5"
+    "Invalid Username" : {
+      "comment" : "[Alert] Invalid username title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户名无效"
           }
         }
       }
     },
-    "Status": {
-      "comment": "[Table] Java status column.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "状态"
+    "Java Detection" : {
+      "comment" : "[Button] Open Java detection window.\n[Text] Java detection window title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Java 检测"
           }
         }
       }
     },
-    "Test file download completed": {
-      "comment": "[Status] Test file download completed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "测试文件下载完成"
+    "Java detection window closed, click button to reopen" : {
+      "comment" : "[Text] Java window closed status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Java 检测窗口已关闭，点击按钮重新打开"
           }
         }
       }
     },
-    "Test Proxy": {
-      "comment": "[Button] Test proxy button.\n[Button] Test proxy connection.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "测试代理"
+    "Java detection window opened" : {
+      "comment" : "[Text] Java window opened status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Java 检测窗口已打开"
           }
         }
       }
     },
-    "Test window closed, click button to reopen": {
-      "comment": "[Text] Test window closed status.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "测试窗口已关闭，点击按钮重新打开"
+    "Java Installation Detection" : {
+      "comment" : "[Text] Java detection title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Java 安装检测"
           }
         }
       }
     },
-    "Test window opened": {
-      "comment": "[Text] Test window opened status.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "测试窗口已打开"
+    "Java Not Found" : {
+      "comment" : "[Alert] Java not found title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到 Java"
           }
         }
       }
     },
-    "Testing proxy connection...": {
-      "comment": "[Status] Testing proxy connection.\n[Status] Testing proxy.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在测试代理连接..."
+    "JAVA_HOME:" : {
+      "comment" : "[Label] JAVA_HOME environment variable label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "JAVA_HOME："
           }
         }
       }
     },
-    "This username already exists.": {
-      "comment": "[Alert] Duplicate username error.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "该用户名已存在。"
+    "Launch" : {
+      "comment" : "[Button] Launch button.\n[Button] Launch game button.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动"
           }
         }
       }
     },
-    "Type": {
-      "comment": "[Table] Java type column.\n[Table] Type column header.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "类型"
+    "Launch Failed" : {
+      "comment" : "[Alert] Launch failed title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动失败"
           }
         }
       }
     },
-    "Type:": {
-      "comment": "[Label] Proxy type label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "类型："
+    "Launch Game" : {
+      "comment" : "[Menu] Launch game.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动游戏"
           }
         }
       }
     },
-    "Unable to delete version %@: %@": {
-      "comment": "[Alert] Delete failed message.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "Unable to delete version %1$@: %2$@"
+    "Launching game..." : {
+      "comment" : "[Status] Launching game.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在启动游戏..."
+          }
+        }
+      }
+    },
+    "Manage offline mode usernames for quick launch" : {
+      "comment" : "[Text] Account management subtitle.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理离线模式用户名以便快速启动"
+          }
+        }
+      }
+    },
+    "Manual Input..." : {
+      "comment" : "[Option] Manual input option.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手动输入..."
+          }
+        }
+      }
+    },
+    "Minecraft" : {
+      "comment" : "[Accessibility] Minecraft icon description.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minecraft"
+          }
+        }
+      }
+    },
+    "Minecraft Launcher" : {
+      "comment" : "[Text] Main window title label.\n[Text] Main window title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minecraft 启动器"
+          }
+        }
+      }
+    },
+    "Network Proxy" : {
+      "comment" : "[Text] Proxy section title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网络代理"
+          }
+        }
+      }
+    },
+    "No accounts saved yet" : {
+      "comment" : "[Text] No accounts message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有保存任何账号"
+          }
+        }
+      }
+    },
+    "No compatible Java installation found. Please install Java to run Minecraft." : {
+      "comment" : "[Alert] Java not found message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到兼容的 Java 安装。请安装 Java 以运行 Minecraft。"
+          }
+        }
+      }
+    },
+    "No installed versions" : {
+      "comment" : "[Text] No installed versions message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无已安装的版本"
+          }
+        }
+      }
+    },
+    "No Java installations found" : {
+      "comment" : "[Status] No Java found.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到 Java 安装"
+          }
+        }
+      }
+    },
+    "No Java installations were detected on your system. Please install Java to run Minecraft." : {
+      "comment" : "[Message] No Java installations found message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "系统中未检测到 Java 安装。请安装 Java 以运行 Minecraft。"
+          }
+        }
+      }
+    },
+    "No saved accounts" : {
+      "comment" : "[Message] No saved accounts message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有保存的账号"
+          }
+        }
+      }
+    },
+    "No versions installed yet" : {
+      "comment" : "[Text] No versions installed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有安装任何版本"
+          }
+        }
+      }
+    },
+    "No versions loaded" : {
+      "comment" : "[Text] No versions loaded message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有加载版本"
+          }
+        }
+      }
+    },
+    "Not set" : {
+      "comment" : "[Text] JAVA_HOME not set.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未设置"
+          }
+        }
+      }
+    },
+    "Offline Launch" : {
+      "comment" : "[Text] Offline launch window title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "离线启动"
+          }
+        }
+      }
+    },
+    "Offline Mode" : {
+      "comment" : "[Text] Offline mode title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "离线模式"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "comment" : "[Button] OK button.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定"
+          }
+        }
+      }
+    },
+    "Open Test Window" : {
+      "comment" : "[Button] Open test window.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开测试窗口"
+          }
+        }
+      }
+    },
+    "Open Version List" : {
+      "comment" : "[Button] Open version list window.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开版本列表"
+          }
+        }
+      }
+    },
+    "Parse failed: %@" : {
+      "comment" : "[Error] Parse failed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解析失败：%@"
+          }
+        }
+      }
+    },
+    "Please enter valid host and port." : {
+      "comment" : "[Alert] Invalid proxy configuration message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请输入有效的主机和端口。"
+          }
+        }
+      }
+    },
+    "Port:" : {
+      "comment" : "[Label] Proxy port label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "端口："
+          }
+        }
+      }
+    },
+    "Preparing to launch game..." : {
+      "comment" : "[Status] Preparing to launch game.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在准备启动游戏..."
+          }
+        }
+      }
+    },
+    "Proxy applied: %@:%lld" : {
+      "comment" : "[Status] Proxy applied with host and port.\n[Status] Proxy applied.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Proxy applied: %1$@:%2$lld"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法删除版本 %1$@：%2$@"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代理已应用：%1$@:%2$lld"
           }
         }
       }
     },
-    "Unknown": {
-      "comment": "[Text] Unknown version type.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未知版本"
+    "Proxy connection failed: %@" : {
+      "comment" : "[Error] Proxy connection failed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代理连接失败：%@"
           }
         }
       }
     },
-    "Update Time": {
-      "comment": "[Table] Update time column header.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "更新时间"
+    "Proxy connection is working correctly." : {
+      "comment" : "[Alert] Proxy test successful message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代理连接正常工作。"
           }
         }
       }
     },
-    "Username can only contain letters, numbers, and underscores.": {
-      "comment": "[Alert] Invalid username format error.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用户名只能包含字母、数字和下划线。"
+    "Proxy connection test failed" : {
+      "comment" : "[Status] Proxy connection test failed.\n[Status] Proxy test failed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代理连接测试失败"
           }
         }
       }
     },
-    "Username cannot be empty.": {
-      "comment": "[Alert] Empty username error.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用户名不能为空。"
+    "Proxy connection test successful" : {
+      "comment" : "[Status] Proxy connection test successful.\n[Status] Proxy test success.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代理连接测试成功"
           }
         }
       }
     },
-    "Username must be 3-16 characters long and contain only letters, numbers, and underscores.": {
-      "comment": "[Alert] Invalid username error.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用户名长度必须为 3-16 个字符，且只能包含字母、数字和下划线。"
+    "Proxy disabled" : {
+      "comment" : "[Status] Proxy disabled.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代理已禁用"
           }
         }
       }
     },
-    "Username must be 3-16 characters long.": {
-      "comment": "[Alert] Invalid username length error.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用户名长度必须为 3-16 个字符。"
+    "Proxy enabled" : {
+      "comment" : "[Status] Proxy enabled.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代理已启用"
           }
         }
       }
     },
-    "Username:": {
-      "comment": "[Label] Username label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用户名："
+    "Proxy Settings" : {
+      "comment" : "[Label] Proxy settings section title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代理设置"
           }
         }
       }
     },
-    "Version": {
-      "comment": "[Table] Java version column.\n[Table] Version column header.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "版本"
+    "Proxy Test Failed" : {
+      "comment" : "[Alert] Proxy test failed title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代理测试失败"
           }
         }
       }
     },
-    "Version %@ has been deleted": {
-      "comment": "[Notification] Delete success message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "版本 %@ 已被删除"
+    "Proxy Test Successful" : {
+      "comment" : "[Alert] Proxy test successful title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代理测试成功"
           }
         }
       }
     },
-    "Version %@ has been downloaded successfully!": {
-      "comment": "[Alert] Download completed message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "版本 %@ 已成功下载！"
+    "Ready" : {
+      "comment" : "[Status] Ready status.\n[Text] Ready status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "就绪"
           }
         }
       }
     },
-    "Version %@ will be permanently deleted. This action cannot be undone.": {
-      "comment": "[Alert] Delete confirmation message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "版本 %@ 将被永久删除，此操作无法撤销。"
+    "Ready to detect Java installations" : {
+      "comment" : "[Status] Ready to detect Java.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "准备检测 Java 安装"
           }
         }
       }
     },
-    "Version details retrieval completed": {
-      "comment": "[Status] Version details retrieval completed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "版本详情获取完成"
+    "Refresh" : {
+      "comment" : "[Button] Refresh Java detection.\n[Button] Refresh versions list.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刷新"
           }
         }
       }
     },
-    "Version list refresh completed": {
-      "comment": "[Status] Version list refresh completed.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "版本列表刷新完成"
+    "Refresh failed: %@" : {
+      "comment" : "[Status] Refresh failed with error.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刷新失败：%@"
           }
         }
       }
     },
-    "Version Management & Download Testing": {
-      "comment": "[Text] Main window subtitle.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "版本管理与下载测试"
+    "Refreshing version list..." : {
+      "comment" : "[Status] Refreshing version list.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在刷新版本列表..."
           }
         }
       }
     },
-    "Version not found: %@": {
-      "comment": "[Error] Version not found.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "版本未找到：%@"
+    "Release" : {
+      "comment" : "[Text] Release version type.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正式版本"
           }
         }
       }
     },
-    "Version:": {
-      "comment": "[Label] Version selection label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "版本："
+    "Release Time" : {
+      "comment" : "[Table] Release time column header.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发布时间"
+          }
+        }
+      }
+    },
+    "Releases Only" : {
+      "comment" : "[Filter] Releases only option.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅正式版"
+          }
+        }
+      }
+    },
+    "Select a saved account to launch in offline mode." : {
+      "comment" : "[Text] Offline mode description.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择已保存的账号以离线模式启动。"
+          }
+        }
+      }
+    },
+    "Select Account:" : {
+      "comment" : "[Label] Select account label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择账号："
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "comment" : "[Button] Open settings window.\n[Text] Settings title.\n[Text] Settings window title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
+          }
+        }
+      }
+    },
+    "SHA1 verification failed" : {
+      "comment" : "[Error] SHA1 verification failed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SHA1 校验失败"
+          }
+        }
+      }
+    },
+    "Show in Finder" : {
+      "comment" : "[Menu] Show version in Finder.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 Finder 中显示"
+          }
+        }
+      }
+    },
+    "Snapshot" : {
+      "comment" : "[Text] Snapshot version type.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快照版本"
+          }
+        }
+      }
+    },
+    "Snapshots Only" : {
+      "comment" : "[Filter] Snapshots only option.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅快照版"
+          }
+        }
+      }
+    },
+    "SOCKS5" : {
+      "comment" : "[Text] SOCKS5 proxy type.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SOCKS5"
+          }
+        }
+      }
+    },
+    "Status" : {
+      "comment" : "[Table] Java status column.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状态"
+          }
+        }
+      }
+    },
+    "Test file download completed" : {
+      "comment" : "[Status] Test file download completed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "测试文件下载完成"
+          }
+        }
+      }
+    },
+    "Test Proxy" : {
+      "comment" : "[Button] Test proxy button.\n[Button] Test proxy connection.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "测试代理"
+          }
+        }
+      }
+    },
+    "Test window closed, click button to reopen" : {
+      "comment" : "[Text] Test window closed status.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "测试窗口已关闭，点击按钮重新打开"
+          }
+        }
+      }
+    },
+    "Test window opened" : {
+      "comment" : "[Text] Test window opened status.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "测试窗口已打开"
+          }
+        }
+      }
+    },
+    "Testing proxy connection..." : {
+      "comment" : "[Status] Testing proxy connection.\n[Status] Testing proxy.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在测试代理连接..."
+          }
+        }
+      }
+    },
+    "This username already exists." : {
+      "comment" : "[Alert] Duplicate username error.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该用户名已存在。"
+          }
+        }
+      }
+    },
+    "Type" : {
+      "comment" : "[Table] Java type column.\n[Table] Type column header.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "类型"
+          }
+        }
+      }
+    },
+    "Type:" : {
+      "comment" : "[Label] Proxy type label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "类型："
+          }
+        }
+      }
+    },
+    "Unable to delete version %@: %@" : {
+      "comment" : "[Alert] Delete failed message.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unable to delete version %1$@: %2$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法删除版本 %1$@：%2$@"
+          }
+        }
+      }
+    },
+    "Unknown" : {
+      "comment" : "[Text] Unknown version type.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知版本"
+          }
+        }
+      }
+    },
+    "Update Time" : {
+      "comment" : "[Table] Update time column header.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新时间"
+          }
+        }
+      }
+    },
+    "Username can only contain letters, numbers, and underscores." : {
+      "comment" : "[Alert] Invalid username format error.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户名只能包含字母、数字和下划线。"
+          }
+        }
+      }
+    },
+    "Username cannot be empty." : {
+      "comment" : "[Alert] Empty username error.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户名不能为空。"
+          }
+        }
+      }
+    },
+    "Username must be 3-16 characters long and contain only letters, numbers, and underscores." : {
+      "comment" : "[Alert] Invalid username error.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户名长度必须为 3-16 个字符，且只能包含字母、数字和下划线。"
+          }
+        }
+      }
+    },
+    "Username must be 3-16 characters long." : {
+      "comment" : "[Alert] Invalid username length error.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户名长度必须为 3-16 个字符。"
+          }
+        }
+      }
+    },
+    "Username:" : {
+      "comment" : "[Label] Username label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户名："
+          }
+        }
+      }
+    },
+    "Version" : {
+      "comment" : "[Table] Java version column.\n[Table] Version column header.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本"
+          }
+        }
+      }
+    },
+    "Version %@ has been deleted" : {
+      "comment" : "[Notification] Delete success message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本 %@ 已被删除"
+          }
+        }
+      }
+    },
+    "Version %@ has been downloaded successfully!" : {
+      "comment" : "[Alert] Download completed message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本 %@ 已成功下载！"
+          }
+        }
+      }
+    },
+    "Version %@ will be permanently deleted. This action cannot be undone." : {
+      "comment" : "[Alert] Delete confirmation message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本 %@ 将被永久删除，此操作无法撤销。"
+          }
+        }
+      }
+    },
+    "Version details retrieval completed" : {
+      "comment" : "[Status] Version details retrieval completed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本详情获取完成"
+          }
+        }
+      }
+    },
+    "Version List" : {
+      "comment" : "[Text] Version list window title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本列表"
+          }
+        }
+      }
+    },
+    "Version list refresh completed" : {
+      "comment" : "[Status] Version list refresh completed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本列表刷新完成"
+          }
+        }
+      }
+    },
+    "Version list window closed, click button to reopen" : {
+      "comment" : "[Text] Version list window closed status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本列表窗口已关闭，点击按钮重新打开"
+          }
+        }
+      }
+    },
+    "Version list window opened" : {
+      "comment" : "[Text] Version list window opened status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本列表窗口已打开"
+          }
+        }
+      }
+    },
+    "Version Management & Download Testing" : {
+      "comment" : "[Text] Main window subtitle.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本管理与下载测试"
+          }
+        }
+      }
+    },
+    "Version not found: %@" : {
+      "comment" : "[Error] Version not found.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本未找到：%@"
+          }
+        }
+      }
+    },
+    "Version:" : {
+      "comment" : "[Label] Version selection label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本："
           }
         }
       }
     }
   },
-  "version": "1.1"
+  "version" : "1.1"
 }
