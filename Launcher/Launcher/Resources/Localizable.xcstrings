@@ -1075,6 +1075,39 @@
         }
       }
     },
+    "Account \"%@\" will be permanently deleted. This action cannot be undone.": {
+      "comment": "[Alert] Delete account confirmation message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "账号 \"%@\" 将被永久删除，此操作无法撤销。"
+          }
+        }
+      }
+    },
+    "Account Management": {
+      "comment": "[Button] Open account management window.\n[Text] Account management title.\n[Text] Account management window title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "账号管理"
+          }
+        }
+      }
+    },
+    "Add Account": {
+      "comment": "[Button] Add account button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加账号"
+          }
+        }
+      }
+    },
     "All Versions": {
       "comment": "[Filter] All versions option.",
       "localizations": {
@@ -1219,7 +1252,7 @@
       }
     },
     "Confirm Deletion": {
-      "comment": "[Alert] Delete confirmation title.",
+      "comment": "[Alert] Delete account confirmation title.\n[Alert] Delete confirmation title.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1247,6 +1280,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "删除"
+          }
+        }
+      }
+    },
+    "Delete Account": {
+      "comment": "[Menu] Delete account.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除账号"
           }
         }
       }
@@ -1425,6 +1469,17 @@
         }
       }
     },
+    "Duplicate Username": {
+      "comment": "[Alert] Duplicate username title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户名重复"
+          }
+        }
+      }
+    },
     "e.g., 127.0.0.1": {
       "comment": "[Placeholder] Proxy host placeholder.",
       "localizations": {
@@ -1459,10 +1514,51 @@
       }
     },
     "Enter username (3-16 characters)": {
-      "comment": "[Placeholder] Username placeholder."
+      "comment": "[Placeholder] Account username placeholder.\n[Placeholder] Username placeholder."
     },
-    "Enter your username to launch the game in offline mode.": {
-      "comment": "[Text] Offline mode description."
+    "Manual Input...": {
+      "comment": "[Option] Manual input option.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "手动输入..."
+          }
+        }
+      }
+    },
+    "No saved accounts": {
+      "comment": "[Message] No saved accounts message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有保存的账号"
+          }
+        }
+      }
+    },
+    "Select a saved account to launch in offline mode.": {
+      "comment": "[Text] Offline mode description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择已保存的账号以离线模式启动。"
+          }
+        }
+      }
+    },
+    "Select Account:": {
+      "comment": "[Label] Select account label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择账号："
+          }
+        }
+      }
     },
     "Extracting native libraries...": {
       "comment": "[Status] Extracting native libraries."
@@ -1722,6 +1818,17 @@
     "Launching game...": {
       "comment": "[Status] Launching game."
     },
+    "Manage offline mode usernames for quick launch": {
+      "comment": "[Text] Account management subtitle.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "管理离线模式用户名以便快速启动"
+          }
+        }
+      }
+    },
     "Minecraft": {
       "comment": "[Accessibility] Minecraft icon description.",
       "localizations": {
@@ -1740,6 +1847,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Minecraft 启动器"
+          }
+        }
+      }
+    },
+    "No accounts saved yet": {
+      "comment": "[Text] No accounts message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有保存任何账号"
           }
         }
       }
@@ -2202,6 +2320,17 @@
         }
       }
     },
+    "This username already exists.": {
+      "comment": "[Alert] Duplicate username error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该用户名已存在。"
+          }
+        }
+      }
+    },
     "Type": {
       "comment": "[Table] Java type column.\n[Table] Type column header.",
       "localizations": {
@@ -2263,11 +2392,33 @@
         }
       }
     },
+    "Username can only contain letters, numbers, and underscores.": {
+      "comment": "[Alert] Invalid username format error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户名只能包含字母、数字和下划线。"
+          }
+        }
+      }
+    },
     "Username cannot be empty.": {
       "comment": "[Alert] Empty username error."
     },
     "Username must be 3-16 characters long and contain only letters, numbers, and underscores.": {
       "comment": "[Alert] Invalid username error."
+    },
+    "Username must be 3-16 characters long.": {
+      "comment": "[Alert] Invalid username length error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户名长度必须为 3-16 个字符。"
+          }
+        }
+      }
     },
     "Username:": {
       "comment": "[Label] Username label."

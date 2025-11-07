@@ -11,8 +11,10 @@ class ViewController: NSViewController {
 
   private var testWindowController: TestWindowController?
   private var javaDetectionWindowController: JavaDetectionWindowController?
+  private var accountWindowController: AccountWindowController?
   private var windowObserver: NSObjectProtocol?
   private var javaWindowObserver: NSObjectProtocol?
+  private var accountWindowObserver: NSObjectProtocol?
 
   // Version management
   private let versionManager = VersionManager.shared
@@ -71,6 +73,23 @@ class ViewController: NSViewController {
     )
     button.target = self
     button.action = #selector(openJavaDetectionWindow)
+    return button
+  }()
+
+  private lazy var accountButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "person.circle.fill",
+      cornerRadius: 6,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+        ? NSColor.white.withAlphaComponent(0.1)
+        : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemPurple,
+      accessibilityLabel: Localized.Account.openAccountButton
+    )
+    button.target = self
+    button.action = #selector(openAccountWindow)
     return button
   }()
 
@@ -163,6 +182,7 @@ class ViewController: NSViewController {
     view.addSubview(refreshButton)
     view.addSubview(testButton)
     view.addSubview(javaDetectionButton)
+    view.addSubview(accountButton)
     view.addSubview(headerSeparator)
     view.addSubview(scrollView)
     view.addSubview(emptyLabel)
@@ -173,11 +193,17 @@ class ViewController: NSViewController {
     // Top-right button group
     testButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-60)
+      make.right.equalToSuperview().offset(-104)
       make.width.height.equalTo(36)
     }
 
     javaDetectionButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalToSuperview().offset(-60)
+      make.width.height.equalTo(36)
+    }
+
+    accountButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-16)
       make.width.height.equalTo(36)
@@ -311,6 +337,33 @@ extension ViewController {
       if let observer = self?.javaWindowObserver {
         NotificationCenter.default.removeObserver(observer)
         self?.javaWindowObserver = nil
+      }
+    }
+  }
+
+  @objc private func openAccountWindow() {
+    // If window already exists, show it
+    if let existingController = accountWindowController {
+      existingController.showWindow(nil)
+      existingController.window?.makeKeyAndOrderFront(nil)
+      return
+    }
+
+    // Create new account window
+    accountWindowController = AccountWindowController()
+    accountWindowController?.showWindow(nil)
+    accountWindowController?.window?.makeKeyAndOrderFront(nil)
+
+    // Window close callback
+    accountWindowObserver = NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification,
+      object: accountWindowController?.window,
+      queue: .main
+    ) { [weak self] _ in
+      self?.accountWindowController = nil
+      if let observer = self?.accountWindowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        self?.accountWindowObserver = nil
       }
     }
   }

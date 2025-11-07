@@ -513,11 +513,16 @@ enum Localized {
     // Window
     static let windowTitle = String(localized: "Offline Launch", comment: "[Text] Offline launch window title.")
     static let title = String(localized: "Offline Mode", comment: "[Text] Offline mode title.")
-    static let description = String(localized: "Enter your username to launch the game in offline mode.", comment: "[Text] Offline mode description.")
+    static let description = String(localized: "Select a saved account to launch in offline mode.", comment: "[Text] Offline mode description.")
 
     // Labels
+    static let selectAccountLabel = String(localized: "Select Account:", comment: "[Label] Select account label.")
     static let usernameLabel = String(localized: "Username:", comment: "[Label] Username label.")
     static let usernamePlaceholder = String(localized: "Enter username (3-16 characters)", comment: "[Placeholder] Username placeholder.")
+
+    // Account Selection
+    static let manualInputOption = String(localized: "Manual Input...", comment: "[Option] Manual input option.")
+    static let noAccountsMessage = String(localized: "No saved accounts", comment: "[Message] No saved accounts message.")
 
     // Buttons
     static let launchButton = String(localized: "Launch", comment: "[Button] Launch button.")
@@ -528,6 +533,44 @@ enum Localized {
     static let errorTitle = String(localized: "Invalid Username", comment: "[Alert] Invalid username title.")
     static let errorEmptyUsername = String(localized: "Username cannot be empty.", comment: "[Alert] Empty username error.")
     static let errorInvalidUsername = String(localized: "Username must be 3-16 characters long and contain only letters, numbers, and underscores.", comment: "[Alert] Invalid username error.")
+  }
+
+  // MARK: - Account Management
+  enum Account {
+    // Window & Labels
+    static let windowTitle = String(localized: "Account Management", comment: "[Text] Account management window title.")
+    static let title = String(localized: "Account Management", comment: "[Text] Account management title.")
+    static let subtitle = String(localized: "Manage offline mode usernames for quick launch", comment: "[Text] Account management subtitle.")
+    static let openAccountButton = String(localized: "Account Management", comment: "[Button] Open account management window.")
+
+    // Input
+    static let usernamePlaceholder = String(localized: "Enter username (3-16 characters)", comment: "[Placeholder] Account username placeholder.")
+    static let addButton = String(localized: "Add Account", comment: "[Button] Add account button.")
+
+    // Empty State
+    static let emptyMessage = String(localized: "No accounts saved yet", comment: "[Text] No accounts message.")
+
+    // Context Menu
+    static let menuDelete = String(localized: "Delete Account", comment: "[Menu] Delete account.")
+
+    // Delete Confirmation
+    static let deleteConfirmTitle = String(localized: "Confirm Deletion", comment: "[Alert] Delete account confirmation title.")
+
+    static func deleteConfirmMessage(_ username: String) -> String {
+      String(localized: "Account \"\(username)\" will be permanently deleted. This action cannot be undone.", comment: "[Alert] Delete account confirmation message.")
+    }
+
+    static let deleteButton = String(localized: "Delete", comment: "[Button] Delete button.")
+    static let cancelButton = String(localized: "Cancel", comment: "[Button] Cancel button.")
+    static let okButton = String(localized: "OK", comment: "[Button] OK button.")
+
+    // Validation Errors
+    static let invalidUsernameTitle = String(localized: "Invalid Username", comment: "[Alert] Invalid username title.")
+    static let emptyUsernameMessage = String(localized: "Username cannot be empty.", comment: "[Alert] Empty username error.")
+    static let invalidUsernameLengthMessage = String(localized: "Username must be 3-16 characters long.", comment: "[Alert] Invalid username length error.")
+    static let invalidUsernameFormatMessage = String(localized: "Username can only contain letters, numbers, and underscores.", comment: "[Alert] Invalid username format error.")
+    static let duplicateUsernameTitle = String(localized: "Duplicate Username", comment: "[Alert] Duplicate username title.")
+    static let duplicateUsernameMessage = String(localized: "This username already exists.", comment: "[Alert] Duplicate username error.")
   }
 
   // MARK: - Errors

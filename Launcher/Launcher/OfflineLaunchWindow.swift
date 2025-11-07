@@ -14,7 +14,7 @@ class OfflineLaunchWindowController: NSWindowController {
 
   convenience init() {
     let window = NSWindow(
-      contentRect: NSRect(x: 0, y: 0, width: 400, height: 250),
+      contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
       styleMask: [.titled, .closable],
       backing: .buffered,
       defer: false
@@ -36,6 +36,8 @@ class OfflineLaunchViewController: NSViewController {
 
   var onLaunch: ((String) -> Void)?
   private var username: String = ""
+  private var savedAccounts: [String] = []
+  private let accountsKey = "SavedAccounts"
 
   // UI components
   private let titleLabel: BRLabel = {
@@ -59,13 +61,31 @@ class OfflineLaunchViewController: NSViewController {
     return label
   }()
 
-  private let usernameLabel: BRLabel = {
+  private let accountLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.OfflineLaunch.selectAccountLabel,
+      font: .systemFont(ofSize: 13),
+      textColor: .labelColor,
+      alignment: .left
+    )
+    return label
+  }()
+
+  private lazy var accountPopUpButton: NSPopUpButton = {
+    let button = NSPopUpButton()
+    button.target = self
+    button.action = #selector(accountSelected)
+    return button
+  }()
+
+  private lazy var usernameLabel: BRLabel = {
     let label = BRLabel(
       text: Localized.OfflineLaunch.usernameLabel,
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
       alignment: .left
     )
+    label.isHidden = true
     return label
   }()
 
@@ -74,6 +94,7 @@ class OfflineLaunchViewController: NSViewController {
     field.placeholderString = Localized.OfflineLaunch.usernamePlaceholder
     field.font = .systemFont(ofSize: 13)
     field.delegate = self
+    field.isHidden = true
     return field
   }()
 
@@ -104,14 +125,15 @@ class OfflineLaunchViewController: NSViewController {
   // MARK: - Lifecycle
 
   override func loadView() {
-    self.view = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 250))
+    self.view = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
     self.view.wantsLayer = true
   }
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    loadSavedAccounts()
     setupUI()
-    loadSavedUsername()
+    setupAccountPopUp()
   }
 
   override func viewDidAppear() {
@@ -124,6 +146,8 @@ class OfflineLaunchViewController: NSViewController {
   private func setupUI() {
     view.addSubview(titleLabel)
     view.addSubview(descriptionLabel)
+    view.addSubview(accountLabel)
+    view.addSubview(accountPopUpButton)
     view.addSubview(usernameLabel)
     view.addSubview(usernameField)
     view.addSubview(separator)
@@ -140,8 +164,19 @@ class OfflineLaunchViewController: NSViewController {
       make.left.right.equalToSuperview().inset(20)
     }
 
-    usernameLabel.snp.makeConstraints { make in
+    accountLabel.snp.makeConstraints { make in
       make.top.equalTo(descriptionLabel.snp.bottom).offset(20)
+      make.left.equalToSuperview().offset(20)
+    }
+
+    accountPopUpButton.snp.makeConstraints { make in
+      make.top.equalTo(accountLabel.snp.bottom).offset(8)
+      make.left.right.equalToSuperview().inset(20)
+      make.height.equalTo(24)
+    }
+
+    usernameLabel.snp.makeConstraints { make in
+      make.top.equalTo(accountPopUpButton.snp.bottom).offset(16)
       make.left.equalToSuperview().offset(20)
     }
 
@@ -172,24 +207,75 @@ class OfflineLaunchViewController: NSViewController {
 
   // MARK: - Data
 
-  private func loadSavedUsername() {
-    if let savedUsername = UserDefaults.standard.string(forKey: "offlineUsername") {
-      usernameField.stringValue = savedUsername
-      username = savedUsername
+  private func loadSavedAccounts() {
+    if let accounts = UserDefaults.standard.array(forKey: accountsKey) as? [String] {
+      savedAccounts = accounts
     }
   }
 
-  private func saveUsername(_ username: String) {
-    UserDefaults.standard.set(username, forKey: "offlineUsername")
+  private func setupAccountPopUp() {
+    accountPopUpButton.removeAllItems()
+
+    if savedAccounts.isEmpty {
+      accountPopUpButton.addItem(withTitle: Localized.OfflineLaunch.noAccountsMessage)
+      accountPopUpButton.isEnabled = false
+      // Show username input field when no accounts
+      usernameLabel.isHidden = false
+      usernameField.isHidden = false
+    } else {
+      accountPopUpButton.addItem(withTitle: Localized.OfflineLaunch.manualInputOption)
+      accountPopUpButton.menu?.addItem(NSMenuItem.separator())
+
+      for account in savedAccounts {
+        accountPopUpButton.addItem(withTitle: account)
+      }
+
+      // Select first account by default
+      if savedAccounts.isNotEmpty {
+        accountPopUpButton.selectItem(at: 2) // Skip "Manual Input" and separator
+        username = savedAccounts[0]
+        // Hide username input when account is selected
+        usernameLabel.isHidden = true
+        usernameField.isHidden = true
+      }
+    }
+  }
+
+  @objc private func accountSelected() {
+    let selectedIndex = accountPopUpButton.indexOfSelectedItem
+
+    if selectedIndex == 0 {
+      // Manual Input selected - show input field
+      usernameLabel.isHidden = false
+      usernameField.isHidden = false
+      usernameField.stringValue = ""
+      username = ""
+      view.window?.makeFirstResponder(usernameField)
+    } else if selectedIndex > 1 {
+      // Account selected - hide input field
+      let accountIndex = selectedIndex - 2
+      if accountIndex >= 0 && accountIndex < savedAccounts.count {
+        let selectedAccount = savedAccounts[accountIndex]
+        username = selectedAccount
+        usernameLabel.isHidden = true
+        usernameField.isHidden = true
+      }
+    }
   }
 
   // MARK: - Actions
 
   @objc private func launchGame() {
-    let username = usernameField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+    // Use username from field if visible, otherwise use saved username
+    let finalUsername: String
+    if usernameField.isHidden {
+      finalUsername = username
+    } else {
+      finalUsername = usernameField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 
     // Validate username
-    guard !username.isEmpty else {
+    guard !finalUsername.isEmpty else {
       showAlert(
         title: Localized.OfflineLaunch.errorTitle,
         message: Localized.OfflineLaunch.errorEmptyUsername
@@ -197,7 +283,7 @@ class OfflineLaunchViewController: NSViewController {
       return
     }
 
-    guard isValidUsername(username) else {
+    guard isValidUsername(finalUsername) else {
       showAlert(
         title: Localized.OfflineLaunch.errorTitle,
         message: Localized.OfflineLaunch.errorInvalidUsername
@@ -205,11 +291,8 @@ class OfflineLaunchViewController: NSViewController {
       return
     }
 
-    // Save username
-    saveUsername(username)
-
     // Notify launch
-    onLaunch?(username)
+    onLaunch?(finalUsername)
 
     // Close window
     view.window?.close()
