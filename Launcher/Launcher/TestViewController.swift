@@ -7,6 +7,7 @@
 
 import AppKit
 import SnapKit
+import Yatagarasu
 
 // swiftlint:disable:next type_body_length
 class TestViewController: NSViewController {
@@ -39,64 +40,105 @@ class TestViewController: NSViewController {
     return textView
   }()
 
-  private lazy var refreshVersionButton: NSButton = {
-    let button = NSButton(
-      title: Localized.TestWindow.refreshVersionsButton,
-      target: self,
-      action: #selector(testRefreshVersions)
+  private lazy var refreshVersionButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "arrow.clockwise",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemBlue,
+      accessibilityLabel: Localized.TestWindow.refreshVersionsButton
     )
-    button.bezelStyle = .rounded
+    button.target = self
+    button.action = #selector(testRefreshVersions)
     return button
   }()
 
-  private lazy var getVersionDetailsButton: NSButton = {
-    let button = NSButton(
-      title: Localized.TestWindow.getVersionDetailsButton,
-      target: self,
-      action: #selector(testGetVersionDetails)
+  private lazy var getVersionDetailsButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "info.circle",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemBlue,
+      accessibilityLabel: Localized.TestWindow.getVersionDetailsButton
     )
-    button.bezelStyle = .rounded
+    button.target = self
+    button.action = #selector(testGetVersionDetails)
     return button
   }()
 
-  private lazy var downloadTestFileButton: NSButton = {
-    let button = NSButton(
-      title: Localized.TestWindow.downloadTestFileButton,
-      target: self,
-      action: #selector(testDownloadFile)
+  private lazy var downloadTestFileButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "arrow.down.doc",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemBlue,
+      accessibilityLabel: Localized.TestWindow.downloadTestFileButton
     )
-    button.bezelStyle = .rounded
+    button.target = self
+    button.action = #selector(testDownloadFile)
     return button
   }()
 
-  private lazy var checkInstalledButton: NSButton = {
-    let button = NSButton(
-      title: Localized.TestWindow.checkInstalledButton,
-      target: self,
-      action: #selector(testCheckInstalled)
+  private lazy var checkInstalledButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "checkmark.circle",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemBlue,
+      accessibilityLabel: Localized.TestWindow.checkInstalledButton
     )
-    button.bezelStyle = .rounded
+    button.target = self
+    button.action = #selector(testCheckInstalled)
     return button
   }()
 
-  private lazy var downloadVersionButton: NSButton = {
-    let button = NSButton(
-      title: Localized.TestWindow.downloadVersionButton,
-      target: self,
-      action: #selector(testDownloadVersion)
+  private lazy var downloadVersionButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "arrow.down.circle.fill",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemGreen,
+      accessibilityLabel: Localized.TestWindow.downloadVersionButton
     )
-    button.bezelStyle = .rounded
-    button.contentTintColor = .systemGreen
+    button.target = self
+    button.action = #selector(testDownloadVersion)
     return button
   }()
 
-  private lazy var clearLogButton: NSButton = {
-    let button = NSButton(
-      title: Localized.TestWindow.clearLogButton,
-      target: self,
-      action: #selector(clearLog)
+  private lazy var clearLogButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "trash",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemRed,
+      accessibilityLabel: Localized.TestWindow.clearLogButton
     )
-    button.bezelStyle = .rounded
+    button.target = self
+    button.action = #selector(clearLog)
     return button
   }()
 
@@ -242,25 +284,38 @@ class TestViewController: NSViewController {
     return popup
   }()
 
-  private lazy var applyProxyButton: NSButton = {
-    let button = NSButton(
-      title: Localized.Proxy.applyButton,
-      target: self,
-      action: #selector(applyProxy)
+  private lazy var applyProxyButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "checkmark",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemBlue,
+      accessibilityLabel: Localized.Proxy.applyButton
     )
-    button.bezelStyle = .rounded
-    button.contentTintColor = .systemBlue
+    button.target = self
+    button.action = #selector(applyProxy)
     button.setContentCompressionResistancePriority(.required, for: .horizontal)
     return button
   }()
 
-  private lazy var testProxyButton: NSButton = {
-    let button = NSButton(
-      title: Localized.Proxy.testButton,
-      target: self,
-      action: #selector(testProxy)
+  private lazy var testProxyButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "network",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemBlue,
+      accessibilityLabel: Localized.Proxy.testButton
     )
-    button.bezelStyle = .rounded
+    button.target = self
+    button.action = #selector(testProxy)
     button.setContentCompressionResistancePriority(.required, for: .horizontal)
     return button
   }()
@@ -445,16 +500,27 @@ class TestViewController: NSViewController {
     scrollView.autohidesScrollers = false
     scrollView.borderType = .bezelBorder
 
-    // Create button container
+    // Create main button container with all action buttons
+    // Add visual separator between button groups
+    let separator1 = NSBox()
+    separator1.boxType = .separator
+    separator1.snp.makeConstraints { make in
+      make.width.equalTo(1)
+      make.height.equalTo(24)
+    }
+    
     let buttonStack = NSStackView(views: [
       refreshVersionButton,
       getVersionDetailsButton,
       downloadTestFileButton,
       checkInstalledButton,
+      separator1,
+      downloadVersionButton,
+      clearLogButton,
     ])
     buttonStack.orientation = .horizontal
-    buttonStack.spacing = 10
-    buttonStack.distribution = .fillEqually
+    buttonStack.spacing = 12
+    buttonStack.distribution = .gravityAreas
 
     // Create filter control row
     let filterLabel = NSTextField(labelWithString: Localized.TestWindow.filterLabel)
@@ -471,8 +537,6 @@ class TestViewController: NSViewController {
     let filterStack = NSStackView(views: [
       filterLabel,
       checkboxStack,
-      downloadVersionButton,
-      clearLogButton,
     ])
     filterStack.orientation = .horizontal
     filterStack.spacing = 10
@@ -487,6 +551,14 @@ class TestViewController: NSViewController {
     let proxyTypeLabel = NSTextField(labelWithString: Localized.Proxy.typeLabel)
     proxyTypeLabel.alignment = .right
 
+    // Add visual separator before proxy buttons
+    let separator2 = NSBox()
+    separator2.boxType = .separator
+    separator2.snp.makeConstraints { make in
+      make.width.equalTo(1)
+      make.height.equalTo(24)
+    }
+
     let proxyStack = NSStackView(views: [
       proxyEnableCheckbox,
       proxyTypeLabel,
@@ -495,11 +567,12 @@ class TestViewController: NSViewController {
       proxyHostField,
       proxyPortLabel,
       proxyPortField,
+      separator2,
       applyProxyButton,
       testProxyButton,
     ])
     proxyStack.orientation = .horizontal
-    proxyStack.spacing = 6
+    proxyStack.spacing = 8
     proxyStack.alignment = .centerY
     proxyStack.distribution = .gravityAreas
 
@@ -525,18 +598,19 @@ class TestViewController: NSViewController {
       make.width.equalTo(60)
     }
 
-    applyProxyButton.snp.makeConstraints { make in
-      make.width.greaterThanOrEqualTo(100)
-    }
-
-    testProxyButton.snp.makeConstraints { make in
-      make.width.greaterThanOrEqualTo(90)
+    // Set button sizes - using standard image button size
+    let buttonSize: CGFloat = 32
+    [refreshVersionButton, getVersionDetailsButton, downloadTestFileButton, 
+     checkInstalledButton, downloadVersionButton, clearLogButton,
+     applyProxyButton, testProxyButton].forEach { button in
+      button.snp.makeConstraints { make in
+        make.width.height.equalTo(buttonSize)
+      }
     }
 
     buttonStack.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
       make.left.equalToSuperview().offset(20)
-      make.right.equalToSuperview().offset(-20)
       make.height.equalTo(32)
     }
 

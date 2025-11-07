@@ -1,6 +1,72 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "\n📊 Version type statistics:" : {
+      "comment" : "[Log] Version statistics title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\n📊 版本类型统计："
+          }
+        }
+      }
+    },
+    "  📋 Total: %lld" : {
+      "comment" : "[Log] Total version count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  📋 总计：%lld"
+          }
+        }
+      }
+    },
+    "  🔵 Beta: %lld" : {
+      "comment" : "[Log] Beta version count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  🔵 Beta：%lld"
+          }
+        }
+      }
+    },
+    "  🟡 Snapshot: %lld" : {
+      "comment" : "[Log] Snapshot version count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  🟡 快照版：%lld"
+          }
+        }
+      }
+    },
+    "  🟢 Release: %lld" : {
+      "comment" : "[Log] Release version count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  🟢 正式版：%lld"
+          }
+        }
+      }
+    },
+    "  🟣 Alpha: %lld" : {
+      "comment" : "[Log] Alpha version count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  🟣 Alpha：%lld"
+          }
+        }
+      }
+    },
     "  Applicable to macOS: %lld" : {
       "comment" : "[Log] Applicable libraries for macOS.",
       "localizations" : {
@@ -56,6 +122,17 @@
         }
       }
     },
+    "⚠️ Latest release not found, selected first item" : {
+      "comment" : "[Log] Latest release not found.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ 未找到最新正式版，已选择第一项"
+          }
+        }
+      }
+    },
     "⚠️ Note: This will download complete game files, may take a while" : {
       "comment" : "[Log] Download warning.",
       "localizations" : {
@@ -63,6 +140,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "⚠️ 注意：这将下载完整的游戏文件，可能需要一段时间"
+          }
+        }
+      }
+    },
+    "⚠️ Version list is empty" : {
+      "comment" : "[Log] Version list is empty.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ 版本列表为空"
           }
         }
       }
@@ -150,6 +238,17 @@
         }
       }
     },
+    "✅ Version data loaded, updating version list..." : {
+      "comment" : "[Log] Version data loaded.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✅ 版本数据已加载，正在更新版本列表..."
+          }
+        }
+      }
+    },
     "✅ Version details retrieved successfully" : {
       "comment" : "[Log] Version details retrieved successfully.",
       "localizations" : {
@@ -168,6 +267,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "✅ 版本列表刷新成功"
+          }
+        }
+      }
+    },
+    "✓ Installed" : {
+      "comment" : "[Text] Installed status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 已安装"
           }
         }
       }
@@ -282,6 +392,34 @@
         }
       }
     },
+    "🎯 Default selected latest release:" : {
+      "comment" : "[Log] Default selected latest release.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎯 默认选择最新正式版："
+          }
+        }
+      }
+    },
+    "🎯 Default selected latest release: %@ (index: %lld)" : {
+      "comment" : "[Log] Default selected with index.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "🎯 Default selected latest release: %1$@ (index: %2$lld)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎯 默认选择最新正式版：%1$@ (索引：%2$lld)"
+          }
+        }
+      }
+    },
     "💾 Client file:" : {
       "comment" : "[Log] Client file title.",
       "localizations" : {
@@ -322,6 +460,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "📂 文件路径：%@"
+          }
+        }
+      }
+    },
+    "📊 Currently loaded versions: %lld" : {
+      "comment" : "[Log] Currently loaded versions count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📊 当前已加载版本：%lld"
+          }
+        }
+      }
+    },
+    "📊 Displayed versions: %lld" : {
+      "comment" : "[Log] Displayed versions count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📊 显示版本：%lld"
           }
         }
       }
@@ -370,6 +530,17 @@
         }
       }
     },
+    "📋 Filter cleared, showing all version types" : {
+      "comment" : "[Log] Filter cleared.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 筛选已清除，显示所有版本类型"
+          }
+        }
+      }
+    },
     "📋 First 10 releases:" : {
       "comment" : "[Log] First 10 releases title.",
       "localizations" : {
@@ -399,6 +570,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "📋 正在刷新版本列表..."
+          }
+        }
+      }
+    },
+    "📋 Showing all versions, total: %lld" : {
+      "comment" : "[Log] Showing all versions.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 显示所有版本，总计：%lld"
+          }
+        }
+      }
+    },
+    "📋 Updating version list..." : {
+      "comment" : "[Log] Updating version list.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 正在更新版本列表..."
           }
         }
       }
@@ -524,6 +717,17 @@
         }
       }
     },
+    "📝 Version list updated" : {
+      "comment" : "[Log] Version list updated.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📝 版本列表已更新"
+          }
+        }
+      }
+    },
     "📥 Starting download of version manifest..." : {
       "comment" : "[Log] Starting download of version manifest.",
       "localizations" : {
@@ -568,6 +772,28 @@
         }
       }
     },
+    "🔄 Refresh version list to show installed status..." : {
+      "comment" : "[Log] Refresh version list to show status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔄 刷新版本列表以显示已安装状态..."
+          }
+        }
+      }
+    },
+    "🔄 Refresh version list to update installation status..." : {
+      "comment" : "[Log] Refresh version list.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔄 刷新版本列表以更新安装状态..."
+          }
+        }
+      }
+    },
     "🔄 Test 1: Refresh version list" : {
       "comment" : "[Log] Test 1 title.",
       "localizations" : {
@@ -580,7 +806,48 @@
       }
     },
     "🔄 Testing proxy connection..." : {
-      "comment" : "[Log] Testing proxy connection."
+      "comment" : "[Log] Testing proxy connection.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔄 正在测试代理连通性。。。"
+          }
+        }
+      }
+    },
+    "🔍 Applying filter: %@, filtered count: %lld" : {
+      "comment" : "[Log] Filtering results.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 正在应用筛选：%@，筛选结果：%lld"
+          }
+        }
+      }
+    },
+    "🔍 Checking version manager status..." : {
+      "comment" : "[Log] Checking version manager status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 正在检查版本管理器状态..."
+          }
+        }
+      }
+    },
+    "🔍 Filter applied: %@" : {
+      "comment" : "[Log] Filter applied.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔍 筛选器已应用：%@"
+          }
+        }
+      }
     },
     "🔍 Filter: All versions" : {
       "comment" : "[Log] Filter all versions.",
@@ -648,6 +915,28 @@
         }
       }
     },
+    "🔵 Beta" : {
+      "comment" : "[Checkbox] Beta filter.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔵 Beta"
+          }
+        }
+      }
+    },
+    "🖱️ Double-clicked version:" : {
+      "comment" : "[Log] Double-clicked version.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🖱️ 双击版本："
+          }
+        }
+      }
+    },
     "🚀 Test 5: Download full version - %@" : {
       "comment" : "[Log] Test 5 title.",
       "localizations" : {
@@ -655,6 +944,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "🚀 测试 5：下载完整版本 - %@"
+          }
+        }
+      }
+    },
+    "🟡 Snapshot" : {
+      "comment" : "[Checkbox] Snapshot filter.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🟡 快照版"
+          }
+        }
+      }
+    },
+    "🟢 Release" : {
+      "comment" : "[Checkbox] Release filter.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🟢 正式版"
+          }
+        }
+      }
+    },
+    "🟣 Alpha" : {
+      "comment" : "[Checkbox] Alpha filter.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🟣 Alpha"
           }
         }
       }
@@ -1353,6 +1675,17 @@
         }
       }
     },
+    "Release Time" : {
+      "comment" : "[Table] Release time column header.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发布时间"
+          }
+        }
+      }
+    },
     "Releases Only" : {
       "comment" : "[Filter] Releases only option.",
       "localizations" : {
@@ -1393,6 +1726,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SOCKS5"
+          }
+        }
+      }
+    },
+    "Status" : {
+      "comment" : "[Table] Status column header.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状态"
           }
         }
       }
@@ -1452,6 +1796,17 @@
         }
       }
     },
+    "Type" : {
+      "comment" : "[Table] Type column header.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "类型"
+          }
+        }
+      }
+    },
     "Type:" : {
       "comment" : "[Label] Proxy type label.",
       "localizations" : {
@@ -1459,6 +1814,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "类型："
+          }
+        }
+      }
+    },
+    "Update Time" : {
+      "comment" : "[Table] Update time column header.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新时间"
+          }
+        }
+      }
+    },
+    "Version" : {
+      "comment" : "[Table] Version column header.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本"
           }
         }
       }
@@ -1518,17 +1895,6 @@
         }
       }
     },
-    "Version" : {
-      "comment" : "[Table] Version column header.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "版本"
-          }
-        }
-      }
-    },
     "Version:" : {
       "comment" : "[Label] Version selection label.",
       "localizations" : {
@@ -1536,364 +1902,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "版本："
-          }
-        }
-      }
-    },
-    "Type" : {
-      "comment" : "[Table] Type column header.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "类型"
-          }
-        }
-      }
-    },
-    "Release Time" : {
-      "comment" : "[Table] Release time column header.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "发布时间"
-          }
-        }
-      }
-    },
-    "Update Time" : {
-      "comment" : "[Table] Update time column header.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "更新时间"
-          }
-        }
-      }
-    },
-    "Status" : {
-      "comment" : "[Table] Status column header.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "状态"
-          }
-        }
-      }
-    },
-    "✓ Installed" : {
-      "comment" : "[Text] Installed status.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "✓ 已安装"
-          }
-        }
-      }
-    },
-    "🟢 Release" : {
-      "comment" : "[Checkbox] Release filter.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🟢 正式版"
-          }
-        }
-      }
-    },
-    "🟡 Snapshot" : {
-      "comment" : "[Checkbox] Snapshot filter.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🟡 快照版"
-          }
-        }
-      }
-    },
-    "🔵 Beta" : {
-      "comment" : "[Checkbox] Beta filter.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🔵 Beta"
-          }
-        }
-      }
-    },
-    "🟣 Alpha" : {
-      "comment" : "[Checkbox] Alpha filter.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🟣 Alpha"
-          }
-        }
-      }
-    },
-    "🔍 Checking version manager status..." : {
-      "comment" : "[Log] Checking version manager status.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🔍 正在检查版本管理器状态..."
-          }
-        }
-      }
-    },
-    "✅ Version data loaded, updating version list..." : {
-      "comment" : "[Log] Version data loaded.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "✅ 版本数据已加载，正在更新版本列表..."
-          }
-        }
-      }
-    },
-    "📋 Updating version list..." : {
-      "comment" : "[Log] Updating version list.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📋 正在更新版本列表..."
-          }
-        }
-      }
-    },
-    "🔄 Refresh version list to update installation status..." : {
-      "comment" : "[Log] Refresh version list.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🔄 刷新版本列表以更新安装状态..."
-          }
-        }
-      }
-    },
-    "🔄 Refresh version list to show installed status..." : {
-      "comment" : "[Log] Refresh version list to show status.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🔄 刷新版本列表以显示已安装状态..."
-          }
-        }
-      }
-    },
-    "⚠️ Version list is empty" : {
-      "comment" : "[Log] Version list is empty.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "⚠️ 版本列表为空"
-          }
-        }
-      }
-    },
-    "📝 Version list updated" : {
-      "comment" : "[Log] Version list updated.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📝 版本列表已更新"
-          }
-        }
-      }
-    },
-    "📋 Filter cleared, showing all version types" : {
-      "comment" : "[Log] Filter cleared.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📋 筛选已清除，显示所有版本类型"
-          }
-        }
-      }
-    },
-    "🖱️ Double-clicked version:" : {
-      "comment" : "[Log] Double-clicked version.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🖱️ 双击版本："
-          }
-        }
-      }
-    },
-    "🎯 Default selected latest release:" : {
-      "comment" : "[Log] Default selected latest release.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🎯 默认选择最新正式版："
-          }
-        }
-      }
-    },
-    "⚠️ Latest release not found, selected first item" : {
-      "comment" : "[Log] Latest release not found.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "⚠️ 未找到最新正式版，已选择第一项"
-          }
-        }
-      }
-    },
-    "📊 Currently loaded versions: %lld" : {
-      "comment" : "[Log] Currently loaded versions count.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📊 当前已加载版本：%lld"
-          }
-        }
-      }
-    },
-    "\n📊 Version type statistics:" : {
-      "comment" : "[Log] Version statistics title.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\n📊 版本类型统计："
-          }
-        }
-      }
-    },
-    "  🟢 Release: %lld" : {
-      "comment" : "[Log] Release version count.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "  🟢 正式版：%lld"
-          }
-        }
-      }
-    },
-    "  🟡 Snapshot: %lld" : {
-      "comment" : "[Log] Snapshot version count.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "  🟡 快照版：%lld"
-          }
-        }
-      }
-    },
-    "  🔵 Beta: %lld" : {
-      "comment" : "[Log] Beta version count.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "  🔵 Beta：%lld"
-          }
-        }
-      }
-    },
-    "  🟣 Alpha: %lld" : {
-      "comment" : "[Log] Alpha version count.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "  🟣 Alpha：%lld"
-          }
-        }
-      }
-    },
-    "  📋 Total: %lld" : {
-      "comment" : "[Log] Total version count.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "  📋 总计：%lld"
-          }
-        }
-      }
-    },
-    "🔍 Filter applied: %@" : {
-      "comment" : "[Log] Filter applied.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🔍 筛选器已应用：%@"
-          }
-        }
-      }
-    },
-    "📋 Showing all versions, total: %lld" : {
-      "comment" : "[Log] Showing all versions.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📋 显示所有版本，总计：%lld"
-          }
-        }
-      }
-    },
-    "🔍 Applying filter: %@, filtered count: %lld" : {
-      "comment" : "[Log] Filtering results.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🔍 正在应用筛选：%@，筛选结果：%lld"
-          }
-        }
-      }
-    },
-    "📊 Displayed versions: %lld" : {
-      "comment" : "[Log] Displayed versions count.",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📊 显示版本：%lld"
-          }
-        }
-      }
-    },
-    "🎯 Default selected latest release: %@ (index: %lld)" : {
-      "comment" : "[Log] Default selected with index.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "🎯 Default selected latest release: %1$@ (index: %2$lld)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🎯 默认选择最新正式版：%1$@ (索引：%2$lld)"
           }
         }
       }

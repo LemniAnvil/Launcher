@@ -5,6 +5,7 @@
 
 import AppKit
 import SnapKit
+import Yatagarasu
 
 class ViewController: NSViewController {
 
@@ -29,15 +30,20 @@ class ViewController: NSViewController {
     return label
   }()
 
-  private lazy var testButton: NSButton = {
-    let button = NSButton(
-      title: Localized.MainWindow.openTestWindowButton,
-      target: self,
-      action: #selector(openTestWindow)
+  private lazy var testButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "play.circle.fill",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua 
+          ? NSColor.white.withAlphaComponent(0.1) 
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemBlue,
+      accessibilityLabel: Localized.MainWindow.openTestWindowButton
     )
-    button.bezelStyle = .rounded
-    button.font = .systemFont(ofSize: 14, weight: .medium)
-    button.contentTintColor = .systemBlue
+    button.target = self
+    button.action = #selector(openTestWindow)
     return button
   }()
 
@@ -102,8 +108,7 @@ class ViewController: NSViewController {
     testButton.snp.makeConstraints { make in
       make.top.equalTo(subtitleLabel.snp.bottom).offset(40)
       make.centerX.equalToSuperview()
-      make.width.equalTo(200)
-      make.height.equalTo(36)
+      make.width.height.equalTo(44)
     }
 
     statusLabel.snp.makeConstraints { make in
