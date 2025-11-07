@@ -125,29 +125,32 @@ class TestViewController: NSViewController {
     return button
   }()
 
-  // Version table view
+  // Version table view with Finder-style appearance
   private lazy var versionTableView: NSTableView = {
     let table = NSTableView()
-    table.style = .plain
-    table.rowSizeStyle = .default
+    table.style = .fullWidth
+    table.rowSizeStyle = .medium
     table.usesAlternatingRowBackgroundColors = true
     table.allowsEmptySelection = false
     table.allowsMultipleSelection = false
     table.target = self
     table.doubleAction = #selector(versionDoubleClicked)
     table.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
+    table.intercellSpacing = NSSize(width: 3, height: 6)
+    table.gridStyleMask = [.solidHorizontalGridLineMask]
+    table.gridColor = NSColor.separatorColor.withAlphaComponent(0.3)
 
     // Add columns
     let versionColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("version"))
     versionColumn.title = Localized.TestWindow.columnVersion
-    versionColumn.width = 150
+    versionColumn.width = 160
     versionColumn.minWidth = 120
     table.addTableColumn(versionColumn)
 
     let typeColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("type"))
     typeColumn.title = Localized.TestWindow.columnType
-    typeColumn.width = 90
-    typeColumn.minWidth = 70
+    typeColumn.width = 100
+    typeColumn.minWidth = 80
     table.addTableColumn(typeColumn)
 
     let dateColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("releaseTime"))
@@ -1119,10 +1122,10 @@ extension TestViewController: NSTableViewDelegate {
       cell?.textField = textField
       cell?.addSubview(textField)
 
-      // Pin to edges with SnapKit
+      // Pin to edges with better padding for Finder-style appearance
       textField.snp.makeConstraints { make in
-        make.left.equalToSuperview().offset(2)
-        make.right.equalToSuperview().offset(-2)
+        make.left.equalToSuperview().offset(4)
+        make.right.equalToSuperview().offset(-4)
         make.centerY.equalToSuperview()
       }
     }
@@ -1130,8 +1133,8 @@ extension TestViewController: NSTableViewDelegate {
     // Configure the text field for this specific cell
     guard let textField = cell?.textField else { return cell }
 
-    // Reset to defaults
-    textField.font = .systemFont(ofSize: 11)
+    // Reset to defaults with larger font for Finder-style appearance
+    textField.font = .systemFont(ofSize: 13)
     textField.textColor = .labelColor
     textField.alignment = .left
 
@@ -1140,20 +1143,22 @@ extension TestViewController: NSTableViewDelegate {
     case "version":
       let emoji = getVersionEmoji(for: version.type)
       textField.stringValue = "\(emoji) \(version.id)"
-      textField.font = .systemFont(ofSize: 11, weight: .medium)
+      textField.font = .systemFont(ofSize: 13, weight: .medium)
 
     case "type":
       textField.stringValue = version.type.displayName
       textField.textColor = getTypeColor(for: version.type)
-      textField.font = .systemFont(ofSize: 11, weight: .semibold)
+      textField.font = .systemFont(ofSize: 13, weight: .semibold)
 
     case "releaseTime":
       textField.stringValue = formatDateTime(version.releaseTime)
       textField.textColor = .secondaryLabelColor
+      textField.font = .systemFont(ofSize: 13)
 
     case "time":
       textField.stringValue = formatDateTime(version.time)
       textField.textColor = NSColor.secondaryLabelColor.withAlphaComponent(0.8)
+      textField.font = .systemFont(ofSize: 13)
 
     default:
       textField.stringValue = ""
@@ -1169,6 +1174,11 @@ extension TestViewController: NSTableViewDelegate {
       selectedVersion = version
       logMessage(Localized.LogMessages.selectedVersion(version.id))
     }
+  }
+
+  // Custom row height for Finder-style appearance
+  func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+    return 24.0
   }
 
   private func formatDate(_ dateString: String) -> String {
