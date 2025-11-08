@@ -11,6 +11,10 @@ import Yatagarasu
 
 class VersionCellView: NSView {
 
+  // MARK: - Properties
+
+  private var isHighlighted: Bool = false
+
   private let iconImageView: NSImageView = {
     let imageView = NSImageView()
     imageView.image = NSImage(systemSymbolName: "cube.box.fill", accessibilityDescription: nil)
@@ -105,5 +109,33 @@ class VersionCellView: NSView {
       typeLabel.stringValue = Localized.InstalledVersions.typeUnknown
       iconImageView.contentTintColor = .systemGray
     }
+  }
+
+  // MARK: - Selection Highlighting
+
+  /// Updates the visual appearance based on selection state
+  func setHighlighted(_ highlighted: Bool) {
+    isHighlighted = highlighted
+    updateAppearance()
+  }
+
+  private func updateAppearance() {
+    if isHighlighted {
+      // Enhanced highlight color for better visibility
+      let highlightColor: NSColor
+      if NSApp.effectiveAppearance.name == .darkAqua {
+        highlightColor = NSColor.systemBlue.withAlphaComponent(0.35)
+      } else {
+        highlightColor = NSColor.systemBlue.withAlphaComponent(0.2)
+      }
+      containerView.layer?.backgroundColor = highlightColor.cgColor
+    } else {
+      containerView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    }
+  }
+
+  override func viewDidChangeEffectiveAppearance() {
+    super.viewDidChangeEffectiveAppearance()
+    updateAppearance()
   }
 }

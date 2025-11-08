@@ -43,7 +43,7 @@ class InstalledVersionsViewController: NSViewController {
     tableView.rowHeight = 60
     tableView.headerView = nil
     tableView.backgroundColor = .clear
-    tableView.selectionHighlightStyle = .regular
+    tableView.selectionHighlightStyle = .none  // Disable default highlight, use custom
     tableView.usesAlternatingRowBackgroundColors = false
     tableView.intercellSpacing = NSSize(width: 0, height: 0)
 
@@ -57,7 +57,9 @@ class InstalledVersionsViewController: NSViewController {
     tableView.addTableColumn(column)
 
     // Set context menu
-    tableView.menu = createContextMenu()
+    let menu = createContextMenu()
+    menu.delegate = self  // Set menu delegate for right-click handling
+    tableView.menu = menu
 
     return tableView
   }()
@@ -416,6 +418,9 @@ extension InstalledVersionsViewController: NSTableViewDelegate {
     let cellView = VersionCellView()
     cellView.configure(with: versionId)
 
+    // Set initial highlight state
+    cellView.setHighlighted(tableView.selectedRow == row)
+
     return cellView
   }
 
@@ -424,13 +429,35 @@ extension InstalledVersionsViewController: NSTableViewDelegate {
   }
 
   func tableViewSelectionDidChange(_ notification: Notification) {
-    guard tableView.selectedRow >= 0 else { return }
+    // Update all visible cells to reflect selection state
+    for row in 0..<installedVersions.count {
+      if let cellView = tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? VersionCellView {
+        cellView.setHighlighted(row == tableView.selectedRow)
+      }
+    }
 
-    let selectedVersion = installedVersions[tableView.selectedRow]
-    Logger.shared.info("Selected version: \(selectedVersion)", category: "InstalledVersions")
+    // Log selection
+    if tableView.selectedRow >= 0 {
+      let selectedVersion = installedVersions[tableView.selectedRow]
+      Logger.shared.info("Selected version: \(selectedVersion)", category: "InstalledVersions")
+    }
   }
 
   func tableView(_ tableView: NSTableView, shouldTypeSelectFor event: NSEvent, withCurrentSearch searchString: String?) -> Bool {
     return true
+  }
+}
+
+// MARK: - NSMenuDelegate
+
+extension InstalledVersionsViewController: NSMenuDelegate {
+
+  func menuNeedsUpdate(_ menu: NSMenu) {
+    // Automatically select the row that was right-clicked
+    let row = tableView.clickedRow
+
+    if row >= 0 {
+      tableView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+    }
   }
 }
