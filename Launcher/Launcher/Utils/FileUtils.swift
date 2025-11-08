@@ -59,6 +59,19 @@ enum FileUtils {
     return versionsDir
   }
 
+  /// Get instances directory
+  static func getInstancesDirectory() -> URL {
+    let launcherDir = getLauncherDirectory()
+    let instancesDir = launcherDir.appendingPathComponent("instances")
+
+    try? FileManager.default.createDirectory(
+      at: instancesDir,
+      withIntermediateDirectories: true
+    )
+
+    return instancesDir
+  }
+
   /// Get libraries directory
   static func getLibrariesDirectory() -> URL {
     let minecraftDir = getMinecraftDirectory()

@@ -18,15 +18,16 @@ class ViewController: NSViewController {
   private var accountWindowObserver: NSObjectProtocol?
   private var settingsWindowObserver: NSObjectProtocol?
 
-  // Version management
+  // Instance management
+  private let instanceManager = InstanceManager.shared
   private let versionManager = VersionManager.shared
   private let gameLauncher = GameLauncher.shared
-  private var installedVersions: [String] = []
+  private var instances: [Instance] = []
 
   // UI elements
   private let titleLabel: BRLabel = {
     let label = BRLabel(
-      text: Localized.InstalledVersions.title,
+      text: Localized.Instances.title,
       font: .systemFont(ofSize: 20, weight: .semibold),
       textColor: .labelColor,
       alignment: .left
@@ -122,10 +123,10 @@ class ViewController: NSViewController {
         : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
-      accessibilityLabel: Localized.InstalledVersions.refreshButton
+      accessibilityLabel: Localized.Instances.refreshButton
     )
     button.target = self
-    button.action = #selector(refreshVersionList)
+    button.action = #selector(refreshInstances)
     return button
   }()
 
@@ -155,8 +156,8 @@ class ViewController: NSViewController {
 
     // Register item
     collectionView.register(
-      VersionCollectionViewItem.self,
-      forItemWithIdentifier: VersionCollectionViewItem.identifier
+      InstanceCollectionViewItem.self,
+      forItemWithIdentifier: InstanceCollectionViewItem.identifier
     )
 
     collectionView.dataSource = self
@@ -169,7 +170,7 @@ class ViewController: NSViewController {
 
   private let emptyLabel: BRLabel = {
     let label = BRLabel(
-      text: Localized.InstalledVersions.emptyMessage,
+      text: Localized.Instances.emptyMessage,
       font: .systemFont(ofSize: 14),
       textColor: .secondaryLabelColor,
       alignment: .center
@@ -191,15 +192,15 @@ class ViewController: NSViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
-    loadInstalledVersions()
+    loadInstances()
   }
 
   private func setupUI() {
     // Add all UI elements
     view.addSubview(titleLabel)
     view.addSubview(countLabel)
-    view.addSubview(refreshButton)
     view.addSubview(testButton)
+    view.addSubview(refreshButton)
     view.addSubview(javaDetectionButton)
     view.addSubview(accountButton)
     view.addSubview(settingsButton)
@@ -210,8 +211,14 @@ class ViewController: NSViewController {
     scrollView.documentView = collectionView
 
     // Layout constraints using SnapKit
-    // Top-right button group
+    // Top-right button group (from left to right: test, refresh, java, account, settings)
     testButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalToSuperview().offset(-192)
+      make.width.height.equalTo(36)
+    }
+
+    refreshButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-148)
       make.width.height.equalTo(36)
@@ -241,12 +248,6 @@ class ViewController: NSViewController {
       make.left.equalToSuperview().offset(20)
     }
 
-    refreshButton.snp.makeConstraints { make in
-      make.centerY.equalTo(titleLabel)
-      make.left.equalTo(titleLabel.snp.right).offset(16)
-      make.width.height.equalTo(36)
-    }
-
     countLabel.snp.makeConstraints { make in
       make.top.equalTo(titleLabel.snp.bottom).offset(8)
       make.left.equalToSuperview().offset(20)
@@ -273,13 +274,9 @@ class ViewController: NSViewController {
 
   // MARK: - Data Loading
 
-  private func loadInstalledVersions() {
-    installedVersions = versionManager.getInstalledVersions()
-
-    // Sort by version number (descending)
-    installedVersions.sort { version1, version2 in
-      return version1.compare(version2, options: .numeric) == .orderedDescending
-    }
+  private func loadInstances() {
+    instanceManager.refreshInstances()
+    instances = instanceManager.instances
 
     collectionView.reloadData()
     updateEmptyState()
@@ -287,18 +284,18 @@ class ViewController: NSViewController {
   }
 
   private func updateEmptyState() {
-    emptyLabel.isHidden = !installedVersions.isEmpty
-    scrollView.isHidden = installedVersions.isEmpty
+    emptyLabel.isHidden = !instances.isEmpty
+    scrollView.isHidden = instances.isEmpty
   }
 
   private func updateCountLabel() {
-    let count = installedVersions.count
+    let count = instances.count
     if count == 0 {
-      countLabel.stringValue = Localized.InstalledVersions.countNone
+      countLabel.stringValue = Localized.Instances.countNone
     } else if count == 1 {
-      countLabel.stringValue = Localized.InstalledVersions.countOne
+      countLabel.stringValue = Localized.Instances.countOne
     } else {
-      countLabel.stringValue = Localized.InstalledVersions.countMultiple(count)
+      countLabel.stringValue = Localized.Instances.countMultiple(count)
     }
   }
 
@@ -323,6 +320,17 @@ extension ViewController {
 
     // Create new version list window
     versionListWindowController = VersionListWindowController()
+
+    // Setup callbacks for instance creation
+    if let viewController = versionListWindowController?.window?.contentViewController as? VersionListViewController {
+      viewController.onInstanceCreated = { [weak self] _ in
+        self?.loadInstances()
+      }
+      viewController.onCancel = {
+        // Just close the window
+      }
+    }
+
     versionListWindowController?.showWindow(nil)
     versionListWindowController?.window?.makeKeyAndOrderFront(nil)
 
@@ -421,8 +429,8 @@ extension ViewController {
     }
   }
 
-  @objc func refreshVersionList() {
-    loadInstalledVersions()
+  @objc func refreshInstances() {
+    loadInstances()
   }
 }
 
@@ -434,7 +442,7 @@ extension ViewController {
     let menu = NSMenu()
 
     let launchItem = NSMenuItem(
-      title: Localized.InstalledVersions.menuLaunchGame,
+      title: Localized.Instances.menuLaunchGame,
       action: #selector(launchGame(_:)),
       keyEquivalent: ""
     )
@@ -444,8 +452,8 @@ extension ViewController {
     menu.addItem(NSMenuItem.separator())
 
     let openFolderItem = NSMenuItem(
-      title: Localized.InstalledVersions.menuShowInFinder,
-      action: #selector(openVersionFolder(_:)),
+      title: Localized.Instances.menuShowInFinder,
+      action: #selector(openInstanceFolder(_:)),
       keyEquivalent: ""
     )
     openFolderItem.target = self
@@ -454,8 +462,8 @@ extension ViewController {
     menu.addItem(NSMenuItem.separator())
 
     let deleteItem = NSMenuItem(
-      title: Localized.InstalledVersions.menuDelete,
-      action: #selector(deleteVersion(_:)),
+      title: Localized.Instances.menuDelete,
+      action: #selector(deleteInstance(_:)),
       keyEquivalent: ""
     )
     deleteItem.target = self
@@ -465,27 +473,27 @@ extension ViewController {
   }
 
   @objc func launchGame(_ sender: Any?) {
-    guard let versionId = getClickedItem() else { return }
+    guard let instance = getClickedInstance() else { return }
 
     // Show offline launch window
     let windowController = OfflineLaunchWindowController()
     if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
       viewController.onLaunch = { [weak self] username in
-        self?.performLaunch(versionId: versionId, username: username)
+        self?.performLaunch(instance: instance, username: username)
       }
     }
     windowController.showWindow(nil)
   }
 
-  func performLaunch(versionId: String, username: String) {
+  func performLaunch(instance: Instance, username: String) {
     Task { @MainActor in
       do {
-        Logger.shared.info(Localized.GameLauncher.logLaunchingVersion(versionId), category: "MainWindow")
+        Logger.shared.info(Localized.GameLauncher.logLaunchingVersion(instance.versionId), category: "MainWindow")
 
         // Detect Java
         Logger.shared.info(Localized.GameLauncher.statusDetectingJava, category: "MainWindow")
 
-        let versionDetails = try await versionManager.getVersionDetails(versionId: versionId)
+        let versionDetails = try await versionManager.getVersionDetails(versionId: instance.versionId)
         guard let javaInstallation = await gameLauncher.getBestJavaForVersion(versionDetails) else {
           showAlert(
             title: Localized.GameLauncher.alertNoJavaTitle,
@@ -501,7 +509,7 @@ extension ViewController {
 
         // Create launch configuration with username
         let config = GameLauncher.LaunchConfig.default(
-          versionId: versionId,
+          versionId: instance.versionId,
           javaPath: javaInstallation.path,
           username: username
         )
@@ -515,7 +523,7 @@ extension ViewController {
         // Show success notification
         showNotification(
           title: Localized.GameLauncher.statusLaunched,
-          message: "Version: \(versionId), User: \(username)"
+          message: "Instance: \(instance.name), Version: \(instance.versionId), User: \(username)"
         )
       } catch {
         Logger.shared.error(
@@ -531,55 +539,53 @@ extension ViewController {
     }
   }
 
-  @objc func openVersionFolder(_ sender: Any?) {
-    guard let clickedItem = getClickedItem() else { return }
+  @objc func openInstanceFolder(_ sender: Any?) {
+    guard let instance = getClickedInstance() else { return }
 
-    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(clickedItem)
-    NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: versionDir.path)
+    let instanceDir = instanceManager.getInstanceDirectory(for: instance)
+    NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: instanceDir.path)
   }
 
-  @objc func deleteVersion(_ sender: Any?) {
-    guard let versionId = getClickedItem() else { return }
+  @objc func deleteInstance(_ sender: Any?) {
+    guard let instance = getClickedInstance() else { return }
 
     // Show confirmation dialog
     let alert = NSAlert()
-    alert.messageText = Localized.InstalledVersions.deleteConfirmTitle
-    alert.informativeText = Localized.InstalledVersions.deleteConfirmMessage(versionId)
+    alert.messageText = Localized.Instances.deleteConfirmTitle
+    alert.informativeText = Localized.Instances.deleteConfirmMessage(instance.name)
     alert.alertStyle = .warning
-    alert.addButton(withTitle: Localized.InstalledVersions.deleteButton)
-    alert.addButton(withTitle: Localized.InstalledVersions.cancelButton)
+    alert.addButton(withTitle: Localized.Instances.deleteButton)
+    alert.addButton(withTitle: Localized.Instances.cancelButton)
 
     guard let window = view.window else { return }
     alert.beginSheetModal(for: window) { [weak self] response in
       guard response == .alertFirstButtonReturn else { return }
-      self?.performDelete(versionId: versionId)
+      self?.performDelete(instance: instance)
     }
   }
 
-  func performDelete(versionId: String) {
-    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(versionId)
-
+  func performDelete(instance: Instance) {
     do {
-      try FileManager.default.removeItem(at: versionDir)
-      Logger.shared.info("Deleted version: \(versionId)", category: "InstalledVersions")
+      try instanceManager.deleteInstance(instance)
+      Logger.shared.info("Deleted instance: \(instance.id)", category: "Instances")
 
       // Refresh list
-      loadInstalledVersions()
+      loadInstances()
 
       // Show success notification
       showNotification(
-        title: Localized.InstalledVersions.deleteSuccessTitle,
-        message: Localized.InstalledVersions.deleteSuccessMessage(versionId)
+        title: Localized.Instances.deleteSuccessTitle,
+        message: Localized.Instances.deleteSuccessMessage(instance.name)
       )
     } catch {
-      Logger.shared.error("Failed to delete version: \(error.localizedDescription)", category: "InstalledVersions")
+      Logger.shared.error("Failed to delete instance: \(error.localizedDescription)", category: "Instances")
 
       // Show error dialog
       let alert = NSAlert()
-      alert.messageText = Localized.InstalledVersions.deleteFailedTitle
-      alert.informativeText = Localized.InstalledVersions.deleteFailedMessage(versionId, error.localizedDescription)
+      alert.messageText = Localized.Instances.deleteFailedTitle
+      alert.informativeText = Localized.Instances.deleteFailedMessage(instance.name, error.localizedDescription)
       alert.alertStyle = .critical
-      alert.addButton(withTitle: Localized.InstalledVersions.okButton)
+      alert.addButton(withTitle: Localized.Instances.okButton)
 
       if let window = view.window {
         alert.beginSheetModal(for: window)
@@ -597,7 +603,7 @@ extension ViewController {
     alert.messageText = title
     alert.informativeText = message
     alert.alertStyle = .warning
-    alert.addButton(withTitle: Localized.InstalledVersions.okButton)
+    alert.addButton(withTitle: Localized.Instances.okButton)
 
     if let window = view.window {
       alert.beginSheetModal(for: window)
@@ -606,19 +612,19 @@ extension ViewController {
     }
   }
 
-  // Get clicked item
-  func getClickedItem() -> String? {
+  // Get clicked instance
+  func getClickedInstance() -> Instance? {
     let point = collectionView.convert(view.window?.mouseLocationOutsideOfEventStream ?? .zero, from: nil)
     guard let indexPath = collectionView.indexPathForItem(at: point),
-          indexPath.item < installedVersions.count else {
+          indexPath.item < instances.count else {
       // If no item clicked, try to get selected item
       guard let selectedIndexPath = collectionView.selectionIndexPaths.first,
-            selectedIndexPath.item < installedVersions.count else {
+            selectedIndexPath.item < instances.count else {
         return nil
       }
-      return installedVersions[selectedIndexPath.item]
+      return instances[selectedIndexPath.item]
     }
-    return installedVersions[indexPath.item]
+    return instances[indexPath.item]
   }
 }
 
@@ -627,19 +633,19 @@ extension ViewController {
 extension ViewController: NSCollectionViewDataSource {
 
   func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-    return installedVersions.count
+    return instances.count
   }
 
   func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
     guard let item = collectionView.makeItem(
-      withIdentifier: VersionCollectionViewItem.identifier,
+      withIdentifier: InstanceCollectionViewItem.identifier,
       for: indexPath
-    ) as? VersionCollectionViewItem else {
+    ) as? InstanceCollectionViewItem else {
       return NSCollectionViewItem()
     }
 
-    let versionId = installedVersions[indexPath.item]
-    item.configure(with: versionId)
+    let instance = instances[indexPath.item]
+    item.configure(with: instance)
 
     return item
   }
@@ -651,8 +657,8 @@ extension ViewController: NSCollectionViewDelegate {
 
   func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
     guard let indexPath = indexPaths.first else { return }
-    let selectedVersion = installedVersions[indexPath.item]
-    Logger.shared.info("Selected version: \(selectedVersion)", category: "MainWindow")
+    let selectedInstance = instances[indexPath.item]
+    Logger.shared.info("Selected instance: \(selectedInstance.name)", category: "MainWindow")
   }
 
   func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {

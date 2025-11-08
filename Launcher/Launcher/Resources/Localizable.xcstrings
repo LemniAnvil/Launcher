@@ -122,6 +122,17 @@
         }
       }
     },
+    "%lld instances": {
+      "comment": "[Text] Multiple instances count.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 个实例"
+          }
+        }
+      }
+    },
     "☕️ Java version: %lld": {
       "comment": "[Log] Java version.",
       "localizations": {
@@ -1031,6 +1042,17 @@
         }
       }
     },
+    "1 instance": {
+      "comment": "[Text] One instance.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 个实例"
+          }
+        }
+      }
+    },
     "1. Refresh Versions": {
       "comment": "[Button] Refresh versions list.",
       "localizations": {
@@ -1137,6 +1159,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "仅 Alpha 版"
+          }
+        }
+      }
+    },
+    "An instance with name \"%@\" already exists.": {
+      "comment": "[Error] Duplicate name error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "名为 \"%@\" 的实例已存在。"
           }
         }
       }
@@ -1284,6 +1317,39 @@
         }
       }
     },
+    "Create": {
+      "comment": "[Button] Create button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "创建"
+          }
+        }
+      }
+    },
+    "Create Instance": {
+      "comment": "[Button] Create instance button.\n[Text] Create instance dialog title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "创建实例"
+          }
+        }
+      }
+    },
+    "Creating instance for version: %@": {
+      "comment": "[Log] Creating instance for version.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在为版本 %@ 创建实例"
+          }
+        }
+      }
+    },
     "Delete": {
       "comment": "[Button] Delete button.",
       "localizations": {
@@ -1302,6 +1368,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "删除账号"
+          }
+        }
+      }
+    },
+    "Delete Instance": {
+      "comment": "[Menu] Delete instance.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除实例"
           }
         }
       }
@@ -1543,6 +1620,17 @@
         }
       }
     },
+    "Enter instance name": {
+      "comment": "[Placeholder] Instance name placeholder.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "输入实例名称"
+          }
+        }
+      }
+    },
     "Enter username (3-16 characters)": {
       "comment": "[Placeholder] Account username placeholder.\n[Placeholder] Username placeholder.",
       "localizations": {
@@ -1550,6 +1638,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "输入用户名（3-16个字符）"
+          }
+        }
+      }
+    },
+    "Error": {
+      "comment": "[Alert] Error title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "错误"
           }
         }
       }
@@ -1576,6 +1675,17 @@
         }
       }
     },
+    "Failed to create instance dialog": {
+      "comment": "[Log] Failed to create instance dialog.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "创建实例对话框失败"
+          }
+        }
+      }
+    },
     "Failed to get details": {
       "comment": "[Status] Failed to get details.",
       "localizations": {
@@ -1594,6 +1704,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "启动游戏失败：%@"
+          }
+        }
+      }
+    },
+    "Failed to save instance: %@": {
+      "comment": "[Error] Save failed error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存实例失败：%@"
           }
         }
       }
@@ -1719,6 +1840,94 @@
         }
       }
     },
+    "Instance \"%@\" has been deleted": {
+      "comment": "[Notification] Delete success message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "实例 \"%@\" 已删除"
+          }
+        }
+      }
+    },
+    "Instance \"%@\" will be permanently deleted. This action cannot be undone.": {
+      "comment": "[Alert] Delete confirmation message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "实例 \"%@\" 将被永久删除，此操作无法撤销。"
+          }
+        }
+      }
+    },
+    "Instance created successfully: %@": {
+      "comment": "[Log] Instance created successfully.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "实例创建成功：%@"
+          }
+        }
+      }
+    },
+    "Instance ID: %@": {
+      "comment": "[Log] Instance ID.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "实例 ID：%@"
+          }
+        }
+      }
+    },
+    "Instance name cannot be empty.": {
+      "comment": "[Error] Empty name error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "实例名称不能为空。"
+          }
+        }
+      }
+    },
+    "Instance Name:": {
+      "comment": "[Label] Instance name label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "实例名称："
+          }
+        }
+      }
+    },
+    "Instance not found: %@": {
+      "comment": "[Error] Instance not found error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到实例：%@"
+          }
+        }
+      }
+    },
+    "Instances": {
+      "comment": "[Text] Instances title.\n[Text] Instances window title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "实例"
+          }
+        }
+      }
+    },
     "Invalid Configuration": {
       "comment": "[Alert] Invalid proxy configuration title.",
       "localizations": {
@@ -1726,6 +1935,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "无效配置"
+          }
+        }
+      }
+    },
+    "Invalid instance name: %@": {
+      "comment": "[Error] Invalid name error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无效的实例名称：%@"
           }
         }
       }
@@ -1983,6 +2203,28 @@
         }
       }
     },
+    "No instances": {
+      "comment": "[Text] No instances message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有实例"
+          }
+        }
+      }
+    },
+    "No instances yet": {
+      "comment": "[Text] No instances.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有实例"
+          }
+        }
+      }
+    },
     "No Java installations found": {
       "comment": "[Status] No Java found.",
       "localizations": {
@@ -2012,6 +2254,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "没有保存的账号"
+          }
+        }
+      }
+    },
+    "No versions installed": {
+      "comment": "[Text] No versions installed.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有已安装的版本"
           }
         }
       }
@@ -2122,6 +2375,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "请输入有效的主机和端口。"
+          }
+        }
+      }
+    },
+    "Please select a version.": {
+      "comment": "[Error] No version selected error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请选择一个版本。"
           }
         }
       }
@@ -2287,7 +2551,7 @@
       }
     },
     "Refresh": {
-      "comment": "[Button] Refresh Java detection.\n[Button] Refresh versions list.",
+      "comment": "[Button] Refresh Java detection.\n[Button] Refresh instances list.\n[Button] Refresh versions list.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2419,7 +2683,7 @@
       }
     },
     "Show in Finder": {
-      "comment": "[Menu] Show version in Finder.",
+      "comment": "[Menu] Show instance in Finder.\n[Menu] Show version in Finder.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2546,6 +2810,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "类型："
+          }
+        }
+      }
+    },
+    "Unable to delete instance \"%@\": %@": {
+      "comment": "[Alert] Delete failed message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法删除实例 \"%@\"：%@"
           }
         }
       }
@@ -2721,6 +2996,28 @@
         }
       }
     },
+    "Version %@ is not installed.": {
+      "comment": "[Error] Version not installed error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "版本 %@ 未安装。"
+          }
+        }
+      }
+    },
+    "Version %@ is not installed. Downloading...": {
+      "comment": "[Log] Version not installed, downloading.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "版本 %@ 未安装。正在下载..."
+          }
+        }
+      }
+    },
     "Version %@ will be permanently deleted. This action cannot be undone.": {
       "comment": "[Alert] Delete confirmation message.",
       "localizations": {
@@ -2810,12 +3107,23 @@
       }
     },
     "Version:": {
-      "comment": "[Label] Version selection label.",
+      "comment": "[Label] Version label.\n[Label] Version selection label.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "版本："
+          }
+        }
+      }
+    },
+    "Version: %@": {
+      "comment": "[Log] Instance version.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "版本：%@"
           }
         }
       }

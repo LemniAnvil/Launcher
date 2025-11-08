@@ -12,115 +12,90 @@ import Yatagarasu
 // swiftlint:disable:next type_body_length
 class VersionListViewController: NSViewController {
 
+  // MARK: - Properties
+
+  var onInstanceCreated: ((Instance) -> Void)?
+  var onCancel: (() -> Void)?
+
   private let logger = Logger.shared
   private let versionManager = VersionManager.shared
   private let downloadManager = DownloadManager.shared
+  private let instanceManager = InstanceManager.shared
+  private var preselectedVersionId: String?
 
-  // UI elements
-  private let scrollView = NSScrollView()
-  private lazy var logTextView: NSTextView = {
-    let textView = NSTextView(frame: .zero)
-    textView.isEditable = false
-    textView.isSelectable = true
-    textView.font = .monospacedSystemFont(ofSize: 11, weight: .regular)
-    textView.textColor = .labelColor
-    textView.backgroundColor = .textBackgroundColor
-    textView.minSize = NSSize(width: 0, height: 0)
-    textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
-    textView.isVerticallyResizable = true
-    textView.isHorizontallyResizable = false
-    textView.autoresizingMask = [.width]
+  // MARK: - Instance Info UI
 
-    if let textContainer = textView.textContainer {
-      textContainer.containerSize = NSSize(width: 200, height: CGFloat.greatestFiniteMagnitude)
-      textContainer.widthTracksTextView = true
-    }
+  // Instance info container
+  private let infoContainerView: NSView = {
+    let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    view.layer?.cornerRadius = 8
+    view.layer?.borderWidth = 1
+    view.layer?.borderColor = NSColor.separatorColor.cgColor
+    return view
+  }()
 
-    return textView
+  private let iconImageView: NSImageView = {
+    let imageView = NSImageView()
+    imageView.wantsLayer = true
+    imageView.layer?.cornerRadius = 8
+    imageView.imageScaling = .scaleProportionallyUpOrDown
+
+    // Create a simple grass block-like icon using system symbols
+    let config = NSImage.SymbolConfiguration(pointSize: 60, weight: .regular)
+    let cubeImage = NSImage(systemSymbolName: "cube.fill", accessibilityDescription: nil)
+    let configuredImage = cubeImage?.withSymbolConfiguration(config)
+    imageView.image = configuredImage
+    imageView.contentTintColor = .systemGreen
+
+    return imageView
+  }()
+
+  private let nameLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.Instances.instanceNameLabel,
+      font: .systemFont(ofSize: 13, weight: .medium),
+      textColor: .labelColor,
+      alignment: .left
+    )
+    return label
+  }()
+
+  private lazy var nameTextField: NSTextField = {
+    let field = NSTextField()
+    field.placeholderString = Localized.Instances.instanceNamePlaceholder
+    field.font = .systemFont(ofSize: 13)
+    field.lineBreakMode = .byTruncatingTail
+    return field
+  }()
+
+  // MARK: - Version Selection UI
+
+  private let versionSectionLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.Instances.versionLabel,
+      font: .systemFont(ofSize: 13, weight: .medium),
+      textColor: .labelColor,
+      alignment: .left
+    )
+    return label
   }()
 
   private lazy var refreshVersionButton: BRImageButton = {
     let button = BRImageButton(
       symbolName: "arrow.clockwise",
-      cornerRadius: 8,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-          ? NSColor.white.withAlphaComponent(0.1)
-          : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemBlue,
-      accessibilityLabel: Localized.VersionListWindow.refreshVersionsButton
-    )
-    button.target = self
-    button.action = #selector(testRefreshVersions)
-    return button
-  }()
-
-  private lazy var getVersionDetailsButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "info.circle",
-      cornerRadius: 8,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-          ? NSColor.white.withAlphaComponent(0.1)
-          : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemBlue,
-      accessibilityLabel: Localized.VersionListWindow.getVersionDetailsButton
-    )
-    button.target = self
-    button.action = #selector(testGetVersionDetails)
-    return button
-  }()
-
-  private lazy var downloadTestFileButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "arrow.down.doc",
-      cornerRadius: 8,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-          ? NSColor.white.withAlphaComponent(0.1)
-          : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemBlue,
-      accessibilityLabel: Localized.VersionListWindow.downloadTestFileButton
-    )
-    button.target = self
-    button.action = #selector(testDownloadFile)
-    return button
-  }()
-
-  private lazy var downloadVersionButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "arrow.down.circle.fill",
-      cornerRadius: 8,
+      cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
           ? NSColor.white.withAlphaComponent(0.1)
           : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemGreen,
-      accessibilityLabel: Localized.VersionListWindow.downloadVersionButton
+      accessibilityLabel: Localized.VersionListWindow.refreshVersionsButton
     )
     button.target = self
-    button.action = #selector(testDownloadVersion)
-    return button
-  }()
-
-  private lazy var clearLogButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "trash",
-      cornerRadius: 8,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-          ? NSColor.white.withAlphaComponent(0.1)
-          : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemRed,
-      accessibilityLabel: Localized.VersionListWindow.clearLogButton
-    )
-    button.target = self
-    button.action = #selector(clearLog)
+    button.action = #selector(testRefreshVersions)
     return button
   }()
 
@@ -245,6 +220,22 @@ class VersionListViewController: NSViewController {
     return label
   }()
 
+  // MARK: - Action Buttons
+
+  private lazy var createButton: NSButton = {
+    let button = NSButton(title: Localized.Instances.createButton, target: self, action: #selector(createInstanceAction))
+    button.bezelStyle = .rounded
+    button.keyEquivalent = "\r"
+    return button
+  }()
+
+  private lazy var cancelButton: NSButton = {
+    let button = NSButton(title: Localized.Instances.cancelButton, target: self, action: #selector(cancelAction))
+    button.bezelStyle = .rounded
+    button.keyEquivalent = "\u{1b}"
+    return button
+  }()
+
   override func loadView() {
     self.view = NSView(frame: NSRect(x: 0, y: 0, width: 1000, height: 750))
     self.view.wantsLayer = true
@@ -253,19 +244,7 @@ class VersionListViewController: NSViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
-    setupLogObserver()
     loadVersionsToTable()
-    logMessage(Localized.LogMessages.initialized)
-    logMessage(Localized.LogMessages.pleaseClickButtons)
-  }
-
-  override func viewDidAppear() {
-    super.viewDidAppear()
-    // Force layout update for text view after layout is complete
-    logTextView.needsLayout = true
-    if let textContainer = logTextView.textContainer {
-      logTextView.layoutManager?.ensureLayout(for: textContainer)
-    }
   }
 
   private func loadVersionsToTable() {
@@ -356,10 +335,11 @@ class VersionListViewController: NSViewController {
     guard row >= 0, row < displayedVersions.count else { return }
 
     let version = displayedVersions[row]
-    logMessage("\(Localized.LogMessages.mouseDoubleClickVersion) \(version.id)")
+    selectedVersion = version
+    updateNameFromSelectedVersion()
 
-    // Trigger version download
-    testDownloadVersion()
+    // Trigger instance creation on double-click
+    createInstanceAction()
   }
 
   @objc private func filterVersions() {
@@ -396,41 +376,16 @@ class VersionListViewController: NSViewController {
   }
 
   private func setupUI() {
-    // Setup scroll view for log text view
-    scrollView.documentView = logTextView
-    scrollView.hasVerticalScroller = true
-    scrollView.hasHorizontalScroller = false
-    scrollView.autohidesScrollers = false
-    scrollView.borderType = .bezelBorder
+    // Add main components
+    view.addSubview(infoContainerView)
+    infoContainerView.addSubview(iconImageView)
+    infoContainerView.addSubview(nameLabel)
+    infoContainerView.addSubview(nameTextField)
 
-    // Create main button container with all action buttons
-    // Add visual separator between button groups
-    let separator1 = BRSeparator.vertical()
-    separator1.snp.makeConstraints { make in
-      make.width.equalTo(1)
-      make.height.equalTo(24)
-    }
-
-    let buttonStack = NSStackView(views: [
-      refreshVersionButton,
-      getVersionDetailsButton,
-      downloadTestFileButton,
-      separator1,
-      downloadVersionButton,
-      clearLogButton,
-    ])
-    buttonStack.orientation = .horizontal
-    buttonStack.spacing = 12
-    buttonStack.distribution = .gravityAreas
+    view.addSubview(versionSectionLabel)
+    view.addSubview(refreshVersionButton)
 
     // Create filter control row
-    let filterLabel = BRLabel(
-      text: Localized.VersionListWindow.filterLabel,
-      font: .systemFont(ofSize: 12),
-      textColor: .labelColor,
-      alignment: .left
-    )
-
     let checkboxStack = NSStackView(views: [
       releaseCheckbox,
       snapshotCheckbox,
@@ -440,98 +395,92 @@ class VersionListViewController: NSViewController {
     checkboxStack.orientation = .horizontal
     checkboxStack.spacing = 15
 
-    let filterStack = NSStackView(views: [
-      filterLabel,
-      checkboxStack,
-    ])
-    filterStack.orientation = .horizontal
-    filterStack.spacing = 10
-
-    // Add to view
-    view.addSubview(buttonStack)
-    view.addSubview(filterStack)
+    view.addSubview(checkboxStack)
     view.addSubview(versionScrollView)
-    view.addSubview(scrollView)
-    view.addSubview(progressBar)
-    view.addSubview(statusLabel)
+    view.addSubview(cancelButton)
+    view.addSubview(createButton)
 
     // Layout using SnapKit
-    // Set button sizes - using standard image button size
-    let buttonSize: CGFloat = 32
-    [
-      refreshVersionButton,
-      getVersionDetailsButton,
-      downloadTestFileButton,
-      downloadVersionButton,
-      clearLogButton,
-    ].forEach { button in
-      button.snp.makeConstraints { make in
-        make.width.height.equalTo(buttonSize)
-      }
-    }
-
-    buttonStack.snp.makeConstraints { make in
+    // Instance info container at top
+    infoContainerView.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
-      make.left.equalToSuperview().offset(20)
-      make.height.equalTo(32)
+      make.left.right.equalToSuperview().inset(20)
+      make.height.equalTo(140)
     }
 
-    filterStack.snp.makeConstraints { make in
-      make.top.equalTo(buttonStack.snp.bottom).offset(10)
+    iconImageView.snp.makeConstraints { make in
+      make.left.equalToSuperview().offset(20)
+      make.centerY.equalToSuperview()
+      make.width.height.equalTo(100)
+    }
+
+    nameLabel.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(30)
+      make.left.equalTo(iconImageView.snp.right).offset(20)
+      make.right.equalToSuperview().offset(-20)
+    }
+
+    nameTextField.snp.makeConstraints { make in
+      make.top.equalTo(nameLabel.snp.bottom).offset(8)
+      make.left.equalTo(iconImageView.snp.right).offset(20)
+      make.right.equalToSuperview().offset(-20)
+      make.height.equalTo(28)
+    }
+
+    // Version section
+    versionSectionLabel.snp.makeConstraints { make in
+      make.top.equalTo(infoContainerView.snp.bottom).offset(24)
+      make.left.equalToSuperview().offset(20)
+    }
+
+    refreshVersionButton.snp.makeConstraints { make in
+      make.centerY.equalTo(versionSectionLabel)
+      make.right.equalToSuperview().offset(-20)
+      make.width.height.equalTo(28)
+    }
+
+    // Filter checkboxes
+    checkboxStack.snp.makeConstraints { make in
+      make.top.equalTo(versionSectionLabel.snp.bottom).offset(12)
       make.left.equalToSuperview().offset(20)
       make.right.equalToSuperview().offset(-20)
-      make.height.equalTo(32)
+      make.height.equalTo(24)
     }
 
+    // Version table
     versionScrollView.snp.makeConstraints { make in
-      make.top.equalTo(filterStack.snp.bottom).offset(10)
-      make.left.equalToSuperview().offset(20)
-      make.width.equalTo(730)
-      make.bottom.equalTo(progressBar.snp.top).offset(-15)
+      make.top.equalTo(checkboxStack.snp.bottom).offset(12)
+      make.left.right.equalToSuperview().inset(20)
+      make.bottom.equalTo(cancelButton.snp.top).offset(-20)
     }
 
-    scrollView.snp.makeConstraints { make in
-      make.top.equalTo(filterStack.snp.bottom).offset(10)
-      make.left.equalTo(versionScrollView.snp.right).offset(10)
-      make.right.equalToSuperview().offset(-20)
-      make.bottom.equalTo(progressBar.snp.top).offset(-15)
+    // Bottom buttons
+    cancelButton.snp.makeConstraints { make in
+      make.bottom.equalToSuperview().offset(-20)
+      make.right.equalTo(createButton.snp.left).offset(-12)
+      make.width.equalTo(100)
     }
 
-    progressBar.snp.makeConstraints { make in
-      make.left.equalToSuperview().offset(20)
+    createButton.snp.makeConstraints { make in
+      make.bottom.equalToSuperview().offset(-20)
       make.right.equalToSuperview().offset(-20)
-      make.bottom.equalTo(statusLabel.snp.top).offset(-8)
-      make.height.equalTo(20)
-    }
-
-    statusLabel.snp.makeConstraints { make in
-      make.left.equalToSuperview().offset(20)
-      make.right.equalToSuperview().offset(-20)
-      make.bottom.equalToSuperview().offset(-10)
+      make.width.equalTo(100)
     }
   }
 
-  private func setupLogObserver() {
-    // Monitor download progress updates
-    Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-      guard let self = self else { return }
-
-      Task { @MainActor in
-        if self.downloadManager.isDownloading {
-          let progress = self.downloadManager.currentProgress
-          self.progressBar.doubleValue = progress.overallProgress
-
-          let speed = FileUtils.formatBytes(
-            Int64(self.downloadManager.downloadSpeed)
-          )
-          self.statusLabel.stringValue = Localized.VersionListWindow.statusDownloading(
-            progress: progress.displayProgress,
-            speed: speed,
-            bytes: progress.bytesDisplay
-          )
-        }
-      }
+  private func updateNameFromSelectedVersion() {
+    // Update name field to match selected version
+    if let selectedVersion = selectedVersion {
+      // Format: versionId-type (e.g., "1.21.10-release")
+      let typeName = selectedVersion.type.rawValue
+      nameTextField.stringValue = "\(selectedVersion.id)-\(typeName)"
     }
+  }
+
+  /// Set the selected version in the table
+  func setSelectedVersion(_ versionId: String) {
+    preselectedVersionId = versionId
+    // Will be handled when versions are loaded
   }
 
   // MARK: - Test Methods
@@ -700,18 +649,68 @@ class VersionListViewController: NSViewController {
     }
   }
 
-  @objc private func testDownloadVersion() {
-    let row = versionTableView.selectedRow
-    guard row >= 0, row < displayedVersions.count else {
-      logMessage(Localized.LogMessages.pleaseSelectVersion)
+  @objc private func createInstanceAction() {
+    // Validate name
+    guard let name = nameTextField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines).nonEmpty else {
+      showError(Localized.Instances.errorEmptyName)
       return
     }
 
-    let versionId = displayedVersions[row].id
+    // Validate version selection
+    guard let selectedVersion = selectedVersion else {
+      showError(Localized.Instances.errorNoVersionSelected)
+      return
+    }
 
-    logMessage("\n" + String(repeating: "=", count: 60))
-    logMessage(Localized.LogMessages.test5Title(versionId))
-    logMessage(String(repeating: "=", count: 60))
+    // Check if version is installed
+    let isInstalled = versionManager.isVersionInstalled(versionId: selectedVersion.id)
+
+    if !isInstalled {
+      // Version not installed, show alert
+      let alert = NSAlert()
+      alert.messageText = Localized.Instances.errorTitle
+      alert.informativeText = Localized.LogMessages.versionNotInstalledDownloading(selectedVersion.id)
+      alert.alertStyle = .warning
+      alert.addButton(withTitle: Localized.Instances.okButton)
+
+      if let window = view.window {
+        alert.beginSheetModal(for: window)
+      } else {
+        alert.runModal()
+      }
+      return
+    }
+
+    // Create instance
+    do {
+      let instance = try instanceManager.createInstance(name: name, versionId: selectedVersion.id)
+      onInstanceCreated?(instance)
+      view.window?.close()
+    } catch {
+      showError(error.localizedDescription)
+    }
+  }
+
+  @objc private func cancelAction() {
+    onCancel?()
+    view.window?.close()
+  }
+
+  private func showError(_ message: String) {
+    let alert = NSAlert()
+    alert.messageText = Localized.Instances.errorTitle
+    alert.informativeText = message
+    alert.alertStyle = .warning
+    alert.addButton(withTitle: Localized.Instances.okButton)
+
+    if let window = view.window {
+      alert.beginSheetModal(for: window)
+    } else {
+      alert.runModal()
+    }
+  }
+
+  private func downloadVersionAndCreateInstance(versionId: String) {
     logMessage(Localized.LogMessages.downloadWarning)
 
     // Confirmation dialog
@@ -776,12 +775,13 @@ class VersionListViewController: NSViewController {
 
           disableButtons(false)
 
-          // Show success dialog
-          let successAlert = NSAlert()
-          successAlert.messageText = Localized.Alerts.downloadCompletedTitle
-          successAlert.informativeText = Localized.Alerts.downloadCompletedMessage(versionId)
-          successAlert.alertStyle = .informational
-          successAlert.runModal()
+          // Refresh version manager to detect newly installed version
+          // This ensures the version appears in the instance creation dialog
+          Task { @MainActor in
+            // Small delay to ensure file system has updated
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+            self.showCreateInstanceDialog(versionId: versionId)
+          }
         }
       } catch {
         await MainActor.run {
@@ -799,46 +799,41 @@ class VersionListViewController: NSViewController {
     }
   }
 
-  @objc private func clearLog() {
-    logTextView.string = ""
-    logMessage(Localized.LogMessages.logCleared)
+  private func showCreateInstanceDialog(versionId: String) {
+    // Create window controller for independent window
+    let windowController = CreateInstanceWindowController()
+    guard let window = windowController.window,
+          let viewController = window.contentViewController as? CreateInstanceViewController else {
+      logMessage(Localized.LogMessages.failedToCreateInstanceDialog)
+      return
+    }
+
+    viewController.onInstanceCreated = { [weak self] instance in
+      self?.logMessage(Localized.LogMessages.instanceCreatedSuccessfully(instance.name))
+      self?.logMessage(Localized.LogMessages.instanceId(instance.id))
+      self?.logMessage(Localized.LogMessages.instanceVersion(instance.versionId))
+      windowController.close()
+    }
+    viewController.onCancel = {
+      windowController.close()
+    }
+
+    // Set the selected version before showing
+    viewController.setSelectedVersion(versionId)
+
+    // Show as independent window
+    windowController.showWindow(nil)
+    window.makeKeyAndOrderFront(nil)
   }
 
   // MARK: - Helper Methods
 
   private func logMessage(_ message: String) {
-    let timestamp = DateFormatter.localizedString(
-      from: Date(),
-      dateStyle: .none,
-      timeStyle: .medium
-    )
-    let logLine = "[\(timestamp)] \(message)\n"
-
-    DispatchQueue.main.async { [weak self] in
-      guard let self = self else { return }
-
-      let textStorage = self.logTextView.textStorage
-      let newText = NSAttributedString(
-        string: logLine,
-        attributes: [
-          .font: NSFont.monospacedSystemFont(ofSize: 11, weight: .regular),
-          .foregroundColor: NSColor.labelColor,
-        ]
-      )
-
-      textStorage?.append(newText)
-
-      // Scroll to bottom
-      let range = NSRange(location: textStorage?.length ?? 0, length: 0)
-      self.logTextView.scrollRangeToVisible(range)
-    }
+    // No-op: logging removed in create instance view
   }
 
   private func disableButtons(_ disabled: Bool) {
     refreshVersionButton.isEnabled = !disabled
-    getVersionDetailsButton.isEnabled = !disabled
-    downloadTestFileButton.isEnabled = !disabled
-    downloadVersionButton.isEnabled = !disabled
   }
 }
 
@@ -945,6 +940,9 @@ extension VersionListViewController: NSTableViewDelegate {
       let version = displayedVersions[row]
       selectedVersion = version
       logMessage(Localized.LogMessages.selectedVersion(version.id))
+
+      // Auto-fill name field with version-type format
+      updateNameFromSelectedVersion()
     }
   }
 
@@ -1005,5 +1003,13 @@ extension VersionListViewController: NSTableViewDelegate {
       return .systemPurple
     }
   }
-  // swiftlint:disable:next file_length
+}
+
+// MARK: - String Extension
+
+private extension String {
+  var nonEmpty: String? {
+    let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
+    return trimmed.isEmpty ? nil : trimmed
+  }
 }

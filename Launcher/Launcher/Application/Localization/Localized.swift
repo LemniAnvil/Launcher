@@ -42,6 +42,7 @@ enum Localized {
     static let getVersionDetailsButton = String(localized: "2. Get Version Details", comment: "[Button] Get version details.")
     static let downloadTestFileButton = String(localized: "3. Download Test File", comment: "[Button] Download test file.")
     static let downloadVersionButton = String(localized: "5. Download Version", comment: "[Button] Download version.")
+    static let createInstanceButton = String(localized: "Create Instance", comment: "[Button] Create instance button.")
     static let clearLogButton = String(localized: "Clear Log", comment: "[Button] Clear log.")
 
     // Labels
@@ -286,6 +287,29 @@ enum Localized {
     static let filterAlphaOnly = String(localized: "🔍 Filter: Alpha only", comment: "[Log] Filter alpha only.")
 
     static let loadingCachedVersions = String(localized: "📋 Loading cached versions...", comment: "[Log] Loading cached versions.")
+
+    // Instance Creation
+    static func creatingInstanceForVersion(_ versionId: String) -> String {
+      String(localized: "Creating instance for version: \(versionId)", comment: "[Log] Creating instance for version.")
+    }
+
+    static func versionNotInstalledDownloading(_ versionId: String) -> String {
+      String(localized: "Version \(versionId) is not installed. Downloading...", comment: "[Log] Version not installed, downloading.")
+    }
+
+    static func instanceCreatedSuccessfully(_ name: String) -> String {
+      String(localized: "Instance created successfully: \(name)", comment: "[Log] Instance created successfully.")
+    }
+
+    static func instanceId(_ id: String) -> String {
+      String(localized: "Instance ID: \(id)", comment: "[Log] Instance ID.")
+    }
+
+    static func instanceVersion(_ versionId: String) -> String {
+      String(localized: "Version: \(versionId)", comment: "[Log] Instance version.")
+    }
+
+    static let failedToCreateInstanceDialog = String(localized: "Failed to create instance dialog", comment: "[Log] Failed to create instance dialog.")
   }
 
   // MARK: - Alert Dialogs
@@ -409,6 +433,86 @@ enum Localized {
     // Java Home
     static let javaHomeLabel = String(localized: "JAVA_HOME:", comment: "[Label] JAVA_HOME environment variable label.")
     static let javaHomeNotSet = String(localized: "Not set", comment: "[Text] JAVA_HOME not set.")
+  }
+
+  // MARK: - Instances
+  enum Instances {
+    // Window & Labels
+    static let windowTitle = String(localized: "Instances", comment: "[Text] Instances window title.")
+    static let title = String(localized: "Instances", comment: "[Text] Instances title.")
+    static let refreshButton = String(localized: "Refresh", comment: "[Button] Refresh instances list.")
+    static let emptyMessage = String(localized: "No instances", comment: "[Text] No instances message.")
+    static let createInstanceButton = String(localized: "Create Instance", comment: "[Button] Create instance button.")
+
+    // Count Labels
+    static let countNone = String(localized: "No instances yet", comment: "[Text] No instances.")
+    static let countOne = String(localized: "1 instance", comment: "[Text] One instance.")
+
+    static func countMultiple(_ count: Int) -> String {
+      String(localized: "\(count) instances", comment: "[Text] Multiple instances count.")
+    }
+
+    // Create Instance Dialog
+    static let createInstanceTitle = String(localized: "Create Instance", comment: "[Text] Create instance dialog title.")
+    static let instanceNameLabel = String(localized: "Instance Name:", comment: "[Label] Instance name label.")
+    static let instanceNamePlaceholder = String(localized: "Enter instance name", comment: "[Placeholder] Instance name placeholder.")
+    static let versionLabel = String(localized: "Version:", comment: "[Label] Version label.")
+    static let noVersionsInstalled = String(localized: "No versions installed", comment: "[Text] No versions installed.")
+    static let createButton = String(localized: "Create", comment: "[Button] Create button.")
+    static let cancelButton = String(localized: "Cancel", comment: "[Button] Cancel button.")
+    static let okButton = String(localized: "OK", comment: "[Button] OK button.")
+
+    // Context Menu
+    static let menuShowInFinder = String(localized: "Show in Finder", comment: "[Menu] Show instance in Finder.")
+    static let menuLaunchGame = String(localized: "Launch Game", comment: "[Menu] Launch game.")
+    static let menuDelete = String(localized: "Delete Instance", comment: "[Menu] Delete instance.")
+
+    // Delete Confirmation
+    static let deleteConfirmTitle = String(localized: "Confirm Deletion", comment: "[Alert] Delete confirmation title.")
+
+    static func deleteConfirmMessage(_ name: String) -> String {
+      String(localized: "Instance \"\(name)\" will be permanently deleted. This action cannot be undone.", comment: "[Alert] Delete confirmation message.")
+    }
+
+    static let deleteButton = String(localized: "Delete", comment: "[Button] Delete button.")
+
+    // Notifications
+    static let deleteSuccessTitle = String(localized: "Deletion Successful", comment: "[Notification] Delete success title.")
+
+    static func deleteSuccessMessage(_ name: String) -> String {
+      String(localized: "Instance \"\(name)\" has been deleted", comment: "[Notification] Delete success message.")
+    }
+
+    static let deleteFailedTitle = String(localized: "Deletion Failed", comment: "[Alert] Delete failed title.")
+
+    static func deleteFailedMessage(_ name: String, _ error: String) -> String {
+      String(localized: "Unable to delete instance \"\(name)\": \(error)", comment: "[Alert] Delete failed message.")
+    }
+
+    // Errors
+    static let errorTitle = String(localized: "Error", comment: "[Alert] Error title.")
+    static let errorEmptyName = String(localized: "Instance name cannot be empty.", comment: "[Error] Empty name error.")
+    static let errorNoVersionSelected = String(localized: "Please select a version.", comment: "[Error] No version selected error.")
+
+    static func errorInvalidName(_ reason: String) -> String {
+      String(localized: "Invalid instance name: \(reason)", comment: "[Error] Invalid name error.")
+    }
+
+    static func errorDuplicateName(_ name: String) -> String {
+      String(localized: "An instance with name \"\(name)\" already exists.", comment: "[Error] Duplicate name error.")
+    }
+
+    static func errorVersionNotInstalled(_ versionId: String) -> String {
+      String(localized: "Version \(versionId) is not installed.", comment: "[Error] Version not installed error.")
+    }
+
+    static func errorInstanceNotFound(_ id: String) -> String {
+      String(localized: "Instance not found: \(id)", comment: "[Error] Instance not found error.")
+    }
+
+    static func errorSaveFailed(_ reason: String) -> String {
+      String(localized: "Failed to save instance: \(reason)", comment: "[Error] Save failed error.")
+    }
   }
 
   // MARK: - Installed Versions

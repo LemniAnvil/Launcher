@@ -1,13 +1,13 @@
 //
-//  VersionListWindowController.swift
+//  CreateInstanceWindowController.swift
 //  Launcher
 //
-//  Version list window controller
+//  Window controller for creating new instance
 //
 
 import AppKit
 
-class VersionListWindowController: NSWindowController {
+class CreateInstanceWindowController: NSWindowController {
 
   convenience init() {
     let window = NSWindow(
@@ -16,15 +16,17 @@ class VersionListWindowController: NSWindowController {
       backing: .buffered,
       defer: false
     )
-
     window.title = Localized.Instances.createInstanceTitle
     window.center()
-    window.minSize = NSSize(width: 900, height: 600)
+    window.isReleasedWhenClosed = false
 
-    // Set content view controller
-    let versionListViewController = VersionListViewController()
-    window.contentViewController = versionListViewController
+    let viewController = CreateInstanceViewController()
+    window.contentViewController = viewController
 
     self.init(window: window)
+  }
+
+  override func close() {
+    window?.close()
   }
 }
