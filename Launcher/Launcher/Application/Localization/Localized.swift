@@ -581,6 +581,13 @@ enum Localized {
     static let hostPlaceholder = String(localized: "e.g., 127.0.0.1", comment: "[Placeholder] Proxy host placeholder.")
     static let portPlaceholder = String(localized: "e.g., 7890", comment: "[Placeholder] Proxy port placeholder.")
 
+    // Download Section
+    static let downloadSectionTitle = String(localized: "Download Settings", comment: "[Text] Download section title.")
+    static let enableFileVerification = String(localized: "Verify File Integrity", comment: "[Checkbox] Enable file verification checkbox.")
+    static let fileVerificationDescription = String(localized: "Verify SHA1 checksums when downloading files", comment: "[Text] File verification description.")
+    static let maxConcurrentLabel = String(localized: "Max Concurrent Downloads:", comment: "[Label] Max concurrent downloads label.")
+    static let concurrentDescription = String(localized: "Number of simultaneous downloads (1-64)", comment: "[Text] Concurrent downloads description.")
+
     // Buttons
     static let applyButton = String(localized: "Apply Settings", comment: "[Button] Apply settings button.")
     static let testButton = String(localized: "Test Proxy", comment: "[Button] Test proxy button.")

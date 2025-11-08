@@ -23,11 +23,15 @@ class DownloadManager: NSObject, ObservableObject {
   // MARK: - Private Properties
 
   private let logger = Logger.shared
+  private let downloadSettingsManager = DownloadSettingsManager.shared
   private var session: URLSession?
   private var downloadTasks: [UUID: DownloadTask] = [:]
   private var taskQueue: [DownloadQueueItem] = []
-  private let maxConcurrentDownloads = 8
   private var activeDownloads = 0
+
+  private var maxConcurrentDownloads: Int {
+    downloadSettingsManager.maxConcurrentDownloads
+  }
 
   private let downloadQueue = DispatchQueue(
     label: "com.launcher.download",
@@ -110,7 +114,7 @@ class DownloadManager: NSObject, ObservableObject {
 
     // Check if file already exists and is valid
     if FileManager.default.fileExists(atPath: destination.path) {
-      if let sha1 = expectedSHA1 {
+      if let sha1 = expectedSHA1, downloadSettingsManager.fileVerificationEnabled {
         if FileUtils.verifySHA1(of: destination, expectedSHA1: sha1) {
           logger.debug(
             "File exists and verified, skipping: \(destination.lastPathComponent)",
@@ -147,8 +151,8 @@ class DownloadManager: NSObject, ObservableObject {
       )
     }
 
-    // Verify SHA1
-    if let sha1 = expectedSHA1 {
+    // Verify SHA1 if enabled
+    if let sha1 = expectedSHA1, downloadSettingsManager.fileVerificationEnabled {
       if !FileUtils.verifySHA1(of: tempURL, expectedSHA1: sha1) {
         throw DownloadError.sha1Mismatch
       }
@@ -413,8 +417,8 @@ class DownloadManager: NSObject, ObservableObject {
       return true
     }
 
-    // Verify SHA1
-    if let sha1 = expectedSHA1 {
+    // Verify SHA1 if enabled
+    if let sha1 = expectedSHA1, downloadSettingsManager.fileVerificationEnabled {
       if !FileUtils.verifySHA1(of: url, expectedSHA1: sha1) {
         logger.debug(
           "File SHA1 verification failed, need re-download: \(url.lastPathComponent)",

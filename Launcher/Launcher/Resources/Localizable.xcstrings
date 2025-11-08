@@ -2698,6 +2698,61 @@
           }
         }
       }
+    },
+    "Verify File Integrity": {
+      "comment": "[Checkbox] Enable file verification checkbox.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "校验文件完整性"
+          }
+        }
+      }
+    },
+    "Verify SHA1 checksums when downloading files": {
+      "comment": "[Text] File verification description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载文件时校验 SHA1 哈希值"
+          }
+        }
+      }
+    },
+    "Download Settings": {
+      "comment": "[Text] Download section title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载设置"
+          }
+        }
+      }
+    },
+    "Max Concurrent Downloads:": {
+      "comment": "[Label] Max concurrent downloads label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最大并发下载数："
+          }
+        }
+      }
+    },
+    "Number of simultaneous downloads (1-64)": {
+      "comment": "[Text] Concurrent downloads description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "同时下载的文件数量（1-64）"
+          }
+        }
+      }
     }
   },
   "version": "1.1"
