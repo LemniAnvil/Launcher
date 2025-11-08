@@ -62,9 +62,17 @@ class DownloadManager: NSObject, ObservableObject {
   /// Configure URLSession with proxy settings
   private func configureSession() {
     let config = URLSessionConfiguration.default
-    config.timeoutIntervalForRequest = 30
+
+    // Timeout configuration
+    config.timeoutIntervalForRequest = 15  // Reduced from 30s for faster failure detection
     config.timeoutIntervalForResource = 300
+
+    // Connection configuration
     config.httpMaximumConnectionsPerHost = maxConcurrentDownloads
+
+    // Cache configuration - disable for downloads to save memory
+    config.requestCachePolicy = .reloadIgnoringLocalCacheData
+    config.urlCache = nil
 
     // Apply proxy configuration if enabled
     if let proxyDict = ProxyManager.shared.getProxyConfigurationForBoth() {
@@ -108,32 +116,22 @@ class DownloadManager: NSObject, ObservableObject {
       throw DownloadError.invalidURL(urlString)
     }
 
-    // Ensure destination directory exists
-    let directory = destination.deletingLastPathComponent()
-    try FileUtils.ensureDirectoryExists(at: directory)
-
     // Check if file already exists and is valid
     if FileManager.default.fileExists(atPath: destination.path) {
-      if let sha1 = expectedSHA1, downloadSettingsManager.fileVerificationEnabled {
-        if FileUtils.verifySHA1(of: destination, expectedSHA1: sha1) {
-          logger.debug(
-            "File exists and verified, skipping: \(destination.lastPathComponent)",
-            category: "DownloadManager"
-          )
-          return
-        } else {
-          logger.warning(
-            "File exists but failed verification, re-downloading: \(destination.lastPathComponent)",
-            category: "DownloadManager"
-          )
-          try? FileManager.default.removeItem(at: destination)
-        }
-      } else if let size = FileUtils.getFileSize(at: destination), size == expectedSize {
+      // For existing files, only check file size to avoid expensive SHA1 computation
+      if let size = FileUtils.getFileSize(at: destination), size == expectedSize {
         logger.debug(
           "File exists with matching size, skipping: \(destination.lastPathComponent)",
           category: "DownloadManager"
         )
         return
+      } else {
+        // File size mismatch, remove and re-download
+        logger.debug(
+          "File exists but size mismatch, re-downloading: \(destination.lastPathComponent)",
+          category: "DownloadManager"
+        )
+        try? FileManager.default.removeItem(at: destination)
       }
     }
 
@@ -158,6 +156,10 @@ class DownloadManager: NSObject, ObservableObject {
       }
     }
 
+    // Ensure destination directory exists before moving
+    let directory = destination.deletingLastPathComponent()
+    try FileUtils.ensureDirectoryExists(at: directory)
+
     // Move file to destination
     try FileUtils.moveFileSafely(from: tempURL, to: destination)
 
@@ -177,14 +179,11 @@ class DownloadManager: NSObject, ObservableObject {
     isDownloading = true
     defer { isDownloading = false }
 
-    // Filter out files that already exist and are valid
-    let filteredItems = items.filter { item in
-      shouldDownloadFile(
-        at: item.destination,
-        expectedSize: item.size,
-        expectedSHA1: item.sha1
-      )
-    }
+    // Pre-create all directories in batch to avoid repeated directory creation
+    try prepareDirectories(for: items)
+
+    // Filter out files that already exist and are valid (in background)
+    let filteredItems = await batchCheckFiles(items)
 
     logger.info(
       "After filtering, \(filteredItems.count) files need downloading",
@@ -214,11 +213,13 @@ class DownloadManager: NSObject, ObservableObject {
       var completed = 0
       var failed = 0
       var downloadedBytes: Int64 = 0
+      var activeCount = 0
 
       for item in filteredItems {
-        // Limit concurrency
-        if group.isEmpty == false {
+        // Control concurrency: wait if we've reached the limit
+        while activeCount >= maxConcurrentDownloads {
           try await group.next()
+          activeCount -= 1
           completed += 1
         }
 
@@ -252,16 +253,13 @@ class DownloadManager: NSObject, ObservableObject {
             throw error
           }
         }
-
-        // Control concurrency
-        if group.isEmpty == false && completed.isMultiple(of: maxConcurrentDownloads) {
-          try await group.next()
-          completed += 1
-        }
+        activeCount += 1
       }
 
-      // Wait for all tasks to complete
-      try await group.waitForAll()
+      // Wait for all remaining tasks to complete
+      while try await group.next() != nil {
+        completed += 1
+      }
     }
 
     logger.info("Batch download completed", category: "DownloadManager")
@@ -407,6 +405,38 @@ class DownloadManager: NSObject, ObservableObject {
 
   // MARK: - Private Methods
 
+  /// Pre-create all required directories in batch
+  private func prepareDirectories(for items: [DownloadQueueItem]) throws {
+    let directories = Set(items.map { $0.destination.deletingLastPathComponent() })
+    logger.debug(
+      "Pre-creating \(directories.count) directories",
+      category: "DownloadManager"
+    )
+
+    for directory in directories {
+      try FileUtils.ensureDirectoryExists(at: directory)
+    }
+  }
+
+  /// Batch check files in background to avoid blocking main thread
+  private func batchCheckFiles(_ items: [DownloadQueueItem]) async -> [DownloadQueueItem] {
+    await Task.detached(priority: .utility) {
+      items.filter { item in
+        // Check file existence and size in background thread
+        guard FileManager.default.fileExists(atPath: item.destination.path) else {
+          return true
+        }
+
+        // Only check file size (faster than SHA1)
+        if let size = FileUtils.getFileSize(at: item.destination), size != item.size {
+          return true
+        }
+
+        return false
+      }
+    }.value
+  }
+
   /// Check if file needs to be downloaded
   private func shouldDownloadFile(
     at url: URL,
@@ -417,24 +447,13 @@ class DownloadManager: NSObject, ObservableObject {
       return true
     }
 
-    // Verify SHA1 if enabled
-    if let sha1 = expectedSHA1, downloadSettingsManager.fileVerificationEnabled {
-      if !FileUtils.verifySHA1(of: url, expectedSHA1: sha1) {
-        logger.debug(
-          "File SHA1 verification failed, need re-download: \(url.lastPathComponent)",
-          category: "DownloadManager"
-        )
-        return true
-      }
-    } else {
-      // Verify file size
-      if let size = FileUtils.getFileSize(at: url), size != expectedSize {
-        logger.debug(
-          "File size mismatch, need re-download: \(url.lastPathComponent)",
-          category: "DownloadManager"
-        )
-        return true
-      }
+    // For existing files, only check file size (faster than SHA1)
+    if let size = FileUtils.getFileSize(at: url), size != expectedSize {
+      logger.debug(
+        "File size mismatch, need re-download: \(url.lastPathComponent)",
+        category: "DownloadManager"
+      )
+      return true
     }
 
     return false
