@@ -587,6 +587,12 @@ enum Localized {
     static let fileVerificationDescription = String(localized: "Verify SHA1 checksums when downloading files", comment: "[Text] File verification description.")
     static let maxConcurrentLabel = String(localized: "Max Concurrent Downloads:", comment: "[Label] Max concurrent downloads label.")
     static let concurrentDescription = String(localized: "Number of simultaneous downloads (1-64)", comment: "[Text] Concurrent downloads description.")
+    static let requestTimeoutLabel = String(localized: "Request Timeout:", comment: "[Label] Request timeout label.")
+    static let requestTimeoutDescription = String(localized: "Timeout for download requests (5-120 seconds)", comment: "[Text] Request timeout description.")
+    static let resourceTimeoutLabel = String(localized: "Resource Timeout:", comment: "[Label] Resource timeout label.")
+    static let resourceTimeoutDescription = String(localized: "Maximum time for downloads (60-600 seconds)", comment: "[Text] Resource timeout description.")
+    static let useV2Manifest = String(localized: "Use V2 Manifest API", comment: "[Checkbox] Use V2 manifest API checkbox.")
+    static let v2ManifestDescription = String(localized: "Use Piston Meta API instead of launcher meta", comment: "[Text] V2 manifest description.")
 
     // Buttons
     static let applyButton = String(localized: "Apply Settings", comment: "[Button] Apply settings button.")

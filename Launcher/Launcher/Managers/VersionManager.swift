@@ -30,11 +30,17 @@ class VersionManager: ObservableObject {
 
   // MARK: - Private Properties
 
-  private let versionManifestURL = APIEndpoints.versionManifestOfficial
   private let logger = Logger.shared
   private let parser = VersionManifestParser()
+  private let downloadSettingsManager = DownloadSettingsManager.shared
   private var cachedManifest: VersionManifest?
   private let cacheURL: URL
+
+  private var versionManifestURL: String {
+    downloadSettingsManager.useV2Manifest
+      ? APIEndpoints.versionManifestV2
+      : APIEndpoints.versionManifestOfficial
+  }
 
   // URLSession with proxy support
   private var urlSession: URLSession {

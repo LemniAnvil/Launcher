@@ -63,9 +63,9 @@ class DownloadManager: NSObject, ObservableObject {
   private func configureSession() {
     let config = URLSessionConfiguration.default
 
-    // Timeout configuration
-    config.timeoutIntervalForRequest = 15  // Reduced from 30s for faster failure detection
-    config.timeoutIntervalForResource = 300
+    // Timeout configuration from settings
+    config.timeoutIntervalForRequest = TimeInterval(downloadSettingsManager.requestTimeout)
+    config.timeoutIntervalForResource = TimeInterval(downloadSettingsManager.resourceTimeout)
 
     // Connection configuration
     config.httpMaximumConnectionsPerHost = maxConcurrentDownloads

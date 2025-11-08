@@ -1449,6 +1449,17 @@
         }
       }
     },
+    "Download Settings": {
+      "comment": "[Text] Download section title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载设置"
+          }
+        }
+      }
+    },
     "Downloading test file...": {
       "comment": "[Status] Downloading test file.",
       "localizations": {
@@ -1884,6 +1895,28 @@
         }
       }
     },
+    "Max Concurrent Downloads:": {
+      "comment": "[Label] Max concurrent downloads label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最大并发下载数："
+          }
+        }
+      }
+    },
+    "Maximum time for downloads (60-600 seconds)": {
+      "comment": "[Text] Resource timeout description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载的最大时长（60-600 秒）"
+          }
+        }
+      }
+    },
     "Minecraft": {
       "comment": "[Accessibility] Minecraft icon description.",
       "localizations": {
@@ -2012,6 +2045,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "未设置"
+          }
+        }
+      }
+    },
+    "Number of simultaneous downloads (1-64)": {
+      "comment": "[Text] Concurrent downloads description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "同时下载的文件数量（1-64）"
           }
         }
       }
@@ -2308,6 +2352,28 @@
         }
       }
     },
+    "Request Timeout:": {
+      "comment": "[Label] Request timeout label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请求超时："
+          }
+        }
+      }
+    },
+    "Resource Timeout:": {
+      "comment": "[Label] Resource timeout label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "资源超时："
+          }
+        }
+      }
+    },
     "Select a saved account to launch in offline mode.": {
       "comment": "[Text] Offline mode description.",
       "localizations": {
@@ -2451,6 +2517,17 @@
         }
       }
     },
+    "Timeout for download requests (5-120 seconds)": {
+      "comment": "[Text] Request timeout description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载请求超时时间（5-120 秒）"
+          }
+        }
+      }
+    },
     "Type": {
       "comment": "[Table] Java type column.\n[Table] Type column header.",
       "localizations": {
@@ -2512,6 +2589,28 @@
         }
       }
     },
+    "Use Piston Meta API instead of launcher meta": {
+      "comment": "[Text] V2 manifest description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用 Piston Meta API 代替启动器元数据 API"
+          }
+        }
+      }
+    },
+    "Use V2 Manifest API": {
+      "comment": "[Checkbox] Use V2 manifest API checkbox.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用 V2 清单 API"
+          }
+        }
+      }
+    },
     "Username can only contain letters, numbers, and underscores.": {
       "comment": "[Alert] Invalid username format error.",
       "localizations": {
@@ -2563,6 +2662,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "用户名："
+          }
+        }
+      }
+    },
+    "Verify File Integrity": {
+      "comment": "[Checkbox] Enable file verification checkbox.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "校验文件完整性"
+          }
+        }
+      }
+    },
+    "Verify SHA1 checksums when downloading files": {
+      "comment": "[Text] File verification description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载文件时校验 SHA1 哈希值"
           }
         }
       }
@@ -2695,61 +2816,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "版本："
-          }
-        }
-      }
-    },
-    "Verify File Integrity": {
-      "comment": "[Checkbox] Enable file verification checkbox.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "校验文件完整性"
-          }
-        }
-      }
-    },
-    "Verify SHA1 checksums when downloading files": {
-      "comment": "[Text] File verification description.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下载文件时校验 SHA1 哈希值"
-          }
-        }
-      }
-    },
-    "Download Settings": {
-      "comment": "[Text] Download section title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下载设置"
-          }
-        }
-      }
-    },
-    "Max Concurrent Downloads:": {
-      "comment": "[Label] Max concurrent downloads label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最大并发下载数："
-          }
-        }
-      }
-    },
-    "Number of simultaneous downloads (1-64)": {
-      "comment": "[Text] Concurrent downloads description.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "同时下载的文件数量（1-64）"
           }
         }
       }
