@@ -1064,6 +1064,17 @@
         }
       }
     },
+    "1.21.10": {
+      "comment": "[Placeholder] Instance name placeholder.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1.21.10"
+          }
+        }
+      }
+    },
     "2. Get Version Details": {
       "comment": "[Button] Get version details.",
       "localizations": {
@@ -1130,6 +1141,17 @@
         }
       }
     },
+    "Add Instance": {
+      "comment": "[Button] Open add instance window.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加实例"
+          }
+        }
+      }
+    },
     "All Versions": {
       "comment": "[Filter] All versions option.",
       "localizations": {
@@ -1142,7 +1164,7 @@
       }
     },
     "Alpha": {
-      "comment": "[Text] Alpha version type.",
+      "comment": "[Checkbox] Alpha filter.\n[Text] Alpha version type.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1219,7 +1241,7 @@
       }
     },
     "Beta": {
-      "comment": "[Text] Beta version type.",
+      "comment": "[Checkbox] Beta filter.\n[Text] Beta version type.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1247,6 +1269,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "取消"
+          }
+        }
+      }
+    },
+    "Categories": {
+      "comment": "[Text] Categories title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分类"
           }
         }
       }
@@ -1346,6 +1379,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在为版本 %@ 创建实例"
+          }
+        }
+      }
+    },
+    "Custom": {
+      "comment": "[Category] Custom category.\n[Text] Custom section title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自定义"
           }
         }
       }
@@ -1752,6 +1796,17 @@
         }
       }
     },
+    "FTB Import": {
+      "comment": "[Category] FTB Import category.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "从 FTB 导入"
+          }
+        }
+      }
+    },
     "Game launched successfully!": {
       "comment": "[Status] Game launched successfully.",
       "localizations": {
@@ -1770,6 +1825,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在获取版本详情..."
+          }
+        }
+      }
+    },
+    "Group:": {
+      "comment": "[Label] Group label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分组："
+          }
+        }
+      }
+    },
+    "Help": {
+      "comment": "[Button] Help button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "帮助"
           }
         }
       }
@@ -1814,6 +1891,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "HTTPS"
+          }
+        }
+      }
+    },
+    "Import": {
+      "comment": "[Category] Import category.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入"
           }
         }
       }
@@ -2159,6 +2247,28 @@
         }
       }
     },
+    "Mod Loader": {
+      "comment": "[Text] Mod loader title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mod 加载器"
+          }
+        }
+      }
+    },
+    "Name:": {
+      "comment": "[Label] Instance name label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "名称："
+          }
+        }
+      }
+    },
     "Network Proxy": {
       "comment": "[Text] Proxy section title.",
       "localizations": {
@@ -2166,6 +2276,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "网络代理"
+          }
+        }
+      }
+    },
+    "New Instance": {
+      "comment": "[Text] Add instance window title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新实例"
           }
         }
       }
@@ -2247,6 +2368,17 @@
         }
       }
     },
+    "No mod loader selected.": {
+      "comment": "[Text] Mod loader placeholder.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未选择 Mod 加载器。"
+          }
+        }
+      }
+    },
     "No saved accounts": {
       "comment": "[Message] No saved accounts message.",
       "localizations": {
@@ -2287,6 +2419,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "没有加载版本"
+          }
+        }
+      }
+    },
+    "None": {
+      "comment": "[Option] No mod loader.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无"
           }
         }
       }
@@ -2336,7 +2479,7 @@
       }
     },
     "OK": {
-      "comment": "[Button] OK button.",
+      "comment": "[Button] Confirm button.\n[Button] OK button.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2551,7 +2694,7 @@
       }
     },
     "Refresh": {
-      "comment": "[Button] Refresh Java detection.\n[Button] Refresh instances list.\n[Button] Refresh versions list.",
+      "comment": "[Button] Refresh Java detection.\n[Button] Refresh button.\n[Button] Refresh instances list.\n[Button] Refresh versions list.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2584,7 +2727,7 @@
       }
     },
     "Release": {
-      "comment": "[Text] Release version type.",
+      "comment": "[Checkbox] Release filter.\n[Text] Release version type.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2601,6 +2744,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "发布时间"
+          }
+        }
+      }
+    },
+    "Released": {
+      "comment": "[Table] Release column.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发布于"
           }
         }
       }
@@ -2694,7 +2848,7 @@
       }
     },
     "Snapshot": {
-      "comment": "[Text] Snapshot version type.",
+      "comment": "[Checkbox] Snapshot filter.\n[Text] Snapshot version type.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2793,7 +2947,7 @@
       }
     },
     "Type": {
-      "comment": "[Table] Java type column.\n[Table] Type column header.",
+      "comment": "[Table] Java type column.\n[Table] Type column header.\n[Table] Type column.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2838,6 +2992,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "无法删除版本 %1$@：%2$@"
+          }
+        }
+      }
+    },
+    "Uncategorized": {
+      "comment": "[Text] Uncategorized group.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未分类"
           }
         }
       }
@@ -2964,7 +3129,7 @@
       }
     },
     "Version": {
-      "comment": "[Table] Java version column.\n[Table] Version column header.",
+      "comment": "[Table] Java version column.\n[Table] Version column header.\n[Table] Version column.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {

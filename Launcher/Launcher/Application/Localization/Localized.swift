@@ -726,6 +726,55 @@ enum Localized {
     }
   }
 
+  // MARK: - Add Instance
+  enum AddInstance {
+    // Window & Labels
+    static let windowTitle = String(localized: "New Instance", comment: "[Text] Add instance window title.")
+    static let openAddInstanceButton = String(localized: "Add Instance", comment: "[Button] Open add instance window.")
+
+    // Top Section
+    static let nameLabel = String(localized: "Name:", comment: "[Label] Instance name label.")
+    static let namePlaceholder = String(localized: "1.21.10", comment: "[Placeholder] Instance name placeholder.")
+    static let groupLabel = String(localized: "Group:", comment: "[Label] Group label.")
+    static let groupUncategorized = String(localized: "Uncategorized", comment: "[Text] Uncategorized group.")
+
+    // Categories
+    static let categoriesTitle = String(localized: "Categories", comment: "[Text] Categories title.")
+    static let categoryCustom = String(localized: "Custom", comment: "[Category] Custom category.")
+    static let categoryImport = String(localized: "Import", comment: "[Category] Import category.")
+    static let categoryFTBImport = String(localized: "FTB Import", comment: "[Category] FTB Import category.")
+
+    // Custom Content
+    static let customTitle = String(localized: "Custom", comment: "[Text] Custom section title.")
+    static let filterLabel = String(localized: "Filter:", comment: "[Label] Filter label.")
+    static let filterRelease = String(localized: "Release", comment: "[Checkbox] Release filter.")
+    static let filterSnapshot = String(localized: "Snapshot", comment: "[Checkbox] Snapshot filter.")
+    static let filterBeta = String(localized: "Beta", comment: "[Checkbox] Beta filter.")
+    static let filterAlpha = String(localized: "Alpha", comment: "[Checkbox] Alpha filter.")
+    static let refreshButton = String(localized: "Refresh", comment: "[Button] Refresh button.")
+
+    // Version Table
+    static let columnVersion = String(localized: "Version", comment: "[Table] Version column.")
+    static let columnRelease = String(localized: "Released", comment: "[Table] Release column.")
+    static let columnType = String(localized: "Type", comment: "[Table] Type column.")
+
+    // Mod Loader
+    static let modLoaderTitle = String(localized: "Mod Loader", comment: "[Text] Mod loader title.")
+    static let modLoaderPlaceholder = String(localized: "No mod loader selected.", comment: "[Text] Mod loader placeholder.")
+    static let modLoaderNone = String(localized: "None", comment: "[Option] No mod loader.")
+
+    // Buttons
+    static let helpButton = String(localized: "Help", comment: "[Button] Help button.")
+    static let cancelButton = String(localized: "Cancel", comment: "[Button] Cancel button.")
+    static let confirmButton = String(localized: "OK", comment: "[Button] Confirm button.")
+    static let okButton = String(localized: "OK", comment: "[Button] OK button.")
+
+    // Errors
+    static let errorTitle = String(localized: "Error", comment: "[Alert] Error title.")
+    static let errorEmptyName = String(localized: "Instance name cannot be empty.", comment: "[Error] Empty name error.")
+    static let errorNoVersionSelected = String(localized: "Please select a version.", comment: "[Error] No version selected error.")
+  }
+
   // MARK: - Errors
   enum Errors {
     // VersionManager Errors

@@ -8,15 +8,17 @@ import SnapKit
 import Yatagarasu
 
 class ViewController: NSViewController {
-
+  // swiftlint:disable:previous type_body_length
   private var versionListWindowController: VersionListWindowController?
   private var javaDetectionWindowController: JavaDetectionWindowController?
   private var accountWindowController: AccountWindowController?
   private var settingsWindowController: SettingsWindowController?
+  private var addInstanceWindowController: AddInstanceWindowController?
   private var windowObserver: NSObjectProtocol?
   private var javaWindowObserver: NSObjectProtocol?
   private var accountWindowObserver: NSObjectProtocol?
   private var settingsWindowObserver: NSObjectProtocol?
+  private var addInstanceWindowObserver: NSObjectProtocol?
 
   // Instance management
   private let instanceManager = InstanceManager.shared
@@ -113,6 +115,23 @@ class ViewController: NSViewController {
     return button
   }()
 
+  private lazy var addInstanceButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "plus.circle.fill",
+      cornerRadius: 6,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+        ? NSColor.white.withAlphaComponent(0.1)
+        : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemGreen,
+      accessibilityLabel: Localized.AddInstance.openAddInstanceButton
+    )
+    button.target = self
+    button.action = #selector(openAddInstanceWindow)
+    return button
+  }()
+
   private lazy var refreshButton: BRImageButton = {
     let button = BRImageButton(
       symbolName: "arrow.clockwise",
@@ -199,6 +218,7 @@ class ViewController: NSViewController {
     // Add all UI elements
     view.addSubview(titleLabel)
     view.addSubview(countLabel)
+    view.addSubview(addInstanceButton)
     view.addSubview(testButton)
     view.addSubview(refreshButton)
     view.addSubview(javaDetectionButton)
@@ -211,7 +231,13 @@ class ViewController: NSViewController {
     scrollView.documentView = collectionView
 
     // Layout constraints using SnapKit
-    // Top-right button group (from left to right: test, refresh, java, account, settings)
+    // Top-right button group (from left to right: add, test, refresh, java, account, settings)
+    addInstanceButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalToSuperview().offset(-236)
+      make.width.height.equalTo(36)
+    }
+
     testButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-192)
@@ -431,6 +457,44 @@ extension ViewController {
 
   @objc func refreshInstances() {
     loadInstances()
+  }
+
+  @objc private func openAddInstanceWindow() {
+    // If window already exists, show it
+    if let existingController = addInstanceWindowController {
+      existingController.showWindow(nil)
+      existingController.window?.makeKeyAndOrderFront(nil)
+      return
+    }
+
+    // Create new add instance window
+    addInstanceWindowController = AddInstanceWindowController()
+
+    // Setup callback for instance creation
+    if let viewController = addInstanceWindowController?.window?.contentViewController as? AddInstanceViewController {
+      viewController.onInstanceCreated = { [weak self] _ in
+        self?.loadInstances()
+      }
+      viewController.onCancel = {
+        // Just close the window
+      }
+    }
+
+    addInstanceWindowController?.showWindow(nil)
+    addInstanceWindowController?.window?.makeKeyAndOrderFront(nil)
+
+    // Window close callback
+    addInstanceWindowObserver = NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification,
+      object: addInstanceWindowController?.window,
+      queue: .main
+    ) { [weak self] _ in
+      self?.addInstanceWindowController = nil
+      if let observer = self?.addInstanceWindowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        self?.addInstanceWindowObserver = nil
+      }
+    }
   }
 }
 

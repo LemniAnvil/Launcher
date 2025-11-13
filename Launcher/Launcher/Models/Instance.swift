@@ -65,4 +65,3 @@ struct Instance: Codable, Identifiable {
     case lastModified
   }
 }
-

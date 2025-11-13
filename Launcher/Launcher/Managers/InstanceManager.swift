@@ -58,7 +58,7 @@ class InstanceManager: ObservableObject {
     }
 
     // Create instance
-    var instance = Instance(name: name, versionId: versionId)
+    let instance = Instance(name: name, versionId: versionId)
 
     // Save instance to disk
     try saveInstance(instance)
@@ -178,4 +178,3 @@ enum InstanceManagerError: LocalizedError {
     }
   }
 }
-
