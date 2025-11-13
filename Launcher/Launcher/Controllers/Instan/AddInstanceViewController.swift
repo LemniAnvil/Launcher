@@ -130,8 +130,8 @@ class AddInstanceViewController: NSViewController {
 
   // MARK: - DiffableDataSource
 
-  private var categoryDataSource: NSTableViewDiffableDataSource<Section, InstanceCategory>!
-  private var versionDataSource: NSTableViewDiffableDataSource<Section, VersionItem>!
+  private var categoryDataSource: NSTableViewDiffableDataSource<Section, InstanceCategory>?
+  private var versionDataSource: NSTableViewDiffableDataSource<Section, VersionItem>?
 
   // MARK: - UI Components
 
@@ -451,7 +451,7 @@ class AddInstanceViewController: NSViewController {
       Section, InstanceCategory
     >(
       tableView: categoryTableView
-    ) { [weak self] tableView, tableColumn, row, category in
+    ) { [weak self] _, _, _, category in
       guard let self = self else { return NSView() }
       return self.makeCategoryCell(for: category)
     }
@@ -459,7 +459,7 @@ class AddInstanceViewController: NSViewController {
     // Setup version list DataSource
     versionDataSource = NSTableViewDiffableDataSource<Section, VersionItem>(
       tableView: versionTableView
-    ) { [weak self] tableView, tableColumn, row, versionItem in
+    ) { [weak self] _, tableColumn, _, versionItem in
       guard let self = self else { return NSView() }
       return self.makeVersionCell(for: versionItem, column: tableColumn)
     }
@@ -574,7 +574,7 @@ class AddInstanceViewController: NSViewController {
     var snapshot = NSDiffableDataSourceSnapshot<Section, InstanceCategory>()
     snapshot.appendSections([.main])
     snapshot.appendItems(InstanceCategory.allCases, toSection: .main)
-    categoryDataSource.apply(snapshot, animatingDifferences: false)
+    categoryDataSource?.apply(snapshot, animatingDifferences: false)
   }
 
   private func loadInstalledVersions() {
@@ -630,7 +630,7 @@ class AddInstanceViewController: NSViewController {
     snapshot.appendSections([.main])
     snapshot.appendItems(versionItems, toSection: .main)
 
-    versionDataSource.apply(snapshot, animatingDifferences: true)
+    versionDataSource?.apply(snapshot, animatingDifferences: true)
 
     // Select first item if available
     if !versionItems.isEmpty && versionTableView.selectedRow < 0 {
@@ -865,11 +865,9 @@ class AddInstanceViewController: NSViewController {
   }
 
   @objc private func modLoaderChanged() {
-    for (index, button) in modLoaderRadioButtons.enumerated() {
-      if button.state == .on {
-        selectedModLoader = ModLoader.allCases[index]
-        break
-      }
+    for (index, button) in modLoaderRadioButtons.enumerated() where button.state == .on {
+      selectedModLoader = ModLoader.allCases[index]
+      break
     }
   }
 
@@ -935,14 +933,14 @@ extension AddInstanceViewController: NSTableViewDelegate {
   func tableViewSelectionDidChange(_ notification: Notification) {
     if notification.object as? NSTableView == categoryTableView {
       let row = categoryTableView.selectedRow
-      if row >= 0, let category = categoryDataSource.itemIdentifier(forRow: row) {
+      if row >= 0, let category = categoryDataSource?.itemIdentifier(forRow: row) {
         selectedCategory = category
         updateContentView()
       }
     } else if notification.object as? NSTableView == versionTableView {
       let row = versionTableView.selectedRow
       if row >= 0,
-        let versionItem = versionDataSource.itemIdentifier(forRow: row) {
+        let versionItem = versionDataSource?.itemIdentifier(forRow: row) {
         selectedVersionId = versionItem.id
         if nameTextField.stringValue.isEmpty {
           nameTextField.stringValue = versionItem.id
