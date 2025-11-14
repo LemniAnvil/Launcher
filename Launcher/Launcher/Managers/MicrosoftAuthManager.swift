@@ -112,9 +112,6 @@ class MicrosoftAuthManager {
   // Azure Application Configuration
   private let clientID = "00000000-0000-0000-0000-000000000000"
   private let redirectURI = "LemniAnvil-launcher://auth"
-
-  private let authURL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize"
-  private let tokenURL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
   private let scope = "XboxLive.signin offline_access"
 
   private init() {}
@@ -127,7 +124,7 @@ class MicrosoftAuthManager {
     let codeVerifier = generateCodeVerifier()
     let codeChallenge = generateCodeChallenge(from: codeVerifier)
 
-    var components = URLComponents(string: authURL)!
+    var components = URLComponents(string: APIService.MicrosoftAuth.authorize)!
     components.queryItems = [
       URLQueryItem(name: "client_id", value: clientID),
       URLQueryItem(name: "response_type", value: "code"),
@@ -176,7 +173,7 @@ class MicrosoftAuthManager {
 
   /// Exchanges authorization code for access token and refresh token
   func getAuthorizationToken(authCode: String, codeVerifier: String) async throws -> AuthorizationTokenResponse {
-    var request = URLRequest(url: URL(string: tokenURL)!)
+    var request = URLRequest(url: URL(string: APIService.MicrosoftAuth.token)!)
     request.httpMethod = "POST"
     request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
 
@@ -208,7 +205,7 @@ class MicrosoftAuthManager {
 
   /// Authenticates with Xbox Live using Microsoft access token
   func authenticateWithXBL(accessToken: String) async throws -> XBLResponse {
-    let url = URL(string: "https://user.auth.xboxlive.com/user/authenticate")!
+    let url = URL(string: APIService.XboxLive.authenticate)!
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -220,7 +217,7 @@ class MicrosoftAuthManager {
         "SiteName": "user.auth.xboxlive.com",
         "RpsTicket": "d=\(accessToken)",
       ],
-      "RelyingParty": "http://auth.xboxlive.com",
+      "RelyingParty": APIService.XboxLive.relyingParty,
       "TokenType": "JWT",
     ]
 
@@ -240,7 +237,7 @@ class MicrosoftAuthManager {
 
   /// Authenticates with XSTS using XBL token
   func authenticateWithXSTS(xblToken: String) async throws -> XBLResponse {
-    let url = URL(string: "https://xsts.auth.xboxlive.com/xsts/authorize")!
+    let url = URL(string: APIService.XboxLive.authorize)!
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -251,7 +248,7 @@ class MicrosoftAuthManager {
         "SandboxId": "RETAIL",
         "UserTokens": [xblToken],
       ],
-      "RelyingParty": "rp://api.minecraftservices.com/",
+      "RelyingParty": APIService.MinecraftServices.relyingParty,
       "TokenType": "JWT",
     ]
 
@@ -271,7 +268,7 @@ class MicrosoftAuthManager {
 
   /// Authenticates with Minecraft using XSTS token
   func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws -> MinecraftAuthResponse {
-    let url = URL(string: "https://api.minecraftservices.com/authentication/login_with_xbox")!
+    let url = URL(string: APIService.MinecraftServices.loginWithXbox)!
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -297,7 +294,7 @@ class MicrosoftAuthManager {
 
   /// Gets Minecraft profile using Minecraft access token
   func getProfile(accessToken: String) async throws -> MinecraftProfileResponse {
-    let url = URL(string: "https://api.minecraftservices.com/minecraft/profile")!
+    let url = URL(string: APIService.MinecraftServices.profile)!
     var request = URLRequest(url: url)
     request.httpMethod = "GET"
     request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -353,7 +350,7 @@ class MicrosoftAuthManager {
 
   /// Refreshes authentication using refresh token
   func refreshAuthorizationToken(refreshToken: String) async throws -> AuthorizationTokenResponse {
-    var request = URLRequest(url: URL(string: "https://login.live.com/oauth20_token.srf")!)
+    var request = URLRequest(url: URL(string: APIService.MicrosoftAuth.refreshToken)!)
     request.httpMethod = "POST"
     request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
 

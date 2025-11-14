@@ -29,14 +29,12 @@ struct AssetObject: Codable {
 
   /// Get asset download URL
   func getURL() -> String {
-    let prefix = String(hash.prefix(2))
-    return "https://resources.download.minecraft.net/\(prefix)/\(hash)"
+    return APIService.MinecraftResources.getResourceURL(hash: hash)
   }
 
   /// Get asset storage path
   func getPath() -> String {
-    let prefix = String(hash.prefix(2))
-    return "\(prefix)/\(hash)"
+    return APIService.MinecraftResources.getResourcePath(hash: hash)
   }
 }
 

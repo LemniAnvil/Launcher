@@ -623,7 +623,7 @@ class VersionListViewController: NSViewController {
         logMessage(Localized.LogMessages.saveLocation(destination.path))
 
         try await downloadManager.downloadFile(
-          from: APIEndpoints.versionManifestOfficial,
+          from: APIService.MinecraftVersion.manifestOfficial,
           to: destination,
           expectedSize: 500000
         )

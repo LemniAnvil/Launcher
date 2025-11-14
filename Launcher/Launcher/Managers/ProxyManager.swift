@@ -147,7 +147,7 @@ class ProxyManager {
 
     let session = URLSession(configuration: config)
 
-    guard let testURL = URL(string: APIEndpoints.versionManifestOfficial) else {
+    guard let testURL = URL(string: APIService.MinecraftVersion.manifestOfficial) else {
       throw ProxyError.invalidConfiguration
     }
 

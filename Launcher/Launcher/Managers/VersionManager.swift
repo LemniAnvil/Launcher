@@ -8,11 +8,6 @@
 import Combine
 import Foundation
 
-/// Centralized API endpoints
-enum APIEndpoints {
-  static let versionManifestOfficial = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
-  static let versionManifestV2 = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
-}
 
 /// Version Manager
 @MainActor
@@ -37,9 +32,7 @@ class VersionManager: ObservableObject {
   private let cacheURL: URL
 
   private var versionManifestURL: String {
-    downloadSettingsManager.useV2Manifest
-      ? APIEndpoints.versionManifestV2
-      : APIEndpoints.versionManifestOfficial
+    APIService.MinecraftVersion.getManifestURL(useV2: downloadSettingsManager.useV2Manifest)
   }
 
   // URLSession with proxy support
