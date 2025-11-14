@@ -13,8 +13,15 @@ class AccountViewController: NSViewController {
 
   // MARK: - Properties
 
-  private var accounts: [String] = []
-  private let accountsKey = "SavedAccounts"
+  private var microsoftAccounts: [MicrosoftAccount] = []
+  private let accountManager = MicrosoftAccountManager.shared
+  private var isDeveloperMode: Bool = false {
+    didSet {
+      UserDefaults.standard.set(isDeveloperMode, forKey: "AccountDeveloperMode")
+      updateTableRowHeight()
+      tableView.reloadData()
+    }
+  }
 
   // UI components
   private let titleLabel: BRLabel = {
@@ -37,6 +44,15 @@ class AccountViewController: NSViewController {
     return label
   }()
 
+  private lazy var loginMicrosoftButton: NSButton = {
+    let button = NSButton()
+    button.title = Localized.Account.signInMicrosoftButton
+    button.bezelStyle = .rounded
+    button.target = self
+    button.action = #selector(loginMicrosoft)
+    return button
+  }()
+
   private let scrollView: NSScrollView = {
     let scrollView = NSScrollView()
     scrollView.hasVerticalScroller = true
@@ -49,12 +65,12 @@ class AccountViewController: NSViewController {
   private lazy var tableView: NSTableView = {
     let tableView = NSTableView()
     tableView.style = .plain
-    tableView.rowHeight = 44
+    tableView.rowHeight = 64
     tableView.headerView = nil
     tableView.backgroundColor = .clear
     tableView.selectionHighlightStyle = .regular
     tableView.usesAlternatingRowBackgroundColors = false
-    tableView.intercellSpacing = NSSize(width: 0, height: 0)
+    tableView.intercellSpacing = NSSize(width: 0, height: 4)
 
     tableView.dataSource = self
     tableView.delegate = self
@@ -70,46 +86,35 @@ class AccountViewController: NSViewController {
 
   private let emptyLabel: BRLabel = {
     let label = BRLabel(
-      text: Localized.Account.emptyMessage,
+      text: Localized.Account.emptyMicrosoftMessage,
       font: .systemFont(ofSize: 14),
       textColor: .secondaryLabelColor,
       alignment: .center
     )
+    label.maximumNumberOfLines = 0
     label.isHidden = true
     return label
-  }()
-
-  private let usernameField: NSTextField = {
-    let textField = NSTextField()
-    textField.placeholderString = Localized.Account.usernamePlaceholder
-    textField.font = .systemFont(ofSize: 13)
-    textField.focusRingType = .none
-    return textField
-  }()
-
-  private lazy var addButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "plus.circle.fill",
-      cornerRadius: 6,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemGreen,
-      accessibilityLabel: Localized.Account.addButton
-    )
-    button.target = self
-    button.action = #selector(addAccount)
-    return button
   }()
 
   private let headerSeparator: BRSeparator = {
     return BRSeparator.horizontal()
   }()
 
-  private let inputSeparator: BRSeparator = {
-    return BRSeparator.horizontal()
+  private lazy var developerModeSwitch: NSSwitch = {
+    let toggle = NSSwitch()
+    toggle.target = self
+    toggle.action = #selector(toggleDeveloperMode)
+    return toggle
+  }()
+
+  private let developerModeLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.Account.developerModeLabel,
+      font: .systemFont(ofSize: 12),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
+    return label
   }()
 
   // MARK: - Lifecycle
@@ -122,6 +127,7 @@ class AccountViewController: NSViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
+    loadDeveloperMode()
     loadAccounts()
   }
 
@@ -131,9 +137,9 @@ class AccountViewController: NSViewController {
     view.addSubview(titleLabel)
     view.addSubview(subtitleLabel)
     view.addSubview(headerSeparator)
-    view.addSubview(usernameField)
-    view.addSubview(addButton)
-    view.addSubview(inputSeparator)
+    view.addSubview(developerModeLabel)
+    view.addSubview(developerModeSwitch)
+    view.addSubview(loginMicrosoftButton)
     view.addSubview(scrollView)
     view.addSubview(emptyLabel)
 
@@ -157,27 +163,25 @@ class AccountViewController: NSViewController {
       make.height.equalTo(1)
     }
 
-    usernameField.snp.makeConstraints { make in
-      make.top.equalTo(headerSeparator.snp.bottom).offset(16)
-      make.left.equalToSuperview().offset(20)
-      make.right.equalTo(addButton.snp.left).offset(-8)
-      make.height.equalTo(28)
-    }
-
-    addButton.snp.makeConstraints { make in
-      make.centerY.equalTo(usernameField)
+    developerModeSwitch.snp.makeConstraints { make in
+      make.top.equalTo(headerSeparator.snp.bottom).offset(12)
       make.right.equalToSuperview().offset(-20)
-      make.width.height.equalTo(28)
     }
 
-    inputSeparator.snp.makeConstraints { make in
-      make.top.equalTo(usernameField.snp.bottom).offset(16)
-      make.left.right.equalToSuperview().inset(20)
-      make.height.equalTo(1)
+    developerModeLabel.snp.makeConstraints { make in
+      make.centerY.equalTo(developerModeSwitch)
+      make.right.equalTo(developerModeSwitch.snp.left).offset(-8)
+    }
+
+    loginMicrosoftButton.snp.makeConstraints { make in
+      make.top.equalTo(developerModeSwitch.snp.bottom).offset(12)
+      make.centerX.equalToSuperview()
+      make.width.equalTo(200)
+      make.height.equalTo(32)
     }
 
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(inputSeparator.snp.bottom).offset(12)
+      make.top.equalTo(loginMicrosoftButton.snp.bottom).offset(16)
       make.left.right.bottom.equalToSuperview().inset(20)
     }
 
@@ -190,80 +194,64 @@ class AccountViewController: NSViewController {
   // MARK: - Data Management
 
   private func loadAccounts() {
-    if let savedAccounts = UserDefaults.standard.array(forKey: accountsKey) as? [String] {
-      accounts = savedAccounts
-    }
-
+    microsoftAccounts = accountManager.loadAccounts()
     tableView.reloadData()
     updateEmptyState()
   }
 
-  private func saveAccounts() {
-    UserDefaults.standard.set(accounts, forKey: accountsKey)
+  private func loadDeveloperMode() {
+    isDeveloperMode = UserDefaults.standard.bool(forKey: "AccountDeveloperMode")
+    developerModeSwitch.state = isDeveloperMode ? .on : .off
   }
 
   private func updateEmptyState() {
-    emptyLabel.isHidden = !accounts.isEmpty
-    scrollView.isHidden = accounts.isEmpty
+    emptyLabel.isHidden = !microsoftAccounts.isEmpty
+    scrollView.isHidden = microsoftAccounts.isEmpty
+  }
+
+  private func updateTableRowHeight() {
+    tableView.rowHeight = isDeveloperMode ? 120 : 64
   }
 
   // MARK: - Actions
 
-  @objc private func addAccount() {
-    let username = usernameField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+  @objc private func toggleDeveloperMode() {
+    isDeveloperMode = developerModeSwitch.state == .on
+    Logger.shared.info("Developer mode: \(isDeveloperMode)", category: "Account")
+  }
 
-    // Validate username
-    guard !username.isEmpty else {
-      showAlert(
-        title: Localized.Account.invalidUsernameTitle,
-        message: Localized.Account.emptyUsernameMessage
-      )
-      return
+  @objc private func loginMicrosoft() {
+    // Open Microsoft authentication window
+    let authWindowController = MicrosoftAuthWindowController()
+    authWindowController.window?.makeKeyAndOrderFront(nil)
+
+    // Set up callbacks
+    if let viewController = authWindowController.contentViewController as? MicrosoftAuthViewController {
+      viewController.onAuthSuccess = { [weak self] response in
+        self?.loadAccounts()
+        Logger.shared.info("Account added: \(response.name)", category: "Account")
+      }
+
+      viewController.onAuthFailure = { error in
+        Logger.shared.error("Authentication failed: \(error.localizedDescription)", category: "Account")
+      }
     }
-
-    guard username.count >= 3 && username.count <= 16 else {
-      showAlert(
-        title: Localized.Account.invalidUsernameTitle,
-        message: Localized.Account.invalidUsernameLengthMessage
-      )
-      return
-    }
-
-    let usernameRegex = "^[a-zA-Z0-9_]+$"
-    let usernamePredicate = NSPredicate(format: "SELF MATCHES %@", usernameRegex)
-    guard usernamePredicate.evaluate(with: username) else {
-      showAlert(
-        title: Localized.Account.invalidUsernameTitle,
-        message: Localized.Account.invalidUsernameFormatMessage
-      )
-      return
-    }
-
-    // Check for duplicate
-    guard !accounts.contains(username) else {
-      showAlert(
-        title: Localized.Account.duplicateUsernameTitle,
-        message: Localized.Account.duplicateUsernameMessage
-      )
-      return
-    }
-
-    // Add account
-    accounts.append(username)
-    saveAccounts()
-    tableView.reloadData()
-    updateEmptyState()
-
-    // Clear input field
-    usernameField.stringValue = ""
-
-    Logger.shared.info("Added account: \(username)", category: "Account")
   }
 
   // MARK: - Context Menu
 
   private func createContextMenu() -> NSMenu {
     let menu = NSMenu()
+
+    let refreshItem = NSMenuItem(
+      title: Localized.Account.menuRefresh,
+      action: #selector(refreshAccount(_:)),
+      keyEquivalent: ""
+    )
+    refreshItem.target = self
+    menu.addItem(refreshItem)
+
+    menu.addItem(NSMenuItem.separator())
 
     let deleteItem = NSMenuItem(
       title: Localized.Account.menuDelete,
@@ -276,18 +264,49 @@ class AccountViewController: NSViewController {
     return menu
   }
 
+  @objc private func refreshAccount(_ sender: Any?) {
+    guard tableView.clickedRow >= 0,
+          tableView.clickedRow < microsoftAccounts.count else {
+      return
+    }
+
+    let account = microsoftAccounts[tableView.clickedRow]
+
+    Task { @MainActor in
+      do {
+        // Refresh the account using refresh token
+        let authManager = MicrosoftAuthManager.shared
+        let response = try await authManager.completeRefresh(refreshToken: account.refreshToken)
+
+        Logger.shared.info("Account refreshed: \(response.name)", category: "Account")
+        loadAccounts()
+
+        showAlert(
+          title: Localized.Account.refreshSuccessTitle,
+          message: Localized.Account.refreshSuccessMessage(response.name)
+        )
+      } catch {
+        Logger.shared.error("Refresh failed: \(error.localizedDescription)", category: "Account")
+        showAlert(
+          title: Localized.Account.refreshFailedTitle,
+          message: error.localizedDescription
+        )
+      }
+    }
+  }
+
   @objc private func deleteAccount(_ sender: Any?) {
     guard tableView.clickedRow >= 0,
-          tableView.clickedRow < accounts.count else {
+          tableView.clickedRow < microsoftAccounts.count else {
       return
     }
 
     let rowToDelete = tableView.clickedRow
-    let username = accounts[rowToDelete]
+    let account = microsoftAccounts[rowToDelete]
 
     let alert = NSAlert()
     alert.messageText = Localized.Account.deleteConfirmTitle
-    alert.informativeText = Localized.Account.deleteConfirmMessage(username)
+    alert.informativeText = Localized.Account.deleteAccountConfirmMessage(account.name)
     alert.alertStyle = .warning
     alert.addButton(withTitle: Localized.Account.deleteButton)
     alert.addButton(withTitle: Localized.Account.cancelButton)
@@ -295,20 +314,14 @@ class AccountViewController: NSViewController {
     guard let window = view.window else { return }
     alert.beginSheetModal(for: window) { [weak self] response in
       guard response == .alertFirstButtonReturn else { return }
-      self?.performDelete(at: rowToDelete)
+      self?.performDelete(accountId: account.id)
     }
   }
 
-  private func performDelete(at index: Int) {
-    guard index >= 0 && index < accounts.count else { return }
-
-    let username = accounts[index]
-    accounts.remove(at: index)
-    saveAccounts()
-    tableView.reloadData()
-    updateEmptyState()
-
-    Logger.shared.info("Deleted account: \(username)", category: "Account")
+  private func performDelete(accountId: String) {
+    accountManager.deleteAccount(id: accountId)
+    loadAccounts()
+    Logger.shared.info("Deleted account: \(accountId)", category: "Account")
   }
 
   private func showAlert(title: String, message: String) {
@@ -331,7 +344,7 @@ class AccountViewController: NSViewController {
 extension AccountViewController: NSTableViewDataSource {
 
   func numberOfRows(in tableView: NSTableView) -> Int {
-    return accounts.count
+    return microsoftAccounts.count
   }
 }
 
@@ -340,35 +353,155 @@ extension AccountViewController: NSTableViewDataSource {
 extension AccountViewController: NSTableViewDelegate {
 
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-    let username = accounts[row]
+    let account = microsoftAccounts[row]
 
-    let cellView = NSTableCellView()
+    let cellView = NSView()
+
+    // Container for better layout
+    let containerView = NSView()
+    containerView.wantsLayer = true
+    containerView.layer?.cornerRadius = 8
+    containerView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    cellView.addSubview(containerView)
+
+    containerView.snp.makeConstraints { make in
+      make.edges.equalToSuperview().inset(NSEdgeInsets(top: 2, left: 4, bottom: 2, right: 4))
+    }
 
     // Icon
     let iconView = NSImageView()
-    iconView.image = NSImage(systemSymbolName: "person.circle.fill", accessibilityDescription: nil)
-    iconView.contentTintColor = .systemBlue
-    cellView.addSubview(iconView)
+    iconView.image = NSImage(systemSymbolName: "person.crop.circle.fill", accessibilityDescription: nil)
+    iconView.contentTintColor = .systemGreen
+    containerView.addSubview(iconView)
 
     iconView.snp.makeConstraints { make in
-      make.left.equalToSuperview().offset(8)
-      make.centerY.equalToSuperview()
-      make.width.height.equalTo(24)
+      make.left.equalToSuperview().offset(12)
+      make.top.equalToSuperview().offset(10)
+      make.width.height.equalTo(36)
     }
 
-    // Username label
-    let textLabel = BRLabel(
-      text: username,
-      font: .systemFont(ofSize: 13),
+    // Name label
+    let nameLabel = BRLabel(
+      text: account.name,
+      font: .systemFont(ofSize: 14, weight: .medium),
       textColor: .labelColor,
       alignment: .left
     )
-    cellView.addSubview(textLabel)
+    containerView.addSubview(nameLabel)
 
-    textLabel.snp.makeConstraints { make in
-      make.left.equalTo(iconView.snp.right).offset(8)
-      make.centerY.equalToSuperview()
-      make.right.equalToSuperview().offset(-8)
+    nameLabel.snp.makeConstraints { make in
+      make.left.equalTo(iconView.snp.right).offset(12)
+      make.top.equalToSuperview().offset(10)
+      make.right.equalToSuperview().offset(-12)
+    }
+
+    if isDeveloperMode {
+      // Developer Mode: Show detailed information
+
+      // Full UUID label
+      let fullUUIDLabel = BRLabel(
+        text: "UUID: \(account.id)",
+        font: .systemFont(ofSize: 10, weight: .regular),
+        textColor: .secondaryLabelColor,
+        alignment: .left
+      )
+      fullUUIDLabel.maximumNumberOfLines = 1
+      containerView.addSubview(fullUUIDLabel)
+
+      fullUUIDLabel.snp.makeConstraints { make in
+        make.left.equalTo(nameLabel)
+        make.top.equalTo(nameLabel.snp.bottom).offset(4)
+        make.right.equalToSuperview().offset(-12)
+      }
+
+      // Timestamp label
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateStyle = .medium
+      dateFormatter.timeStyle = .short
+      let date = Date(timeIntervalSince1970: account.timestamp)
+      let timestampLabel = BRLabel(
+        text: Localized.Account.loginTime(dateFormatter.string(from: date)),
+        font: .systemFont(ofSize: 10),
+        textColor: .secondaryLabelColor,
+        alignment: .left
+      )
+      containerView.addSubview(timestampLabel)
+
+      timestampLabel.snp.makeConstraints { make in
+        make.left.equalTo(nameLabel)
+        make.top.equalTo(fullUUIDLabel.snp.bottom).offset(3)
+        make.right.equalToSuperview().offset(-12)
+      }
+
+      // Access Token label (truncated)
+      let truncatedToken = String(account.accessToken.prefix(40)) + "..."
+      let tokenLabel = BRLabel(
+        text: "Access Token: \(truncatedToken)",
+        font: NSFont.monospacedSystemFont(ofSize: 9, weight: .regular),
+        textColor: .secondaryLabelColor,
+        alignment: .left
+      )
+      tokenLabel.maximumNumberOfLines = 1
+      containerView.addSubview(tokenLabel)
+
+      tokenLabel.snp.makeConstraints { make in
+        make.left.equalTo(nameLabel)
+        make.top.equalTo(timestampLabel.snp.bottom).offset(3)
+        make.right.equalToSuperview().offset(-12)
+      }
+
+      // Status indicator
+      let expiryTime = Date().timeIntervalSince1970 - account.timestamp
+      let hoursRemaining = max(0, 24 - Int(expiryTime / 3600))
+      let statusText = account.isExpired
+        ? Localized.Account.statusExpired
+        : Localized.Account.statusValid(hoursRemaining)
+
+      let statusLabel = BRLabel(
+        text: statusText,
+        font: .systemFont(ofSize: 10, weight: .medium),
+        textColor: account.isExpired ? .systemOrange : .systemGreen,
+        alignment: .left
+      )
+      containerView.addSubview(statusLabel)
+
+      statusLabel.snp.makeConstraints { make in
+        make.left.equalTo(nameLabel)
+        make.top.equalTo(tokenLabel.snp.bottom).offset(3)
+        make.right.equalToSuperview().offset(-12)
+      }
+    } else {
+      // Normal Mode: Show basic information
+
+      // UUID label (short)
+      let uuidLabel = BRLabel(
+        text: "UUID: \(account.shortUUID)",
+        font: .systemFont(ofSize: 11),
+        textColor: .secondaryLabelColor,
+        alignment: .left
+      )
+      containerView.addSubview(uuidLabel)
+
+      uuidLabel.snp.makeConstraints { make in
+        make.left.equalTo(nameLabel)
+        make.top.equalTo(nameLabel.snp.bottom).offset(2)
+        make.right.equalToSuperview().offset(-12)
+      }
+
+      // Status indicator
+      let statusLabel = BRLabel(
+        text: account.isExpired ? Localized.Account.statusExpired : Localized.Account.statusLoggedIn,
+        font: .systemFont(ofSize: 10),
+        textColor: account.isExpired ? .systemOrange : .systemGreen,
+        alignment: .left
+      )
+      containerView.addSubview(statusLabel)
+
+      statusLabel.snp.makeConstraints { make in
+        make.left.equalTo(nameLabel)
+        make.top.equalTo(uuidLabel.snp.bottom).offset(2)
+        make.right.equalToSuperview().offset(-12)
+      }
     }
 
     return cellView

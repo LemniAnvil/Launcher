@@ -14,11 +14,13 @@ class ViewController: NSViewController {
   private var accountWindowController: AccountWindowController?
   private var settingsWindowController: SettingsWindowController?
   private var addInstanceWindowController: AddInstanceWindowController?
+  private var microsoftAuthWindowController: MicrosoftAuthWindowController?
   private var windowObserver: NSObjectProtocol?
   private var javaWindowObserver: NSObjectProtocol?
   private var accountWindowObserver: NSObjectProtocol?
   private var settingsWindowObserver: NSObjectProtocol?
   private var addInstanceWindowObserver: NSObjectProtocol?
+  private var microsoftAuthWindowObserver: NSObjectProtocol?
 
   // Instance management
   private let instanceManager = InstanceManager.shared
@@ -95,6 +97,23 @@ class ViewController: NSViewController {
     )
     button.target = self
     button.action = #selector(openAccountWindow)
+    return button
+  }()
+
+  private lazy var microsoftAuthButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "person.crop.circle.badge.checkmark",
+      cornerRadius: 6,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+        ? NSColor.white.withAlphaComponent(0.1)
+        : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemGreen,
+      accessibilityLabel: Localized.MicrosoftAuth.openMicrosoftAuthButton
+    )
+    button.target = self
+    button.action = #selector(openMicrosoftAuthWindow)
     return button
   }()
 
@@ -223,6 +242,7 @@ class ViewController: NSViewController {
     view.addSubview(refreshButton)
     view.addSubview(javaDetectionButton)
     view.addSubview(accountButton)
+    view.addSubview(microsoftAuthButton)
     view.addSubview(settingsButton)
     view.addSubview(headerSeparator)
     view.addSubview(scrollView)
@@ -231,32 +251,38 @@ class ViewController: NSViewController {
     scrollView.documentView = collectionView
 
     // Layout constraints using SnapKit
-    // Top-right button group (from left to right: add, test, refresh, java, account, settings)
+    // Top-right button group (from left to right: add, test, refresh, java, account, microsoft, settings)
     addInstanceButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-236)
+      make.right.equalToSuperview().offset(-280)
       make.width.height.equalTo(36)
     }
 
     testButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-192)
+      make.right.equalToSuperview().offset(-236)
       make.width.height.equalTo(36)
     }
 
     refreshButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-148)
+      make.right.equalToSuperview().offset(-192)
       make.width.height.equalTo(36)
     }
 
     javaDetectionButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-104)
+      make.right.equalToSuperview().offset(-148)
       make.width.height.equalTo(36)
     }
 
     accountButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalToSuperview().offset(-104)
+      make.width.height.equalTo(36)
+    }
+
+    microsoftAuthButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-60)
       make.width.height.equalTo(36)
@@ -451,6 +477,45 @@ extension ViewController {
       if let observer = self?.settingsWindowObserver {
         NotificationCenter.default.removeObserver(observer)
         self?.settingsWindowObserver = nil
+      }
+    }
+  }
+
+  @objc private func openMicrosoftAuthWindow() {
+    // If window already exists, show it
+    if let existingController = microsoftAuthWindowController {
+      existingController.showWindow(nil)
+      existingController.window?.makeKeyAndOrderFront(nil)
+      return
+    }
+
+    // Create new Microsoft auth window
+    microsoftAuthWindowController = MicrosoftAuthWindowController()
+
+    // Setup callbacks
+    if let viewController = microsoftAuthWindowController?.window?.contentViewController as? MicrosoftAuthViewController {
+      viewController.onAuthSuccess = { [weak self] loginResponse in
+        Logger.shared.info("Microsoft authentication successful: \(loginResponse.name)", category: "MainWindow")
+        // You can handle the login response here (e.g., save account, update UI)
+      }
+      viewController.onAuthFailure = { [weak self] error in
+        Logger.shared.error("Microsoft authentication failed: \(error.localizedDescription)", category: "MainWindow")
+      }
+    }
+
+    microsoftAuthWindowController?.showWindow(nil)
+    microsoftAuthWindowController?.window?.makeKeyAndOrderFront(nil)
+
+    // Window close callback
+    microsoftAuthWindowObserver = NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification,
+      object: microsoftAuthWindowController?.window,
+      queue: .main
+    ) { [weak self] _ in
+      self?.microsoftAuthWindowController = nil
+      if let observer = self?.microsoftAuthWindowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        self?.microsoftAuthWindowObserver = nil
       }
     }
   }

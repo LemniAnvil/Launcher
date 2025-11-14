@@ -1053,6 +1053,17 @@
         }
       }
     },
+    "1. Click \"Sign In with Microsoft\" button": {
+      "comment": "[Text] Instruction step 1.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. 点击 \"使用微软账户登录\" 按钮"
+          }
+        }
+      }
+    },
     "1. Refresh Versions": {
       "comment": "[Button] Refresh versions list.",
       "localizations": {
@@ -1086,6 +1097,17 @@
         }
       }
     },
+    "2. Your default browser will open Microsoft login page": {
+      "comment": "[Text] Instruction step 2.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2. 默认浏览器将打开微软登录页面"
+          }
+        }
+      }
+    },
     "3. Download Test File": {
       "comment": "[Button] Download test file.",
       "localizations": {
@@ -1097,6 +1119,28 @@
         }
       }
     },
+    "3. Sign in with your Microsoft account": {
+      "comment": "[Text] Instruction step 3.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3. 使用您的微软账户登录"
+          }
+        }
+      }
+    },
+    "4. Grant permission to access Minecraft": {
+      "comment": "[Text] Instruction step 4.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "4. 授予访问 Minecraft 的权限"
+          }
+        }
+      }
+    },
     "5. Download Version": {
       "comment": "[Button] Download version.",
       "localizations": {
@@ -1104,6 +1148,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "5. 下载版本"
+          }
+        }
+      }
+    },
+    "5. Return to this window after authorization completes": {
+      "comment": "[Text] Instruction step 5.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "5. 授权完成后返回此窗口"
           }
         }
       }
@@ -1263,7 +1318,7 @@
       }
     },
     "Cancel": {
-      "comment": "[Button] Cancel button.",
+      "comment": "[Button] Cancel button.\n[Button] Cancel login.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1302,6 +1357,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "点击按钮开始"
+          }
+        }
+      }
+    },
+    "Completing Microsoft authentication...\nThis may take a few moments.": {
+      "comment": "[Status] Completing login.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在完成微软认证...\n这可能需要几分钟时间。"
           }
         }
       }
@@ -1697,6 +1763,17 @@
         }
       }
     },
+    "Error: %@": {
+      "comment": "[Status] Error occurred.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "错误：%@"
+          }
+        }
+      }
+    },
     "Extracting native libraries...": {
       "comment": "[Status] Extracting native libraries.",
       "localizations": {
@@ -1763,6 +1840,17 @@
         }
       }
     },
+    "Failed to sign in with Microsoft account:\n%@": {
+      "comment": "[Alert] Login failed message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用微软账户登录失败：\n%@"
+          }
+        }
+      }
+    },
     "File not found: %@": {
       "comment": "[Error] File not found.",
       "localizations": {
@@ -1818,6 +1906,17 @@
         }
       }
     },
+    "Generating secure login URL...": {
+      "comment": "[Status] Generating login URL.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在生成安全登录链接..."
+          }
+        }
+      }
+    },
     "Getting version details...": {
       "comment": "[Status] Getting version details.",
       "localizations": {
@@ -1858,6 +1957,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "主机："
+          }
+        }
+      }
+    },
+    "How it works:": {
+      "comment": "[Text] Instructions title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工作原理："
           }
         }
       }
@@ -2181,6 +2291,28 @@
         }
       }
     },
+    "Login Failed": {
+      "comment": "[Alert] Login failed title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录失败"
+          }
+        }
+      }
+    },
+    "Login Successful": {
+      "comment": "[Alert] Login successful title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录成功"
+          }
+        }
+      }
+    },
     "Manage offline mode usernames for quick launch": {
       "comment": "[Text] Account management subtitle.",
       "localizations": {
@@ -2221,6 +2353,39 @@
           "stringUnit": {
             "state": "translated",
             "value": "下载的最大时长（60-600 秒）"
+          }
+        }
+      }
+    },
+    "Microsoft Account": {
+      "comment": "[Text] Microsoft auth title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "微软账户"
+          }
+        }
+      }
+    },
+    "Microsoft Account Login": {
+      "comment": "[Text] Microsoft auth window title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "微软账户登录"
+          }
+        }
+      }
+    },
+    "Microsoft Login": {
+      "comment": "[Button] Open Microsoft authentication window.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "微软登录"
           }
         }
       }
@@ -2500,6 +2665,17 @@
         }
       }
     },
+    "Opening browser for authentication...": {
+      "comment": "[Status] Opening browser.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在打开浏览器进行认证..."
+          }
+        }
+      }
+    },
     "Parse failed: %@": {
       "comment": "[Error] Parse failed.",
       "localizations": {
@@ -2551,6 +2727,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在准备启动游戏..."
+          }
+        }
+      }
+    },
+    "Processing authentication response...": {
+      "comment": "[Status] Processing callback.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在处理认证响应..."
           }
         }
       }
@@ -2689,6 +2876,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "准备检测 Java 安装"
+          }
+        }
+      }
+    },
+    "Ready to sign in": {
+      "comment": "[Status] Ready to sign in.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "准备登录"
+          }
+        }
+      }
+    },
+    "Ready to sign in": {
+      "comment": "[Status] Ready to sign in.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "准备登录"
           }
         }
       }
@@ -2847,6 +3056,28 @@
         }
       }
     },
+    "Sign In with Microsoft": {
+      "comment": "[Button] Start Microsoft login.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用微软账户登录"
+          }
+        }
+      }
+    },
+    "Sign in with your Microsoft account to access Minecraft. The authentication will be performed in your default browser for enhanced security.": {
+      "comment": "[Text] Microsoft auth subtitle.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用您的微软账户登录以访问 Minecraft。为增强安全性，认证将在默认浏览器中进行。"
+          }
+        }
+      }
+    },
     "Snapshot": {
       "comment": "[Checkbox] Snapshot filter.\n[Text] Snapshot version type.",
       "localizations": {
@@ -2880,6 +3111,28 @@
         }
       }
     },
+    "Starting local callback server...": {
+      "comment": "[Status] Starting callback server.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在启动本地回调服务器..."
+          }
+        }
+      }
+    },
+    "Starting local callback server...": {
+      "comment": "[Status] Starting callback server.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在启动本地回调服务器..."
+          }
+        }
+      }
+    },
     "Status": {
       "comment": "[Table] Java status column.",
       "localizations": {
@@ -2887,6 +3140,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "状态"
+          }
+        }
+      }
+    },
+    "Successfully signed in as %@!": {
+      "comment": "[Status] Sign in successful.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "成功登录为 %@！"
+          }
+        }
+      }
+    },
+    "Successfully signed in!\n\nUsername: %@\nUUID: %@\n\nYour account has been saved and you can now launch Minecraft.": {
+      "comment": "[Alert] Login successful message.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Successfully signed in!\n\nUsername: %1$@\nUUID: %2$@\n\nYour account has been saved and you can now launch Minecraft."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录成功！\n\n用户名：%1$@\nUUID：%2$@\n\n您的账号已保存，现在可以启动 Minecraft 了。"
           }
         }
       }
@@ -3289,6 +3570,160 @@
           "stringUnit": {
             "state": "translated",
             "value": "版本：%@"
+          }
+        }
+      }
+    },
+    "Waiting for authentication in browser...\nPlease complete the sign-in process in your browser.": {
+      "comment": "[Status] Waiting for authentication.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "等待浏览器认证...\n请在浏览器中完成登录过程。"
+          }
+        }
+      }
+    },
+    "Your password is never shared with this application. Authentication is handled securely by Microsoft.": {
+      "comment": "[Text] Security note.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "您的密码绝不会与此应用程序共享。认证由微软安全处理。"
+          }
+        }
+      }
+    },
+    "Sign in with Microsoft": {
+      "comment": "[Button] Sign in with Microsoft button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录微软账户"
+          }
+        }
+      }
+    },
+    "No Microsoft accounts\nClick the button above to sign in": {
+      "comment": "[Text] Empty state message for Microsoft accounts.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无微软账户\n点击上方按钮登录"
+          }
+        }
+      }
+    },
+    "Developer Mode": {
+      "comment": "[Label] Developer mode toggle label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "开发者模式"
+          }
+        }
+      }
+    },
+    "Refresh Account": {
+      "comment": "[Menu] Refresh account menu item.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新账户"
+          }
+        }
+      }
+    },
+    "Refresh Successful": {
+      "comment": "[Alert] Refresh successful title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新成功"
+          }
+        }
+      }
+    },
+    "Account %@ has been refreshed": {
+      "comment": "[Alert] Account refresh success message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "账户 %@ 已刷新"
+          }
+        }
+      }
+    },
+    "Refresh Failed": {
+      "comment": "[Alert] Refresh failed title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新失败"
+          }
+        }
+      }
+    },
+    "Are you sure you want to delete account %@?": {
+      "comment": "[Alert] Delete account confirmation message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确定要删除账户 %@ 吗？"
+          }
+        }
+      }
+    },
+    "Login Time: %@": {
+      "comment": "[Label] Login timestamp label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录时间: %@"
+          }
+        }
+      }
+    },
+    "⚠️ Expired": {
+      "comment": "[Status] Token expired status.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ 已过期"
+          }
+        }
+      }
+    },
+    "✓ Valid (%lld hours remaining)": {
+      "comment": "[Status] Token valid status with hours remaining.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "✓ 有效 (剩余 %lld 小时)"
+          }
+        }
+      }
+    },
+    "✓ Logged In": {
+      "comment": "[Status] Logged in status.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "✓ 已登录"
           }
         }
       }
