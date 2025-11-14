@@ -64,8 +64,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let params = components?.queryItems ?? []
 
     // Extract authorization code and state from callback URL
-    let code = params.first(where: { $0.name == "code" })?.value
-    let state = params.first(where: { $0.name == "state" })?.value
+    let code = params.first { $0.name == "code" }?.value
+    let state = params.first { $0.name == "state" }?.value
 
     print("Extracted code:", code ?? "nil")
     print("Extracted state:", state ?? "nil")

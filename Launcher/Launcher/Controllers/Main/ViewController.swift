@@ -494,11 +494,11 @@ extension ViewController {
 
     // Setup callbacks
     if let viewController = microsoftAuthWindowController?.window?.contentViewController as? MicrosoftAuthViewController {
-      viewController.onAuthSuccess = { [weak self] loginResponse in
+      viewController.onAuthSuccess = { loginResponse in
         Logger.shared.info("Microsoft authentication successful: \(loginResponse.name)", category: "MainWindow")
         // You can handle the login response here (e.g., save account, update UI)
       }
-      viewController.onAuthFailure = { [weak self] error in
+      viewController.onAuthFailure = { error in
         Logger.shared.error("Microsoft authentication failed: \(error.localizedDescription)", category: "MainWindow")
       }
     }

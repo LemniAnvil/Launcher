@@ -127,8 +127,8 @@ struct APIConfiguration {
   var proxyConfiguration: [String: Any]?
 
   /// Create default configuration
-  static func `default`() -> APIConfiguration {
-    return APIConfiguration()
+  static func `default`() -> Self {
+    return Self()
   }
 }
 

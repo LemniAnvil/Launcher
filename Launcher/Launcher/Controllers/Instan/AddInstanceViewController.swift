@@ -514,7 +514,7 @@ class AddInstanceViewController: NSViewController {
       textField.snp.makeConstraints { make in
         make.left.equalToSuperview().offset(8)
         make.centerY.equalToSuperview()
-        make.right.equalToSuperview().offset(-8)
+        make.right.lessThanOrEqualToSuperview().offset(-8).priority(.high)
       }
     } else if column?.identifier.rawValue == "ReleaseColumn" {
       let textField = NSTextField(labelWithString: versionItem.releaseDate)
@@ -524,7 +524,7 @@ class AddInstanceViewController: NSViewController {
       textField.snp.makeConstraints { make in
         make.left.equalToSuperview().offset(8)
         make.centerY.equalToSuperview()
-        make.right.equalToSuperview().offset(-8)
+        make.right.lessThanOrEqualToSuperview().offset(-8).priority(.high)
       }
     } else if column?.identifier.rawValue == "TypeColumn" {
       let textField = NSTextField(labelWithString: versionItem.type)
@@ -534,7 +534,7 @@ class AddInstanceViewController: NSViewController {
       textField.snp.makeConstraints { make in
         make.left.equalToSuperview().offset(8)
         make.centerY.equalToSuperview()
-        make.right.equalToSuperview().offset(-8)
+        make.right.lessThanOrEqualToSuperview().offset(-8).priority(.high)
       }
     }
 
@@ -872,7 +872,8 @@ class AddInstanceViewController: NSViewController {
   }
 
   @objc private func showHelp() {
-    // TODO: Show help documentation
+    guard let url = URL(string: "https://minecraft.wiki") else { return }
+    NSWorkspace.shared.open(url)
   }
 
   @objc private func cancel() {

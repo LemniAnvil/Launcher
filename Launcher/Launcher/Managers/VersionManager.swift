@@ -8,7 +8,6 @@
 import Combine
 import Foundation
 
-
 /// Version Manager
 @MainActor
 class VersionManager: ObservableObject {

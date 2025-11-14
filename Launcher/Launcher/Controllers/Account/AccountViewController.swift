@@ -24,25 +24,19 @@ class AccountViewController: NSViewController {
   }
 
   // UI components
-  private let titleLabel: BRLabel = {
-    let label = BRLabel(
-      text: Localized.Account.title,
-      font: .systemFont(ofSize: 20, weight: .semibold),
-      textColor: .labelColor,
-      alignment: .left
-    )
-    return label
-  }()
+  private let titleLabel = BRLabel(
+    text: Localized.Account.title,
+    font: .systemFont(ofSize: 20, weight: .semibold),
+    textColor: .labelColor,
+    alignment: .left
+  )
 
-  private let subtitleLabel: BRLabel = {
-    let label = BRLabel(
-      text: Localized.Account.subtitle,
-      font: .systemFont(ofSize: 12),
-      textColor: .secondaryLabelColor,
-      alignment: .left
-    )
-    return label
-  }()
+  private let subtitleLabel = BRLabel(
+    text: Localized.Account.subtitle,
+    font: .systemFont(ofSize: 12),
+    textColor: .secondaryLabelColor,
+    alignment: .left
+  )
 
   private lazy var loginMicrosoftButton: NSButton = {
     let button = NSButton()
@@ -96,9 +90,7 @@ class AccountViewController: NSViewController {
     return label
   }()
 
-  private let headerSeparator: BRSeparator = {
-    return BRSeparator.horizontal()
-  }()
+  private let headerSeparator = BRSeparator.horizontal()
 
   private lazy var developerModeSwitch: NSSwitch = {
     let toggle = NSSwitch()
@@ -107,15 +99,12 @@ class AccountViewController: NSViewController {
     return toggle
   }()
 
-  private let developerModeLabel: BRLabel = {
-    let label = BRLabel(
-      text: Localized.Account.developerModeLabel,
-      font: .systemFont(ofSize: 12),
-      textColor: .secondaryLabelColor,
-      alignment: .left
-    )
-    return label
-  }()
+  private let developerModeLabel = BRLabel(
+    text: Localized.Account.developerModeLabel,
+    font: .systemFont(ofSize: 12),
+    textColor: .secondaryLabelColor,
+    alignment: .left
+  )
 
   // MARK: - Lifecycle
 
@@ -339,6 +328,124 @@ class AccountViewController: NSViewController {
   }
 }
 
+// MARK: - Cell View Helpers
+
+private extension AccountViewController {
+  func createContainerView() -> NSView {
+    let containerView = NSView()
+    containerView.wantsLayer = true
+    containerView.layer?.cornerRadius = 8
+    containerView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    return containerView
+  }
+
+  func createIconView() -> NSImageView {
+    let iconView = NSImageView()
+    iconView.image = NSImage(systemSymbolName: "person.crop.circle.fill", accessibilityDescription: nil)
+    iconView.contentTintColor = .systemGreen
+    return iconView
+  }
+
+  func createNameLabel(for account: MicrosoftAccount) -> BRLabel {
+    BRLabel(
+      text: account.name,
+      font: .systemFont(ofSize: 14, weight: .medium),
+      textColor: .labelColor,
+      alignment: .left
+    )
+  }
+
+  func addDeveloperModeInfo(to container: NSView, for account: MicrosoftAccount, below nameLabel: BRLabel) {
+    let fullUUIDLabel = BRLabel(
+      text: "UUID: \(account.id)",
+      font: .systemFont(ofSize: 10, weight: .regular),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
+    fullUUIDLabel.maximumNumberOfLines = 1
+    container.addSubview(fullUUIDLabel)
+    fullUUIDLabel.snp.makeConstraints { make in
+      make.left.equalTo(nameLabel)
+      make.top.equalTo(nameLabel.snp.bottom).offset(4)
+      make.right.equalToSuperview().offset(-12)
+    }
+
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .medium
+    dateFormatter.timeStyle = .short
+    let timestampLabel = BRLabel(
+      text: Localized.Account.loginTime(dateFormatter.string(from: Date(timeIntervalSince1970: account.timestamp))),
+      font: .systemFont(ofSize: 10),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
+    container.addSubview(timestampLabel)
+    timestampLabel.snp.makeConstraints { make in
+      make.left.equalTo(nameLabel)
+      make.top.equalTo(fullUUIDLabel.snp.bottom).offset(3)
+      make.right.equalToSuperview().offset(-12)
+    }
+
+    let tokenLabel = BRLabel(
+      text: "Access Token: \(String(account.accessToken.prefix(40)))...",
+      font: NSFont.monospacedSystemFont(ofSize: 9, weight: .regular),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
+    tokenLabel.maximumNumberOfLines = 1
+    container.addSubview(tokenLabel)
+    tokenLabel.snp.makeConstraints { make in
+      make.left.equalTo(nameLabel)
+      make.top.equalTo(timestampLabel.snp.bottom).offset(3)
+      make.right.equalToSuperview().offset(-12)
+    }
+
+    let expiryTime = Date().timeIntervalSince1970 - account.timestamp
+    let hoursRemaining = max(0, 24 - Int(expiryTime / 3600))
+    let statusText = account.isExpired ? Localized.Account.statusExpired : Localized.Account.statusValid(hoursRemaining)
+    let statusLabel = BRLabel(
+      text: statusText,
+      font: .systemFont(ofSize: 10, weight: .medium),
+      textColor: account.isExpired ? .systemOrange : .systemGreen,
+      alignment: .left
+    )
+    container.addSubview(statusLabel)
+    statusLabel.snp.makeConstraints { make in
+      make.left.equalTo(nameLabel)
+      make.top.equalTo(tokenLabel.snp.bottom).offset(3)
+      make.right.equalToSuperview().offset(-12)
+    }
+  }
+
+  func addNormalModeInfo(to container: NSView, for account: MicrosoftAccount, below nameLabel: BRLabel) {
+    let uuidLabel = BRLabel(
+      text: "UUID: \(account.shortUUID)",
+      font: .systemFont(ofSize: 11),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
+    container.addSubview(uuidLabel)
+    uuidLabel.snp.makeConstraints { make in
+      make.left.equalTo(nameLabel)
+      make.top.equalTo(nameLabel.snp.bottom).offset(2)
+      make.right.equalToSuperview().offset(-12)
+    }
+
+    let statusLabel = BRLabel(
+      text: account.isExpired ? Localized.Account.statusExpired : Localized.Account.statusLoggedIn,
+      font: .systemFont(ofSize: 10),
+      textColor: account.isExpired ? .systemOrange : .systemGreen,
+      alignment: .left
+    )
+    container.addSubview(statusLabel)
+    statusLabel.snp.makeConstraints { make in
+      make.left.equalTo(nameLabel)
+      make.top.equalTo(uuidLabel.snp.bottom).offset(2)
+      make.right.equalToSuperview().offset(-12)
+    }
+  }
+}
+
 // MARK: - NSTableViewDataSource
 
 extension AccountViewController: NSTableViewDataSource {
@@ -354,24 +461,15 @@ extension AccountViewController: NSTableViewDelegate {
 
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
     let account = microsoftAccounts[row]
-
     let cellView = NSView()
-
-    // Container for better layout
-    let containerView = NSView()
-    containerView.wantsLayer = true
-    containerView.layer?.cornerRadius = 8
-    containerView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    let containerView = createContainerView()
     cellView.addSubview(containerView)
 
     containerView.snp.makeConstraints { make in
       make.edges.equalToSuperview().inset(NSEdgeInsets(top: 2, left: 4, bottom: 2, right: 4))
     }
 
-    // Icon
-    let iconView = NSImageView()
-    iconView.image = NSImage(systemSymbolName: "person.crop.circle.fill", accessibilityDescription: nil)
-    iconView.contentTintColor = .systemGreen
+    let iconView = createIconView()
     containerView.addSubview(iconView)
 
     iconView.snp.makeConstraints { make in
@@ -380,13 +478,7 @@ extension AccountViewController: NSTableViewDelegate {
       make.width.height.equalTo(36)
     }
 
-    // Name label
-    let nameLabel = BRLabel(
-      text: account.name,
-      font: .systemFont(ofSize: 14, weight: .medium),
-      textColor: .labelColor,
-      alignment: .left
-    )
+    let nameLabel = createNameLabel(for: account)
     containerView.addSubview(nameLabel)
 
     nameLabel.snp.makeConstraints { make in
@@ -396,112 +488,9 @@ extension AccountViewController: NSTableViewDelegate {
     }
 
     if isDeveloperMode {
-      // Developer Mode: Show detailed information
-
-      // Full UUID label
-      let fullUUIDLabel = BRLabel(
-        text: "UUID: \(account.id)",
-        font: .systemFont(ofSize: 10, weight: .regular),
-        textColor: .secondaryLabelColor,
-        alignment: .left
-      )
-      fullUUIDLabel.maximumNumberOfLines = 1
-      containerView.addSubview(fullUUIDLabel)
-
-      fullUUIDLabel.snp.makeConstraints { make in
-        make.left.equalTo(nameLabel)
-        make.top.equalTo(nameLabel.snp.bottom).offset(4)
-        make.right.equalToSuperview().offset(-12)
-      }
-
-      // Timestamp label
-      let dateFormatter = DateFormatter()
-      dateFormatter.dateStyle = .medium
-      dateFormatter.timeStyle = .short
-      let date = Date(timeIntervalSince1970: account.timestamp)
-      let timestampLabel = BRLabel(
-        text: Localized.Account.loginTime(dateFormatter.string(from: date)),
-        font: .systemFont(ofSize: 10),
-        textColor: .secondaryLabelColor,
-        alignment: .left
-      )
-      containerView.addSubview(timestampLabel)
-
-      timestampLabel.snp.makeConstraints { make in
-        make.left.equalTo(nameLabel)
-        make.top.equalTo(fullUUIDLabel.snp.bottom).offset(3)
-        make.right.equalToSuperview().offset(-12)
-      }
-
-      // Access Token label (truncated)
-      let truncatedToken = String(account.accessToken.prefix(40)) + "..."
-      let tokenLabel = BRLabel(
-        text: "Access Token: \(truncatedToken)",
-        font: NSFont.monospacedSystemFont(ofSize: 9, weight: .regular),
-        textColor: .secondaryLabelColor,
-        alignment: .left
-      )
-      tokenLabel.maximumNumberOfLines = 1
-      containerView.addSubview(tokenLabel)
-
-      tokenLabel.snp.makeConstraints { make in
-        make.left.equalTo(nameLabel)
-        make.top.equalTo(timestampLabel.snp.bottom).offset(3)
-        make.right.equalToSuperview().offset(-12)
-      }
-
-      // Status indicator
-      let expiryTime = Date().timeIntervalSince1970 - account.timestamp
-      let hoursRemaining = max(0, 24 - Int(expiryTime / 3600))
-      let statusText = account.isExpired
-        ? Localized.Account.statusExpired
-        : Localized.Account.statusValid(hoursRemaining)
-
-      let statusLabel = BRLabel(
-        text: statusText,
-        font: .systemFont(ofSize: 10, weight: .medium),
-        textColor: account.isExpired ? .systemOrange : .systemGreen,
-        alignment: .left
-      )
-      containerView.addSubview(statusLabel)
-
-      statusLabel.snp.makeConstraints { make in
-        make.left.equalTo(nameLabel)
-        make.top.equalTo(tokenLabel.snp.bottom).offset(3)
-        make.right.equalToSuperview().offset(-12)
-      }
+      addDeveloperModeInfo(to: containerView, for: account, below: nameLabel)
     } else {
-      // Normal Mode: Show basic information
-
-      // UUID label (short)
-      let uuidLabel = BRLabel(
-        text: "UUID: \(account.shortUUID)",
-        font: .systemFont(ofSize: 11),
-        textColor: .secondaryLabelColor,
-        alignment: .left
-      )
-      containerView.addSubview(uuidLabel)
-
-      uuidLabel.snp.makeConstraints { make in
-        make.left.equalTo(nameLabel)
-        make.top.equalTo(nameLabel.snp.bottom).offset(2)
-        make.right.equalToSuperview().offset(-12)
-      }
-
-      // Status indicator
-      let statusLabel = BRLabel(
-        text: account.isExpired ? Localized.Account.statusExpired : Localized.Account.statusLoggedIn,
-        font: .systemFont(ofSize: 10),
-        textColor: account.isExpired ? .systemOrange : .systemGreen,
-        alignment: .left
-      )
-      containerView.addSubview(statusLabel)
-
-      statusLabel.snp.makeConstraints { make in
-        make.left.equalTo(nameLabel)
-        make.top.equalTo(uuidLabel.snp.bottom).offset(2)
-        make.right.equalToSuperview().offset(-12)
-      }
+      addNormalModeInfo(to: containerView, for: account, below: nameLabel)
     }
 
     return cellView

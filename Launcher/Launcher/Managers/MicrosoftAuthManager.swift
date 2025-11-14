@@ -124,7 +124,9 @@ class MicrosoftAuthManager {
     let codeVerifier = generateCodeVerifier()
     let codeChallenge = generateCodeChallenge(from: codeVerifier)
 
-    var components = URLComponents(string: APIService.MicrosoftAuth.authorize)!
+    guard var components = URLComponents(string: APIService.MicrosoftAuth.authorize) else {
+      fatalError("Invalid Microsoft Auth URL configuration")
+    }
     components.queryItems = [
       URLQueryItem(name: "client_id", value: clientID),
       URLQueryItem(name: "response_type", value: "code"),
@@ -136,8 +138,12 @@ class MicrosoftAuthManager {
       URLQueryItem(name: "code_challenge_method", value: "S256"),
     ]
 
+    guard let url = components.url else {
+      fatalError("Failed to construct authorization URL")
+    }
+
     return SecureLoginData(
-      url: components.url!.absoluteString,
+      url: url.absoluteString,
       state: state,
       codeVerifier: codeVerifier
     )
@@ -173,7 +179,10 @@ class MicrosoftAuthManager {
 
   /// Exchanges authorization code for access token and refresh token
   func getAuthorizationToken(authCode: String, codeVerifier: String) async throws -> AuthorizationTokenResponse {
-    var request = URLRequest(url: URL(string: APIService.MicrosoftAuth.token)!)
+    guard let url = URL(string: APIService.MicrosoftAuth.token) else {
+      throw MicrosoftAuthError.invalidURL
+    }
+    var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
 
@@ -205,7 +214,9 @@ class MicrosoftAuthManager {
 
   /// Authenticates with Xbox Live using Microsoft access token
   func authenticateWithXBL(accessToken: String) async throws -> XBLResponse {
-    let url = URL(string: APIService.XboxLive.authenticate)!
+    guard let url = URL(string: APIService.XboxLive.authenticate) else {
+      throw MicrosoftAuthError.invalidURL
+    }
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -237,7 +248,9 @@ class MicrosoftAuthManager {
 
   /// Authenticates with XSTS using XBL token
   func authenticateWithXSTS(xblToken: String) async throws -> XBLResponse {
-    let url = URL(string: APIService.XboxLive.authorize)!
+    guard let url = URL(string: APIService.XboxLive.authorize) else {
+      throw MicrosoftAuthError.invalidURL
+    }
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -268,7 +281,9 @@ class MicrosoftAuthManager {
 
   /// Authenticates with Minecraft using XSTS token
   func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws -> MinecraftAuthResponse {
-    let url = URL(string: APIService.MinecraftServices.loginWithXbox)!
+    guard let url = URL(string: APIService.MinecraftServices.loginWithXbox) else {
+      throw MicrosoftAuthError.invalidURL
+    }
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -294,7 +309,9 @@ class MicrosoftAuthManager {
 
   /// Gets Minecraft profile using Minecraft access token
   func getProfile(accessToken: String) async throws -> MinecraftProfileResponse {
-    let url = URL(string: APIService.MinecraftServices.profile)!
+    guard let url = URL(string: APIService.MinecraftServices.profile) else {
+      throw MicrosoftAuthError.invalidURL
+    }
     var request = URLRequest(url: url)
     request.httpMethod = "GET"
     request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -350,7 +367,10 @@ class MicrosoftAuthManager {
 
   /// Refreshes authentication using refresh token
   func refreshAuthorizationToken(refreshToken: String) async throws -> AuthorizationTokenResponse {
-    var request = URLRequest(url: URL(string: APIService.MicrosoftAuth.refreshToken)!)
+    guard let url = URL(string: APIService.MicrosoftAuth.refreshToken) else {
+      throw MicrosoftAuthError.invalidURL
+    }
+    var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
 
