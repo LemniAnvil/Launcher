@@ -18,26 +18,26 @@ English | [简体中文](README.zh-CN.md)
 
 ## Table of Contents
 
-- [Features](#-features)
-- [Screenshots](#-screenshots)
-- [Quick Start](#-quick-start)
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Quick Start](#quick-start)
   - [Requirements](#requirements)
   - [Installation](#installation)
   - [Running the Project](#running-the-project)
-- [Project Structure](#-project-structure)
-- [Usage Guide](#-usage-guide)
+- [Project Structure](#project-structure)
+- [Usage Guide](#usage-guide)
   - [Test Window Features](#test-window-features)
   - [Version Selection](#version-selection)
-- [Technical Stack](#-technical-stack)
-- [Architecture](#-architecture)
-- [Download Information](#-download-information)
-- [Development](#-development)
-  - [Completed Features](#-completed-features)
-  - [Planned Features](#-planned-features)
-- [Documentation](#-documentation)
-- [Contributing](#-contributing)
-- [Troubleshooting](#-troubleshooting)
-- [License](#-license)
+  - [Proxy Configuration](#proxy-configuration)
+- [Technical Stack](#technical-stack)
+- [Architecture](#architecture)
+- [Download Information](#download-information)
+- [Development](#development)
+  - [Completed Features](#completed-features)
+  - [Planned Features](#planned-features)
+- [Contributing](#contributing)
+- [License](#license)
+- [Star History](#star-history)
 
 ---
 
@@ -63,16 +63,40 @@ English | [简体中文](README.zh-CN.md)
 
 ## Screenshots
 
-### Main Window
-The main window provides a clean interface to access the test functionality.
+### Instance Management
+The instance management interface provides functionality for creating, editing, and managing game instances.
 
-### Test Window
-The test window offers comprehensive testing capabilities with:
-- Version list with visual table view
-- Real-time download progress tracking
-- Detailed logging output
-- Proxy configuration panel
-- Version filtering options
+<img src="Resources/en/instances-overview.png" alt="Instance Management" width="800">
+
+*Instance list view showing all created Minecraft game instances*
+
+### New Instance
+Create new game instances through an intuitive dialog with version selection and custom configuration.
+
+<img src="Resources/en/new-instance-dialog.png" alt="New Instance Dialog" width="600">
+
+*New instance dialog for selecting game version and configuring instance parameters*
+
+### Java Detection
+Automatically detect installed Java runtime environments with support for multiple Java versions.
+
+<img src="Resources/en/java-detection.png" alt="Java Detection" width="700">
+
+*Java detection interface displaying all available Java versions*
+
+### Account Management
+Support for multiple account management, making it easy to switch between different Minecraft accounts.
+
+<img src="Resources/en/account-management.png" alt="Account Management" width="700">
+
+*Account management interface for adding, editing, and switching game accounts*
+
+### Settings
+Comprehensive settings interface providing various configuration options for the launcher.
+
+<img src="Resources/en/settings.png" alt="Settings" width="700">
+
+*Settings interface for configuring launcher parameters and preferences*
 
 ---
 
@@ -310,6 +334,9 @@ Configure network proxy to access Mojang services:
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+> **⚠️ Important Note**
+> The UI component library used in this project is not yet open source. If you would like to contribute to development, please contact me through [Issues](https://github.com/LemniAnvil/Launcher/issues) or other means.
+
 ### Guidelines
 
 1. Fork the repository
@@ -323,6 +350,12 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0) - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=LemniAnvil/Launcher&type=date&legend=top-left)](https://www.star-history.com/#LemniAnvil/Launcher&type=date&legend=top-left)
 
 ---
 

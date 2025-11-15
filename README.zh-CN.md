@@ -18,26 +18,26 @@
 
 ## 目录
 
-- [功能特性](#-功能特性)
-- [截图预览](#-截图预览)
-- [快速开始](#-快速开始)
+- [功能特性](#功能特性)
+- [截图预览](#截图预览)
+- [快速开始](#快速开始)
   - [系统要求](#系统要求)
   - [安装说明](#安装说明)
   - [运行项目](#运行项目)
-- [项目结构](#-项目结构)
-- [使用指南](#-使用指南)
+- [项目结构](#项目结构)
+- [使用指南](#使用指南)
   - [测试窗口功能](#测试窗口功能)
   - [版本选择](#版本选择)
-- [技术栈](#-技术栈)
-- [架构设计](#-架构设计)
-- [下载说明](#-下载说明)
-- [开发进度](#-开发进度)
-  - [已完成功能](#-已完成功能)
-  - [计划功能](#-计划功能)
-- [文档](#-文档)
-- [贡献指南](#-贡献指南)
-- [问题反馈](#-问题反馈)
-- [许可证](#-许可证)
+  - [代理配置](#代理配置)
+- [技术栈](#技术栈)
+- [架构设计](#架构设计)
+- [下载说明](#下载说明)
+- [开发进度](#开发进度)
+  - [已完成功能](#已完成功能)
+  - [计划功能](#计划功能)
+- [贡献指南](#贡献指南)
+- [许可证](#许可证)
+- [Star History](#star-history)
 
 ---
 
@@ -63,16 +63,40 @@
 
 ## 截图预览
 
-### 主窗口
-主窗口提供简洁的界面来访问测试功能。
+### 实例管理
+实例管理界面提供了游戏实例的创建、编辑和管理功能。
 
-### 测试窗口
-测试窗口提供全面的测试功能：
-- 版本列表视觉化表格视图
-- 实时下载进度追踪
-- 详细的日志输出
-- 代理配置面板
-- 版本筛选选项
+<img src="Resources/zh-CN/instances-overview.png" alt="实例管理界面" width="800">
+
+*实例列表界面，显示所有已创建的 Minecraft 游戏实例*
+
+### 新建实例
+通过直观的对话框创建新的游戏实例，支持选择版本和自定义配置。
+
+<img src="Resources/zh-CN/new-instance-dialog.png" alt="新建实例对话框" width="600">
+
+*新建实例对话框，可选择游戏版本并配置实例参数*
+
+### Java 环境检测
+自动检测系统中已安装的 Java 运行环境，支持多版本 Java 管理。
+
+<img src="Resources/zh-CN/java-detection.png" alt="Java 检测" width="700">
+
+*Java 环境检测界面，显示所有可用的 Java 版本*
+
+### 账户管理
+支持多账户管理，方便切换不同的 Minecraft 账户进行游戏。
+
+<img src="Resources/zh-CN/account-management.png" alt="账户管理" width="700">
+
+*账户管理界面，支持添加、编辑和切换游戏账户*
+
+### 设置中心
+全面的设置界面，提供启动器的各项配置选项。
+
+<img src="Resources/zh-CN/settings.png" alt="设置界面" width="700">
+
+*设置界面，可配置启动器的各项参数和偏好设置*
 
 ---
 
@@ -310,6 +334,9 @@ Launcher/
 
 欢迎贡献！请随时提交 Pull Request。
 
+> **⚠️ 重要提示**
+> 当前项目使用的 UI 组件库尚未开源。如果您希望参与开发，请通过 [Issues](https://github.com/LemniAnvil/Launcher/issues) 或其他方式与我联系。
+
 ### 指南
 
 1. Fork 仓库
@@ -323,6 +350,12 @@ Launcher/
 ## 许可证
 
 本项目基于 GNU Affero General Public License v3.0 (AGPL-3.0) - 详见 [LICENSE](LICENSE) 文件
+
+---
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=LemniAnvil/Launcher&type=date&legend=top-left)](https://www.star-history.com/#LemniAnvil/Launcher&type=date&legend=top-left)
 
 ---
 
