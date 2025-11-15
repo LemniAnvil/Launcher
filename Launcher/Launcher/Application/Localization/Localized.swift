@@ -506,6 +506,10 @@ enum Localized {
       String(localized: "Version \(versionId) is not installed.", comment: "[Error] Version not installed error.")
     }
 
+    static func errorVersionNotFound(_ versionId: String) -> String {
+      String(localized: "Version \(versionId) not found in version manifest.", comment: "[Error] Version not found in manifest error.")
+    }
+
     static func errorInstanceNotFound(_ id: String) -> String {
       String(localized: "Instance not found: \(id)", comment: "[Error] Instance not found error.")
     }
@@ -513,6 +517,39 @@ enum Localized {
     static func errorSaveFailed(_ reason: String) -> String {
       String(localized: "Failed to save instance: \(reason)", comment: "[Error] Save failed error.")
     }
+  }
+
+  // MARK: - Instance Detail
+  enum InstanceDetail {
+    // Window & Labels
+    static let windowTitle = String(localized: "Instance Details", comment: "[Text] Instance detail window title.")
+    static let configurationTitle = String(localized: "Configuration", comment: "[Text] Configuration section title.")
+
+    static let nameLabel = String(localized: "Name:", comment: "[Label] Instance name label.")
+    static let versionLabel = String(localized: "Version:", comment: "[Label] Version label.")
+    static let idLabel = String(localized: "ID:", comment: "[Label] Instance ID label.")
+    static let createdLabel = String(localized: "Created:", comment: "[Label] Created date label.")
+    static let modifiedLabel = String(localized: "Modified:", comment: "[Label] Last modified date label.")
+
+    static func versionInfo(_ version: String) -> String {
+      String(localized: "Minecraft \(version)", comment: "[Text] Version info format.")
+    }
+
+    // Buttons
+    static let editButton = String(localized: "Edit", comment: "[Button] Edit instance button.")
+    static let saveButton = String(localized: "Save", comment: "[Button] Save changes button.")
+    static let cancelButton = String(localized: "Cancel", comment: "[Button] Cancel edit button.")
+    static let openFolderButton = String(localized: "Open Folder", comment: "[Button] Open instance folder button.")
+    static let closeButton = String(localized: "Close", comment: "[Button] Close button.")
+    static let okButton = String(localized: "OK", comment: "[Button] OK button.")
+
+    // Errors
+    static let errorTitle = String(localized: "Error", comment: "[Alert] Error title.")
+    static let errorEmptyName = String(localized: "Instance name cannot be empty.", comment: "[Error] Empty name error.")
+
+    // Not Implemented
+    static let notImplementedTitle = String(localized: "Feature Not Yet Implemented", comment: "[Alert] Not implemented title.")
+    static let notImplementedMessage = String(localized: "Instance editing will be available in a future update.", comment: "[Alert] Not implemented message.")
   }
 
   // MARK: - Installed Versions

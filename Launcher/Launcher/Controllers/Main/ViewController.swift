@@ -14,12 +14,14 @@ class ViewController: NSViewController {
   private var accountWindowController: AccountWindowController?
   private var settingsWindowController: SettingsWindowController?
   private var addInstanceWindowController: AddInstanceWindowController?
+  private var instanceDetailWindowController: InstanceDetailWindowController?
   private var microsoftAuthWindowController: MicrosoftAuthWindowController?
   private var windowObserver: NSObjectProtocol?
   private var javaWindowObserver: NSObjectProtocol?
   private var accountWindowObserver: NSObjectProtocol?
   private var settingsWindowObserver: NSObjectProtocol?
   private var addInstanceWindowObserver: NSObjectProtocol?
+  private var instanceDetailWindowObserver: NSObjectProtocol?
   private var microsoftAuthWindowObserver: NSObjectProtocol?
 
   // Instance management
@@ -202,6 +204,11 @@ class ViewController: NSViewController {
     collectionView.delegate = self
 
     collectionView.menu = createContextMenu()
+
+    // Add double-click gesture
+    let doubleClickGesture = NSClickGestureRecognizer(target: self, action: #selector(handleDoubleClick(_:)))
+    doubleClickGesture.numberOfClicksRequired = 2
+    collectionView.addGestureRecognizer(doubleClickGesture)
 
     return collectionView
   }()
@@ -524,6 +531,17 @@ extension ViewController {
     loadInstances()
   }
 
+  @objc private func handleDoubleClick(_ sender: NSClickGestureRecognizer) {
+    let point = sender.location(in: collectionView)
+    guard let indexPath = collectionView.indexPathForItem(at: point),
+          indexPath.item < instances.count else {
+      return
+    }
+
+    let selectedInstance = instances[indexPath.item]
+    openInstanceDetailWindow(for: selectedInstance)
+  }
+
   @objc private func openAddInstanceWindow() {
     // If window already exists, show it
     if let existingController = addInstanceWindowController {
@@ -558,6 +576,44 @@ extension ViewController {
       if let observer = self?.addInstanceWindowObserver {
         NotificationCenter.default.removeObserver(observer)
         self?.addInstanceWindowObserver = nil
+      }
+    }
+  }
+
+  private func openInstanceDetailWindow(for instance: Instance) {
+    // If window already exists, close it first to create a new one with updated data
+    if let existingController = instanceDetailWindowController {
+      existingController.close()
+      instanceDetailWindowController = nil
+      if let observer = instanceDetailWindowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        instanceDetailWindowObserver = nil
+      }
+    }
+
+    // Create new instance detail window
+    instanceDetailWindowController = InstanceDetailWindowController(instance: instance)
+
+    // Setup callback
+    if let viewController = instanceDetailWindowController?.window?.contentViewController as? InstanceDetailViewController {
+      viewController.onClose = {
+        // Just close the window
+      }
+    }
+
+    instanceDetailWindowController?.showWindow(nil)
+    instanceDetailWindowController?.window?.makeKeyAndOrderFront(nil)
+
+    // Window close callback
+    instanceDetailWindowObserver = NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification,
+      object: instanceDetailWindowController?.window,
+      queue: .main
+    ) { [weak self] _ in
+      self?.instanceDetailWindowController = nil
+      if let observer = self?.instanceDetailWindowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        self?.instanceDetailWindowObserver = nil
       }
     }
   }
@@ -785,7 +841,9 @@ extension ViewController: NSCollectionViewDataSource {
 extension ViewController: NSCollectionViewDelegate {
 
   func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-    guard let indexPath = indexPaths.first else { return }
+    guard let indexPath = indexPaths.first,
+          indexPath.item < instances.count else { return }
+
     let selectedInstance = instances[indexPath.item]
     Logger.shared.info("Selected instance: \(selectedInstance.name)", category: "MainWindow")
   }

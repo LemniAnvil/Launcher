@@ -161,6 +161,17 @@
         }
       }
     },
+    "⚠️ Expired": {
+      "comment": "[Status] Token expired status.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ 已过期"
+          }
+        }
+      }
+    },
     "⚠️ Latest release not found, selected first item": {
       "comment": "[Log] Latest release not found.",
       "localizations": {
@@ -317,6 +328,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "✅ 版本列表窗口已初始化"
+          }
+        }
+      }
+    },
+    "✓ Logged In": {
+      "comment": "[Status] Logged in status.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "✓ 已登录"
+          }
+        }
+      }
+    },
+    "✓ Valid (%lld hours remaining)": {
+      "comment": "[Status] Token valid status with hours remaining.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "✓ 有效 (剩余 %lld 小时)"
           }
         }
       }
@@ -1174,6 +1207,17 @@
         }
       }
     },
+    "Account %@ has been refreshed": {
+      "comment": "[Alert] Account refresh success message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "账户 %@ 已刷新"
+          }
+        }
+      }
+    },
     "Account Management": {
       "comment": "[Button] Open account management window.\n[Text] Account management title.\n[Text] Account management window title.",
       "localizations": {
@@ -1273,6 +1317,17 @@
         }
       }
     },
+    "Are you sure you want to delete account %@?": {
+      "comment": "[Alert] Delete account confirmation message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确定要删除账户 %@ 吗？"
+          }
+        }
+      }
+    },
     "Are you sure you want to download %@?\nThis will download game core, libraries and assets.": {
       "comment": "[Alert] Confirm download message.",
       "localizations": {
@@ -1318,7 +1373,7 @@
       }
     },
     "Cancel": {
-      "comment": "[Button] Cancel button.\n[Button] Cancel login.",
+      "comment": "[Button] Cancel button.\n[Button] Cancel edit button.\n[Button] Cancel login.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1361,6 +1416,9 @@
         }
       }
     },
+    "Close": {
+      "comment": "[Button] Close button."
+    },
     "Completing Microsoft authentication...\nThis may take a few moments.": {
       "comment": "[Status] Completing login.",
       "localizations": {
@@ -1371,6 +1429,9 @@
           }
         }
       }
+    },
+    "Configuration": {
+      "comment": "[Text] Configuration section title."
     },
     "Configure application settings": {
       "comment": "[Text] Settings subtitle.",
@@ -1437,6 +1498,9 @@
           }
         }
       }
+    },
+    "Created:": {
+      "comment": "[Label] Created date label."
     },
     "Creating instance for version: %@": {
       "comment": "[Log] Creating instance for version.",
@@ -1566,6 +1630,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在检测 Java 安装..."
+          }
+        }
+      }
+    },
+    "Developer Mode": {
+      "comment": "[Label] Developer mode toggle label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "开发者模式"
           }
         }
       }
@@ -1719,6 +1794,9 @@
         }
       }
     },
+    "Edit": {
+      "comment": "[Button] Edit instance button."
+    },
     "Enable Proxy": {
       "comment": "[Checkbox] Enable proxy checkbox.",
       "localizations": {
@@ -1850,6 +1928,9 @@
           }
         }
       }
+    },
+    "Feature Not Yet Implemented": {
+      "comment": "[Alert] Not implemented title."
     },
     "File not found: %@": {
       "comment": "[Error] File not found.",
@@ -2005,6 +2086,9 @@
         }
       }
     },
+    "ID:": {
+      "comment": "[Label] Instance ID label."
+    },
     "Import": {
       "comment": "[Category] Import category.",
       "localizations": {
@@ -2070,6 +2154,12 @@
           }
         }
       }
+    },
+    "Instance Details": {
+      "comment": "[Text] Instance detail window title."
+    },
+    "Instance editing will be available in a future update.": {
+      "comment": "[Alert] Not implemented message."
     },
     "Instance ID: %@": {
       "comment": "[Log] Instance ID.",
@@ -2313,6 +2403,17 @@
         }
       }
     },
+    "Login Time: %@": {
+      "comment": "[Label] Login timestamp label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录时间: %@"
+          }
+        }
+      }
+    },
     "Manage offline mode usernames for quick launch": {
       "comment": "[Text] Account management subtitle.",
       "localizations": {
@@ -2401,6 +2502,9 @@
         }
       }
     },
+    "Minecraft %@": {
+      "comment": "[Text] Version info format."
+    },
     "Minecraft Launcher": {
       "comment": "[Text] Main window title label.\n[Text] Main window title.",
       "localizations": {
@@ -2422,6 +2526,9 @@
           }
         }
       }
+    },
+    "Modified:": {
+      "comment": "[Label] Last modified date label."
     },
     "Name:": {
       "comment": "[Label] Instance name label.",
@@ -2529,6 +2636,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "系统中未检测到 Java 安装。请安装 Java 以运行 Minecraft。"
+          }
+        }
+      }
+    },
+    "No Microsoft accounts\nClick the button above to sign in": {
+      "comment": "[Text] Empty state message for Microsoft accounts.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无微软账户\n点击上方按钮登录"
           }
         }
       }
@@ -2653,6 +2771,9 @@
           }
         }
       }
+    },
+    "Open Folder": {
+      "comment": "[Button] Open instance folder button."
     },
     "Open Version List": {
       "comment": "[Button] Open version list window.",
@@ -2891,17 +3012,6 @@
         }
       }
     },
-    "Ready to sign in": {
-      "comment": "[Status] Ready to sign in.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "准备登录"
-          }
-        }
-      }
-    },
     "Refresh": {
       "comment": "[Button] Refresh Java detection.\n[Button] Refresh button.\n[Button] Refresh instances list.\n[Button] Refresh versions list.",
       "localizations": {
@@ -2913,6 +3023,28 @@
         }
       }
     },
+    "Refresh Account": {
+      "comment": "[Menu] Refresh account menu item.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新账户"
+          }
+        }
+      }
+    },
+    "Refresh Failed": {
+      "comment": "[Alert] Refresh failed title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新失败"
+          }
+        }
+      }
+    },
     "Refresh failed: %@": {
       "comment": "[Status] Refresh failed with error.",
       "localizations": {
@@ -2920,6 +3052,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "刷新失败：%@"
+          }
+        }
+      }
+    },
+    "Refresh Successful": {
+      "comment": "[Alert] Refresh successful title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新成功"
           }
         }
       }
@@ -3001,6 +3144,9 @@
         }
       }
     },
+    "Save": {
+      "comment": "[Button] Save changes button."
+    },
     "Select a saved account to launch in offline mode.": {
       "comment": "[Text] Offline mode description.",
       "localizations": {
@@ -3056,6 +3202,17 @@
         }
       }
     },
+    "Sign in with Microsoft": {
+      "comment": "[Button] Sign in with Microsoft button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录微软账户"
+          }
+        }
+      }
+    },
     "Sign In with Microsoft": {
       "comment": "[Button] Start Microsoft login.",
       "localizations": {
@@ -3107,17 +3264,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "SOCKS5"
-          }
-        }
-      }
-    },
-    "Starting local callback server...": {
-      "comment": "[Status] Starting callback server.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在启动本地回调服务器..."
           }
         }
       }
@@ -3464,6 +3610,9 @@
         }
       }
     },
+    "Version %@ not found in version manifest.": {
+      "comment": "[Error] Version not found in manifest error."
+    },
     "Version %@ will be permanently deleted. This action cannot be undone.": {
       "comment": "[Alert] Delete confirmation message.",
       "localizations": {
@@ -3592,138 +3741,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "您的密码绝不会与此应用程序共享。认证由微软安全处理。"
-          }
-        }
-      }
-    },
-    "Sign in with Microsoft": {
-      "comment": "[Button] Sign in with Microsoft button.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录微软账户"
-          }
-        }
-      }
-    },
-    "No Microsoft accounts\nClick the button above to sign in": {
-      "comment": "[Text] Empty state message for Microsoft accounts.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暂无微软账户\n点击上方按钮登录"
-          }
-        }
-      }
-    },
-    "Developer Mode": {
-      "comment": "[Label] Developer mode toggle label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "开发者模式"
-          }
-        }
-      }
-    },
-    "Refresh Account": {
-      "comment": "[Menu] Refresh account menu item.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "刷新账户"
-          }
-        }
-      }
-    },
-    "Refresh Successful": {
-      "comment": "[Alert] Refresh successful title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "刷新成功"
-          }
-        }
-      }
-    },
-    "Account %@ has been refreshed": {
-      "comment": "[Alert] Account refresh success message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "账户 %@ 已刷新"
-          }
-        }
-      }
-    },
-    "Refresh Failed": {
-      "comment": "[Alert] Refresh failed title.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "刷新失败"
-          }
-        }
-      }
-    },
-    "Are you sure you want to delete account %@?": {
-      "comment": "[Alert] Delete account confirmation message.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "确定要删除账户 %@ 吗？"
-          }
-        }
-      }
-    },
-    "Login Time: %@": {
-      "comment": "[Label] Login timestamp label.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录时间: %@"
-          }
-        }
-      }
-    },
-    "⚠️ Expired": {
-      "comment": "[Status] Token expired status.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⚠️ 已过期"
-          }
-        }
-      }
-    },
-    "✓ Valid (%lld hours remaining)": {
-      "comment": "[Status] Token valid status with hours remaining.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✓ 有效 (剩余 %lld 小时)"
-          }
-        }
-      }
-    },
-    "✓ Logged In": {
-      "comment": "[Status] Logged in status.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✓ 已登录"
           }
         }
       }

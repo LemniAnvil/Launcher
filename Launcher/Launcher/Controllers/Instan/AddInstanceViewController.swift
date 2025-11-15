@@ -636,9 +636,8 @@ class AddInstanceViewController: NSViewController {
     if !versionItems.isEmpty && versionTableView.selectedRow < 0 {
       versionTableView.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
       selectedVersionId = versionItems[0].id
-      if nameTextField.stringValue.isEmpty {
-        nameTextField.stringValue = versionItems[0].id
-      }
+      // Auto-update name from first version
+      updateNameFromVersion(versionItems[0].id)
     }
   }
 
@@ -897,9 +896,13 @@ class AddInstanceViewController: NSViewController {
     }
 
     do {
+      // Get selected mod loader
+      let modLoaderString = selectedModLoader == .NONE ? nil : selectedModLoader.rawValue
+
       let instance = try instanceManager.createInstance(
         name: name,
-        versionId: selectedVersion
+        versionId: selectedVersion,
+        modLoader: modLoaderString
       )
       onInstanceCreated?(instance)
       view.window?.close()
@@ -943,10 +946,33 @@ extension AddInstanceViewController: NSTableViewDelegate {
       if row >= 0,
         let versionItem = versionDataSource?.itemIdentifier(forRow: row) {
         selectedVersionId = versionItem.id
-        if nameTextField.stringValue.isEmpty {
-          nameTextField.stringValue = versionItem.id
-        }
+        // Auto-update name field if it's empty or contains a previous version ID
+        updateNameFromVersion(versionItem.id)
       }
+    }
+  }
+
+  /// Update name field from selected version if appropriate
+  private func updateNameFromVersion(_ versionId: String) {
+    let currentName = nameTextField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+
+    // Update name if:
+    // 1. Name field is empty, OR
+    // 2. Current name matches a version ID pattern (likely auto-filled before)
+    //    Check against both current versionManager.versions and displayed version items
+    let isCurrentNameAVersionId: Bool
+    if let snapshot = versionDataSource?.snapshot() {
+      // Check if current name matches any version in the current table
+      isCurrentNameAVersionId = snapshot.itemIdentifiers.contains { $0.id == currentName }
+    } else {
+      // Fallback to checking versionManager.versions
+      isCurrentNameAVersionId = versionManager.versions.contains { $0.id == currentName }
+    }
+
+    let shouldUpdate = currentName.isEmpty || isCurrentNameAVersionId
+
+    if shouldUpdate {
+      nameTextField.stringValue = versionId
     }
   }
 
