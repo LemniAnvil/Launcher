@@ -91,7 +91,7 @@ class InstanceCellView: NSView {
 
   func configure(with instance: Instance) {
     nameLabel.stringValue = instance.name
-    versionLabel.stringValue = "Version: \(instance.versionId)"
+    versionLabel.stringValue = Localized.Instances.versionInfo(instance.versionId)
 
     // Determine version type color
     let versionId = instance.versionId

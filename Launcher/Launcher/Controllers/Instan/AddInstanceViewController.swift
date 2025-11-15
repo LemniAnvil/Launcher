@@ -19,8 +19,11 @@ class AddInstanceViewController: NSViewController {
 
   private let instanceManager = InstanceManager.shared
   private let versionManager = VersionManager.shared
+  private let modLoaderManager = ModLoaderManager.shared
   private var selectedVersionId: String?
   private var selectedModLoader: ModLoader = .NONE
+  private var selectedModLoaderVersion: String?
+  private var availableModLoaderVersions: [String] = []
 
   // MARK: - Enums & Models
 
@@ -106,6 +109,21 @@ class AddInstanceViewController: NSViewController {
     }
   }
 
+  // Loader version data model
+  struct LoaderVersionItem: Hashable {
+    let versionId: String
+
+    var id: String { versionId }
+
+    func hash(into hasher: inout Hasher) {
+      hasher.combine(versionId)
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+      return lhs.versionId == rhs.versionId
+    }
+  }
+
   enum ModLoader: String, CaseIterable {
     case NONE
     case neoForge
@@ -131,7 +149,6 @@ class AddInstanceViewController: NSViewController {
   // MARK: - DiffableDataSource
 
   private var categoryDataSource: NSTableViewDiffableDataSource<Section, InstanceCategory>?
-  private var versionDataSource: NSTableViewDiffableDataSource<Section, VersionItem>?
 
   // MARK: - UI Components
 
@@ -309,45 +326,48 @@ class AddInstanceViewController: NSViewController {
     return button
   }()
 
-  private let versionScrollView: NSScrollView = {
-    let scrollView = NSScrollView()
-    scrollView.hasVerticalScroller = true
-    scrollView.hasHorizontalScroller = false
-    scrollView.autohidesScrollers = true
-    scrollView.borderType = .bezelBorder
-    return scrollView
-  }()
+  private lazy var versionTableView: VersionTableView<VersionItem> = {
+    let columns: [VersionTableView<VersionItem>.ColumnConfig] = [
+      .init(
+        identifier: "VersionColumn",
+        title: Localized.AddInstance.columnVersion,
+        width: 120,
+        valueProvider: { $0.id },
+        fontProvider: { _ in .systemFont(ofSize: 12, weight: .medium) },
+        colorProvider: { _ in .labelColor }
+      ),
+      .init(
+        identifier: "ReleaseColumn",
+        title: Localized.AddInstance.columnRelease,
+        width: 120,
+        valueProvider: { $0.releaseDate },
+        fontProvider: { _ in .systemFont(ofSize: 12) },
+        colorProvider: { _ in .secondaryLabelColor }
+      ),
+      .init(
+        identifier: "TypeColumn",
+        title: Localized.AddInstance.columnType,
+        width: 100,
+        valueProvider: { $0.type },
+        fontProvider: { _ in .systemFont(ofSize: 12, weight: .semibold) },
+        colorProvider: { [weak self] item in
+          self?.getTypeColor(for: item.versionType) ?? .labelColor
+        }
+      )
+    ]
 
-  private lazy var versionTableView: NSTableView = {
-    let tableView = NSTableView()
-    tableView.style = .plain
-    tableView.rowHeight = 36
-    tableView.backgroundColor = .clear
-    tableView.selectionHighlightStyle = .regular
-    tableView.intercellSpacing = NSSize(width: 0, height: 0)
-    tableView.delegate = self
-
-    let versionColumn = NSTableColumn(
-      identifier: NSUserInterfaceItemIdentifier("VersionColumn")
+    let tableView = VersionTableView<VersionItem>(
+      columns: columns,
+      onSelectionChanged: { [weak self] item in
+        self?.selectedVersionId = item?.id
+        if let versionId = item?.id {
+          self?.updateNameFromVersion(versionId)
+          if self?.selectedModLoader != .NONE {
+            self?.loadModLoaderVersions()
+          }
+        }
+      }
     )
-    versionColumn.title = Localized.AddInstance.columnVersion
-    versionColumn.width = 120
-    tableView.addTableColumn(versionColumn)
-
-    let releaseColumn = NSTableColumn(
-      identifier: NSUserInterfaceItemIdentifier("ReleaseColumn")
-    )
-    releaseColumn.title = Localized.AddInstance.columnRelease
-    releaseColumn.width = 120
-    tableView.addTableColumn(releaseColumn)
-
-    let typeColumn = NSTableColumn(
-      identifier: NSUserInterfaceItemIdentifier("TypeColumn")
-    )
-    typeColumn.title = Localized.AddInstance.columnType
-    typeColumn.width = 100
-    tableView.addTableColumn(typeColumn)
-
     return tableView
   }()
 
@@ -356,9 +376,15 @@ class AddInstanceViewController: NSViewController {
       text: Localized.AddInstance.modLoaderTitle,
       font: .systemFont(ofSize: 14, weight: .semibold),
       textColor: .labelColor,
-      alignment: .center
+      alignment: .left
     )
     return label
+  }()
+
+  private let modLoaderSeparator: NSBox = {
+    let box = NSBox()
+    box.boxType = .separator
+    return box
   }()
 
   private let modLoaderPlaceholder: BRLabel = {
@@ -370,6 +396,59 @@ class AddInstanceViewController: NSViewController {
     )
     label.maximumNumberOfLines = 0
     return label
+  }()
+
+  private lazy var modLoaderDescriptionLabel: BRLabel = {
+    let label = BRLabel(
+      text: "Select a mod loader and version to enable mod support for this instance.",
+      font: .systemFont(ofSize: 11),
+      textColor: .tertiaryLabelColor,
+      alignment: .left
+    )
+    label.maximumNumberOfLines = 0
+    label.isHidden = true
+    return label
+  }()
+
+  private lazy var modLoaderVersionLabel: BRLabel = {
+    let label = BRLabel(
+      text: "Loader Version:",
+      font: .systemFont(ofSize: 12, weight: .medium),
+      textColor: .labelColor,
+      alignment: .left
+    )
+    label.isHidden = true
+    return label
+  }()
+
+  private lazy var modLoaderVersionTableView: VersionTableView<LoaderVersionItem> = {
+    let columns: [VersionTableView<LoaderVersionItem>.ColumnConfig] = [
+      .init(
+        identifier: "LoaderVersionColumn",
+        title: "Version",
+        width: 220,
+        valueProvider: { $0.id },
+        fontProvider: { _ in .systemFont(ofSize: 12) },
+        colorProvider: { _ in .labelColor }
+      )
+    ]
+
+    let tableView = VersionTableView<LoaderVersionItem>(
+      columns: columns,
+      onSelectionChanged: { [weak self] item in
+        self?.selectedModLoaderVersion = item?.id
+      }
+    )
+    tableView.isHidden = true
+    return tableView
+  }()
+
+  private lazy var modLoaderVersionLoadingIndicator: NSProgressIndicator = {
+    let indicator = NSProgressIndicator()
+    indicator.style = .spinning
+    indicator.controlSize = .small
+    indicator.isHidden = true
+    return indicator
   }()
 
   private lazy var modLoaderRadioButtons: [NSButton] = {
@@ -455,14 +534,6 @@ class AddInstanceViewController: NSViewController {
       guard let self = self else { return NSView() }
       return self.makeCategoryCell(for: category)
     }
-
-    // Setup version list DataSource
-    versionDataSource = NSTableViewDiffableDataSource<Section, VersionItem>(
-      tableView: versionTableView
-    ) { [weak self] _, tableColumn, _, versionItem in
-      guard let self = self else { return NSView() }
-      return self.makeVersionCell(for: versionItem, column: tableColumn)
-    }
   }
 
   // MARK: - Cell Factories
@@ -496,46 +567,6 @@ class AddInstanceViewController: NSViewController {
       make.left.equalTo(imageView.snp.right).offset(8)
       make.centerY.equalToSuperview()
       make.right.equalToSuperview().offset(-8)
-    }
-
-    return cellView
-  }
-
-  private func makeVersionCell(
-    for versionItem: VersionItem,
-    column: NSTableColumn?
-  ) -> NSView {
-    let cellView = NSTableCellView()
-
-    if column?.identifier.rawValue == "VersionColumn" {
-      let textField = NSTextField(labelWithString: versionItem.id)
-      textField.font = .systemFont(ofSize: 12, weight: .medium)
-      cellView.addSubview(textField)
-      textField.snp.makeConstraints { make in
-        make.left.equalToSuperview().offset(8)
-        make.centerY.equalToSuperview()
-        make.right.lessThanOrEqualToSuperview().offset(-8).priority(.high)
-      }
-    } else if column?.identifier.rawValue == "ReleaseColumn" {
-      let textField = NSTextField(labelWithString: versionItem.releaseDate)
-      textField.font = .systemFont(ofSize: 12)
-      textField.textColor = .secondaryLabelColor
-      cellView.addSubview(textField)
-      textField.snp.makeConstraints { make in
-        make.left.equalToSuperview().offset(8)
-        make.centerY.equalToSuperview()
-        make.right.lessThanOrEqualToSuperview().offset(-8).priority(.high)
-      }
-    } else if column?.identifier.rawValue == "TypeColumn" {
-      let textField = NSTextField(labelWithString: versionItem.type)
-      textField.font = .systemFont(ofSize: 12, weight: .semibold)
-      textField.textColor = getTypeColor(for: versionItem.versionType)
-      cellView.addSubview(textField)
-      textField.snp.makeConstraints { make in
-        make.left.equalToSuperview().offset(8)
-        make.centerY.equalToSuperview()
-        make.right.lessThanOrEqualToSuperview().offset(-8).priority(.high)
-      }
     }
 
     return cellView
@@ -623,18 +654,13 @@ class AddInstanceViewController: NSViewController {
       }
     }
 
-    // Convert to VersionItem and create snapshot
+    // Convert to VersionItem and update table
     let versionItems = versions.map { VersionItem(version: $0) }
-
-    var snapshot = NSDiffableDataSourceSnapshot<Section, VersionItem>()
-    snapshot.appendSections([.main])
-    snapshot.appendItems(versionItems, toSection: .main)
-
-    versionDataSource?.apply(snapshot, animatingDifferences: true)
+    versionTableView.updateItems(versionItems)
 
     // Select first item if available
-    if !versionItems.isEmpty && versionTableView.selectedRow < 0 {
-      versionTableView.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
+    if !versionItems.isEmpty, versionTableView.selectedItem == nil {
+      versionTableView.selectItem(at: 0)
       selectedVersionId = versionItems[0].id
       // Auto-update name from first version
       updateNameFromVersion(versionItems[0].id)
@@ -738,16 +764,19 @@ class AddInstanceViewController: NSViewController {
     customContentView.addSubview(betaCheckbox)
     customContentView.addSubview(alphaCheckbox)
     customContentView.addSubview(refreshButton)
-    customContentView.addSubview(versionScrollView)
+    customContentView.addSubview(versionTableView)
+    customContentView.addSubview(modLoaderSeparator)
     customContentView.addSubview(modLoaderLabel)
+    customContentView.addSubview(modLoaderDescriptionLabel)
     customContentView.addSubview(modLoaderPlaceholder)
+    customContentView.addSubview(modLoaderVersionLabel)
+    customContentView.addSubview(modLoaderVersionTableView)
+    customContentView.addSubview(modLoaderVersionLoadingIndicator)
     customContentView.addSubview(modLoaderRefreshButton)
 
     for button in modLoaderRadioButtons {
       customContentView.addSubview(button)
     }
-
-    versionScrollView.documentView = versionTableView
 
     versionTitleLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
@@ -785,17 +814,30 @@ class AddInstanceViewController: NSViewController {
       make.left.equalToSuperview().offset(10)
     }
 
-    versionScrollView.snp.makeConstraints { make in
+    versionTableView.snp.makeConstraints { make in
       make.top.equalTo(alphaCheckbox.snp.bottom).offset(12)
       make.left.equalToSuperview().offset(10)
-      make.right.equalToSuperview().offset(-290)
+      make.right.equalToSuperview().offset(-300)
       make.bottom.equalToSuperview().offset(-10)
+    }
+
+    modLoaderSeparator.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(10)
+      make.bottom.equalToSuperview().offset(-10)
+      make.right.equalToSuperview().offset(-280)
+      make.width.equalTo(1)
     }
 
     modLoaderLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
+      make.left.equalTo(modLoaderSeparator.snp.right).offset(20)
       make.right.equalToSuperview().offset(-10)
-      make.width.equalTo(270)
+    }
+
+    modLoaderDescriptionLabel.snp.makeConstraints { make in
+      make.top.equalTo(modLoaderLabel.snp.bottom).offset(4)
+      make.left.equalTo(modLoaderSeparator.snp.right).offset(20)
+      make.right.equalToSuperview().offset(-10)
     }
 
     modLoaderPlaceholder.snp.makeConstraints { make in
@@ -810,11 +852,35 @@ class AddInstanceViewController: NSViewController {
         if let previous = previousButton {
           make.top.equalTo(previous.snp.bottom).offset(8)
         } else {
-          make.top.equalTo(modLoaderLabel.snp.bottom).offset(16)
+          make.top.equalTo(modLoaderDescriptionLabel.snp.bottom).offset(16)
         }
-        make.right.equalToSuperview().offset(-30)
+        make.left.equalTo(modLoaderSeparator.snp.right).offset(20)
+        make.right.equalToSuperview().offset(-10)
       }
       previousButton = button
+    }
+
+    modLoaderVersionLabel.snp.makeConstraints { make in
+      if let lastButton = modLoaderRadioButtons.last {
+        make.top.equalTo(lastButton.snp.bottom).offset(20)
+      } else {
+        make.top.equalTo(modLoaderLabel.snp.bottom).offset(20)
+      }
+      make.left.equalTo(modLoaderSeparator.snp.right).offset(20)
+      make.right.equalToSuperview().offset(-10)
+    }
+
+    modLoaderVersionTableView.snp.makeConstraints { make in
+      make.top.equalTo(modLoaderVersionLabel.snp.bottom).offset(8)
+      make.left.equalTo(modLoaderSeparator.snp.right).offset(20)
+      make.right.equalToSuperview().offset(-10)
+      make.height.equalTo(200)
+    }
+
+    modLoaderVersionLoadingIndicator.snp.makeConstraints { make in
+      make.centerX.equalTo(modLoaderVersionTableView)
+      make.centerY.equalTo(modLoaderVersionTableView)
+      make.width.height.equalTo(16)
     }
 
     modLoaderRefreshButton.snp.makeConstraints { make in
@@ -867,6 +933,87 @@ class AddInstanceViewController: NSViewController {
     for (index, button) in modLoaderRadioButtons.enumerated() where button.state == .on {
       selectedModLoader = ModLoader.allCases[index]
       break
+    }
+
+    // Show/hide description label and placeholder
+    modLoaderDescriptionLabel.isHidden = (selectedModLoader == .NONE)
+    modLoaderPlaceholder.isHidden = (selectedModLoader != .NONE)
+
+    // Load mod loader versions when a mod loader is selected
+    if selectedModLoader != .NONE {
+      loadModLoaderVersions()
+    } else {
+      // Hide version selector when NONE is selected
+      modLoaderVersionLabel.isHidden = true
+      modLoaderVersionTableView.isHidden = true
+      modLoaderVersionTableView.updateItems([])
+      availableModLoaderVersions = []
+      selectedModLoaderVersion = nil
+    }
+  }
+
+  private func loadModLoaderVersions() {
+    guard let minecraftVersion = selectedVersionId,
+          selectedModLoader != .NONE else {
+      return
+    }
+
+    // Show loading indicator
+    modLoaderVersionLoadingIndicator.isHidden = false
+    modLoaderVersionLoadingIndicator.startAnimation(nil)
+    modLoaderVersionTableView.tableView.isEnabled = false
+
+    Task {
+      do {
+        let loader = try modLoaderManager.getModLoader(id: selectedModLoader.rawValue)
+        let versions = try await loader.getLoaderVersions(
+          minecraftVersion: minecraftVersion,
+          stableOnly: true
+        )
+
+        await MainActor.run {
+          self.availableModLoaderVersions = versions
+          let loaderItems = versions.map { LoaderVersionItem(versionId: $0) }
+
+          if !loaderItems.isEmpty {
+            self.modLoaderVersionTableView.updateItems(loaderItems)
+            self.modLoaderVersionTableView.selectItem(at: 0)
+            self.selectedModLoaderVersion = versions[0]
+            self.modLoaderVersionLabel.isHidden = false
+            self.modLoaderVersionTableView.isHidden = false
+          } else {
+            self.modLoaderVersionTableView.updateItems([])
+            self.selectedModLoaderVersion = nil
+            self.modLoaderVersionLabel.isHidden = false
+            self.modLoaderVersionTableView.isHidden = false
+          }
+
+          self.modLoaderVersionLoadingIndicator.stopAnimation(nil)
+          self.modLoaderVersionLoadingIndicator.isHidden = true
+          self.modLoaderVersionTableView.tableView.isEnabled = true
+        }
+      } catch {
+        await MainActor.run {
+          print("Failed to load mod loader versions: \(error)")
+          self.modLoaderVersionTableView.updateItems([])
+          self.modLoaderVersionLoadingIndicator.stopAnimation(nil)
+          self.modLoaderVersionLoadingIndicator.isHidden = true
+          self.modLoaderVersionTableView.tableView.isEnabled = false
+
+          // Show error alert
+          let alert = NSAlert()
+          alert.messageText = "Failed to Load Versions"
+          alert.informativeText = error.localizedDescription
+          alert.alertStyle = .warning
+          alert.addButton(withTitle: "OK")
+
+          if let window = self.view.window {
+            alert.beginSheetModal(for: window)
+          } else {
+            alert.runModal()
+          }
+        }
+      }
     }
   }
 
@@ -941,14 +1088,6 @@ extension AddInstanceViewController: NSTableViewDelegate {
         selectedCategory = category
         updateContentView()
       }
-    } else if notification.object as? NSTableView == versionTableView {
-      let row = versionTableView.selectedRow
-      if row >= 0,
-        let versionItem = versionDataSource?.itemIdentifier(forRow: row) {
-        selectedVersionId = versionItem.id
-        // Auto-update name field if it's empty or contains a previous version ID
-        updateNameFromVersion(versionItem.id)
-      }
     }
   }
 
@@ -959,15 +1098,8 @@ extension AddInstanceViewController: NSTableViewDelegate {
     // Update name if:
     // 1. Name field is empty, OR
     // 2. Current name matches a version ID pattern (likely auto-filled before)
-    //    Check against both current versionManager.versions and displayed version items
-    let isCurrentNameAVersionId: Bool
-    if let snapshot = versionDataSource?.snapshot() {
-      // Check if current name matches any version in the current table
-      isCurrentNameAVersionId = snapshot.itemIdentifiers.contains { $0.id == currentName }
-    } else {
-      // Fallback to checking versionManager.versions
-      isCurrentNameAVersionId = versionManager.versions.contains { $0.id == currentName }
-    }
+    //    Check if current name matches any version in the version manager
+    let isCurrentNameAVersionId = versionManager.versions.contains { $0.id == currentName }
 
     let shouldUpdate = currentName.isEmpty || isCurrentNameAVersionId
 
@@ -988,8 +1120,4 @@ extension String {
     let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
     return trimmed.isEmpty ? nil : trimmed
   }
-}
-
-#Preview {
-  AddInstanceViewController()
 }

@@ -517,6 +517,11 @@ enum Localized {
     static func errorSaveFailed(_ reason: String) -> String {
       String(localized: "Failed to save instance: \(reason)", comment: "[Error] Save failed error.")
     }
+
+    // Cell Display
+    static func versionInfo(_ versionId: String) -> String {
+      String(localized: "Version: \(versionId)", comment: "[Text] Instance version label.")
+    }
   }
 
   // MARK: - Instance Detail

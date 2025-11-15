@@ -1417,7 +1417,15 @@
       }
     },
     "Close": {
-      "comment": "[Button] Close button."
+      "comment": "[Button] Close button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关闭"
+          }
+        }
+      }
     },
     "Completing Microsoft authentication...\nThis may take a few moments.": {
       "comment": "[Status] Completing login.",
@@ -1431,7 +1439,15 @@
       }
     },
     "Configuration": {
-      "comment": "[Text] Configuration section title."
+      "comment": "[Text] Configuration section title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配置"
+          }
+        }
+      }
     },
     "Configure application settings": {
       "comment": "[Text] Settings subtitle.",
@@ -1500,7 +1516,15 @@
       }
     },
     "Created:": {
-      "comment": "[Label] Created date label."
+      "comment": "[Label] Created date label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "创建时间："
+          }
+        }
+      }
     },
     "Creating instance for version: %@": {
       "comment": "[Log] Creating instance for version.",
@@ -1795,7 +1819,15 @@
       }
     },
     "Edit": {
-      "comment": "[Button] Edit instance button."
+      "comment": "[Button] Edit instance button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "编辑"
+          }
+        }
+      }
     },
     "Enable Proxy": {
       "comment": "[Checkbox] Enable proxy checkbox.",
@@ -1930,7 +1962,15 @@
       }
     },
     "Feature Not Yet Implemented": {
-      "comment": "[Alert] Not implemented title."
+      "comment": "[Alert] Not implemented title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "功能尚未实现"
+          }
+        }
+      }
     },
     "File not found: %@": {
       "comment": "[Error] File not found.",
@@ -2087,7 +2127,15 @@
       }
     },
     "ID:": {
-      "comment": "[Label] Instance ID label."
+      "comment": "[Label] Instance ID label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ID："
+          }
+        }
+      }
     },
     "Import": {
       "comment": "[Category] Import category.",
@@ -2156,10 +2204,26 @@
       }
     },
     "Instance Details": {
-      "comment": "[Text] Instance detail window title."
+      "comment": "[Text] Instance detail window title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "实例详情"
+          }
+        }
+      }
     },
     "Instance editing will be available in a future update.": {
-      "comment": "[Alert] Not implemented message."
+      "comment": "[Alert] Not implemented message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "实例编辑功能将在未来更新中提供。"
+          }
+        }
+      }
     },
     "Instance ID: %@": {
       "comment": "[Log] Instance ID.",
@@ -2503,7 +2567,15 @@
       }
     },
     "Minecraft %@": {
-      "comment": "[Text] Version info format."
+      "comment": "[Text] Version info format.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minecraft %@"
+          }
+        }
+      }
     },
     "Minecraft Launcher": {
       "comment": "[Text] Main window title label.\n[Text] Main window title.",
@@ -2528,7 +2600,15 @@
       }
     },
     "Modified:": {
-      "comment": "[Label] Last modified date label."
+      "comment": "[Label] Last modified date label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "修改时间："
+          }
+        }
+      }
     },
     "Name:": {
       "comment": "[Label] Instance name label.",
@@ -2773,7 +2853,15 @@
       }
     },
     "Open Folder": {
-      "comment": "[Button] Open instance folder button."
+      "comment": "[Button] Open instance folder button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开文件夹"
+          }
+        }
+      }
     },
     "Open Version List": {
       "comment": "[Button] Open version list window.",
@@ -3145,7 +3233,15 @@
       }
     },
     "Save": {
-      "comment": "[Button] Save changes button."
+      "comment": "[Button] Save changes button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存"
+          }
+        }
+      }
     },
     "Select a saved account to launch in offline mode.": {
       "comment": "[Text] Offline mode description.",
@@ -3611,7 +3707,15 @@
       }
     },
     "Version %@ not found in version manifest.": {
-      "comment": "[Error] Version not found in manifest error."
+      "comment": "[Error] Version not found in manifest error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在版本清单中未找到版本 %@。"
+          }
+        }
+      }
     },
     "Version %@ will be permanently deleted. This action cannot be undone.": {
       "comment": "[Alert] Delete confirmation message.",
@@ -3713,7 +3817,7 @@
       }
     },
     "Version: %@": {
-      "comment": "[Log] Instance version.",
+      "comment": "[Log] Instance version.\n[Text] Instance version label.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
