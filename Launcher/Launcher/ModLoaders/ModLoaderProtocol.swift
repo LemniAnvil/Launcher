@@ -50,7 +50,7 @@ class ModLoaderManager {
             FabricModLoader(),
             ForgeModLoader(),
             NeoForgeModLoader(),
-            QuiltModLoader()
+            QuiltModLoader(),
         ]
     }
 

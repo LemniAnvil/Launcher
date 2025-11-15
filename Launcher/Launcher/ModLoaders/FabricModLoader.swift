@@ -85,5 +85,16 @@ private struct FabricGameVersion: Codable {
 
 private struct FabricLoaderVersion: Codable {
     let version: String
-    let stable: Bool?
+    let stable: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case version
+        case stable
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        version = try container.decode(String.self, forKey: .version)
+        stable = try container.decodeIfPresent(Bool.self, forKey: .stable) ?? false
+    }
 }

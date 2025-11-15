@@ -10,7 +10,9 @@ import Foundation
 /// NeoForge mod loader implementation
 class NeoForgeModLoader: ModLoaderProtocol {
     private let apiUrl = "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge"
-    private let versionRegex = try! NSRegularExpression(pattern: "^\\d+\\.\\d+")
+    private lazy var versionRegex: NSRegularExpression? = {
+        try? NSRegularExpression(pattern: "^\\d+\\.\\d+")
+    }()
 
     func getId() -> String {
         return "neoforge"
@@ -37,7 +39,8 @@ class NeoForgeModLoader: ModLoaderProtocol {
             }
 
             // Extract the Minecraft version part using regex
-            if let match = versionRegex.firstMatch(
+            guard let regex = versionRegex else { continue }
+            if let match = regex.firstMatch(
                 in: version,
                 range: NSRange(version.startIndex..., in: version)
             ) {
@@ -69,7 +72,8 @@ class NeoForgeModLoader: ModLoaderProtocol {
             }
 
             // Extract the Minecraft version part
-            if let match = versionRegex.firstMatch(
+            guard let regex = versionRegex else { continue }
+            if let match = regex.firstMatch(
                 in: version,
                 range: NSRange(version.startIndex..., in: version)
             ) {

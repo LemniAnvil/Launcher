@@ -353,7 +353,7 @@ class AddInstanceViewController: NSViewController {
         colorProvider: { [weak self] item in
           self?.getTypeColor(for: item.versionType) ?? .labelColor
         }
-      )
+      ),
     ]
 
     let tableView = VersionTableView<VersionItem>(
@@ -430,7 +430,7 @@ class AddInstanceViewController: NSViewController {
         valueProvider: { $0.id },
         fontProvider: { _ in .systemFont(ofSize: 12) },
         colorProvider: { _ in .labelColor }
-      )
+      ),
     ]
 
     let tableView = VersionTableView<LoaderVersionItem>(
@@ -1120,4 +1120,5 @@ extension String {
     let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
     return trimmed.isEmpty ? nil : trimmed
   }
+  // swiftlint:disable:next file_length
 }

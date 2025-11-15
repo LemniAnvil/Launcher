@@ -29,8 +29,8 @@ struct InstanceConfig {
   }
 
   /// Parse instance.cfg content
-  static func fromConfigString(_ content: String) -> InstanceConfig? {
-    var config = InstanceConfig(name: "")
+  static func fromConfigString(_ content: String) -> Self? {
+    var config = Self(name: "")
 
     let lines = content.components(separatedBy: .newlines)
     for line in lines {
@@ -75,9 +75,9 @@ struct MMCPack: Codable {
     var cachedName: String
     var cachedRequires: [MMCRequirement]?
     var cachedVersion: String
-    var cachedVolatile: Bool?
-    var dependencyOnly: Bool?
-    var important: Bool?
+    var cachedVolatile: Bool
+    var dependencyOnly: Bool
+    var important: Bool
     var uid: String
     var version: String
 
@@ -87,9 +87,9 @@ struct MMCPack: Codable {
       cachedName: String,
       cachedVersion: String,
       cachedRequires: [MMCRequirement]? = nil,
-      cachedVolatile: Bool? = nil,
-      dependencyOnly: Bool? = nil,
-      important: Bool? = nil
+      cachedVolatile: Bool = false,
+      dependencyOnly: Bool = false,
+      important: Bool = false
     ) {
       self.uid = uid
       self.version = version
@@ -115,7 +115,7 @@ struct MMCPack: Codable {
   }
 
   /// Create MMC pack for vanilla Minecraft
-  static func createVanillaPack(minecraftVersion: String) -> MMCPack {
+  static func createVanillaPack(minecraftVersion: String) -> Self {
     let components = [
       MMCComponent(
         uid: "net.minecraft",
@@ -126,10 +126,10 @@ struct MMCPack: Codable {
           MMCRequirement(uid: "org.lwjgl3", suggests: "3.3.1")
         ],
         important: true
-      )
+      ),
     ]
 
-    return MMCPack(formatVersion: 1, components: components)
+    return Self(formatVersion: 1, components: components)
   }
 
   /// Create MMC pack with mod loader
@@ -137,7 +137,7 @@ struct MMCPack: Codable {
     minecraftVersion: String,
     modLoader: String,
     modLoaderVersion: String
-  ) -> MMCPack {
+  ) -> Self {
     var components = [
       MMCComponent(
         uid: "net.minecraft",
@@ -148,7 +148,7 @@ struct MMCPack: Codable {
           MMCRequirement(uid: "org.lwjgl3", suggests: "3.3.1")
         ],
         important: true
-      )
+      ),
     ]
 
     // Add mod loader component
@@ -205,7 +205,7 @@ struct MMCPack: Codable {
       break
     }
 
-    return MMCPack(formatVersion: 1, components: components)
+    return Self(formatVersion: 1, components: components)
   }
 
   /// Encode to JSON string
@@ -217,11 +217,11 @@ struct MMCPack: Codable {
   }
 
   /// Decode from JSON string
-  static func fromJSONString(_ json: String) throws -> MMCPack {
+  static func fromJSONString(_ json: String) throws -> Self {
     guard let data = json.data(using: .utf8) else {
       throw NSError(domain: "MMCPack", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON string"])
     }
     let decoder = JSONDecoder()
-    return try decoder.decode(MMCPack.self, from: data)
+    return try decoder.decode(Self.self, from: data)
   }
 }

@@ -73,7 +73,8 @@ class VersionTableView<Item: Hashable>: NSView {
         identifier: NSUserInterfaceItemIdentifier(column.identifier)
       )
       tableColumn.title = column.title
-      tableColumn.width = column.width
+      tableColumn.width = max(column.width, 20) // Ensure minimum width
+      tableColumn.minWidth = 20 // Set minimum width to prevent negative values
       tableView.addTableColumn(tableColumn)
     }
 
@@ -94,6 +95,7 @@ class VersionTableView<Item: Hashable>: NSView {
     setupDelegate()
   }
 
+  @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -102,11 +104,13 @@ class VersionTableView<Item: Hashable>: NSView {
 
   private func setupUI() {
     addSubview(scrollView)
-    scrollView.documentView = tableView
 
     scrollView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
     }
+
+    // Set document view after constraints to ensure proper geometry
+    scrollView.documentView = tableView
   }
 
   private func setupDataSource() {
@@ -161,11 +165,13 @@ class VersionTableView<Item: Hashable>: NSView {
       cellView?.addSubview(textField)
       cellView?.textField = textField
 
-      NSLayoutConstraint.activate([
-        textField.leadingAnchor.constraint(equalTo: cellView!.leadingAnchor, constant: 8),
-        textField.centerYAnchor.constraint(equalTo: cellView!.centerYAnchor),
-        textField.trailingAnchor.constraint(lessThanOrEqualTo: cellView!.trailingAnchor, constant: -8)
-      ])
+      if let cellView = cellView {
+        NSLayoutConstraint.activate([
+          textField.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 8),
+          textField.centerYAnchor.constraint(equalTo: cellView.centerYAnchor),
+          textField.trailingAnchor.constraint(lessThanOrEqualTo: cellView.trailingAnchor, constant: -8),
+        ])
+      }
     }
 
     // Update cell content
