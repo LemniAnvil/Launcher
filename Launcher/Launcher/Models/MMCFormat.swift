@@ -9,22 +9,117 @@ import Foundation
 
 /// MMC instance configuration (instance.cfg)
 struct InstanceConfig {
+  // Basic info
   var name: String
   var iconKey: String = "default"
   var notes: String = ""
+  var instanceType: String = "OneSix"
+
+  // Time tracking
   var lastLaunchTime: Int64 = 0
   var totalTimePlayed: Int64 = 0
-  var instanceType: String = "OneSix"
+
+  // Java settings
+  var javaPath: String = ""
+  var jvmArgs: String = ""
+  var minMemAlloc: Int = 512  // MB
+  var maxMemAlloc: Int = 2048 // MB
+  var permGen: Int = 128      // MB (for older Java versions)
+
+  // Game window settings
+  var launchMaximized: Bool = false
+  var minecraftWinWidth: Int = 854
+  var minecraftWinHeight: Int = 480
+
+  // Pre/Post launch commands
+  var preLaunchCommand: String = ""
+  var postExitCommand: String = ""
+  var wrapperCommand: String = ""
+
+  // Game settings
+  var overrideCommands: Bool = false
+  var overrideConsole: Bool = false
+  var overrideJavaArgs: Bool = false
+  var overrideJavaLocation: Bool = false
+  var overrideMemory: Bool = false
+  var overrideWindow: Bool = false
+
+  // Misc
+  var logPrePostOutput: Bool = true
+  var autoCloseConsole: Bool = true
+  var showConsole: Bool = true
+  var showConsoleOnError: Bool = true
 
   /// Generate instance.cfg content
   func toConfigString() -> String {
     var lines: [String] = []
+    lines.append("[General]")
+    lines.append("ConfigVersion=1.2")
     lines.append("InstanceType=\(instanceType)")
-    lines.append("name=\(name)")
     lines.append("iconKey=\(iconKey)")
-    lines.append("notes=\(notes)")
-    lines.append("lastLaunchTime=\(lastLaunchTime)")
-    lines.append("totalTimePlayed=\(totalTimePlayed)")
+    lines.append("name=\(name)")
+
+    if !notes.isEmpty {
+      lines.append("notes=\(notes)")
+    }
+    if lastLaunchTime > 0 {
+      lines.append("lastLaunchTime=\(lastLaunchTime)")
+    }
+    if totalTimePlayed > 0 {
+      lines.append("totalTimePlayed=\(totalTimePlayed)")
+    }
+
+    // Java settings
+    if overrideJavaLocation && !javaPath.isEmpty {
+      lines.append("JavaPath=\(javaPath)")
+    }
+    if overrideJavaArgs && !jvmArgs.isEmpty {
+      lines.append("JvmArgs=\(jvmArgs)")
+    }
+    if overrideMemory {
+      lines.append("MinMemAlloc=\(minMemAlloc)")
+      lines.append("MaxMemAlloc=\(maxMemAlloc)")
+      lines.append("PermGen=\(permGen)")
+    }
+
+    // Window settings
+    if overrideWindow {
+      lines.append("LaunchMaximized=\(launchMaximized)")
+      if !launchMaximized {
+        lines.append("MinecraftWinWidth=\(minecraftWinWidth)")
+        lines.append("MinecraftWinHeight=\(minecraftWinHeight)")
+      }
+    }
+
+    // Commands
+    if overrideCommands {
+      if !preLaunchCommand.isEmpty {
+        lines.append("PreLaunchCommand=\(preLaunchCommand)")
+      }
+      if !postExitCommand.isEmpty {
+        lines.append("PostExitCommand=\(postExitCommand)")
+      }
+      if !wrapperCommand.isEmpty {
+        lines.append("WrapperCommand=\(wrapperCommand)")
+      }
+    }
+
+    // Console settings
+    if overrideConsole {
+      lines.append("LogPrePostOutput=\(logPrePostOutput)")
+      lines.append("AutoCloseConsole=\(autoCloseConsole)")
+      lines.append("ShowConsole=\(showConsole)")
+      lines.append("ShowConsoleOnError=\(showConsoleOnError)")
+    }
+
+    // Override flags
+    lines.append("OverrideCommands=\(overrideCommands)")
+    lines.append("OverrideConsole=\(overrideConsole)")
+    lines.append("OverrideJavaArgs=\(overrideJavaArgs)")
+    lines.append("OverrideJavaLocation=\(overrideJavaLocation)")
+    lines.append("OverrideMemory=\(overrideMemory)")
+    lines.append("OverrideWindow=\(overrideWindow)")
+
     return lines.joined(separator: "\n") + "\n"
   }
 
@@ -35,7 +130,8 @@ struct InstanceConfig {
     let lines = content.components(separatedBy: .newlines)
     for line in lines {
       let trimmed = line.trimmingCharacters(in: .whitespaces)
-      guard !trimmed.isEmpty, trimmed.contains("=") else { continue }
+      // Skip section headers and empty lines
+      guard !trimmed.isEmpty, !trimmed.hasPrefix("["), trimmed.contains("=") else { continue }
 
       let parts = trimmed.split(separator: "=", maxSplits: 1).map(String.init)
       guard parts.count == 2 else { continue }
@@ -44,6 +140,7 @@ struct InstanceConfig {
       let value = parts[1]
 
       switch key {
+      // Basic info
       case "name":
         config.name = value
       case "iconKey":
@@ -56,6 +153,59 @@ struct InstanceConfig {
         config.totalTimePlayed = Int64(value) ?? 0
       case "InstanceType":
         config.instanceType = value
+
+      // Java settings
+      case "JavaPath":
+        config.javaPath = value
+      case "JvmArgs":
+        config.jvmArgs = value
+      case "MinMemAlloc":
+        config.minMemAlloc = Int(value) ?? 512
+      case "MaxMemAlloc":
+        config.maxMemAlloc = Int(value) ?? 2048
+      case "PermGen":
+        config.permGen = Int(value) ?? 128
+
+      // Window settings
+      case "LaunchMaximized":
+        config.launchMaximized = value.lowercased() == "true"
+      case "MinecraftWinWidth":
+        config.minecraftWinWidth = Int(value) ?? 854
+      case "MinecraftWinHeight":
+        config.minecraftWinHeight = Int(value) ?? 480
+
+      // Commands
+      case "PreLaunchCommand":
+        config.preLaunchCommand = value
+      case "PostExitCommand":
+        config.postExitCommand = value
+      case "WrapperCommand":
+        config.wrapperCommand = value
+
+      // Console settings
+      case "LogPrePostOutput":
+        config.logPrePostOutput = value.lowercased() == "true"
+      case "AutoCloseConsole":
+        config.autoCloseConsole = value.lowercased() == "true"
+      case "ShowConsole":
+        config.showConsole = value.lowercased() == "true"
+      case "ShowConsoleOnError":
+        config.showConsoleOnError = value.lowercased() == "true"
+
+      // Override flags
+      case "OverrideCommands":
+        config.overrideCommands = value.lowercased() == "true"
+      case "OverrideConsole":
+        config.overrideConsole = value.lowercased() == "true"
+      case "OverrideJavaArgs":
+        config.overrideJavaArgs = value.lowercased() == "true"
+      case "OverrideJavaLocation":
+        config.overrideJavaLocation = value.lowercased() == "true"
+      case "OverrideMemory":
+        config.overrideMemory = value.lowercased() == "true"
+      case "OverrideWindow":
+        config.overrideWindow = value.lowercased() == "true"
+
       default:
         break
       }
@@ -123,7 +273,7 @@ struct MMCPack: Codable {
         cachedName: "Minecraft",
         cachedVersion: minecraftVersion,
         cachedRequires: [
-          MMCRequirement(uid: "org.lwjgl3", suggests: "3.3.1")
+          MMCRequirement(uid: "org.lwjgl3", suggests: "3.3.3")
         ],
         important: true
       ),
@@ -145,7 +295,7 @@ struct MMCPack: Codable {
         cachedName: "Minecraft",
         cachedVersion: minecraftVersion,
         cachedRequires: [
-          MMCRequirement(uid: "org.lwjgl3", suggests: "3.3.1")
+          MMCRequirement(uid: "org.lwjgl3", suggests: "3.3.3")
         ],
         important: true
       ),

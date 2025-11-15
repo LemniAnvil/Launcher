@@ -202,16 +202,6 @@ class AddInstanceViewController: NSViewController {
     return button
   }()
 
-  private let categoriesLabel: BRLabel = {
-    let label = BRLabel(
-      text: Localized.AddInstance.categoriesTitle,
-      font: .systemFont(ofSize: 16, weight: .semibold),
-      textColor: .labelColor,
-      alignment: .left
-    )
-    return label
-  }()
-
   private lazy var categoryTableView: NSTableView = {
     let tableView = NSTableView()
     tableView.rowHeight = 44
@@ -236,12 +226,27 @@ class AddInstanceViewController: NSViewController {
     scrollView.hasHorizontalScroller = false
     scrollView.autohidesScrollers = true
     scrollView.borderType = .noBorder
-    scrollView.drawsBackground = false
+    scrollView.drawsBackground = true
+    scrollView.backgroundColor = NSColor.controlBackgroundColor
+    scrollView.wantsLayer = true
+    scrollView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    scrollView.layer?.cornerRadius = 8
     return scrollView
+  }()
+
+  private let instanceInfoView: NSView = {
+    let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    view.layer?.cornerRadius = 8
+    return view
   }()
 
   private let customContentView: NSView = {
     let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    view.layer?.cornerRadius = 8
     return view
   }()
 
@@ -381,11 +386,7 @@ class AddInstanceViewController: NSViewController {
     return label
   }()
 
-  private let modLoaderSeparator: NSBox = {
-    let box = NSBox()
-    box.boxType = .separator
-    return box
-  }()
+  private let versionModLoaderSeparator: BRSeparator = BRSeparator(type: .horizontal)
 
   private let modLoaderPlaceholder: BRLabel = {
     let label = BRLabel(
@@ -417,7 +418,8 @@ class AddInstanceViewController: NSViewController {
       textColor: .labelColor,
       alignment: .left
     )
-    label.isHidden = true
+    // Show label initially (will display empty table when no mod loader selected)
+    label.isHidden = false
     return label
   }()
 
@@ -439,7 +441,8 @@ class AddInstanceViewController: NSViewController {
         self?.selectedModLoaderVersion = item?.id
       }
     )
-    tableView.isHidden = true
+    // Show table initially (empty when no mod loader selected)
+    tableView.isHidden = false
     return tableView
   }()
 
@@ -476,13 +479,20 @@ class AddInstanceViewController: NSViewController {
     return button
   }()
 
-  private lazy var helpButton: NSButton = {
-    let button = NSButton(
-      title: Localized.AddInstance.helpButton,
-      target: self,
-      action: #selector(showHelp)
+  private lazy var helpButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "questionmark.circle",
+      cornerRadius: 6,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemBlue,
+      accessibilityLabel: Localized.AddInstance.helpButton
     )
-    button.bezelStyle = .rounded
+    button.target = self
+    button.action = #selector(showHelp)
     return button
   }()
 
@@ -511,7 +521,7 @@ class AddInstanceViewController: NSViewController {
   // MARK: - Lifecycle
 
   override func loadView() {
-    self.view = NSView(frame: NSRect(x: 0, y: 0, width: 1000, height: 700))
+    self.view = NSView(frame: NSRect(x: 0, y: 0, width: 1000, height: 800))
     self.view.wantsLayer = true
   }
 
@@ -670,24 +680,67 @@ class AddInstanceViewController: NSViewController {
   // MARK: - Setup UI
 
   private func setupUI() {
-    view.addSubview(iconImageView)
-    view.addSubview(nameLabel)
-    view.addSubview(nameTextField)
-    view.addSubview(groupLabel)
-    view.addSubview(groupPopUpButton)
-    view.addSubview(categoriesLabel)
     view.addSubview(categoryScrollView)
+    view.addSubview(instanceInfoView)
     view.addSubview(customContentView)
     view.addSubview(helpButton)
     view.addSubview(cancelButton)
     view.addSubview(confirmButton)
 
     categoryScrollView.documentView = categoryTableView
+    setupInstanceInfoView()
     setupCustomContentView()
+
+    categoryScrollView.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(20)
+      make.left.equalToSuperview().offset(20)
+      make.width.equalTo(180)
+      make.bottom.equalTo(helpButton.snp.top).offset(-20)
+    }
+
+    instanceInfoView.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(20)
+      make.left.equalTo(categoryScrollView.snp.right).offset(20)
+      make.right.equalToSuperview().offset(-20)
+      make.height.equalTo(140)
+    }
+
+    customContentView.snp.makeConstraints { make in
+      make.top.equalTo(instanceInfoView.snp.bottom).offset(20)
+      make.left.equalTo(categoryScrollView.snp.right).offset(20)
+      make.right.equalToSuperview().offset(-20)
+      make.bottom.equalTo(cancelButton.snp.top).offset(-20)
+    }
+
+    helpButton.snp.makeConstraints { make in
+      make.bottom.equalToSuperview().offset(-20)
+      make.left.equalToSuperview().offset(20)
+      make.width.height.equalTo(32)
+    }
+
+    cancelButton.snp.makeConstraints { make in
+      make.bottom.equalToSuperview().offset(-20)
+      make.right.equalTo(confirmButton.snp.left).offset(-12)
+      make.width.equalTo(100)
+    }
+
+    confirmButton.snp.makeConstraints { make in
+      make.bottom.equalToSuperview().offset(-20)
+      make.right.equalToSuperview().offset(-20)
+      make.width.equalTo(100)
+    }
+  }
+
+  private func setupInstanceInfoView() {
+    instanceInfoView.addSubview(iconImageView)
+    instanceInfoView.addSubview(nameLabel)
+    instanceInfoView.addSubview(nameTextField)
+    instanceInfoView.addSubview(groupLabel)
+    instanceInfoView.addSubview(groupPopUpButton)
 
     iconImageView.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
-      make.left.equalToSuperview().offset(220)
+      make.left.equalToSuperview().offset(20)
       make.width.height.equalTo(100)
     }
 
@@ -716,44 +769,6 @@ class AddInstanceViewController: NSViewController {
       make.right.equalToSuperview().offset(-20)
       make.height.equalTo(24)
     }
-
-    categoriesLabel.snp.makeConstraints { make in
-      make.top.equalTo(iconImageView.snp.bottom).offset(20)
-      make.left.equalToSuperview().offset(20)
-      make.width.equalTo(180)
-    }
-
-    categoryScrollView.snp.makeConstraints { make in
-      make.top.equalTo(categoriesLabel.snp.bottom).offset(8)
-      make.left.equalToSuperview().offset(20)
-      make.width.equalTo(180)
-      make.bottom.equalTo(helpButton.snp.top).offset(-20)
-    }
-
-    customContentView.snp.makeConstraints { make in
-      make.top.equalTo(groupLabel.snp.bottom).offset(20)
-      make.left.equalTo(categoryScrollView.snp.right).offset(20)
-      make.right.equalToSuperview().offset(-20)
-      make.bottom.equalTo(cancelButton.snp.top).offset(-20)
-    }
-
-    helpButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-20)
-      make.left.equalToSuperview().offset(20)
-      make.width.equalTo(80)
-    }
-
-    cancelButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-20)
-      make.right.equalTo(confirmButton.snp.left).offset(-12)
-      make.width.equalTo(100)
-    }
-
-    confirmButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-20)
-      make.right.equalToSuperview().offset(-20)
-      make.width.equalTo(100)
-    }
   }
 
   private func setupCustomContentView() {
@@ -765,7 +780,7 @@ class AddInstanceViewController: NSViewController {
     customContentView.addSubview(alphaCheckbox)
     customContentView.addSubview(refreshButton)
     customContentView.addSubview(versionTableView)
-    customContentView.addSubview(modLoaderSeparator)
+    customContentView.addSubview(versionModLoaderSeparator)
     customContentView.addSubview(modLoaderLabel)
     customContentView.addSubview(modLoaderDescriptionLabel)
     customContentView.addSubview(modLoaderPlaceholder)
@@ -778,72 +793,80 @@ class AddInstanceViewController: NSViewController {
       customContentView.addSubview(button)
     }
 
+    // Version section (top half) - Filters on left, Table on right
     versionTitleLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
       make.left.equalToSuperview().offset(10)
     }
 
     refreshButton.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(10)
-      make.right.equalToSuperview().offset(-290)
+      make.top.equalTo(alphaCheckbox.snp.bottom).offset(12)
+      make.left.equalToSuperview().offset(10)
       make.width.height.equalTo(32)
     }
 
     filterLabel.snp.makeConstraints { make in
       make.top.equalTo(versionTitleLabel.snp.bottom).offset(12)
       make.left.equalToSuperview().offset(10)
+      make.width.equalTo(120)
     }
 
     releaseCheckbox.snp.makeConstraints { make in
       make.top.equalTo(filterLabel.snp.bottom).offset(8)
       make.left.equalToSuperview().offset(10)
+      make.width.equalTo(120)
     }
 
     snapshotCheckbox.snp.makeConstraints { make in
       make.top.equalTo(releaseCheckbox.snp.bottom).offset(6)
       make.left.equalToSuperview().offset(10)
+      make.width.equalTo(120)
     }
 
     betaCheckbox.snp.makeConstraints { make in
       make.top.equalTo(snapshotCheckbox.snp.bottom).offset(6)
       make.left.equalToSuperview().offset(10)
+      make.width.equalTo(120)
     }
 
     alphaCheckbox.snp.makeConstraints { make in
       make.top.equalTo(betaCheckbox.snp.bottom).offset(6)
       make.left.equalToSuperview().offset(10)
+      make.width.equalTo(120)
     }
 
     versionTableView.snp.makeConstraints { make in
-      make.top.equalTo(alphaCheckbox.snp.bottom).offset(12)
-      make.left.equalToSuperview().offset(10)
-      make.right.equalToSuperview().offset(-300)
-      make.bottom.equalToSuperview().offset(-10)
-    }
-
-    modLoaderSeparator.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(10)
-      make.bottom.equalToSuperview().offset(-10)
-      make.right.equalToSuperview().offset(-280)
-      make.width.equalTo(1)
-    }
-
-    modLoaderLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(10)
-      make.left.equalTo(modLoaderSeparator.snp.right).offset(20)
+      make.top.equalTo(versionTitleLabel.snp.bottom).offset(12)
+      make.left.equalToSuperview().offset(150)
       make.right.equalToSuperview().offset(-10)
+      make.height.equalTo(250)  // Fixed height for version list
+    }
+
+    // Horizontal separator between version and mod loader sections
+    versionModLoaderSeparator.snp.makeConstraints { make in
+      make.top.equalTo(versionTableView.snp.bottom).offset(10)
+      make.left.equalToSuperview().offset(10)
+      make.right.equalToSuperview().offset(-10)
+      make.height.equalTo(1)
+    }
+
+    // Mod Loader section (bottom half) - Options on left, Table on right
+    modLoaderLabel.snp.makeConstraints { make in
+      make.top.equalTo(versionModLoaderSeparator.snp.bottom).offset(10)
+      make.left.equalToSuperview().offset(10)
+      make.width.equalTo(200)
     }
 
     modLoaderDescriptionLabel.snp.makeConstraints { make in
       make.top.equalTo(modLoaderLabel.snp.bottom).offset(4)
-      make.left.equalTo(modLoaderSeparator.snp.right).offset(20)
-      make.right.equalToSuperview().offset(-10)
+      make.left.equalToSuperview().offset(10)
+      make.width.equalTo(200)
     }
 
     modLoaderPlaceholder.snp.makeConstraints { make in
-      make.centerX.equalTo(modLoaderLabel)
-      make.centerY.equalToSuperview()
-      make.width.equalTo(220)
+      make.centerX.equalTo(modLoaderVersionTableView)
+      make.centerY.equalTo(modLoaderVersionTableView)
+      make.width.equalTo(240)
     }
 
     var previousButton: NSButton?
@@ -854,27 +877,23 @@ class AddInstanceViewController: NSViewController {
         } else {
           make.top.equalTo(modLoaderDescriptionLabel.snp.bottom).offset(16)
         }
-        make.left.equalTo(modLoaderSeparator.snp.right).offset(20)
-        make.right.equalToSuperview().offset(-10)
+        make.left.equalToSuperview().offset(10)
+        make.width.equalTo(200)
       }
       previousButton = button
     }
 
     modLoaderVersionLabel.snp.makeConstraints { make in
-      if let lastButton = modLoaderRadioButtons.last {
-        make.top.equalTo(lastButton.snp.bottom).offset(20)
-      } else {
-        make.top.equalTo(modLoaderLabel.snp.bottom).offset(20)
-      }
-      make.left.equalTo(modLoaderSeparator.snp.right).offset(20)
+      make.top.equalTo(versionModLoaderSeparator.snp.bottom).offset(10)
+      make.left.equalToSuperview().offset(150)
       make.right.equalToSuperview().offset(-10)
     }
 
     modLoaderVersionTableView.snp.makeConstraints { make in
       make.top.equalTo(modLoaderVersionLabel.snp.bottom).offset(8)
-      make.left.equalTo(modLoaderSeparator.snp.right).offset(20)
+      make.left.equalToSuperview().offset(150)
       make.right.equalToSuperview().offset(-10)
-      make.height.equalTo(200)
+      make.bottom.equalToSuperview().offset(-10)
     }
 
     modLoaderVersionLoadingIndicator.snp.makeConstraints { make in
@@ -884,8 +903,8 @@ class AddInstanceViewController: NSViewController {
     }
 
     modLoaderRefreshButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-10)
-      make.right.equalToSuperview().offset(-10)
+      make.top.equalTo(modLoaderRadioButtons.last!.snp.bottom).offset(12)
+      make.left.equalToSuperview().offset(10)
       make.width.equalTo(100)
     }
   }
@@ -943,9 +962,9 @@ class AddInstanceViewController: NSViewController {
     if selectedModLoader != .NONE {
       loadModLoaderVersions()
     } else {
-      // Hide version selector when NONE is selected
-      modLoaderVersionLabel.isHidden = true
-      modLoaderVersionTableView.isHidden = true
+      // Show empty version table when NONE is selected (don't hide it)
+      modLoaderVersionLabel.isHidden = false
+      modLoaderVersionTableView.isHidden = false
       modLoaderVersionTableView.updateItems([])
       availableModLoaderVersions = []
       selectedModLoaderVersion = nil
@@ -1018,7 +1037,7 @@ class AddInstanceViewController: NSViewController {
   }
 
   @objc private func showHelp() {
-    guard let url = URL(string: "https://minecraft.wiki") else { return }
+    guard let url = URL(string: "https://github.com/LemniAnvil/Launcher/wiki") else { return }
     NSWorkspace.shared.open(url)
   }
 
