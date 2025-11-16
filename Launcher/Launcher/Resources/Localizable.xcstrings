@@ -111,6 +111,17 @@
         }
       }
     },
+    "(Offline)": {
+      "comment": "[Text] Offline account suffix.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "（离线）"
+          }
+        }
+      }
+    },
     "%lld installed versions": {
       "comment": "[Text] Multiple installed versions count.",
       "localizations": {
@@ -2468,7 +2479,7 @@
       }
     },
     "Launch Game": {
-      "comment": "[Menu] Launch game.",
+      "comment": "[Menu] Launch game.\n[Text] Launch game title.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2546,6 +2557,7 @@
     },
     "Manual Input...": {
       "comment": "[Option] Manual input option.",
+      "extractionState": "stale",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2797,17 +2809,6 @@
         }
       }
     },
-    "Please select a mod loader first": {
-      "comment": "[Text] Mod loader version placeholder when no loader selected.",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请先选择 Mod 加载器"
-          }
-        }
-      }
-    },
     "No offline accounts\nClick the button above to add an offline account": {
       "comment": "[Text] Empty state message for offline accounts.",
       "localizations": {
@@ -2821,11 +2822,23 @@
     },
     "No saved accounts": {
       "comment": "[Message] No saved accounts message.",
+      "extractionState": "stale",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "没有保存的账号"
+          }
+        }
+      }
+    },
+    "No saved accounts found. Please add an account first.": {
+      "comment": "[Message] No saved accounts message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到已保存的账号。请先添加一个账号。"
           }
         }
       }
@@ -2920,6 +2933,7 @@
     },
     "Offline Launch": {
       "comment": "[Text] Offline launch window title.",
+      "extractionState": "stale",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2931,6 +2945,7 @@
     },
     "Offline Mode": {
       "comment": "[Text] Offline mode title.",
+      "extractionState": "stale",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3006,6 +3021,17 @@
         }
       }
     },
+    "Please select a mod loader first": {
+      "comment": "[Text] Mod loader version placeholder when no loader selected.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请先选择 Mod 加载器"
+          }
+        }
+      }
+    },
     "Please select a version.": {
       "comment": "[Error] No version selected error.",
       "localizations": {
@@ -3013,6 +3039,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "请选择一个版本。"
+          }
+        }
+      }
+    },
+    "Please select an account first": {
+      "comment": "[Alert] No account selected error.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请先选择一个账号"
           }
         }
       }
@@ -3355,11 +3392,23 @@
     },
     "Select a saved account to launch in offline mode.": {
       "comment": "[Text] Offline mode description.",
+      "extractionState": "stale",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "选择已保存的账号以离线模式启动。"
+          }
+        }
+      }
+    },
+    "Select Account": {
+      "comment": "[Text] Account selection window title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择账号"
           }
         }
       }
@@ -3371,6 +3420,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "选择账号："
+          }
+        }
+      }
+    },
+    "Select an account to launch the game.": {
+      "comment": "[Text] Account selection description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择一个账号来启动游戏。"
           }
         }
       }

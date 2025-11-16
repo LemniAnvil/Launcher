@@ -76,8 +76,8 @@ class InstanceManager: ObservableObject {
   func deleteInstance(_ instance: Instance) throws {
     logger.info("Deleting instance: \(instance.id)", category: "InstanceManager")
 
-    // Remove instance directory
-    let instanceDir = instancesDirectory.appendingPathComponent(instance.id)
+    // Remove instance directory (use instance.name as directory name, not instance.id)
+    let instanceDir = instancesDirectory.appendingPathComponent(instance.name)
     if FileManager.default.fileExists(atPath: instanceDir.path) {
       try FileManager.default.removeItem(at: instanceDir)
     }

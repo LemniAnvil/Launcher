@@ -584,14 +584,14 @@ extension ViewController {
     // Show offline launch window
     let windowController = OfflineLaunchWindowController()
     if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
-      viewController.onLaunch = { [weak self] username in
-        self?.performLaunch(instance: instance, username: username)
+      viewController.onLaunch = { [weak self] accountInfo in
+        self?.performLaunch(instance: instance, accountInfo: accountInfo)
       }
     }
     windowController.showWindow(nil)
   }
 
-  func performLaunch(instance: Instance, username: String) {
+  func performLaunch(instance: Instance, accountInfo: OfflineLaunchViewController.AccountInfo) {
     Task { @MainActor in
       do {
         Logger.shared.info(Localized.GameLauncher.logLaunchingVersion(instance.versionId), category: "MainWindow")
@@ -613,11 +613,17 @@ extension ViewController {
           category: "MainWindow"
         )
 
-        // Create launch configuration with username
-        let config = GameLauncher.LaunchConfig.default(
+        // Create launch configuration with account info
+        let config = GameLauncher.LaunchConfig(
           versionId: instance.versionId,
           javaPath: javaInstallation.path,
-          username: username
+          username: accountInfo.username,
+          uuid: accountInfo.uuid,
+          accessToken: accountInfo.accessToken,
+          maxMemory: 2048,
+          minMemory: 512,
+          windowWidth: 854,
+          windowHeight: 480
         )
 
         // Launch game
@@ -629,7 +635,7 @@ extension ViewController {
         // Show success notification
         showNotification(
           title: Localized.GameLauncher.statusLaunched,
-          message: "Instance: \(instance.name), Version: \(instance.versionId), User: \(username)"
+          message: "Instance: \(instance.name), Version: \(instance.versionId), User: \(accountInfo.username)"
         )
       } catch {
         Logger.shared.error(

@@ -14,7 +14,7 @@ class OfflineLaunchWindowController: NSWindowController {
 
   convenience init() {
     let window = NSWindow(
-      contentRect: NSRect(x: 0, y: 0, width: 400, height: 250),
+      contentRect: NSRect(x: 0, y: 0, width: 400, height: 400),
       styleMask: [.titled, .closable],
       backing: .buffered,
       defer: false
@@ -34,8 +34,18 @@ class OfflineLaunchViewController: NSViewController {
 
   // MARK: - Properties
 
-  var onLaunch: ((String) -> Void)?
-  private var username: String = ""
+  struct AccountInfo {
+    let username: String
+    let uuid: String
+    let accessToken: String
+  }
+
+  var onLaunch: ((AccountInfo) -> Void)?
+  private var microsoftAccounts: [MicrosoftAccount] = []
+  private var offlineAccounts: [OfflineAccount] = []
+  private let accountManager = MicrosoftAccountManager.shared
+  private let offlineAccountManager = OfflineAccountManager.shared
+  private var selectedAccountInfo: AccountInfo?
 
   // UI components
   private let titleLabel: BRLabel = {
@@ -59,9 +69,9 @@ class OfflineLaunchViewController: NSViewController {
     return label
   }()
 
-  private let usernameLabel: BRLabel = {
+  private let accountLabel: BRLabel = {
     let label = BRLabel(
-      text: Localized.OfflineLaunch.usernameLabel,
+      text: Localized.OfflineLaunch.selectAccountLabel,
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
       alignment: .left
@@ -69,12 +79,44 @@ class OfflineLaunchViewController: NSViewController {
     return label
   }()
 
-  private lazy var usernameField: NSTextField = {
-    let field = NSTextField()
-    field.placeholderString = Localized.OfflineLaunch.usernamePlaceholder
-    field.font = .systemFont(ofSize: 13)
-    field.delegate = self
-    return field
+  private let scrollView: NSScrollView = {
+    let scrollView = NSScrollView()
+    scrollView.hasVerticalScroller = true
+    scrollView.hasHorizontalScroller = false
+    scrollView.autohidesScrollers = true
+    scrollView.borderType = .bezelBorder
+    scrollView.scrollerStyle = .overlay
+    return scrollView
+  }()
+
+  private lazy var tableView: NSTableView = {
+    let tableView = NSTableView()
+    tableView.style = .plain
+    tableView.rowHeight = 44
+    tableView.headerView = nil
+    tableView.backgroundColor = .clear
+    tableView.selectionHighlightStyle = .regular
+    tableView.usesAlternatingRowBackgroundColors = false
+    tableView.dataSource = self
+    tableView.delegate = self
+
+    let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("AccountColumn"))
+    column.width = 300
+    tableView.addTableColumn(column)
+
+    return tableView
+  }()
+
+  private let emptyLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.OfflineLaunch.noAccountsMessage,
+      font: .systemFont(ofSize: 13),
+      textColor: .secondaryLabelColor,
+      alignment: .center
+    )
+    label.maximumNumberOfLines = 0
+    label.isHidden = true
+    return label
   }()
 
   private lazy var launchButton: NSButton = {
@@ -104,19 +146,23 @@ class OfflineLaunchViewController: NSViewController {
   // MARK: - Lifecycle
 
   override func loadView() {
-    self.view = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 250))
+    self.view = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 400))
     self.view.wantsLayer = true
   }
 
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
-    loadSavedUsername()
+    loadAccounts()
   }
 
   override func viewDidAppear() {
     super.viewDidAppear()
-    view.window?.makeFirstResponder(usernameField)
+    // Select first account if available
+    if tableView.numberOfRows > 0 {
+      tableView.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
+      updateSelectedAccount()
+    }
   }
 
   // MARK: - Setup
@@ -124,11 +170,14 @@ class OfflineLaunchViewController: NSViewController {
   private func setupUI() {
     view.addSubview(titleLabel)
     view.addSubview(descriptionLabel)
-    view.addSubview(usernameLabel)
-    view.addSubview(usernameField)
+    view.addSubview(accountLabel)
+    view.addSubview(scrollView)
+    view.addSubview(emptyLabel)
     view.addSubview(separator)
     view.addSubview(launchButton)
     view.addSubview(cancelButton)
+
+    scrollView.documentView = tableView
 
     titleLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
@@ -140,15 +189,20 @@ class OfflineLaunchViewController: NSViewController {
       make.left.right.equalToSuperview().inset(20)
     }
 
-    usernameLabel.snp.makeConstraints { make in
+    accountLabel.snp.makeConstraints { make in
       make.top.equalTo(descriptionLabel.snp.bottom).offset(20)
       make.left.equalToSuperview().offset(20)
     }
 
-    usernameField.snp.makeConstraints { make in
-      make.top.equalTo(usernameLabel.snp.bottom).offset(8)
+    scrollView.snp.makeConstraints { make in
+      make.top.equalTo(accountLabel.snp.bottom).offset(8)
       make.left.right.equalToSuperview().inset(20)
-      make.height.equalTo(24)
+      make.height.equalTo(180)
+    }
+
+    emptyLabel.snp.makeConstraints { make in
+      make.center.equalTo(scrollView)
+      make.left.right.equalToSuperview().inset(40)
     }
 
     separator.snp.makeConstraints { make in
@@ -172,44 +226,61 @@ class OfflineLaunchViewController: NSViewController {
 
   // MARK: - Data
 
-  private func loadSavedUsername() {
-    if let savedUsername = UserDefaults.standard.string(forKey: "offlineUsername") {
-      usernameField.stringValue = savedUsername
-      username = savedUsername
-    }
+  private func loadAccounts() {
+    microsoftAccounts = accountManager.loadAccounts()
+    offlineAccounts = offlineAccountManager.loadAccounts()
+    tableView.reloadData()
+    updateEmptyState()
   }
 
-  private func saveUsername(_ username: String) {
-    UserDefaults.standard.set(username, forKey: "offlineUsername")
+  private func updateEmptyState() {
+    let isEmpty = microsoftAccounts.isEmpty && offlineAccounts.isEmpty
+    emptyLabel.isHidden = !isEmpty
+    scrollView.isHidden = isEmpty
+    launchButton.isEnabled = !isEmpty
+  }
+
+  private func updateSelectedAccount() {
+    let selectedRow = tableView.selectedRow
+    guard selectedRow >= 0 else {
+      selectedAccountInfo = nil
+      launchButton.isEnabled = false
+      return
+    }
+
+    if selectedRow < microsoftAccounts.count {
+      // Microsoft account - use real credentials
+      let account = microsoftAccounts[selectedRow]
+      selectedAccountInfo = AccountInfo(
+        username: account.name,
+        uuid: account.id,
+        accessToken: account.accessToken
+      )
+    } else {
+      // Offline account - use generated UUID and fake token
+      let account = offlineAccounts[selectedRow - microsoftAccounts.count]
+      selectedAccountInfo = AccountInfo(
+        username: account.name,
+        uuid: account.id,
+        accessToken: account.accessToken
+      )
+    }
+    launchButton.isEnabled = true
   }
 
   // MARK: - Actions
 
   @objc private func launchGame() {
-    let username = usernameField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-
-    // Validate username
-    guard !username.isEmpty else {
+    guard let accountInfo = selectedAccountInfo else {
       showAlert(
         title: Localized.OfflineLaunch.errorTitle,
-        message: Localized.OfflineLaunch.errorEmptyUsername
+        message: Localized.OfflineLaunch.errorNoAccountSelected
       )
       return
     }
 
-    guard isValidUsername(username) else {
-      showAlert(
-        title: Localized.OfflineLaunch.errorTitle,
-        message: Localized.OfflineLaunch.errorInvalidUsername
-      )
-      return
-    }
-
-    // Save username
-    saveUsername(username)
-
-    // Notify launch
-    onLaunch?(username)
+    // Notify launch with account info
+    onLaunch?(accountInfo)
 
     // Close window
     view.window?.close()
@@ -217,16 +288,6 @@ class OfflineLaunchViewController: NSViewController {
 
   @objc private func cancel() {
     view.window?.close()
-  }
-
-  // MARK: - Validation
-
-  private func isValidUsername(_ username: String) -> Bool {
-    // Username should be 3-16 characters, alphanumeric and underscore only
-    let pattern = "^[a-zA-Z0-9_]{3,16}$"
-    let regex = try? NSRegularExpression(pattern: pattern)
-    let range = NSRange(location: 0, length: username.utf16.count)
-    return regex?.firstMatch(in: username, options: [], range: range) != nil
   }
 
   private func showAlert(title: String, message: String) {
@@ -242,13 +303,139 @@ class OfflineLaunchViewController: NSViewController {
       alert.runModal()
     }
   }
+
+  // MARK: - Avatar Loading
+
+  private func loadMinecraftAvatar(uuid: String?, username: String? = nil, completion: @escaping (NSImage?) -> Void) {
+    // Use Crafatar service for avatar rendering
+    let avatarURLString: String
+
+    if let uuid = uuid {
+      // Format UUID properly (remove dashes for Crafatar)
+      let cleanUUID = uuid.replacingOccurrences(of: "-", with: "")
+      // Use size 128 for better quality, overlay for skin layers
+      avatarURLString = "https://crafatar.com/avatars/\(cleanUUID)?size=128&overlay"
+    } else if let username = username {
+      // For offline accounts, use Steve skin via MineAvatar
+      avatarURLString = "https://minotar.net/avatar/\(username)/128"
+    } else {
+      completion(nil)
+      return
+    }
+
+    guard let url = URL(string: avatarURLString) else {
+      completion(nil)
+      return
+    }
+
+    // Load image asynchronously
+    URLSession.shared.dataTask(with: url) { data, response, error in
+      guard let data = data,
+            error == nil,
+            let image = NSImage(data: data) else {
+        completion(nil)
+        return
+      }
+      completion(image)
+    }.resume()
+  }
 }
 
-// MARK: - NSTextFieldDelegate
+// MARK: - NSTableViewDataSource
 
-extension OfflineLaunchViewController: NSTextFieldDelegate {
+extension OfflineLaunchViewController: NSTableViewDataSource {
 
-  func controlTextDidChange(_ obj: Notification) {
-    username = usernameField.stringValue
+  func numberOfRows(in tableView: NSTableView) -> Int {
+    return microsoftAccounts.count + offlineAccounts.count
+  }
+}
+
+// MARK: - NSTableViewDelegate
+
+extension OfflineLaunchViewController: NSTableViewDelegate {
+
+  func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+    let cellView = NSView()
+    let containerView = NSView()
+    containerView.wantsLayer = true
+    containerView.layer?.cornerRadius = 6
+    containerView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    cellView.addSubview(containerView)
+
+    containerView.snp.makeConstraints { make in
+      make.edges.equalToSuperview().inset(NSEdgeInsets(top: 2, left: 4, bottom: 2, right: 4))
+    }
+
+    // Create icon view
+    let iconView = NSImageView()
+    iconView.imageScaling = .scaleProportionallyUpOrDown
+    iconView.wantsLayer = true
+    iconView.layer?.cornerRadius = 4
+    iconView.layer?.masksToBounds = true
+    containerView.addSubview(iconView)
+
+    iconView.snp.makeConstraints { make in
+      make.left.equalToSuperview().offset(8)
+      make.centerY.equalToSuperview()
+      make.width.height.equalTo(28)
+    }
+
+    // Create name label
+    let nameLabel = BRLabel(
+      text: "",
+      font: .systemFont(ofSize: 13, weight: .medium),
+      textColor: .labelColor,
+      alignment: .left
+    )
+    containerView.addSubview(nameLabel)
+
+    nameLabel.snp.makeConstraints { make in
+      make.left.equalTo(iconView.snp.right).offset(8)
+      make.centerY.equalToSuperview()
+      make.right.equalToSuperview().offset(-8)
+    }
+
+    // Configure based on account type
+    if row < microsoftAccounts.count {
+      let account = microsoftAccounts[row]
+      nameLabel.stringValue = account.name
+      iconView.image = NSImage(systemSymbolName: "person.crop.circle.fill", accessibilityDescription: nil)
+      iconView.contentTintColor = .systemGreen
+
+      // Load avatar asynchronously
+      loadMinecraftAvatar(uuid: account.id) { [weak iconView] image in
+        DispatchQueue.main.async {
+          if let image = image {
+            iconView?.image = image
+            iconView?.contentTintColor = nil
+          }
+        }
+      }
+    } else {
+      let account = offlineAccounts[row - microsoftAccounts.count]
+      nameLabel.stringValue = "\(account.name) \(Localized.OfflineLaunch.offlineAccountSuffix)"
+      iconView.image = NSImage(systemSymbolName: "person.crop.circle", accessibilityDescription: nil)
+      iconView.contentTintColor = .systemBlue
+
+      // Load avatar asynchronously (offline accounts use Steve skin by default)
+      loadMinecraftAvatar(uuid: nil, username: account.name) { [weak iconView] image in
+        DispatchQueue.main.async {
+          if let image = image {
+            iconView?.image = image
+            iconView?.contentTintColor = nil
+          }
+        }
+      }
+    }
+
+    return cellView
+  }
+
+  func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
+    return true
+  }
+
+  func tableViewSelectionDidChange(_ notification: Notification) {
+    updateSelectedAccount()
   }
 }

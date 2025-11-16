@@ -251,14 +251,14 @@ class InstalledVersionsViewController: NSViewController {
     // Show offline launch window
     let windowController = OfflineLaunchWindowController()
     if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
-      viewController.onLaunch = { [weak self] username in
-        self?.performLaunch(versionId: versionId, username: username)
+      viewController.onLaunch = { [weak self] accountInfo in
+        self?.performLaunch(versionId: versionId, accountInfo: accountInfo)
       }
     }
     windowController.showWindow(nil)
   }
 
-  private func performLaunch(versionId: String, username: String) {
+  private func performLaunch(versionId: String, accountInfo: OfflineLaunchViewController.AccountInfo) {
     Task { @MainActor in
       do {
         Logger.shared.info(Localized.GameLauncher.logLaunchingVersion(versionId), category: "InstalledVersions")
@@ -280,11 +280,17 @@ class InstalledVersionsViewController: NSViewController {
           category: "InstalledVersions"
         )
 
-        // Create launch configuration with username
-        let config = GameLauncher.LaunchConfig.default(
+        // Create launch configuration with account info
+        let config = GameLauncher.LaunchConfig(
           versionId: versionId,
           javaPath: javaInstallation.path,
-          username: username
+          username: accountInfo.username,
+          uuid: accountInfo.uuid,
+          accessToken: accountInfo.accessToken,
+          maxMemory: 2048,
+          minMemory: 512,
+          windowWidth: 854,
+          windowHeight: 480
         )
 
         // Launch game
@@ -296,7 +302,7 @@ class InstalledVersionsViewController: NSViewController {
         // Show success notification
         showNotification(
           title: Localized.GameLauncher.statusLaunched,
-          message: "Version: \(versionId), User: \(username)"
+          message: "Version: \(versionId), User: \(accountInfo.username)"
         )
       } catch {
         Logger.shared.error(

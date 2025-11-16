@@ -648,18 +648,18 @@ enum Localized {
   // MARK: - Offline Launch
   enum OfflineLaunch {
     // Window
-    static let windowTitle = String(localized: "Offline Launch", comment: "[Text] Offline launch window title.")
-    static let title = String(localized: "Offline Mode", comment: "[Text] Offline mode title.")
-    static let description = String(localized: "Select a saved account to launch in offline mode.", comment: "[Text] Offline mode description.")
+    static let windowTitle = String(localized: "Select Account", comment: "[Text] Account selection window title.")
+    static let title = String(localized: "Launch Game", comment: "[Text] Launch game title.")
+    static let description = String(localized: "Select an account to launch the game.", comment: "[Text] Account selection description.")
 
     // Labels
     static let selectAccountLabel = String(localized: "Select Account:", comment: "[Label] Select account label.")
     static let usernameLabel = String(localized: "Username:", comment: "[Label] Username label.")
     static let usernamePlaceholder = String(localized: "Enter username (3-16 characters)", comment: "[Placeholder] Username placeholder.")
 
-    // Account Selection
-    static let manualInputOption = String(localized: "Manual Input...", comment: "[Option] Manual input option.")
-    static let noAccountsMessage = String(localized: "No saved accounts", comment: "[Message] No saved accounts message.")
+    // Account List
+    static let noAccountsMessage = String(localized: "No saved accounts found. Please add an account first.", comment: "[Message] No saved accounts message.")
+    static let offlineAccountSuffix = String(localized: "(Offline)", comment: "[Text] Offline account suffix.")
 
     // Buttons
     static let launchButton = String(localized: "Launch", comment: "[Button] Launch button.")
@@ -667,7 +667,8 @@ enum Localized {
     static let okButton = String(localized: "OK", comment: "[Button] OK button.")
 
     // Errors
-    static let errorTitle = String(localized: "Invalid Username", comment: "[Alert] Invalid username title.")
+    static let errorTitle = String(localized: "Error", comment: "[Alert] Error title.")
+    static let errorNoAccountSelected = String(localized: "Please select an account first", comment: "[Alert] No account selected error.")
     static let errorEmptyUsername = String(localized: "Username cannot be empty.", comment: "[Alert] Empty username error.")
     static let errorInvalidUsername = String(localized: "Username must be 3-16 characters long and contain only letters, numbers, and underscores.", comment: "[Alert] Invalid username error.")
   }
