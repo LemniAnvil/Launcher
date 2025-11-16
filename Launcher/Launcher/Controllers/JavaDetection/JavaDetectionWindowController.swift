@@ -7,7 +7,7 @@
 
 import AppKit
 
-class JavaDetectionWindowController: NSWindowController {
+class JavaDetectionWindowController: NSWindowController, NSWindowDelegate {
 
   convenience init() {
     let window = NSWindow(
@@ -26,5 +26,10 @@ class JavaDetectionWindowController: NSWindowController {
     window.contentViewController = viewController
 
     self.init(window: window)
+    window.delegate = self
+  }
+
+  func windowWillClose(_ notification: Notification) {
+    NSApplication.shared.stopModal()
   }
 }

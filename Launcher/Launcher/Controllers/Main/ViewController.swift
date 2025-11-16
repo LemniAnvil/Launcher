@@ -17,10 +17,6 @@ class ViewController: NSViewController {
   private var instanceDetailWindowController: InstanceDetailWindowController?
   private var microsoftAuthWindowController: MicrosoftAuthWindowController?
   private var windowObserver: NSObjectProtocol?
-  private var javaWindowObserver: NSObjectProtocol?
-  private var accountWindowObserver: NSObjectProtocol?
-  private var settingsWindowObserver: NSObjectProtocol?
-  private var addInstanceWindowObserver: NSObjectProtocol?
   private var instanceDetailWindowObserver: NSObjectProtocol?
   private var microsoftAuthWindowObserver: NSObjectProtocol?
 
@@ -371,21 +367,14 @@ extension ViewController {
 
     // Create new Java detection window
     javaDetectionWindowController = JavaDetectionWindowController()
-    javaDetectionWindowController?.showWindow(nil)
-    javaDetectionWindowController?.window?.makeKeyAndOrderFront(nil)
 
-    // Window close callback
-    javaWindowObserver = NotificationCenter.default.addObserver(
-      forName: NSWindow.willCloseNotification,
-      object: javaDetectionWindowController?.window,
-      queue: .main
-    ) { [weak self] _ in
-      self?.javaDetectionWindowController = nil
-      if let observer = self?.javaWindowObserver {
-        NotificationCenter.default.removeObserver(observer)
-        self?.javaWindowObserver = nil
-      }
+    if let window = javaDetectionWindowController?.window {
+      // Run as modal window
+      NSApplication.shared.runModal(for: window)
     }
+
+    // Clean up after modal closes
+    javaDetectionWindowController = nil
   }
 
   @objc private func openAccountWindow() {
@@ -398,21 +387,14 @@ extension ViewController {
 
     // Create new account window
     accountWindowController = AccountWindowController()
-    accountWindowController?.showWindow(nil)
-    accountWindowController?.window?.makeKeyAndOrderFront(nil)
 
-    // Window close callback
-    accountWindowObserver = NotificationCenter.default.addObserver(
-      forName: NSWindow.willCloseNotification,
-      object: accountWindowController?.window,
-      queue: .main
-    ) { [weak self] _ in
-      self?.accountWindowController = nil
-      if let observer = self?.accountWindowObserver {
-        NotificationCenter.default.removeObserver(observer)
-        self?.accountWindowObserver = nil
-      }
+    if let window = accountWindowController?.window {
+      // Run as modal window
+      NSApplication.shared.runModal(for: window)
     }
+
+    // Clean up after modal closes
+    accountWindowController = nil
   }
 
   @objc private func openSettingsWindow() {
@@ -425,21 +407,14 @@ extension ViewController {
 
     // Create new settings window
     settingsWindowController = SettingsWindowController()
-    settingsWindowController?.showWindow(nil)
-    settingsWindowController?.window?.makeKeyAndOrderFront(nil)
 
-    // Window close callback
-    settingsWindowObserver = NotificationCenter.default.addObserver(
-      forName: NSWindow.willCloseNotification,
-      object: settingsWindowController?.window,
-      queue: .main
-    ) { [weak self] _ in
-      self?.settingsWindowController = nil
-      if let observer = self?.settingsWindowObserver {
-        NotificationCenter.default.removeObserver(observer)
-        self?.settingsWindowObserver = nil
-      }
+    if let window = settingsWindowController?.window {
+      // Run as modal window
+      NSApplication.shared.runModal(for: window)
     }
+
+    // Clean up after modal closes
+    settingsWindowController = nil
   }
 
   @objc private func openMicrosoftAuthWindow() {
@@ -517,21 +492,13 @@ extension ViewController {
       }
     }
 
-    addInstanceWindowController?.showWindow(nil)
-    addInstanceWindowController?.window?.makeKeyAndOrderFront(nil)
-
-    // Window close callback
-    addInstanceWindowObserver = NotificationCenter.default.addObserver(
-      forName: NSWindow.willCloseNotification,
-      object: addInstanceWindowController?.window,
-      queue: .main
-    ) { [weak self] _ in
-      self?.addInstanceWindowController = nil
-      if let observer = self?.addInstanceWindowObserver {
-        NotificationCenter.default.removeObserver(observer)
-        self?.addInstanceWindowObserver = nil
-      }
+    if let window = addInstanceWindowController?.window {
+      // Run as modal window
+      NSApplication.shared.runModal(for: window)
     }
+
+    // Clean up after modal closes
+    addInstanceWindowController = nil
   }
 
   private func openInstanceDetailWindow(for instance: Instance) {

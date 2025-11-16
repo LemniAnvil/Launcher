@@ -7,7 +7,7 @@
 
 import AppKit
 
-class AddInstanceWindowController: NSWindowController {
+class AddInstanceWindowController: NSWindowController, NSWindowDelegate {
 
   convenience init() {
     let window = NSWindow(
@@ -26,11 +26,16 @@ class AddInstanceWindowController: NSWindowController {
     window.contentViewController = viewController
 
     self.init(window: window)
+    window.delegate = self
   }
 
   override func windowDidLoad() {
     super.windowDidLoad()
 
     window?.makeKeyAndOrderFront(nil)
+  }
+
+  func windowWillClose(_ notification: Notification) {
+    NSApplication.shared.stopModal()
   }
 }
