@@ -1048,18 +1048,7 @@ class AddInstanceViewController: NSViewController {
           self.modLoaderVersionPlaceholder.isHidden = false
           self.modLoaderVersionTableView.tableView.isEnabled = false
 
-          // Show error alert
-          let alert = NSAlert()
-          alert.messageText = Localized.AddInstance.alertFailedToLoadVersions
-          alert.informativeText = error.localizedDescription
-          alert.alertStyle = .warning
-          alert.addButton(withTitle: Localized.AddInstance.okButton)
-
-          if let window = self.view.window {
-            alert.beginSheetModal(for: window)
-          } else {
-            alert.runModal()
-          }
+          // Error alert removed - silently fail and show placeholder instead
         }
       }
     }
