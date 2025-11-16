@@ -401,7 +401,7 @@ class AddInstanceViewController: NSViewController {
 
   private lazy var modLoaderDescriptionLabel: BRLabel = {
     let label = BRLabel(
-      text: "Select a mod loader and version to enable mod support for this instance.",
+      text: Localized.AddInstance.modLoaderDescription,
       font: .systemFont(ofSize: 11),
       textColor: .tertiaryLabelColor,
       alignment: .left
@@ -413,7 +413,7 @@ class AddInstanceViewController: NSViewController {
 
   private lazy var modLoaderVersionLabel: BRLabel = {
     let label = BRLabel(
-      text: "Loader Version:",
+      text: Localized.AddInstance.modLoaderVersionLabel,
       font: .systemFont(ofSize: 12, weight: .medium),
       textColor: .labelColor,
       alignment: .left
@@ -427,7 +427,7 @@ class AddInstanceViewController: NSViewController {
     let columns: [VersionTableView<LoaderVersionItem>.ColumnConfig] = [
       .init(
         identifier: "LoaderVersionColumn",
-        title: "Version",
+        title: Localized.AddInstance.loaderVersionColumn,
         width: 220,
         valueProvider: { $0.id },
         fontProvider: { _ in .systemFont(ofSize: 12) },
@@ -933,10 +933,10 @@ class AddInstanceViewController: NSViewController {
 
           // Show error alert
           let alert = NSAlert()
-          alert.messageText = "Failed to Refresh"
+          alert.messageText = Localized.AddInstance.alertFailedToRefresh
           alert.informativeText = error.localizedDescription
           alert.alertStyle = .warning
-          alert.addButton(withTitle: "OK")
+          alert.addButton(withTitle: Localized.AddInstance.okButton)
 
           if let window = view.window {
             alert.beginSheetModal(for: window)
@@ -1021,10 +1021,10 @@ class AddInstanceViewController: NSViewController {
 
           // Show error alert
           let alert = NSAlert()
-          alert.messageText = "Failed to Load Versions"
+          alert.messageText = Localized.AddInstance.alertFailedToLoadVersions
           alert.informativeText = error.localizedDescription
           alert.alertStyle = .warning
-          alert.addButton(withTitle: "OK")
+          alert.addButton(withTitle: Localized.AddInstance.okButton)
 
           if let window = self.view.window {
             alert.beginSheetModal(for: window)

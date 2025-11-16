@@ -850,12 +850,19 @@ enum Localized {
     static let modLoaderTitle = String(localized: "Mod Loader", comment: "[Text] Mod loader title.")
     static let modLoaderPlaceholder = String(localized: "No mod loader selected.", comment: "[Text] Mod loader placeholder.")
     static let modLoaderNone = String(localized: "None", comment: "[Option] No mod loader.")
+    static let modLoaderDescription = String(localized: "Select a mod loader and version to enable mod support for this instance.", comment: "[Text] Mod loader description.")
+    static let modLoaderVersionLabel = String(localized: "Loader Version:", comment: "[Label] Mod loader version label.")
+    static let loaderVersionColumn = String(localized: "Version", comment: "[Table] Loader version column.")
 
     // Buttons
     static let helpButton = String(localized: "Help", comment: "[Button] Help button.")
     static let cancelButton = String(localized: "Cancel", comment: "[Button] Cancel button.")
     static let confirmButton = String(localized: "OK", comment: "[Button] Confirm button.")
     static let okButton = String(localized: "OK", comment: "[Button] OK button.")
+
+    // Alert Titles
+    static let alertFailedToRefresh = String(localized: "Failed to Refresh", comment: "[Alert] Failed to refresh title.")
+    static let alertFailedToLoadVersions = String(localized: "Failed to Load Versions", comment: "[Alert] Failed to load versions title.")
 
     // Errors
     static let errorTitle = String(localized: "Error", comment: "[Alert] Error title.")

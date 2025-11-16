@@ -1252,7 +1252,15 @@
       }
     },
     "Add Offline Account": {
-      "comment": "[Alert] Add offline account title.\n[Button] Add offline account button."
+      "comment": "[Alert] Add offline account title.\n[Button] Add offline account button.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加离线账户"
+          }
+        }
+      }
     },
     "All Versions": {
       "comment": "[Filter] All versions option.",
@@ -1844,7 +1852,15 @@
       }
     },
     "Enter a username for the offline account:": {
-      "comment": "[Alert] Add offline account message."
+      "comment": "[Alert] Add offline account message.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请输入离线账户的用户名："
+          }
+        }
+      }
     },
     "Enter instance name": {
       "comment": "[Placeholder] Instance name placeholder.",
@@ -1941,6 +1957,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "启动游戏失败：%@"
+          }
+        }
+      }
+    },
+    "Failed to Load Versions": {
+      "comment": "[Alert] Failed to load versions title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加载版本失败"
+          }
+        }
+      }
+    },
+    "Failed to Refresh": {
+      "comment": "[Alert] Failed to refresh title.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新失败"
           }
         }
       }
@@ -2451,6 +2489,17 @@
         }
       }
     },
+    "Loader Version:": {
+      "comment": "[Label] Mod loader version label.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加载器版本："
+          }
+        }
+      }
+    },
     "Login Failed": {
       "comment": "[Alert] Login failed title.",
       "localizations": {
@@ -2749,7 +2798,15 @@
       }
     },
     "No offline accounts\nClick the button above to add an offline account": {
-      "comment": "[Text] Empty state message for offline accounts."
+      "comment": "[Text] Empty state message for offline accounts.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无离线账户\n点击上方按钮添加离线账户"
+          }
+        }
+      }
     },
     "No saved accounts": {
       "comment": "[Message] No saved accounts message.",
@@ -2829,10 +2886,26 @@
       }
     },
     "Offline": {
-      "comment": "[Label] Offline account type."
+      "comment": "[Label] Offline account type.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "离线"
+          }
+        }
+      }
     },
     "Offline account added successfully": {
-      "comment": "[Status] Offline account added."
+      "comment": "[Status] Offline account added.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "离线账户添加成功"
+          }
+        }
+      }
     },
     "Offline Launch": {
       "comment": "[Text] Offline launch window title.",
@@ -3258,6 +3331,17 @@
         }
       }
     },
+    "Select a mod loader and version to enable mod support for this instance.": {
+      "comment": "[Text] Mod loader description.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择模组加载器和版本以为此实例启用模组支持。"
+          }
+        }
+      }
+    },
     "Select a saved account to launch in offline mode.": {
       "comment": "[Text] Offline mode description.",
       "localizations": {
@@ -3590,7 +3674,15 @@
       }
     },
     "Username (3-16 characters)": {
-      "comment": "[Placeholder] Offline account username placeholder."
+      "comment": "[Placeholder] Offline account username placeholder.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户名（3-16 个字符）"
+          }
+        }
+      }
     },
     "Username can only contain letters, numbers, and underscores.": {
       "comment": "[Alert] Invalid username format error.",
@@ -3670,7 +3762,7 @@
       }
     },
     "Version": {
-      "comment": "[Table] Java version column.\n[Table] Version column header.\n[Table] Version column.",
+      "comment": "[Table] Java version column.\n[Table] Loader version column.\n[Table] Version column header.\n[Table] Version column.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
