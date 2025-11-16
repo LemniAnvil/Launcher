@@ -337,7 +337,8 @@ class OfflineLaunchViewController: NSViewController {
         return
       }
       completion(image)
-    }.resume()
+    }
+    .resume()
   }
 }
 

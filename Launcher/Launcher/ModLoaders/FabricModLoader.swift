@@ -53,7 +53,7 @@ class FabricModLoader: ModLoaderProtocol {
         for loader in loaders {
             // Skip unstable versions if requested
             if stableOnly {
-                let isStable = loader.stable ?? true
+                let isStable = loader.stable
                 if !isStable || loader.version.contains("beta") {
                     continue
                 }

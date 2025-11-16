@@ -2555,18 +2555,6 @@
         }
       }
     },
-    "Manual Input...": {
-      "comment": "[Option] Manual input option.",
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "手动输入..."
-          }
-        }
-      }
-    },
     "Max Concurrent Downloads:": {
       "comment": "[Label] Max concurrent downloads label.",
       "localizations": {
@@ -2820,18 +2808,6 @@
         }
       }
     },
-    "No saved accounts": {
-      "comment": "[Message] No saved accounts message.",
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "没有保存的账号"
-          }
-        }
-      }
-    },
     "No saved accounts found. Please add an account first.": {
       "comment": "[Message] No saved accounts message.",
       "localizations": {
@@ -2927,30 +2903,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "离线账户添加成功"
-          }
-        }
-      }
-    },
-    "Offline Launch": {
-      "comment": "[Text] Offline launch window title.",
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "离线启动"
-          }
-        }
-      }
-    },
-    "Offline Mode": {
-      "comment": "[Text] Offline mode title.",
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "离线模式"
           }
         }
       }
@@ -3386,18 +3338,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "选择模组加载器和版本以为此实例启用模组支持。"
-          }
-        }
-      }
-    },
-    "Select a saved account to launch in offline mode.": {
-      "comment": "[Text] Offline mode description.",
-      "extractionState": "stale",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选择已保存的账号以离线模式启动。"
           }
         }
       }

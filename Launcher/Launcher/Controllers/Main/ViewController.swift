@@ -47,7 +47,6 @@ class ViewController: NSViewController {
     return label
   }()
 
-
   private lazy var javaDetectionButton: BRImageButton = {
     let button = BRImageButton(
       symbolName: "cup.and.saucer.fill",
@@ -81,7 +80,6 @@ class ViewController: NSViewController {
     button.action = #selector(openAccountWindow)
     return button
   }()
-
 
   private lazy var settingsButton: BRImageButton = {
     let button = BRImageButton(
