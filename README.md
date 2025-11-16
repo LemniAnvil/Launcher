@@ -10,7 +10,7 @@
 [![Platform](https://img.shields.io/badge/Platform-macOS-blue.svg)](https://www.apple.com/macos)
 [![License](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 
-English | [简体中文](README.zh-CN.md)
+English | [简体中文](Docs/README.zh-CN.md)
 
 </div>
 

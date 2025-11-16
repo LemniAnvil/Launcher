@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="Launcher/Launcher/Resources/Assets.xcassets/AppIcon.appiconset/mac256.png" alt="启动器图标" width="128" height="128">
+<img src="../Launcher/Launcher/Resources/Assets.xcassets/AppIcon.appiconset/mac256.png" alt="启动器图标" width="128" height="128">
 
 # Minecraft 启动器
 
@@ -10,7 +10,7 @@
 [![Platform](https://img.shields.io/badge/Platform-macOS-blue.svg)](https://www.apple.com/macos)
 [![License](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 
-[English](README.md) | 简体中文
+[English](../README.md) | 简体中文
 
 </div>
 
@@ -66,35 +66,35 @@
 ### 实例管理
 实例管理界面提供了游戏实例的创建、编辑和管理功能。
 
-<img src="Resources/zh-CN/instances-overview.png" alt="实例管理界面" width="800">
+<img src="../Resources/zh-CN/instances-overview.png" alt="实例管理界面" width="800">
 
 *实例列表界面，显示所有已创建的 Minecraft 游戏实例*
 
 ### 新建实例
 通过直观的对话框创建新的游戏实例，支持选择版本和自定义配置。
 
-<img src="Resources/zh-CN/new-instance-dialog.png" alt="新建实例对话框" width="600">
+<img src="../Resources/zh-CN/new-instance-dialog.png" alt="新建实例对话框" width="600">
 
 *新建实例对话框，可选择游戏版本并配置实例参数*
 
 ### Java 环境检测
 自动检测系统中已安装的 Java 运行环境，支持多版本 Java 管理。
 
-<img src="Resources/zh-CN/java-detection.png" alt="Java 检测" width="700">
+<img src="../Resources/zh-CN/java-detection.png" alt="Java 检测" width="700">
 
 *Java 环境检测界面，显示所有可用的 Java 版本*
 
 ### 账户管理
 支持多账户管理，方便切换不同的 Minecraft 账户进行游戏。
 
-<img src="Resources/zh-CN/account-management.png" alt="账户管理" width="700">
+<img src="../Resources/zh-CN/account-management.png" alt="账户管理" width="700">
 
 *账户管理界面，支持添加、编辑和切换游戏账户*
 
 ### 设置中心
 全面的设置界面，提供启动器的各项配置选项。
 
-<img src="Resources/zh-CN/settings.png" alt="设置界面" width="700">
+<img src="../Resources/zh-CN/settings.png" alt="设置界面" width="700">
 
 *设置界面，可配置启动器的各项参数和偏好设置*
 
