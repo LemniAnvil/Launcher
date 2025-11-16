@@ -51,22 +51,6 @@ class ViewController: NSViewController {
     return label
   }()
 
-  private lazy var testButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "play.circle.fill",
-      cornerRadius: 6,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemBlue,
-      accessibilityLabel: Localized.MainWindow.openVersionListWindowButton
-    )
-    button.target = self
-    button.action = #selector(openVersionListWindow)
-    return button
-  }()
 
   private lazy var javaDetectionButton: BRImageButton = {
     let button = BRImageButton(
@@ -102,22 +86,6 @@ class ViewController: NSViewController {
     return button
   }()
 
-  private lazy var microsoftAuthButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "person.crop.circle.badge.checkmark",
-      cornerRadius: 6,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemGreen,
-      accessibilityLabel: Localized.MicrosoftAuth.openMicrosoftAuthButton
-    )
-    button.target = self
-    button.action = #selector(openMicrosoftAuthWindow)
-    return button
-  }()
 
   private lazy var settingsButton: BRImageButton = {
     let button = BRImageButton(
@@ -245,11 +213,9 @@ class ViewController: NSViewController {
     view.addSubview(titleLabel)
     view.addSubview(countLabel)
     view.addSubview(addInstanceButton)
-    view.addSubview(testButton)
     view.addSubview(refreshButton)
     view.addSubview(javaDetectionButton)
     view.addSubview(accountButton)
-    view.addSubview(microsoftAuthButton)
     view.addSubview(settingsButton)
     view.addSubview(headerSeparator)
     view.addSubview(scrollView)
@@ -258,38 +224,26 @@ class ViewController: NSViewController {
     scrollView.documentView = collectionView
 
     // Layout constraints using SnapKit
-    // Top-right button group (from left to right: add, test, refresh, java, account, microsoft, settings)
+    // Top-right button group (from left to right: add, refresh, java, account, settings)
     addInstanceButton.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-280)
-      make.width.height.equalTo(36)
-    }
-
-    testButton.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-236)
-      make.width.height.equalTo(36)
-    }
-
-    refreshButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-192)
       make.width.height.equalTo(36)
     }
 
-    javaDetectionButton.snp.makeConstraints { make in
+    refreshButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-148)
       make.width.height.equalTo(36)
     }
 
-    accountButton.snp.makeConstraints { make in
+    javaDetectionButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-104)
       make.width.height.equalTo(36)
     }
 
-    microsoftAuthButton.snp.makeConstraints { make in
+    accountButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-60)
       make.width.height.equalTo(36)
@@ -310,7 +264,7 @@ class ViewController: NSViewController {
     countLabel.snp.makeConstraints { make in
       make.top.equalTo(titleLabel.snp.bottom).offset(8)
       make.left.equalToSuperview().offset(20)
-      make.right.equalTo(testButton.snp.left).offset(-10)
+      make.right.equalTo(addInstanceButton.snp.left).offset(-10)
     }
 
     headerSeparator.snp.makeConstraints { make in

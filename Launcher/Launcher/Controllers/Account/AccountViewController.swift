@@ -65,6 +65,7 @@ class AccountViewController: NSViewController {
     scrollView.hasHorizontalScroller = false
     scrollView.autohidesScrollers = true
     scrollView.borderType = .noBorder
+    scrollView.scrollerStyle = .overlay
     return scrollView
   }()
 
@@ -560,7 +561,7 @@ private extension AccountViewController {
     let iconView = NSImageView()
     iconView.imageScaling = .scaleProportionallyUpOrDown
     iconView.wantsLayer = true
-    iconView.layer?.cornerRadius = 4
+    iconView.layer?.cornerRadius = 6
     iconView.layer?.masksToBounds = true
 
     // Set default image first
@@ -591,7 +592,7 @@ private extension AccountViewController {
     let iconView = NSImageView()
     iconView.imageScaling = .scaleProportionallyUpOrDown
     iconView.wantsLayer = true
-    iconView.layer?.cornerRadius = 4
+    iconView.layer?.cornerRadius = 6
     iconView.layer?.masksToBounds = true
 
     // Set default image first
