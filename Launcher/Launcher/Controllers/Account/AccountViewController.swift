@@ -9,12 +9,15 @@ import AppKit
 import SnapKit
 import Yatagarasu
 
+// swiftlint:disable type_body_length
 class AccountViewController: NSViewController {
 
   // MARK: - Properties
 
   private var microsoftAccounts: [MicrosoftAccount] = []
+  private var offlineAccounts: [OfflineAccount] = []
   private let accountManager = MicrosoftAccountManager.shared
+  private let offlineAccountManager = OfflineAccountManager.shared
   private var isDeveloperMode: Bool = false {
     didSet {
       UserDefaults.standard.set(isDeveloperMode, forKey: "AccountDeveloperMode")
@@ -44,6 +47,15 @@ class AccountViewController: NSViewController {
     button.bezelStyle = .rounded
     button.target = self
     button.action = #selector(loginMicrosoft)
+    return button
+  }()
+
+  private lazy var addOfflineAccountButton: NSButton = {
+    let button = NSButton()
+    button.title = Localized.Account.addOfflineAccountButton
+    button.bezelStyle = .rounded
+    button.target = self
+    button.action = #selector(addOfflineAccount)
     return button
   }()
 
@@ -129,6 +141,7 @@ class AccountViewController: NSViewController {
     view.addSubview(developerModeLabel)
     view.addSubview(developerModeSwitch)
     view.addSubview(loginMicrosoftButton)
+    view.addSubview(addOfflineAccountButton)
     view.addSubview(scrollView)
     view.addSubview(emptyLabel)
 
@@ -164,8 +177,15 @@ class AccountViewController: NSViewController {
 
     loginMicrosoftButton.snp.makeConstraints { make in
       make.top.equalTo(developerModeSwitch.snp.bottom).offset(12)
-      make.centerX.equalToSuperview()
-      make.width.equalTo(200)
+      make.left.equalToSuperview().offset(20)
+      make.right.equalTo(view.snp.centerX).offset(-4)
+      make.height.equalTo(32)
+    }
+
+    addOfflineAccountButton.snp.makeConstraints { make in
+      make.top.equalTo(loginMicrosoftButton)
+      make.left.equalTo(view.snp.centerX).offset(4)
+      make.right.equalToSuperview().offset(-20)
       make.height.equalTo(32)
     }
 
@@ -184,6 +204,7 @@ class AccountViewController: NSViewController {
 
   private func loadAccounts() {
     microsoftAccounts = accountManager.loadAccounts()
+    offlineAccounts = offlineAccountManager.loadAccounts()
     tableView.reloadData()
     updateEmptyState()
   }
@@ -194,12 +215,13 @@ class AccountViewController: NSViewController {
   }
 
   private func updateEmptyState() {
-    emptyLabel.isHidden = !microsoftAccounts.isEmpty
-    scrollView.isHidden = microsoftAccounts.isEmpty
+    let isEmpty = microsoftAccounts.isEmpty && offlineAccounts.isEmpty
+    emptyLabel.isHidden = !isEmpty
+    scrollView.isHidden = isEmpty
   }
 
   private func updateTableRowHeight() {
-    tableView.rowHeight = isDeveloperMode ? 120 : 64
+    tableView.rowHeight = isDeveloperMode ? 165 : 64
   }
 
   // MARK: - Actions
@@ -217,14 +239,113 @@ class AccountViewController: NSViewController {
     // Set up callbacks
     if let viewController = authWindowController.contentViewController as? MicrosoftAuthViewController {
       viewController.onAuthSuccess = { [weak self] response in
-        self?.loadAccounts()
-        Logger.shared.info("Account added: \(response.name)", category: "Account")
+        guard let self = self else { return }
+
+        // Convert skin and cape data from response
+        let skins = response.skins?.compactMap { responseSkin -> Skin in
+          Skin(
+            id: responseSkin.id,
+            state: responseSkin.state,
+            url: responseSkin.url,
+            variant: responseSkin.variant,
+            alias: responseSkin.alias
+          )
+        }
+
+        let capes = response.capes?.compactMap { responseCape -> Cape in
+          Cape(
+            id: responseCape.id,
+            state: responseCape.state,
+            url: responseCape.url,
+            alias: responseCape.alias
+          )
+        }
+
+        // Create account with all data including skins and capes
+        let account = MicrosoftAccount(
+          id: response.id,
+          name: response.name,
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+          timestamp: Date().timeIntervalSince1970,
+          skins: skins,
+          capes: capes
+        )
+
+        // Save account
+        self.accountManager.saveAccount(account)
+        self.loadAccounts()
+        Logger.shared.info("Account added: \(response.name) with \(skins?.count ?? 0) skins and \(capes?.count ?? 0) capes", category: "Account")
       }
 
       viewController.onAuthFailure = { error in
         Logger.shared.error("Authentication failed: \(error.localizedDescription)", category: "Account")
       }
     }
+  }
+
+  @objc private func addOfflineAccount() {
+    let alert = NSAlert()
+    alert.messageText = Localized.Account.offlineAccountTitle
+    alert.informativeText = Localized.Account.offlineAccountMessage
+    alert.alertStyle = .informational
+    alert.addButton(withTitle: Localized.Account.addButton)
+    alert.addButton(withTitle: Localized.Account.cancelButton)
+
+    let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 260, height: 24))
+    textField.placeholderString = Localized.Account.offlineAccountPlaceholder
+    alert.accessoryView = textField
+
+    guard let window = view.window else { return }
+    alert.beginSheetModal(for: window) { [weak self] response in
+      guard response == .alertFirstButtonReturn else { return }
+      self?.processOfflineAccountAddition(username: textField.stringValue)
+    }
+
+    // Focus on text field
+    alert.window.makeFirstResponder(textField)
+  }
+
+  private func processOfflineAccountAddition(username: String) {
+    // Validate username
+    let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
+
+    if trimmedUsername.isEmpty {
+      showAlert(title: Localized.Account.invalidUsernameTitle, message: Localized.Account.emptyUsernameMessage)
+      return
+    }
+
+    if trimmedUsername.count < 3 || trimmedUsername.count > 16 {
+      showAlert(title: Localized.Account.invalidUsernameTitle, message: Localized.Account.invalidUsernameLengthMessage)
+      return
+    }
+
+    // Check if username contains only valid characters (letters, numbers, underscores)
+    let validCharacterSet = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_"))
+    if trimmedUsername.rangeOfCharacter(from: validCharacterSet.inverted) != nil {
+      showAlert(title: Localized.Account.invalidUsernameTitle, message: Localized.Account.invalidUsernameFormatMessage)
+      return
+    }
+
+    // Check for duplicates
+    if offlineAccounts.contains(where: { $0.name.lowercased() == trimmedUsername.lowercased() }) {
+      showAlert(title: Localized.Account.duplicateUsernameTitle, message: Localized.Account.duplicateUsernameMessage)
+      return
+    }
+
+    // Generate UUID for the account
+    let uuid = offlineAccountManager.generateUUID(for: trimmedUsername)
+
+    // Create and save the offline account
+    let account = OfflineAccount(
+      id: uuid,
+      name: trimmedUsername,
+      timestamp: Date().timeIntervalSince1970
+    )
+
+    offlineAccountManager.saveAccount(account)
+    loadAccounts()
+    Logger.shared.info("Offline account added: \(trimmedUsername)", category: "Account")
   }
 
   // MARK: - Context Menu
@@ -255,7 +376,16 @@ class AccountViewController: NSViewController {
 
   @objc private func refreshAccount(_ sender: Any?) {
     guard tableView.clickedRow >= 0,
-          tableView.clickedRow < microsoftAccounts.count else {
+          tableView.clickedRow < microsoftAccounts.count + offlineAccounts.count else {
+      return
+    }
+
+    // Only Microsoft accounts can be refreshed
+    if tableView.clickedRow >= microsoftAccounts.count {
+      showAlert(
+        title: Localized.Account.refreshFailedTitle,
+        message: "Offline accounts cannot be refreshed"
+      )
       return
     }
 
@@ -267,7 +397,37 @@ class AccountViewController: NSViewController {
         let authManager = MicrosoftAuthManager.shared
         let response = try await authManager.completeRefresh(refreshToken: account.refreshToken)
 
-        Logger.shared.info("Account refreshed: \(response.name)", category: "Account")
+        // Convert skin and cape data from response
+        let skins = response.skins?.compactMap { responseSkin -> Skin in
+          Skin(
+            id: responseSkin.id,
+            state: responseSkin.state,
+            url: responseSkin.url,
+            variant: responseSkin.variant,
+            alias: responseSkin.alias
+          )
+        }
+
+        let capes = response.capes?.compactMap { responseCape -> Cape in
+          Cape(
+            id: responseCape.id,
+            state: responseCape.state,
+            url: responseCape.url,
+            alias: responseCape.alias
+          )
+        }
+
+        // Save the refreshed account data with skins and capes
+        accountManager.updateAccountFromRefresh(
+          id: response.id,
+          name: response.name,
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+          skins: skins,
+          capes: capes
+        )
+
+        Logger.shared.info("Account refreshed: \(response.name) with \(skins?.count ?? 0) skins and \(capes?.count ?? 0) capes", category: "Account")
         loadAccounts()
 
         showAlert(
@@ -286,16 +446,32 @@ class AccountViewController: NSViewController {
 
   @objc private func deleteAccount(_ sender: Any?) {
     guard tableView.clickedRow >= 0,
-          tableView.clickedRow < microsoftAccounts.count else {
+          tableView.clickedRow < microsoftAccounts.count + offlineAccounts.count else {
       return
     }
 
     let rowToDelete = tableView.clickedRow
-    let account = microsoftAccounts[rowToDelete]
+    let isMicrosoftAccount = rowToDelete < microsoftAccounts.count
+
+    let accountName: String
+    let accountId: String
+    let isOffline: Bool
+
+    if isMicrosoftAccount {
+      let account = microsoftAccounts[rowToDelete]
+      accountName = account.name
+      accountId = account.id
+      isOffline = false
+    } else {
+      let account = offlineAccounts[rowToDelete - microsoftAccounts.count]
+      accountName = account.name
+      accountId = account.id
+      isOffline = true
+    }
 
     let alert = NSAlert()
     alert.messageText = Localized.Account.deleteConfirmTitle
-    alert.informativeText = Localized.Account.deleteAccountConfirmMessage(account.name)
+    alert.informativeText = Localized.Account.deleteAccountConfirmMessage(accountName)
     alert.alertStyle = .warning
     alert.addButton(withTitle: Localized.Account.deleteButton)
     alert.addButton(withTitle: Localized.Account.cancelButton)
@@ -303,12 +479,16 @@ class AccountViewController: NSViewController {
     guard let window = view.window else { return }
     alert.beginSheetModal(for: window) { [weak self] response in
       guard response == .alertFirstButtonReturn else { return }
-      self?.performDelete(accountId: account.id)
+      self?.performDelete(accountId: accountId, isOffline: isOffline)
     }
   }
 
-  private func performDelete(accountId: String) {
-    accountManager.deleteAccount(id: accountId)
+  private func performDelete(accountId: String, isOffline: Bool) {
+    if isOffline {
+      offlineAccountManager.deleteAccount(id: accountId)
+    } else {
+      accountManager.deleteAccount(id: accountId)
+    }
     loadAccounts()
     Logger.shared.info("Deleted account: \(accountId)", category: "Account")
   }
@@ -326,6 +506,43 @@ class AccountViewController: NSViewController {
       alert.runModal()
     }
   }
+
+  // MARK: - Avatar Loading
+
+  private func loadMinecraftAvatar(uuid: String?, username: String? = nil, completion: @escaping (NSImage?) -> Void) {
+    // Use Crafatar service for avatar rendering
+    // https://crafatar.com provides Minecraft player avatars
+    let avatarURLString: String
+
+    if let uuid = uuid {
+      // Format UUID properly (remove dashes for Crafatar)
+      let cleanUUID = uuid.replacingOccurrences(of: "-", with: "")
+      // Use size 128 for better quality, overlay for skin layers
+      avatarURLString = "https://crafatar.com/avatars/\(cleanUUID)?size=128&overlay"
+    } else if let username = username {
+      // For offline accounts, use Steve skin via MineAvatar
+      avatarURLString = "https://minotar.net/avatar/\(username)/128"
+    } else {
+      completion(nil)
+      return
+    }
+
+    guard let url = URL(string: avatarURLString) else {
+      completion(nil)
+      return
+    }
+
+    // Load image asynchronously
+    URLSession.shared.dataTask(with: url) { data, response, error in
+      guard let data = data,
+            error == nil,
+            let image = NSImage(data: data) else {
+        completion(nil)
+        return
+      }
+      completion(image)
+    }.resume()
+  }
 }
 
 // MARK: - Cell View Helpers
@@ -339,10 +556,25 @@ private extension AccountViewController {
     return containerView
   }
 
-  func createIconView() -> NSImageView {
+  func createIconView(for account: MicrosoftAccount) -> NSImageView {
     let iconView = NSImageView()
+    iconView.imageScaling = .scaleProportionallyUpOrDown
+    iconView.wantsLayer = true
+    iconView.layer?.cornerRadius = 4
+    iconView.layer?.masksToBounds = true
+
+    // Set default image first
     iconView.image = NSImage(systemSymbolName: "person.crop.circle.fill", accessibilityDescription: nil)
     iconView.contentTintColor = .systemGreen
+
+    // Load avatar asynchronously
+    loadMinecraftAvatar(uuid: account.id) { [weak iconView] image in
+      DispatchQueue.main.async {
+        iconView?.image = image
+        iconView?.contentTintColor = nil
+      }
+    }
+
     return iconView
   }
 
@@ -355,94 +587,35 @@ private extension AccountViewController {
     )
   }
 
-  func addDeveloperModeInfo(to container: NSView, for account: MicrosoftAccount, below nameLabel: BRLabel) {
-    let fullUUIDLabel = BRLabel(
-      text: "UUID: \(account.id)",
-      font: .systemFont(ofSize: 10, weight: .regular),
-      textColor: .secondaryLabelColor,
-      alignment: .left
-    )
-    fullUUIDLabel.maximumNumberOfLines = 1
-    container.addSubview(fullUUIDLabel)
-    fullUUIDLabel.snp.makeConstraints { make in
-      make.left.equalTo(nameLabel)
-      make.top.equalTo(nameLabel.snp.bottom).offset(4)
-      make.right.equalToSuperview().offset(-12)
+  func createOfflineIconView(for account: OfflineAccount) -> NSImageView {
+    let iconView = NSImageView()
+    iconView.imageScaling = .scaleProportionallyUpOrDown
+    iconView.wantsLayer = true
+    iconView.layer?.cornerRadius = 4
+    iconView.layer?.masksToBounds = true
+
+    // Set default image first
+    iconView.image = NSImage(systemSymbolName: "person.crop.circle", accessibilityDescription: nil)
+    iconView.contentTintColor = .systemBlue
+
+    // Load avatar asynchronously (offline accounts use Steve skin by default)
+    loadMinecraftAvatar(uuid: nil, username: account.name) { [weak iconView] image in
+      DispatchQueue.main.async {
+        iconView?.image = image
+        iconView?.contentTintColor = nil
+      }
     }
 
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateStyle = .medium
-    dateFormatter.timeStyle = .short
-    let timestampLabel = BRLabel(
-      text: Localized.Account.loginTime(dateFormatter.string(from: Date(timeIntervalSince1970: account.timestamp))),
-      font: .systemFont(ofSize: 10),
-      textColor: .secondaryLabelColor,
-      alignment: .left
-    )
-    container.addSubview(timestampLabel)
-    timestampLabel.snp.makeConstraints { make in
-      make.left.equalTo(nameLabel)
-      make.top.equalTo(fullUUIDLabel.snp.bottom).offset(3)
-      make.right.equalToSuperview().offset(-12)
-    }
-
-    let tokenLabel = BRLabel(
-      text: "Access Token: \(String(account.accessToken.prefix(40)))...",
-      font: NSFont.monospacedSystemFont(ofSize: 9, weight: .regular),
-      textColor: .secondaryLabelColor,
-      alignment: .left
-    )
-    tokenLabel.maximumNumberOfLines = 1
-    container.addSubview(tokenLabel)
-    tokenLabel.snp.makeConstraints { make in
-      make.left.equalTo(nameLabel)
-      make.top.equalTo(timestampLabel.snp.bottom).offset(3)
-      make.right.equalToSuperview().offset(-12)
-    }
-
-    let expiryTime = Date().timeIntervalSince1970 - account.timestamp
-    let hoursRemaining = max(0, 24 - Int(expiryTime / 3600))
-    let statusText = account.isExpired ? Localized.Account.statusExpired : Localized.Account.statusValid(hoursRemaining)
-    let statusLabel = BRLabel(
-      text: statusText,
-      font: .systemFont(ofSize: 10, weight: .medium),
-      textColor: account.isExpired ? .systemOrange : .systemGreen,
-      alignment: .left
-    )
-    container.addSubview(statusLabel)
-    statusLabel.snp.makeConstraints { make in
-      make.left.equalTo(nameLabel)
-      make.top.equalTo(tokenLabel.snp.bottom).offset(3)
-      make.right.equalToSuperview().offset(-12)
-    }
+    return iconView
   }
 
-  func addNormalModeInfo(to container: NSView, for account: MicrosoftAccount, below nameLabel: BRLabel) {
-    let uuidLabel = BRLabel(
-      text: "UUID: \(account.shortUUID)",
-      font: .systemFont(ofSize: 11),
-      textColor: .secondaryLabelColor,
+  func createOfflineNameLabel(for account: OfflineAccount) -> BRLabel {
+    BRLabel(
+      text: account.name,
+      font: .systemFont(ofSize: 14, weight: .medium),
+      textColor: .labelColor,
       alignment: .left
     )
-    container.addSubview(uuidLabel)
-    uuidLabel.snp.makeConstraints { make in
-      make.left.equalTo(nameLabel)
-      make.top.equalTo(nameLabel.snp.bottom).offset(2)
-      make.right.equalToSuperview().offset(-12)
-    }
-
-    let statusLabel = BRLabel(
-      text: account.isExpired ? Localized.Account.statusExpired : Localized.Account.statusLoggedIn,
-      font: .systemFont(ofSize: 10),
-      textColor: account.isExpired ? .systemOrange : .systemGreen,
-      alignment: .left
-    )
-    container.addSubview(statusLabel)
-    statusLabel.snp.makeConstraints { make in
-      make.left.equalTo(nameLabel)
-      make.top.equalTo(uuidLabel.snp.bottom).offset(2)
-      make.right.equalToSuperview().offset(-12)
-    }
   }
 }
 
@@ -451,7 +624,7 @@ private extension AccountViewController {
 extension AccountViewController: NSTableViewDataSource {
 
   func numberOfRows(in tableView: NSTableView) -> Int {
-    return microsoftAccounts.count
+    return microsoftAccounts.count + offlineAccounts.count
   }
 }
 
@@ -460,7 +633,6 @@ extension AccountViewController: NSTableViewDataSource {
 extension AccountViewController: NSTableViewDelegate {
 
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-    let account = microsoftAccounts[row]
     let cellView = NSView()
     let containerView = createContainerView()
     cellView.addSubview(containerView)
@@ -469,7 +641,22 @@ extension AccountViewController: NSTableViewDelegate {
       make.edges.equalToSuperview().inset(NSEdgeInsets(top: 2, left: 4, bottom: 2, right: 4))
     }
 
-    let iconView = createIconView()
+    // Check if this is a Microsoft or Offline account
+    if row < microsoftAccounts.count {
+      // Microsoft account
+      let account = microsoftAccounts[row]
+      setupMicrosoftAccountCell(containerView: containerView, account: account)
+    } else {
+      // Offline account
+      let account = offlineAccounts[row - microsoftAccounts.count]
+      setupOfflineAccountCell(containerView: containerView, account: account)
+    }
+
+    return cellView
+  }
+
+  private func setupMicrosoftAccountCell(containerView: NSView, account: MicrosoftAccount) {
+    let iconView = createIconView(for: account)
     containerView.addSubview(iconView)
 
     iconView.snp.makeConstraints { make in
@@ -492,8 +679,32 @@ extension AccountViewController: NSTableViewDelegate {
     } else {
       addNormalModeInfo(to: containerView, for: account, below: nameLabel)
     }
+  }
 
-    return cellView
+  private func setupOfflineAccountCell(containerView: NSView, account: OfflineAccount) {
+    let iconView = createOfflineIconView(for: account)
+    containerView.addSubview(iconView)
+
+    iconView.snp.makeConstraints { make in
+      make.left.equalToSuperview().offset(12)
+      make.top.equalToSuperview().offset(10)
+      make.width.height.equalTo(36)
+    }
+
+    let nameLabel = createOfflineNameLabel(for: account)
+    containerView.addSubview(nameLabel)
+
+    nameLabel.snp.makeConstraints { make in
+      make.left.equalTo(iconView.snp.right).offset(12)
+      make.top.equalToSuperview().offset(10)
+      make.right.equalToSuperview().offset(-12)
+    }
+
+    if isDeveloperMode {
+      addOfflineDeveloperModeInfo(to: containerView, for: account, below: nameLabel)
+    } else {
+      addOfflineNormalModeInfo(to: containerView, for: account, below: nameLabel)
+    }
   }
 
   func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {

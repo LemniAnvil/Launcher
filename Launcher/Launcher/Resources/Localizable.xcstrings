@@ -1251,6 +1251,9 @@
         }
       }
     },
+    "Add Offline Account": {
+      "comment": "[Alert] Add offline account title.\n[Button] Add offline account button."
+    },
     "All Versions": {
       "comment": "[Filter] All versions option.",
       "localizations": {
@@ -1839,6 +1842,9 @@
           }
         }
       }
+    },
+    "Enter a username for the offline account:": {
+      "comment": "[Alert] Add offline account message."
     },
     "Enter instance name": {
       "comment": "[Placeholder] Instance name placeholder.",
@@ -2742,6 +2748,9 @@
         }
       }
     },
+    "No offline accounts\nClick the button above to add an offline account": {
+      "comment": "[Text] Empty state message for offline accounts."
+    },
     "No saved accounts": {
       "comment": "[Message] No saved accounts message.",
       "localizations": {
@@ -2818,6 +2827,12 @@
           }
         }
       }
+    },
+    "Offline": {
+      "comment": "[Label] Offline account type."
+    },
+    "Offline account added successfully": {
+      "comment": "[Status] Offline account added."
     },
     "Offline Launch": {
       "comment": "[Text] Offline launch window title.",
@@ -3573,6 +3588,9 @@
           }
         }
       }
+    },
+    "Username (3-16 characters)": {
+      "comment": "[Placeholder] Offline account username placeholder."
     },
     "Username can only contain letters, numbers, and underscores.": {
       "comment": "[Alert] Invalid username format error.",

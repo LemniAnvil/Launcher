@@ -693,9 +693,18 @@ enum Localized {
 
     // Buttons
     static let signInMicrosoftButton = String(localized: "Sign in with Microsoft", comment: "[Button] Sign in with Microsoft button.")
+    static let addOfflineAccountButton = String(localized: "Add Offline Account", comment: "[Button] Add offline account button.")
 
     // Empty State
     static let emptyMicrosoftMessage = String(localized: "No Microsoft accounts\nClick the button above to sign in", comment: "[Text] Empty state message for Microsoft accounts.")
+    static let emptyOfflineMessage = String(localized: "No offline accounts\nClick the button above to add an offline account", comment: "[Text] Empty state message for offline accounts.")
+
+    // Offline Account
+    static let offlineAccountTitle = String(localized: "Add Offline Account", comment: "[Alert] Add offline account title.")
+    static let offlineAccountMessage = String(localized: "Enter a username for the offline account:", comment: "[Alert] Add offline account message.")
+    static let offlineAccountPlaceholder = String(localized: "Username (3-16 characters)", comment: "[Placeholder] Offline account username placeholder.")
+    static let offlineAccountAdded = String(localized: "Offline account added successfully", comment: "[Status] Offline account added.")
+    static let offlineAccountType = String(localized: "Offline", comment: "[Label] Offline account type.")
 
     // Developer Mode
     static let developerModeLabel = String(localized: "Developer Mode", comment: "[Label] Developer mode toggle label.")
