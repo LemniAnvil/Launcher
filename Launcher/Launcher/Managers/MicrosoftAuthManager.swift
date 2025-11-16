@@ -106,7 +106,7 @@ struct SecureLoginData {
 
 // MARK: - Microsoft Authentication Manager
 
-class MicrosoftAuthManager {
+class MicrosoftAuthManager: MicrosoftAuthProtocol {
   static let shared = MicrosoftAuthManager()
 
   // Azure Application Configuration
