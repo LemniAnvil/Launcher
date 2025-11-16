@@ -396,6 +396,19 @@ class AddInstanceViewController: NSViewController {
       alignment: .center
     )
     label.maximumNumberOfLines = 0
+    label.isHidden = false  // Show initially when no mod loader selected (NONE is default)
+    return label
+  }()
+
+  private let modLoaderVersionPlaceholder: BRLabel = {
+    let label = BRLabel(
+      text: Localized.AddInstance.modLoaderVersionPlaceholder,
+      font: .systemFont(ofSize: 13),
+      textColor: .tertiaryLabelColor,
+      alignment: .center
+    )
+    label.maximumNumberOfLines = 0
+    label.isHidden = true  // Hide initially (only show when mod loader is selected but no versions available)
     return label
   }()
 
@@ -418,7 +431,7 @@ class AddInstanceViewController: NSViewController {
       textColor: .labelColor,
       alignment: .left
     )
-    // Show label initially (will display empty table when no mod loader selected)
+    // Always show label
     label.isHidden = false
     return label
   }()
@@ -441,7 +454,7 @@ class AddInstanceViewController: NSViewController {
         self?.selectedModLoaderVersion = item?.id
       }
     )
-    // Show table initially (empty when no mod loader selected)
+    // Always show table (placeholder will overlay when needed)
     tableView.isHidden = false
     return tableView
   }()
@@ -783,9 +796,11 @@ class AddInstanceViewController: NSViewController {
     customContentView.addSubview(versionModLoaderSeparator)
     customContentView.addSubview(modLoaderLabel)
     customContentView.addSubview(modLoaderDescriptionLabel)
-    customContentView.addSubview(modLoaderPlaceholder)
     customContentView.addSubview(modLoaderVersionLabel)
     customContentView.addSubview(modLoaderVersionTableView)
+    // Add placeholders after table so they overlay on top
+    customContentView.addSubview(modLoaderPlaceholder)
+    customContentView.addSubview(modLoaderVersionPlaceholder)
     customContentView.addSubview(modLoaderVersionLoadingIndicator)
     customContentView.addSubview(modLoaderRefreshButton)
 
@@ -863,12 +878,6 @@ class AddInstanceViewController: NSViewController {
       make.width.equalTo(200)
     }
 
-    modLoaderPlaceholder.snp.makeConstraints { make in
-      make.centerX.equalTo(modLoaderVersionTableView)
-      make.centerY.equalTo(modLoaderVersionTableView)
-      make.width.equalTo(240)
-    }
-
     var previousButton: NSButton?
     for button in modLoaderRadioButtons {
       button.snp.makeConstraints { make in
@@ -894,6 +903,18 @@ class AddInstanceViewController: NSViewController {
       make.left.equalToSuperview().offset(150)
       make.right.equalToSuperview().offset(-10)
       make.bottom.equalToSuperview().offset(-10)
+    }
+
+    modLoaderPlaceholder.snp.makeConstraints { make in
+      make.centerX.equalTo(modLoaderVersionTableView)
+      make.centerY.equalTo(modLoaderVersionTableView)
+      make.width.equalTo(240)
+    }
+
+    modLoaderVersionPlaceholder.snp.makeConstraints { make in
+      make.centerX.equalTo(modLoaderVersionTableView)
+      make.centerY.equalTo(modLoaderVersionTableView)
+      make.width.equalTo(280)
     }
 
     modLoaderVersionLoadingIndicator.snp.makeConstraints { make in
@@ -954,17 +975,23 @@ class AddInstanceViewController: NSViewController {
       break
     }
 
-    // Show/hide description label and placeholder
+    // Show/hide description label
     modLoaderDescriptionLabel.isHidden = (selectedModLoader == .NONE)
-    modLoaderPlaceholder.isHidden = (selectedModLoader != .NONE)
 
     // Load mod loader versions when a mod loader is selected
     if selectedModLoader != .NONE {
+      // Hide the "select mod loader" placeholder (overlay)
+      modLoaderPlaceholder.isHidden = true
+      // Hide version placeholder initially (will show if loading fails)
+      modLoaderVersionPlaceholder.isHidden = true
+      // Load versions
       loadModLoaderVersions()
     } else {
-      // Show empty version table when NONE is selected (don't hide it)
-      modLoaderVersionLabel.isHidden = false
-      modLoaderVersionTableView.isHidden = false
+      // Show the "select mod loader" placeholder (overlay on table)
+      modLoaderPlaceholder.isHidden = false
+      // Hide the "select version" placeholder (not applicable when NONE is selected)
+      modLoaderVersionPlaceholder.isHidden = true
+      // Clear data
       modLoaderVersionTableView.updateItems([])
       availableModLoaderVersions = []
       selectedModLoaderVersion = nil
@@ -977,9 +1004,10 @@ class AddInstanceViewController: NSViewController {
       return
     }
 
-    // Show loading indicator
+    // Show loading indicator and hide placeholder
     modLoaderVersionLoadingIndicator.isHidden = false
     modLoaderVersionLoadingIndicator.startAnimation(nil)
+    modLoaderVersionPlaceholder.isHidden = true
     modLoaderVersionTableView.tableView.isEnabled = false
 
     Task {
@@ -1017,6 +1045,7 @@ class AddInstanceViewController: NSViewController {
           self.modLoaderVersionTableView.updateItems([])
           self.modLoaderVersionLoadingIndicator.stopAnimation(nil)
           self.modLoaderVersionLoadingIndicator.isHidden = true
+          self.modLoaderVersionPlaceholder.isHidden = false
           self.modLoaderVersionTableView.tableView.isEnabled = false
 
           // Show error alert

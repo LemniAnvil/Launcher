@@ -2797,6 +2797,17 @@
         }
       }
     },
+    "Please select a mod loader first": {
+      "comment": "[Text] Mod loader version placeholder when no loader selected.",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请先选择 Mod 加载器"
+          }
+        }
+      }
+    },
     "No offline accounts\nClick the button above to add an offline account": {
       "comment": "[Text] Empty state message for offline accounts.",
       "localizations": {

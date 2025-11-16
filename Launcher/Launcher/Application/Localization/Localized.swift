@@ -852,6 +852,7 @@ enum Localized {
     static let modLoaderNone = String(localized: "None", comment: "[Option] No mod loader.")
     static let modLoaderDescription = String(localized: "Select a mod loader and version to enable mod support for this instance.", comment: "[Text] Mod loader description.")
     static let modLoaderVersionLabel = String(localized: "Loader Version:", comment: "[Label] Mod loader version label.")
+    static let modLoaderVersionPlaceholder = String(localized: "Please select a mod loader first", comment: "[Text] Mod loader version placeholder when no loader selected.")
     static let loaderVersionColumn = String(localized: "Version", comment: "[Table] Loader version column.")
 
     // Buttons
