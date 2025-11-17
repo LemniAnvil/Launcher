@@ -8,6 +8,13 @@
 import AppKit
 import Yatagarasu
 
+// MARK: - Mojang Username API Response Models
+
+private struct MojangUsernameResponse: Codable {
+  let id: String
+  let name: String
+}
+
 extension AccountViewController {
   // MARK: - Actions
 
@@ -17,55 +24,114 @@ extension AccountViewController {
   }
 
   @objc func loginMicrosoft() {
-    // Open Microsoft authentication window
-    let authWindowController = MicrosoftAuthWindowController()
-    authWindowController.window?.makeKeyAndOrderFront(nil)
+    // Directly start the authentication flow without opening a separate window
+    Task { @MainActor in
+      await performMicrosoftLogin()
+    }
+  }
 
-    // Set up callbacks
-    if let viewController = authWindowController.contentViewController as? MicrosoftAuthViewController {
-      viewController.onAuthSuccess = { [weak self] response in
-        guard let self = self else { return }
+  // MARK: - Microsoft Authentication
 
-        // Convert skin and cape data from response
-        let skins = response.skins?.compactMap { responseSkin -> Skin in
-          Skin(
-            id: responseSkin.id,
-            state: responseSkin.state,
-            url: responseSkin.url,
-            variant: responseSkin.variant,
-            alias: responseSkin.alias
-          )
+  private func performMicrosoftLogin() async {
+    do {
+      // Step 1: Generate login URL
+      loginData = authManager.getSecureLoginData()
+
+      guard let loginData = loginData else {
+        throw MicrosoftAuthError.invalidURL
+      }
+
+      Logger.shared.info("Generated login URL", category: "MicrosoftAuth")
+
+      // Set up callback handler for when the app receives the URL
+      AppDelegate.pendingAuthCallback = { [weak self] callbackURL in
+        Task { @MainActor in
+          await self?.handleMicrosoftCallback(callbackURL)
         }
+      }
 
-        let capes = response.capes?.compactMap { responseCape -> Cape in
-          Cape(
-            id: responseCape.id,
-            state: responseCape.state,
-            url: responseCape.url,
-            alias: responseCape.alias
-          )
-        }
+      // Step 2: Open browser for user authentication
+      guard let url = URL(string: loginData.url) else {
+        throw MicrosoftAuthError.invalidURL
+      }
 
-        // Create account with all data including skins and capes
-        let account = MicrosoftAccount(
-          id: response.id,
-          name: response.name,
-          accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
-          timestamp: Date().timeIntervalSince1970,
-          skins: skins,
-          capes: capes
+      NSWorkspace.shared.open(url)
+      Logger.shared.info("Opened browser for Microsoft authentication", category: "MicrosoftAuth")
+    } catch {
+      Logger.shared.error("Login failed: \(error.localizedDescription)", category: "MicrosoftAuth")
+      showAlert(
+        title: Localized.MicrosoftAuth.alertLoginFailedTitle,
+        message: Localized.MicrosoftAuth.alertLoginFailedMessage(error.localizedDescription)
+      )
+    }
+  }
+
+  private func handleMicrosoftCallback(_ callbackURL: String) async {
+    guard let loginData = loginData else {
+      Logger.shared.error("Login data not found", category: "MicrosoftAuth")
+      return
+    }
+
+    do {
+      // Step 3: Parse authorization code
+      let authCode = try authManager.parseAuthCodeURL(callbackURL, expectedState: loginData.state)
+      Logger.shared.info("Authorization code received", category: "MicrosoftAuth")
+
+      // Step 4-7: Complete login flow
+      let loginResponse = try await authManager.completeLogin(
+        authCode: authCode,
+        codeVerifier: loginData.codeVerifier
+      )
+
+      Logger.shared.info("Login successful: \(loginResponse.name)", category: "MicrosoftAuth")
+
+      // Convert skin and cape data from response
+      let skins = loginResponse.skins?.compactMap { responseSkin -> Skin in
+        Skin(
+          id: responseSkin.id,
+          state: responseSkin.state,
+          url: responseSkin.url,
+          variant: responseSkin.variant,
+          alias: responseSkin.alias
         )
-
-        // Save account
-        self.accountManager.saveAccount(account)
-        self.loadAccounts()
-        Logger.shared.info("Account added: \(response.name) with \(skins?.count ?? 0) skins and \(capes?.count ?? 0) capes", category: "Account")
       }
 
-      viewController.onAuthFailure = { error in
-        Logger.shared.error("Authentication failed: \(error.localizedDescription)", category: "Account")
+      let capes = loginResponse.capes?.compactMap { responseCape -> Cape in
+        Cape(
+          id: responseCape.id,
+          state: responseCape.state,
+          url: responseCape.url,
+          alias: responseCape.alias
+        )
       }
+
+      // Create account with all data including skins and capes
+      let account = MicrosoftAccount(
+        id: loginResponse.id,
+        name: loginResponse.name,
+        accessToken: loginResponse.accessToken,
+        refreshToken: loginResponse.refreshToken,
+        timestamp: Date().timeIntervalSince1970,
+        skins: skins,
+        capes: capes
+      )
+
+      // Save account
+      accountManager.saveAccount(account)
+      loadAccounts()
+      Logger.shared.info("Account added: \(loginResponse.name) with \(skins?.count ?? 0) skins and \(capes?.count ?? 0) capes", category: "Account")
+
+      // Show success alert
+      showAlert(
+        title: Localized.MicrosoftAuth.alertSuccessTitle,
+        message: Localized.MicrosoftAuth.alertSuccessMessage(loginResponse.name, loginResponse.id)
+      )
+    } catch {
+      Logger.shared.error("Callback handling failed: \(error.localizedDescription)", category: "MicrosoftAuth")
+      showAlert(
+        title: Localized.MicrosoftAuth.alertLoginFailedTitle,
+        message: Localized.MicrosoftAuth.alertLoginFailedMessage(error.localizedDescription)
+      )
     }
   }
 
@@ -118,19 +184,85 @@ extension AccountViewController {
       return
     }
 
-    // Generate UUID for the account
-    let uuid = offlineAccountManager.generateUUID(for: trimmedUsername)
+    // Validate username against Mojang API to get correct capitalization
+    validateUsernameWithMojang(trimmedUsername) { [weak self] validatedUsername in
+      guard let self = self else { return }
 
-    // Create and save the offline account
-    let account = OfflineAccount(
-      id: uuid,
-      name: trimmedUsername,
-      timestamp: Date().timeIntervalSince1970
-    )
+      DispatchQueue.main.async {
+        // Use the validated username (with correct capitalization) or the original if validation fails
+        let finalUsername = validatedUsername ?? trimmedUsername
 
-    offlineAccountManager.saveAccount(account)
-    loadAccounts()
-    Logger.shared.info("Offline account added: \(trimmedUsername)", category: "Account")
+        // Generate UUID for the account
+        let uuid = self.offlineAccountManager.generateUUID(for: finalUsername)
+
+        // Create and save the offline account
+        let account = OfflineAccount(
+          id: uuid,
+          name: finalUsername,
+          timestamp: Date().timeIntervalSince1970
+        )
+
+        self.offlineAccountManager.saveAccount(account)
+        self.loadAccounts()
+        Logger.shared.info("Offline account added: \(finalUsername)\(validatedUsername != nil ? " (validated)" : "")", category: "Account")
+      }
+    }
+  }
+
+  // MARK: - Username Validation
+
+  /// Validates username against Mojang API to get correct capitalization
+  /// - Parameters:
+  ///   - username: The username to validate
+  ///   - completion: Completion handler with validated username (nil if not found or error)
+  private func validateUsernameWithMojang(_ username: String, completion: @escaping (String?) -> Void) {
+    // Try both Mojang API endpoints
+    // 1. First try the modern endpoint
+    let modernURL = "https://api.minecraftservices.com/minecraft/profile/lookup/name/\(username)"
+
+    validateUsernameAtEndpoint(modernURL) { validatedName in
+      if let validatedName = validatedName {
+        completion(validatedName)
+      } else {
+        // 2. Fallback to legacy endpoint if modern fails
+        let legacyURL = "https://api.mojang.com/users/profiles/minecraft/\(username)"
+        self.validateUsernameAtEndpoint(legacyURL) { legacyValidatedName in
+          completion(legacyValidatedName)
+        }
+      }
+    }
+  }
+
+  private func validateUsernameAtEndpoint(_ urlString: String, completion: @escaping (String?) -> Void) {
+    guard let url = URL(string: urlString) else {
+      completion(nil)
+      return
+    }
+
+    URLSession.shared.dataTask(with: url) { data, response, error in
+      // Check for errors or invalid response
+      guard let data = data,
+            error == nil,
+            let httpResponse = response as? HTTPURLResponse else {
+        completion(nil)
+        return
+      }
+
+      // 200: Username found
+      // 204/404: Username not found (not a registered Minecraft account)
+      if httpResponse.statusCode == 200 {
+        if let mojangResponse = try? JSONDecoder().decode(MojangUsernameResponse.self, from: data) {
+          // Username exists on Mojang servers - use the correctly capitalized name
+          completion(mojangResponse.name)
+        } else {
+          completion(nil)
+        }
+      } else {
+        // Username not found or error - this is okay for offline mode
+        // User can still use any username they want
+        completion(nil)
+      }
+    }.resume()
   }
 
   // MARK: - Context Menu

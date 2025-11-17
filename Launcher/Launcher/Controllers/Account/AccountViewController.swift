@@ -25,6 +25,10 @@ class AccountViewController: NSViewController {
     }
   }
 
+  // Microsoft authentication properties
+  var loginData: SecureLoginData?
+  let authManager = MicrosoftAuthManager.shared
+
   // UI components
   private let titleLabel = BRLabel(
     text: Localized.Account.title,
