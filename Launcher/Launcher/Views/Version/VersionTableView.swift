@@ -42,6 +42,7 @@ class VersionTableView<Item: Hashable>: NSView {
   private let columns: [ColumnConfig]
   private var dataSource: NSTableViewDiffableDataSource<Section, Item>?
   private var onSelectionChanged: ((Item?) -> Void)?
+  // swiftlint:disable:next weak_delegate
   private var tableDelegate: TableViewDelegateWrapper?
 
   enum Section: Hashable {
@@ -61,11 +62,16 @@ class VersionTableView<Item: Hashable>: NSView {
 
   private(set) lazy var tableView: NSTableView = {
     let tableView = NSTableView()
-    tableView.style = .plain
-    tableView.rowHeight = 36
-    tableView.backgroundColor = .clear
-    tableView.selectionHighlightStyle = .regular
-    tableView.intercellSpacing = NSSize(width: 0, height: 0)
+    // Finder-style appearance
+    tableView.style = .fullWidth
+    tableView.rowSizeStyle = .medium
+    tableView.usesAlternatingRowBackgroundColors = true
+    tableView.allowsEmptySelection = false
+    tableView.allowsMultipleSelection = false
+    tableView.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
+    tableView.intercellSpacing = NSSize(width: 3, height: 6)
+    tableView.gridStyleMask = [.solidHorizontalGridLineMask]
+    tableView.gridColor = NSColor.separatorColor.withAlphaComponent(0.3)
 
     // Add columns
     for column in columns {
@@ -74,7 +80,7 @@ class VersionTableView<Item: Hashable>: NSView {
       )
       tableColumn.title = column.title
       tableColumn.width = max(column.width, 20) // Ensure minimum width
-      tableColumn.minWidth = 20 // Set minimum width to prevent negative values
+      tableColumn.minWidth = 80 // Set reasonable minimum width
       tableView.addTableColumn(tableColumn)
     }
 
@@ -143,7 +149,7 @@ class VersionTableView<Item: Hashable>: NSView {
     }
 
     // Try to reuse an existing cell view
-    let reuseIdentifier = columnIdentifier
+    let reuseIdentifier = "DataCell"
     var cellView = tableView.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier(reuseIdentifier),
       owner: self
@@ -154,23 +160,29 @@ class VersionTableView<Item: Hashable>: NSView {
       cellView = NSTableCellView()
       cellView?.identifier = NSUserInterfaceItemIdentifier(reuseIdentifier)
 
+      // Create text field (NOT label) for Finder-style appearance
       let textField = NSTextField()
       textField.isBordered = false
-      textField.isBezeled = false
       textField.drawsBackground = false
       textField.isEditable = false
       textField.isSelectable = false
-      textField.translatesAutoresizingMaskIntoConstraints = false
+      textField.lineBreakMode = .byTruncatingTail
+      textField.usesSingleLineMode = true
+      textField.cell?.wraps = false
+      textField.cell?.isScrollable = false
 
-      cellView?.addSubview(textField)
+      // Set content hugging and compression resistance
+      textField.setContentHuggingPriority(.defaultLow, for: .horizontal)
+      textField.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+
       cellView?.textField = textField
+      cellView?.addSubview(textField)
 
-      if let cellView = cellView {
-        NSLayoutConstraint.activate([
-          textField.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 8),
-          textField.centerYAnchor.constraint(equalTo: cellView.centerYAnchor),
-          textField.trailingAnchor.constraint(lessThanOrEqualTo: cellView.trailingAnchor, constant: -8),
-        ])
+      // Pin to edges with better padding for Finder-style appearance
+      textField.snp.makeConstraints { make in
+        make.left.equalToSuperview().offset(4)
+        make.right.equalToSuperview().offset(-4)
+        make.centerY.equalToSuperview()
       }
     }
 
@@ -179,9 +191,11 @@ class VersionTableView<Item: Hashable>: NSView {
       return cellView ?? NSTableCellView()
     }
 
+    // Set content with larger font for Finder-style appearance
     textField.stringValue = columnConfig.valueProvider(item)
-    textField.font = columnConfig.fontProvider?(item) ?? .systemFont(ofSize: 12)
+    textField.font = columnConfig.fontProvider?(item) ?? .systemFont(ofSize: 13)
     textField.textColor = columnConfig.colorProvider?(item) ?? .labelColor
+    textField.alignment = .left
 
     return cellView ?? NSTableCellView()
   }
@@ -237,5 +251,10 @@ private class TableViewDelegateWrapper: NSObject, NSTableViewDelegate {
 
   func tableViewSelectionDidChange(_ notification: Notification) {
     selectionChangedHandler?()
+  }
+
+  // Custom row height for Finder-style appearance
+  func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+    return 24.0
   }
 }

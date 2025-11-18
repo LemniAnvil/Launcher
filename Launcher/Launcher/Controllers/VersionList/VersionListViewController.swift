@@ -483,6 +483,11 @@ class VersionListViewController: NSViewController {
     // Will be handled when versions are loaded
   }
 
+  /// Preselect a version for download (alias for setSelectedVersion)
+  func preselectVersion(_ versionId: String) {
+    setSelectedVersion(versionId)
+  }
+
   // MARK: - Test Methods
 
   @objc private func testRefreshVersions() {

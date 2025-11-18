@@ -13,7 +13,7 @@ class AccountWindowController: NSWindowController, NSWindowDelegate {
     // Create window
     let window = NSWindow(
       contentRect: NSRect(x: 0, y: 0, width: 400, height: 500),
-      styleMask: [.titled, .closable, .resizable, .miniaturizable],
+      styleMask: [.titled, .closable],
       backing: .buffered,
       defer: false
     )

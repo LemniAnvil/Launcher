@@ -231,6 +231,8 @@ class AddInstanceViewController: NSViewController {
     scrollView.wantsLayer = true
     scrollView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
     scrollView.layer?.cornerRadius = 8
+    scrollView.layer?.borderWidth = 1
+    scrollView.layer?.borderColor = NSColor.separatorColor.cgColor
     return scrollView
   }()
 
@@ -239,6 +241,8 @@ class AddInstanceViewController: NSViewController {
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
     view.layer?.cornerRadius = 8
+    view.layer?.borderWidth = 1
+    view.layer?.borderColor = NSColor.separatorColor.cgColor
     return view
   }()
 
@@ -247,6 +251,85 @@ class AddInstanceViewController: NSViewController {
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
     view.layer?.cornerRadius = 8
+    view.layer?.borderWidth = 1
+    view.layer?.borderColor = NSColor.separatorColor.cgColor
+    return view
+  }()
+
+  private lazy var importContentView: NSView = {
+    let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    view.layer?.cornerRadius = 8
+    view.layer?.borderWidth = 1
+    view.layer?.borderColor = NSColor.separatorColor.cgColor
+    view.isHidden = true
+    return view
+  }()
+
+  private lazy var atLauncherContentView: NSView = {
+    let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    view.layer?.cornerRadius = 8
+    view.layer?.borderWidth = 1
+    view.layer?.borderColor = NSColor.separatorColor.cgColor
+    view.isHidden = true
+    return view
+  }()
+
+  private lazy var curseForgeContentView: NSView = {
+    let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    view.layer?.cornerRadius = 8
+    view.layer?.borderWidth = 1
+    view.layer?.borderColor = NSColor.separatorColor.cgColor
+    view.isHidden = true
+    return view
+  }()
+
+  private lazy var ftbLegacyContentView: NSView = {
+    let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    view.layer?.cornerRadius = 8
+    view.layer?.borderWidth = 1
+    view.layer?.borderColor = NSColor.separatorColor.cgColor
+    view.isHidden = true
+    return view
+  }()
+
+  private lazy var ftbImportContentView: NSView = {
+    let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    view.layer?.cornerRadius = 8
+    view.layer?.borderWidth = 1
+    view.layer?.borderColor = NSColor.separatorColor.cgColor
+    view.isHidden = true
+    return view
+  }()
+
+  private lazy var modrinthContentView: NSView = {
+    let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    view.layer?.cornerRadius = 8
+    view.layer?.borderWidth = 1
+    view.layer?.borderColor = NSColor.separatorColor.cgColor
+    view.isHidden = true
+    return view
+  }()
+
+  private lazy var technicContentView: NSView = {
+    let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    view.layer?.cornerRadius = 8
+    view.layer?.borderWidth = 1
+    view.layer?.borderColor = NSColor.separatorColor.cgColor
+    view.isHidden = true
     return view
   }()
 
@@ -338,7 +421,7 @@ class AddInstanceViewController: NSViewController {
         title: Localized.AddInstance.columnVersion,
         width: 120,
         valueProvider: { $0.id },
-        fontProvider: { _ in .systemFont(ofSize: 12, weight: .medium) },
+        fontProvider: { _ in .systemFont(ofSize: 13, weight: .medium) },
         colorProvider: { _ in .labelColor }
       ),
       .init(
@@ -346,7 +429,7 @@ class AddInstanceViewController: NSViewController {
         title: Localized.AddInstance.columnRelease,
         width: 120,
         valueProvider: { $0.releaseDate },
-        fontProvider: { _ in .systemFont(ofSize: 12) },
+        fontProvider: { _ in .systemFont(ofSize: 13) },
         colorProvider: { _ in .secondaryLabelColor }
       ),
       .init(
@@ -354,7 +437,7 @@ class AddInstanceViewController: NSViewController {
         title: Localized.AddInstance.columnType,
         width: 100,
         valueProvider: { $0.type },
-        fontProvider: { _ in .systemFont(ofSize: 12, weight: .semibold) },
+        fontProvider: { _ in .systemFont(ofSize: 13, weight: .semibold) },
         colorProvider: { [weak self] item in
           self?.getTypeColor(for: item.versionType) ?? .labelColor
         }
@@ -443,7 +526,7 @@ class AddInstanceViewController: NSViewController {
         title: Localized.AddInstance.loaderVersionColumn,
         width: 220,
         valueProvider: { $0.id },
-        fontProvider: { _ in .systemFont(ofSize: 12) },
+        fontProvider: { _ in .systemFont(ofSize: 13) },
         colorProvider: { _ in .labelColor }
       ),
     ]
@@ -696,6 +779,13 @@ class AddInstanceViewController: NSViewController {
     view.addSubview(categoryScrollView)
     view.addSubview(instanceInfoView)
     view.addSubview(customContentView)
+    view.addSubview(importContentView)
+    view.addSubview(atLauncherContentView)
+    view.addSubview(curseForgeContentView)
+    view.addSubview(ftbLegacyContentView)
+    view.addSubview(ftbImportContentView)
+    view.addSubview(modrinthContentView)
+    view.addSubview(technicContentView)
     view.addSubview(helpButton)
     view.addSubview(cancelButton)
     view.addSubview(confirmButton)
@@ -703,6 +793,7 @@ class AddInstanceViewController: NSViewController {
     categoryScrollView.documentView = categoryTableView
     setupInstanceInfoView()
     setupCustomContentView()
+    setupOtherContentViews()
 
     categoryScrollView.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
@@ -718,11 +809,25 @@ class AddInstanceViewController: NSViewController {
       make.height.equalTo(140)
     }
 
-    customContentView.snp.makeConstraints { make in
-      make.top.equalTo(instanceInfoView.snp.bottom).offset(20)
-      make.left.equalTo(categoryScrollView.snp.right).offset(20)
-      make.right.equalToSuperview().offset(-20)
-      make.bottom.equalTo(cancelButton.snp.top).offset(-20)
+    // Setup constraints for all content views to occupy the same space
+    let contentViews = [
+      customContentView,
+      importContentView,
+      atLauncherContentView,
+      curseForgeContentView,
+      ftbLegacyContentView,
+      ftbImportContentView,
+      modrinthContentView,
+      technicContentView
+    ]
+
+    for contentView in contentViews {
+      contentView.snp.makeConstraints { make in
+        make.top.equalTo(instanceInfoView.snp.bottom).offset(20)
+        make.left.equalTo(categoryScrollView.snp.right).offset(20)
+        make.right.equalToSuperview().offset(-20)
+        make.bottom.equalTo(cancelButton.snp.top).offset(-20)
+      }
     }
 
     helpButton.snp.makeConstraints { make in
@@ -927,6 +1032,46 @@ class AddInstanceViewController: NSViewController {
       make.top.equalTo(modLoaderRadioButtons.last!.snp.bottom).offset(12)
       make.left.equalToSuperview().offset(10)
       make.width.equalTo(100)
+    }
+  }
+
+  private func setupOtherContentViews() {
+    // Setup placeholder content for other views
+    setupPlaceholderContent(for: importContentView, title: Localized.AddInstance.categoryImport)
+    setupPlaceholderContent(for: atLauncherContentView, title: "ATLauncher")
+    setupPlaceholderContent(for: curseForgeContentView, title: "CurseForge")
+    setupPlaceholderContent(for: ftbLegacyContentView, title: "FTB Legacy")
+    setupPlaceholderContent(for: ftbImportContentView, title: Localized.AddInstance.categoryFTBImport)
+    setupPlaceholderContent(for: modrinthContentView, title: "Modrinth")
+    setupPlaceholderContent(for: technicContentView, title: "Technic")
+  }
+
+  private func setupPlaceholderContent(for contentView: NSView, title: String) {
+    let titleLabel = BRLabel(
+      text: title,
+      font: .systemFont(ofSize: 16, weight: .semibold),
+      textColor: .labelColor,
+      alignment: .center
+    )
+
+    let comingSoonLabel = BRLabel(
+      text: "Coming Soon",
+      font: .systemFont(ofSize: 14),
+      textColor: .secondaryLabelColor,
+      alignment: .center
+    )
+
+    contentView.addSubview(titleLabel)
+    contentView.addSubview(comingSoonLabel)
+
+    titleLabel.snp.makeConstraints { make in
+      make.centerX.equalToSuperview()
+      make.centerY.equalToSuperview().offset(-20)
+    }
+
+    comingSoonLabel.snp.makeConstraints { make in
+      make.centerX.equalToSuperview()
+      make.top.equalTo(titleLabel.snp.bottom).offset(12)
     }
   }
 
@@ -1146,7 +1291,51 @@ extension AddInstanceViewController: NSTableViewDelegate {
   }
 
   private func updateContentView() {
-    // Update content view based on selected category
+    // Hide all content views first
+    customContentView.isHidden = true
+    importContentView.isHidden = true
+    atLauncherContentView.isHidden = true
+    curseForgeContentView.isHidden = true
+    ftbLegacyContentView.isHidden = true
+    ftbImportContentView.isHidden = true
+    modrinthContentView.isHidden = true
+    technicContentView.isHidden = true
+
+    // Update icon based on selected category
+    let config = NSImage.SymbolConfiguration(pointSize: 60, weight: .regular)
+    let image = NSImage(
+      systemSymbolName: selectedCategory.iconName,
+      accessibilityDescription: nil
+    )
+    iconImageView.image = image?.withSymbolConfiguration(config)
+
+    // Update icon color and show appropriate content view
+    switch selectedCategory {
+    case .custom:
+      iconImageView.contentTintColor = .systemGreen
+      customContentView.isHidden = false
+    case .import1:
+      iconImageView.contentTintColor = .systemBlue
+      importContentView.isHidden = false
+    case .atLauncher:
+      iconImageView.contentTintColor = .systemOrange
+      atLauncherContentView.isHidden = false
+    case .curseForge:
+      iconImageView.contentTintColor = .systemRed
+      curseForgeContentView.isHidden = false
+    case .ftbLegacy:
+      iconImageView.contentTintColor = .systemPurple
+      ftbLegacyContentView.isHidden = false
+    case .ftbImport:
+      iconImageView.contentTintColor = .systemPurple
+      ftbImportContentView.isHidden = false
+    case .modrinth:
+      iconImageView.contentTintColor = .systemGreen
+      modrinthContentView.isHidden = false
+    case .technic:
+      iconImageView.contentTintColor = .systemIndigo
+      technicContentView.isHidden = false
+    }
   }
 }
 

@@ -16,9 +16,11 @@ class ViewController: NSViewController {
   private var addInstanceWindowController: AddInstanceWindowController?
   private var instanceDetailWindowController: InstanceDetailWindowController?
   private var microsoftAuthWindowController: MicrosoftAuthWindowController?
+  private var installedVersionsWindowController: InstalledVersionsWindowController?
   private var windowObserver: NSObjectProtocol?
   private var instanceDetailWindowObserver: NSObjectProtocol?
   private var microsoftAuthWindowObserver: NSObjectProtocol?
+  private var installedVersionsWindowObserver: NSObjectProtocol?
 
   // Instance management
   private let instanceManager = InstanceManager.shared
@@ -95,6 +97,23 @@ class ViewController: NSViewController {
     )
     button.target = self
     button.action = #selector(openSettingsWindow)
+    return button
+  }()
+
+  private lazy var installedVersionsButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "square.stack.3d.up.fill",
+      cornerRadius: 6,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+        ? NSColor.white.withAlphaComponent(0.1)
+        : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemTeal,
+      accessibilityLabel: Localized.InstalledVersions.windowTitle
+    )
+    button.target = self
+    button.action = #selector(openInstalledVersionsWindow)
     return button
   }()
 
@@ -211,6 +230,7 @@ class ViewController: NSViewController {
     view.addSubview(javaDetectionButton)
     view.addSubview(accountButton)
     view.addSubview(settingsButton)
+    view.addSubview(installedVersionsButton)
     view.addSubview(headerSeparator)
     view.addSubview(scrollView)
     view.addSubview(emptyLabel)
@@ -218,14 +238,20 @@ class ViewController: NSViewController {
     scrollView.documentView = collectionView
 
     // Layout constraints using SnapKit
-    // Top-right button group (from left to right: add, refresh, java, account, settings)
+    // Top-right button group (from left to right: add, refresh, installedVersions, java, account, settings)
     addInstanceButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalToSuperview().offset(-236)
+      make.width.height.equalTo(36)
+    }
+
+    refreshButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-192)
       make.width.height.equalTo(36)
     }
 
-    refreshButton.snp.makeConstraints { make in
+    installedVersionsButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalToSuperview().offset(-148)
       make.width.height.equalTo(36)
@@ -415,6 +441,34 @@ extension ViewController {
     settingsWindowController = nil
   }
 
+  @objc private func openInstalledVersionsWindow() {
+    // If window already exists, show it
+    if let existingController = installedVersionsWindowController {
+      existingController.showWindow(nil)
+      existingController.window?.makeKeyAndOrderFront(nil)
+      return
+    }
+
+    // Create new installed versions window
+    installedVersionsWindowController = InstalledVersionsWindowController()
+
+    installedVersionsWindowController?.showWindow(nil)
+    installedVersionsWindowController?.window?.makeKeyAndOrderFront(nil)
+
+    // Window close callback
+    installedVersionsWindowObserver = NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification,
+      object: installedVersionsWindowController?.window,
+      queue: .main
+    ) { [weak self] _ in
+      self?.installedVersionsWindowController = nil
+      if let observer = self?.installedVersionsWindowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        self?.installedVersionsWindowObserver = nil
+      }
+    }
+  }
+
   @objc private func openMicrosoftAuthWindow() {
     // If window already exists, show it
     if let existingController = microsoftAuthWindowController {
@@ -579,6 +633,12 @@ extension ViewController {
   @objc func launchGame(_ sender: Any?) {
     guard let instance = getClickedInstance() else { return }
 
+    // Check if version is installed
+    if !versionManager.isVersionInstalled(versionId: instance.versionId) {
+      showVersionNotInstalledAlert(for: instance)
+      return
+    }
+
     // Show offline launch window
     let windowController = OfflineLaunchWindowController()
     if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
@@ -635,6 +695,30 @@ extension ViewController {
           title: Localized.GameLauncher.statusLaunched,
           message: "Instance: \(instance.name), Version: \(instance.versionId), User: \(accountInfo.username)"
         )
+      } catch let error as GameLauncherError {
+        Logger.shared.error(
+          "Failed to launch game: \(error.localizedDescription)",
+          category: "MainWindow"
+        )
+
+        // Handle different error types with specific messages
+        switch error {
+        case .versionNotInstalled(let version):
+          showAlert(
+            title: Localized.GameLauncher.alertVersionNotInstalledTitle,
+            message: Localized.GameLauncher.alertVersionFileMissingMessage(version)
+          )
+        case .javaNotFound(let path):
+          showAlert(
+            title: Localized.GameLauncher.alertNoJavaTitle,
+            message: "\(Localized.GameLauncher.alertJavaNotFoundMessage(path))\n\n\(Localized.GameLauncher.alertNoJavaMessage)"
+          )
+        case .launchFailed(let reason):
+          showAlert(
+            title: Localized.GameLauncher.alertLaunchFailedTitle,
+            message: reason
+          )
+        }
       } catch {
         Logger.shared.error(
           "Failed to launch game: \(error.localizedDescription)",
@@ -719,6 +803,63 @@ extension ViewController {
       alert.beginSheetModal(for: window)
     } else {
       alert.runModal()
+    }
+  }
+
+  private func showVersionNotInstalledAlert(for instance: Instance) {
+    let alert = NSAlert()
+    alert.messageText = Localized.GameLauncher.alertVersionNotInstalledTitle
+    alert.informativeText = Localized.GameLauncher.alertVersionNotInstalledMessage(instance.name, instance.versionId)
+    alert.alertStyle = .warning
+    alert.addButton(withTitle: Localized.GameLauncher.downloadButton)
+    alert.addButton(withTitle: Localized.Instances.cancelButton)
+
+    guard let window = view.window else { return }
+    alert.beginSheetModal(for: window) { [weak self] response in
+      if response == .alertFirstButtonReturn {
+        // User chose to download
+        self?.openVersionListWindowForDownload(versionId: instance.versionId)
+      }
+    }
+  }
+
+  private func openVersionListWindowForDownload(versionId: String) {
+    // If window already exists, show it
+    if let existingController = versionListWindowController {
+      existingController.showWindow(nil)
+      existingController.window?.makeKeyAndOrderFront(nil)
+      return
+    }
+
+    // Create new version list window
+    versionListWindowController = VersionListWindowController()
+
+    // Setup callbacks for instance creation
+    if let viewController = versionListWindowController?.window?.contentViewController as? VersionListViewController {
+      // Preselect the version that needs to be downloaded
+      viewController.preselectVersion(versionId)
+      viewController.onInstanceCreated = { [weak self] _ in
+        self?.loadInstances()
+      }
+      viewController.onCancel = {
+        // Just close the window
+      }
+    }
+
+    versionListWindowController?.showWindow(nil)
+    versionListWindowController?.window?.makeKeyAndOrderFront(nil)
+
+    // Window close callback
+    windowObserver = NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification,
+      object: versionListWindowController?.window,
+      queue: .main
+    ) { [weak self] _ in
+      self?.versionListWindowController = nil
+      if let observer = self?.windowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        self?.windowObserver = nil
+      }
     }
   }
 

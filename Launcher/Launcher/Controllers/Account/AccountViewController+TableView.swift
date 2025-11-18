@@ -15,7 +15,7 @@ extension AccountViewController {
   func createContainerView() -> NSView {
     let containerView = NSView()
     containerView.wantsLayer = true
-    containerView.layer?.cornerRadius = 8
+    containerView.layer?.cornerRadius = 16
     containerView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
     return containerView
   }

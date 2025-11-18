@@ -1691,6 +1691,9 @@
         }
       }
     },
+    "Download": {
+      "comment": "[Button] Download button."
+    },
     "Download cancelled": {
       "comment": "[Error] Download cancelled.",
       "localizations": {
@@ -2071,6 +2074,12 @@
         }
       }
     },
+    "Game files for version %@ are incomplete or missing. Please re-download this version.": {
+      "comment": "[Alert] Version files missing message."
+    },
+    "Game Files Not Downloaded": {
+      "comment": "[Alert] Version not installed title."
+    },
     "Game launched successfully!": {
       "comment": "[Status] Game launched successfully.",
       "localizations": {
@@ -2232,6 +2241,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "实例 \"%@\" 已删除"
+          }
+        }
+      }
+    },
+    "Instance \"%@\" uses game version %@ which has not been downloaded yet.\n\nWould you like to download it now?": {
+      "comment": "[Alert] Version not installed message for instance.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Instance \"%1$@\" uses game version %2$@ which has not been downloaded yet.\n\nWould you like to download it now?"
           }
         }
       }
@@ -2444,6 +2464,9 @@
           }
         }
       }
+    },
+    "Java not found at: %@": {
+      "comment": "[Alert] Java not found at path."
     },
     "JAVA_HOME:": {
       "comment": "[Label] JAVA_HOME environment variable label.",

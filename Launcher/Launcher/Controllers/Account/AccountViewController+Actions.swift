@@ -262,7 +262,8 @@ extension AccountViewController {
         // User can still use any username they want
         completion(nil)
       }
-    }.resume()
+    }
+    .resume()
   }
 
   // MARK: - Context Menu

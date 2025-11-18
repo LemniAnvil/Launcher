@@ -193,14 +193,28 @@ extension Localized {
 
     // Buttons
     static let launchButton = String(localized: "Launch", comment: "[Button] Launch game button.")
+    static let downloadButton = String(localized: "Download", comment: "[Button] Download button.")
 
     // Alerts
     static let alertNoJavaTitle = String(localized: "Java Not Found", comment: "[Alert] Java not found title.")
     static let alertNoJavaMessage = String(localized: "No compatible Java installation found. Please install Java to run Minecraft.", comment: "[Alert] Java not found message.")
     static let alertLaunchFailedTitle = String(localized: "Launch Failed", comment: "[Alert] Launch failed title.")
+    static let alertVersionNotInstalledTitle = String(localized: "Game Files Not Downloaded", comment: "[Alert] Version not installed title.")
 
     static func alertLaunchFailedMessage(_ error: String) -> String {
       String(localized: "Failed to launch game: \(error)", comment: "[Alert] Launch failed message.")
+    }
+
+    static func alertVersionNotInstalledMessage(_ instanceName: String, _ versionId: String) -> String {
+      String(localized: "Instance \"\(instanceName)\" uses game version \(versionId) which has not been downloaded yet.\n\nWould you like to download it now?", comment: "[Alert] Version not installed message for instance.")
+    }
+
+    static func alertVersionFileMissingMessage(_ version: String) -> String {
+      String(localized: "Game files for version \(version) are incomplete or missing. Please re-download this version.", comment: "[Alert] Version files missing message.")
+    }
+
+    static func alertJavaNotFoundMessage(_ path: String) -> String {
+      String(localized: "Java not found at: \(path)", comment: "[Alert] Java not found at path.")
     }
 
     // Log Messages
