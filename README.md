@@ -4,7 +4,7 @@
 
 # Minecraft Launcher
 
-**A modern Minecraft launcher built with Swift for macOS**
+**A feature-rich Minecraft launcher with instance management, mod loader support, CurseForge integration, and Microsoft account authentication**
 
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS-blue.svg)](https://www.apple.com/macos)
@@ -24,14 +24,13 @@ English | [简体中文](Docs/README.zh-CN.md)
   - [Requirements](#requirements)
   - [Installation](#installation)
   - [Running the Project](#running-the-project)
-- [Project Structure](#project-structure)
 - [Usage Guide](#usage-guide)
-  - [Test Window Features](#test-window-features)
-  - [Version Selection](#version-selection)
-  - [Proxy Configuration](#proxy-configuration)
+  - [Creating Game Instances](#creating-game-instances)
+  - [Adding Accounts](#adding-accounts)
+  - [Launching the Game](#launching-the-game)
+  - [Importing CurseForge Modpacks](#importing-curseforge-modpacks)
+  - [Configuring Proxy (Optional)](#configuring-proxy-optional)
 - [Technical Stack](#technical-stack)
-- [Architecture](#architecture)
-- [Download Information](#download-information)
 - [Development](#development)
   - [Completed Features](#completed-features)
   - [Planned Features](#planned-features)
@@ -43,21 +42,28 @@ English | [简体中文](Docs/README.zh-CN.md)
 
 ## Features
 
-### Core Functionality
-- **Version Management** - Fetch, parse, and cache Minecraft versions from official API
-- **Download System** - Multi-threaded concurrent downloads with SHA1 verification
-- **Proxy Support** - HTTP/HTTPS/SOCKS5 proxy configuration for network access
-- **Version Filtering** - Filter by release, snapshot, beta, and alpha versions
-- **Installation Check** - Automatically detect installed versions
-- **Internationalization** - Full support for English and Simplified Chinese
+### 🎮 Game Management
+- **Instance Management** - Create, edit, and delete game instances with MMC format support (compatible with Prism Launcher)
+- **Game Launch** - Complete launch engine with JVM arguments configuration and native library management
+- **Java Detection** - Automatically detect system Java environments and intelligently match version requirements
+- **Version Management** - Download, cache, and install various Minecraft versions (release/snapshot/beta/alpha)
 
-### Technical Features
-- Version inheritance handling (supports Forge/Fabric)
-- Platform compatibility check (macOS optimized)
-- Smart file verification (auto-skip existing files)
-- Real-time progress tracking with download speed
-- Swift Concurrency with async/await
-- Comprehensive logging system
+### 👤 Account System
+- **Microsoft Authentication** - OAuth 2.0 + PKCE security flow with Xbox Live and Minecraft Services support
+- **Offline Accounts** - Support for offline mode gameplay
+- **Multi-Account Management** - Easily switch between different accounts
+- **Token Management** - Automatic authentication token refresh
+
+### 🔧 Mods and Modpacks
+- **Mod Loaders** - Support for Forge, Fabric, NeoForge, and Quilt
+- **CurseForge Integration** - Search, browse, and import CurseForge modpacks
+- **Modpack Management** - Complete modpack support and version management
+
+### ⚙️ Advanced Features
+- **Proxy Support** - HTTP/HTTPS/SOCKS5 proxy configuration
+- **Concurrent Downloads** - Multi-threaded download system with SHA1 integrity verification
+- **Internationalization** - Full support for English and Simplified Chinese
+- **Logging System** - Comprehensive multi-level logging
 
 ---
 
@@ -98,6 +104,13 @@ Comprehensive settings interface providing various configuration options for the
 
 *Settings interface for configuring launcher parameters and preferences*
 
+### CurseForge Modpack Import
+Support for importing modpacks from the CurseForge platform, quickly creating pre-configured game instances.
+
+<img src="Resources/en/curseforge_modpack_import.png" alt="CurseForge Modpack Import" width="800">
+
+*CurseForge modpack import interface for directly importing popular modpacks*
+
 ---
 
 ## Quick Start
@@ -130,93 +143,61 @@ open Launcher/Launcher.xcodeproj
 
 ---
 
-## Project Structure
-
-```
-Launcher/
-├── Launcher/
-│   ├── Models/                 # Data models
-│   │   ├── Version.swift       # Minecraft version data structures
-│   │   ├── Library.swift       # Library dependency models
-│   │   ├── Asset.swift         # Game asset models
-│   │   └── Download.swift      # Download task models
-│   ├── Managers/               # Manager classes
-│   │   ├── VersionManager.swift    # Version management
-│   │   ├── DownloadManager.swift   # Download management
-│   │   └── ProxyManager.swift      # Proxy configuration
-│   ├── Utils/                  # Utility classes
-│   │   ├── Logger.swift        # Logging system
-│   │   ├── FileUtils.swift     # File operations
-│   │   └── VersionManifestParser.swift
-│   ├── Application/            # Application layer
-│   │   └── Localized.swift     # Localization strings
-│   ├── Views/                  # User interface
-│   │   ├── ViewController.swift
-│   │   ├── TestWindowController.swift
-│   │   └── TestViewController.swift
-│   └── Resources/              # Resources
-│       ├── Assets.xcassets/    # App icons and images
-│       └── Localizable.xcstrings   # Localization catalog
-├── LauncherTests/              # Unit tests
-└── LauncherUITests/            # UI tests
-```
-
----
-
 ## Usage Guide
 
-### Test Window Features
+### Creating Game Instances
 
-The test window provides 5 main testing functions:
+1. Click the "Add Instance" button on the main interface
+2. Enter an instance name in the dialog
+3. Select a Minecraft version
+4. Choose a mod loader (optional):
+   - None (Vanilla)
+   - Forge
+   - Fabric
+   - NeoForge
+   - Quilt
+5. Click "Create" to complete instance creation
 
-1. **Refresh Version List** - Fetch all available versions from Mojang's API
-   - Displays latest release and snapshot versions
-   - Shows version type statistics
-   - Caches version data locally
+### Adding Accounts
 
-2. **Get Version Details** - Parse detailed information for a selected version
-   - Main class information
-   - Java version requirements
-   - Library dependencies
-   - Asset index details
+#### Microsoft Account
+1. Open the "Account Management" interface
+2. Click "Add Microsoft Account"
+3. Complete Microsoft login in your browser
+4. After authorization, automatically return to the launcher
+5. Account successfully added - you can see your player name and skin
 
-3. **Download Test File** - Test download functionality
-   - Downloads version manifest
-   - Verifies file integrity
-   - Reports download speed
+#### Offline Account
+1. Open the "Account Management" interface
+2. Click "Add Offline Account"
+3. Enter a player name
+4. Click "Add" to complete
 
-4. **Check Installed Versions** - Scan for locally installed versions
-   - Lists all installed versions
-   - Shows file sizes
-   - Displays installation paths
+### Launching the Game
 
-5. **Download Full Version** - Download complete game files
-   - Downloads game core (JAR file)
-   - Downloads all required libraries
-   - Downloads game assets
-   - Shows real-time progress
+1. Select an instance from the instance list to play
+2. Select an account from the account dropdown menu
+3. Click the "Launch" button
+4. Wait for the game to launch (first launch will automatically download required files)
 
-### Version Selection
+### Importing CurseForge Modpacks
 
-- **Visual Table View**: Browse versions in an organized table
-- **Version Filtering**: Filter by type using checkboxes
-  - 🟢 Release - Stable versions
-  - 🟡 Snapshot - Development snapshots
-  - 🔵 Beta - Legacy beta versions
-  - 🟣 Alpha - Legacy alpha versions
-- **Installation Status**: Shows which versions are already installed
-- **Smart Selection**: Automatically selects latest release version
-- **Double-Click**: Double-click a version to start downloading
+1. Click the "Import from CurseForge" button
+2. Browse or search for desired modpacks
+3. Select a modpack version
+4. Click "Import" to start downloading and installing
+5. After import completes, the new instance will automatically appear in the instance list
 
-### Proxy Configuration
+### Configuring Proxy (Optional)
 
-Configure network proxy to access Mojang services:
+If you need to use a proxy to access Minecraft servers:
 
-1. Enable proxy by checking "Enable Proxy"
-2. Select proxy type (HTTP/HTTPS/SOCKS5)
-3. Enter proxy host and port
-4. Click "Apply Proxy" to activate
-5. Use "Test Proxy" to verify connection
+1. Open the "Settings" interface
+2. Switch to the "Network" tab
+3. Enable proxy and select type (HTTP/HTTPS/SOCKS5)
+4. Enter proxy server address and port
+5. Click "Test Connection" to verify the proxy
+6. Save settings
 
 ---
 
@@ -233,75 +214,11 @@ Configure network proxy to access Mojang services:
 
 ---
 
-## Architecture
-
-### Design Patterns
-
-- **MVVM Architecture**: Clear separation of concerns
-- **Singleton Pattern**: Shared managers (VersionManager, DownloadManager)
-- **Async/Await**: Modern concurrency with Swift Concurrency
-- **Protocol-Oriented**: Flexible and testable code structure
-
-### Key Components
-
-1. **VersionManager**
-   - Manages version manifest and caching
-   - Handles version inheritance
-   - Parses version JSON data
-
-2. **DownloadManager**
-   - Concurrent download queue
-   - Progress tracking and reporting
-   - SHA1 integrity verification
-   - Proxy configuration support
-
-3. **ProxyManager**
-   - Configures HTTP/HTTPS/SOCKS5 proxies
-   - Tests proxy connectivity
-   - Manages proxy state
-
-4. **Logger**
-   - Multi-level logging (Debug, Info, Warning, Error)
-   - File-based log storage
-   - Console output with timestamps
-
----
-
-## Download Information
-
-### File Locations
-
-```
-~/.minecraft/
-├── versions/          # Version files
-│   └── {version}/
-│       ├── {version}.jar
-│       └── {version}.json
-├── libraries/         # Library dependencies
-├── assets/           # Game assets
-│   ├── indexes/
-│   └── objects/
-└── logs/             # Launcher logs
-```
-
-### Disk Space Requirements
-
-- Single version: ~500MB - 1GB
-- Complete setup: 5GB+ recommended
-- Assets are shared across versions
-
-### Network Requirements
-
-- Stable internet connection required
-- Mojang servers are located overseas
-- Proxy recommended for optimal speed in some regions
-
----
-
 ## Development
 
 ### Completed Features
 
+#### Core Features
 - [x] Version list fetching and caching
 - [x] Version details parsing
 - [x] Version inheritance handling
@@ -309,24 +226,93 @@ Configure network proxy to access Mojang services:
 - [x] SHA1 integrity verification
 - [x] Real-time progress tracking
 - [x] Comprehensive logging system
-- [x] Test interface with visual table
 - [x] Version filtering by type
 - [x] Proxy support (HTTP/HTTPS/SOCKS5)
 - [x] Full internationalization (EN/ZH-CN)
 - [x] Installation status checking
 
+#### Game Launch
+- [x] Game launch engine
+- [x] Offline UUID generation
+- [x] JVM arguments configuration
+- [x] Game arguments processing
+- [x] Native library extraction
+- [x] Classpath construction
+- [x] Platform compatibility check (macOS optimized)
+
+#### Account System
+- [x] Microsoft account authentication
+- [x] OAuth 2.0 + PKCE security flow
+- [x] Xbox Live integration
+- [x] Minecraft Services authentication
+- [x] Token refresh mechanism
+- [x] Offline account support
+- [x] Account management interface
+
+#### Instance Management
+- [x] Instance creation and deletion
+- [x] MMC format support (compatible with Prism Launcher)
+- [x] Instance configuration management
+- [x] Game directory isolation (mods, saves, resourcepacks, etc.)
+- [x] Instance list interface
+- [x] Instance details viewing and editing
+
+#### Mod Loaders
+- [x] Forge support
+- [x] Fabric support
+- [x] NeoForge support
+- [x] Quilt support
+- [x] Mod loader version management
+
+#### CurseForge Integration
+- [x] CurseForge API client
+- [x] Modpack search functionality
+- [x] Modpack details retrieval
+- [x] Pagination and sorting support
+- [x] CurseForge import interface
+
+#### Java Environment
+- [x] Automatic Java installation detection
+- [x] Multi-version Java management
+- [x] Java version matching (based on Minecraft version)
+- [x] Java detection interface
+
 ### Planned Features
 
-- [ ] Game launch engine
-- [ ] Microsoft account authentication
-- [ ] Complete launcher UI redesign
-- [ ] Configuration management system
-- [ ] Mod loader support (Forge/Fabric/Quilt)
-- [ ] Profile management
+#### Core Enhancements
 - [ ] Auto-update functionality
-- [ ] Resource pack management
+- [ ] Pre-launch resource integrity check
+- [ ] Custom launch argument templates
+- [ ] Performance monitoring and log viewer
+
+#### CurseForge Features
+- [ ] Modpack download and installation
+- [ ] Automatic modpack updates
+- [ ] Mod browsing and search
+- [ ] Individual mod install/update/uninstall
+
+#### Resource Management
+- [ ] Resource pack browsing and management
 - [ ] Shader pack support
-- [ ] Server management
+- [ ] Data pack management
+- [ ] World backup and restore
+
+#### Multiplayer
+- [ ] Server list management
+- [ ] Quick server connect
+- [ ] LAN game support
+
+#### User Experience
+- [ ] Theme and appearance customization
+- [ ] More language support
+- [ ] Keyboard shortcut configuration
+- [ ] Instance import/export (support more formats)
+
+#### Advanced Features
+- [ ] Batch operations (batch update, batch delete, etc.)
+- [ ] Instance template system
+- [ ] Cloud sync support
+- [ ] Plugin system
 
 ---
 

@@ -4,7 +4,7 @@
 
 # Minecraft 启动器
 
-**使用 Swift 开发的现代化 Minecraft 启动器（macOS 平台）**
+**功能完整的 Minecraft 启动器，支持实例管理、Mod 加载器、CurseForge 集成和 Microsoft 账户认证**
 
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS-blue.svg)](https://www.apple.com/macos)
@@ -24,14 +24,13 @@
   - [系统要求](#系统要求)
   - [安装说明](#安装说明)
   - [运行项目](#运行项目)
-- [项目结构](#项目结构)
 - [使用指南](#使用指南)
-  - [测试窗口功能](#测试窗口功能)
-  - [版本选择](#版本选择)
-  - [代理配置](#代理配置)
+  - [创建游戏实例](#创建游戏实例)
+  - [添加账户](#添加账户)
+  - [启动游戏](#启动游戏)
+  - [导入 CurseForge 整合包](#导入-curseforge-整合包)
+  - [配置代理](#配置代理可选)
 - [技术栈](#技术栈)
-- [架构设计](#架构设计)
-- [下载说明](#下载说明)
 - [开发进度](#开发进度)
   - [已完成功能](#已完成功能)
   - [计划功能](#计划功能)
@@ -43,21 +42,28 @@
 
 ## 功能特性
 
-### 核心功能
-- **版本管理** - 从官方 API 获取、解析、缓存 Minecraft 版本
-- **下载系统** - 多线程并发下载，支持 SHA1 校验
-- **代理支持** - 支持 HTTP/HTTPS/SOCKS5 代理配置
-- **版本筛选** - 按正式版、快照版、Beta、Alpha 筛选
-- **安装检测** - 自动检测已安装的版本
-- **国际化** - 完整支持英文和简体中文
+### 🎮 游戏管理
+- **实例管理** - 创建、编辑、删除游戏实例，支持 MMC 格式（与 Prism Launcher 兼容）
+- **游戏启动** - 完整的启动引擎，支持 JVM 参数配置和 Native 库管理
+- **Java 检测** - 自动检测系统 Java 环境，智能匹配版本要求
+- **版本管理** - 下载、缓存、安装 Minecraft 各版本（正式版/快照版/Beta/Alpha）
 
-### 技术特性
-- 版本继承处理（支持 Forge/Fabric）
-- 平台兼容性检查（macOS 优化）
-- 智能文件校验（自动跳过已存在文件）
-- 实时进度追踪和速度显示
-- Swift Concurrency 异步编程
-- 完善的日志系统
+### 👤 账户系统
+- **Microsoft 认证** - OAuth 2.0 + PKCE 安全流程，支持 Xbox Live 和 Minecraft Services
+- **离线账户** - 支持离线模式游戏
+- **多账户管理** - 轻松切换不同账户
+- **Token 管理** - 自动刷新认证令牌
+
+### 🔧 Mod 与整合包
+- **Mod 加载器** - 支持 Forge、Fabric、NeoForge、Quilt
+- **CurseForge 集成** - 搜索、浏览和导入 CurseForge 整合包
+- **Modpack 管理** - 完整的整合包支持和版本管理
+
+### ⚙️ 高级功能
+- **代理支持** - HTTP/HTTPS/SOCKS5 代理配置
+- **并发下载** - 多线程下载系统，支持 SHA1 完整性校验
+- **国际化** - 完整支持英文和简体中文
+- **日志系统** - 完善的多级别日志记录
 
 ---
 
@@ -98,6 +104,13 @@
 
 *设置界面，可配置启动器的各项参数和偏好设置*
 
+### CurseForge Modpack 导入
+支持从 CurseForge 平台导入整合包（Modpack），快速创建预配置的游戏实例。
+
+<img src="../Resources/zh-CN/curseforge_modpack_import.png" alt="CurseForge Modpack 导入" width="800">
+
+*CurseForge 整合包导入界面，可以直接导入流行的 Modpack*
+
 ---
 
 ## 快速开始
@@ -130,93 +143,61 @@ open Launcher/Launcher.xcodeproj
 
 ---
 
-## 项目结构
-
-```
-Launcher/
-├── Launcher/
-│   ├── Models/                 # 数据模型
-│   │   ├── Version.swift       # Minecraft 版本数据结构
-│   │   ├── Library.swift       # 库依赖模型
-│   │   ├── Asset.swift         # 游戏资源模型
-│   │   └── Download.swift      # 下载任务模型
-│   ├── Managers/               # 管理器类
-│   │   ├── VersionManager.swift    # 版本管理
-│   │   ├── DownloadManager.swift   # 下载管理
-│   │   └── ProxyManager.swift      # 代理配置
-│   ├── Utils/                  # 工具类
-│   │   ├── Logger.swift        # 日志系统
-│   │   ├── FileUtils.swift     # 文件操作
-│   │   └── VersionManifestParser.swift
-│   ├── Application/            # 应用层
-│   │   └── Localized.swift     # 本地化字符串
-│   ├── Views/                  # 用户界面
-│   │   ├── ViewController.swift
-│   │   ├── TestWindowController.swift
-│   │   └── TestViewController.swift
-│   └── Resources/              # 资源文件
-│       ├── Assets.xcassets/    # 应用图标和图片
-│       └── Localizable.xcstrings   # 本地化目录
-├── LauncherTests/              # 单元测试
-└── LauncherUITests/            # UI 测试
-```
-
----
-
 ## 使用指南
 
-### 测试窗口功能
+### 创建游戏实例
 
-测试窗口提供 5 个主要测试功能：
+1. 点击主界面的"添加实例"按钮
+2. 在对话框中输入实例名称
+3. 选择 Minecraft 版本
+4. 选择 Mod 加载器（可选）：
+   - None（原版）
+   - Forge
+   - Fabric
+   - NeoForge
+   - Quilt
+5. 点击"创建"完成实例创建
 
-1. **刷新版本列表** - 从 Mojang API 获取所有可用版本
-   - 显示最新正式版和快照版
-   - 显示版本类型统计
-   - 本地缓存版本数据
+### 添加账户
 
-2. **获取版本详情** - 解析选定版本的详细信息
-   - 主类信息
-   - Java 版本要求
-   - 库依赖
-   - 资源索引详情
+#### Microsoft 账户
+1. 打开"账户管理"界面
+2. 点击"添加 Microsoft 账户"
+3. 在浏览器中完成 Microsoft 登录
+4. 授权后自动返回启动器
+5. 账户添加成功，可以看到你的玩家名和皮肤
 
-3. **下载测试文件** - 测试下载功能
-   - 下载版本清单
-   - 验证文件完整性
-   - 报告下载速度
+#### 离线账户
+1. 打开"账户管理"界面
+2. 点击"添加离线账户"
+3. 输入玩家名称
+4. 点击"添加"完成
 
-4. **检查已安装版本** - 扫描本地已安装的版本
-   - 列出所有已安装版本
-   - 显示文件大小
-   - 显示安装路径
+### 启动游戏
 
-5. **下载完整版本** - 下载完整游戏文件
-   - 下载游戏核心（JAR 文件）
-   - 下载所有必需的库
-   - 下载游戏资源
-   - 显示实时进度
+1. 在实例列表中选择要玩的实例
+2. 在账户下拉菜单中选择账户
+3. 点击"启动"按钮
+4. 等待游戏启动（首次启动会自动下载所需文件）
 
-### 版本选择
+### 导入 CurseForge 整合包
 
-- **可视化表格视图**：在有组织的表格中浏览版本
-- **版本筛选**：使用复选框按类型筛选
-  - 🟢 正式版 - 稳定版本
-  - 🟡 快照版 - 开发快照
-  - 🔵 Beta - 旧版 Beta
-  - 🟣 Alpha - 旧版 Alpha
-- **安装状态**：显示哪些版本已经安装
-- **智能选择**：自动选择最新正式版
-- **双击操作**：双击版本开始下载
+1. 点击"从 CurseForge 导入"按钮
+2. 浏览或搜索想要的整合包
+3. 选择整合包版本
+4. 点击"导入"开始下载和安装
+5. 导入完成后，新实例会自动出现在实例列表中
 
-### 代理配置
+### 配置代理（可选）
 
-配置网络代理以访问 Mojang 服务：
+如果需要使用代理访问 Minecraft 服务器：
 
-1. 勾选"启用代理"
-2. 选择代理类型（HTTP/HTTPS/SOCKS5）
-3. 输入代理主机和端口
-4. 点击"应用代理"激活
-5. 使用"测试代理"验证连接
+1. 打开"设置"界面
+2. 切换到"网络"标签
+3. 启用代理并选择类型（HTTP/HTTPS/SOCKS5）
+4. 输入代理服务器地址和端口
+5. 点击"测试连接"验证代理
+6. 保存设置
 
 ---
 
@@ -233,75 +214,11 @@ Launcher/
 
 ---
 
-## 架构设计
-
-### 设计模式
-
-- **MVVM 架构**：清晰的关注点分离
-- **单例模式**：共享管理器（VersionManager、DownloadManager）
-- **Async/Await**：使用 Swift Concurrency 的现代并发
-- **面向协议**：灵活且可测试的代码结构
-
-### 关键组件
-
-1. **VersionManager**
-   - 管理版本清单和缓存
-   - 处理版本继承
-   - 解析版本 JSON 数据
-
-2. **DownloadManager**
-   - 并发下载队列
-   - 进度追踪和报告
-   - SHA1 完整性验证
-   - 代理配置支持
-
-3. **ProxyManager**
-   - 配置 HTTP/HTTPS/SOCKS5 代理
-   - 测试代理连接
-   - 管理代理状态
-
-4. **Logger**
-   - 多级别日志（Debug、Info、Warning、Error）
-   - 基于文件的日志存储
-   - 带时间戳的控制台输出
-
----
-
-## 下载说明
-
-### 文件位置
-
-```
-~/.minecraft/
-├── versions/          # 版本文件
-│   └── {version}/
-│       ├── {version}.jar
-│       └── {version}.json
-├── libraries/         # 库依赖
-├── assets/           # 游戏资源
-│   ├── indexes/
-│   └── objects/
-└── logs/             # 启动器日志
-```
-
-### 磁盘空间要求
-
-- 单个版本：约 500MB - 1GB
-- 完整设置：建议 5GB+
-- 资源在版本间共享
-
-### 网络要求
-
-- 需要稳定的互联网连接
-- Mojang 服务器位于海外
-- 某些地区建议使用代理以获得最佳速度
-
----
-
 ## 开发进度
 
 ### 已完成功能
 
+#### 核心功能
 - [x] 版本列表获取和缓存
 - [x] 版本详情解析
 - [x] 版本继承处理
@@ -309,24 +226,93 @@ Launcher/
 - [x] SHA1 完整性校验
 - [x] 实时进度追踪
 - [x] 完善的日志系统
-- [x] 带可视化表格的测试界面
 - [x] 按类型筛选版本
 - [x] 代理支持（HTTP/HTTPS/SOCKS5）
 - [x] 完整国际化（英文/简体中文）
 - [x] 安装状态检查
 
+#### 游戏启动
+- [x] 游戏启动引擎
+- [x] 离线 UUID 生成
+- [x] JVM 参数配置
+- [x] 游戏参数处理
+- [x] Native 库提取
+- [x] Classpath 构建
+- [x] 平台兼容性检查（macOS 优化）
+
+#### 账户系统
+- [x] Microsoft 账户认证
+- [x] OAuth 2.0 + PKCE 安全流程
+- [x] Xbox Live 集成
+- [x] Minecraft Services 认证
+- [x] Token 刷新机制
+- [x] 离线账户支持
+- [x] 账户管理界面
+
+#### 实例管理
+- [x] 实例创建和删除
+- [x] MMC 格式支持（与 Prism Launcher 兼容）
+- [x] 实例配置管理
+- [x] 游戏目录隔离（mods、saves、resourcepacks 等）
+- [x] 实例列表界面
+- [x] 实例详情查看和编辑
+
+#### Mod 加载器
+- [x] Forge 支持
+- [x] Fabric 支持
+- [x] NeoForge 支持
+- [x] Quilt 支持
+- [x] Mod 加载器版本管理
+
+#### CurseForge 集成
+- [x] CurseForge API 客户端
+- [x] Modpack 搜索功能
+- [x] Modpack 详情获取
+- [x] 分页和排序支持
+- [x] CurseForge 导入界面
+
+#### Java 环境
+- [x] Java 安装自动检测
+- [x] 多版本 Java 管理
+- [x] Java 版本匹配（根据 Minecraft 版本）
+- [x] Java 检测界面
+
 ### 计划功能
 
-- [ ] 游戏启动引擎
-- [ ] Microsoft 账户认证
-- [ ] 完整启动器 UI 重新设计
-- [ ] 配置管理系统
-- [ ] Mod 加载器支持（Forge/Fabric/Quilt）
-- [ ] 配置文件管理
+#### 核心增强
 - [ ] 自动更新功能
-- [ ] 资源包管理
+- [ ] 启动前资源完整性检查
+- [ ] 自定义启动参数模板
+- [ ] 性能监控和日志查看器
+
+#### CurseForge 功能
+- [ ] Modpack 下载和安装
+- [ ] Modpack 自动更新
+- [ ] Mod 浏览和搜索
+- [ ] 单个 Mod 安装/更新/卸载
+
+#### 资源管理
+- [ ] 资源包浏览和管理
 - [ ] 光影包支持
-- [ ] 服务器管理
+- [ ] 数据包管理
+- [ ] 世界备份和恢复
+
+#### 多人游戏
+- [ ] 服务器列表管理
+- [ ] 服务器快速连接
+- [ ] 局域网游戏支持
+
+#### 用户体验
+- [ ] 主题和外观自定义
+- [ ] 更多语言支持
+- [ ] 快捷键配置
+- [ ] 实例导入/导出（支持更多格式）
+
+#### 高级功能
+- [ ] 批量操作（批量更新、批量删除等）
+- [ ] 实例模板系统
+- [ ] 云同步支持
+- [ ] 插件系统
 
 ---
 
