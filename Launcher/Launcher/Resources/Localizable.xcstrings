@@ -1372,6 +1372,9 @@
         }
       }
     },
+    "Author": {
+      "comment": "[Sort] Author sort option.\n[Table] Author column."
+    },
     "Beta": {
       "comment": "[Checkbox] Beta filter.\n[Text] Beta version type.",
       "localizations": {
@@ -1558,6 +1561,12 @@
           }
         }
       }
+    },
+    "CurseForge API key not configured": {
+      "comment": "[Error] No API key configured."
+    },
+    "CurseForge Modpacks": {
+      "comment": "[Text] CurseForge section title."
     },
     "Custom": {
       "comment": "[Category] Custom category.\n[Text] Custom section title.",
@@ -1810,6 +1819,9 @@
         }
       }
     },
+    "Downloads": {
+      "comment": "[Sort] Downloads sort option.\n[Table] Downloads column."
+    },
     "Duplicate Username": {
       "comment": "[Alert] Duplicate username title.",
       "localizations": {
@@ -1975,6 +1987,9 @@
         }
       }
     },
+    "Failed to load modpacks": {
+      "comment": "[Error] Failed to load modpacks."
+    },
     "Failed to Load Versions": {
       "comment": "[Alert] Failed to load versions title.",
       "localizations": {
@@ -2029,6 +2044,9 @@
           }
         }
       }
+    },
+    "Featured": {
+      "comment": "[Sort] Featured sort option."
     },
     "File not found: %@": {
       "comment": "[Error] File not found.",
@@ -2479,6 +2497,9 @@
         }
       }
     },
+    "Last Updated": {
+      "comment": "[Sort] Last Updated sort option."
+    },
     "Launch": {
       "comment": "[Button] Launch button.\n[Button] Launch game button.",
       "localizations": {
@@ -2533,6 +2554,12 @@
           }
         }
       }
+    },
+    "Loading modpacks...": {
+      "comment": "[Status] Loading modpacks status."
+    },
+    "Loading more...": {
+      "comment": "[Status] Loading more results."
     },
     "Login Failed": {
       "comment": "[Alert] Login failed title.",
@@ -2688,6 +2715,12 @@
         }
       }
     },
+    "Modpack": {
+      "comment": "[Table] Modpack name column."
+    },
+    "Name": {
+      "comment": "[Sort] Name sort option."
+    },
     "Name:": {
       "comment": "[Label] Instance name label.",
       "localizations": {
@@ -2819,6 +2852,9 @@
           }
         }
       }
+    },
+    "No modpacks found": {
+      "comment": "[Status] No modpacks found."
     },
     "No offline accounts\nClick the button above to add an offline account": {
       "comment": "[Text] Empty state message for offline accounts.",
@@ -3028,6 +3064,9 @@
           }
         }
       }
+    },
+    "Popularity": {
+      "comment": "[Sort] Popularity sort option."
     },
     "Port:": {
       "comment": "[Label] Proxy port label.",
@@ -3354,6 +3393,9 @@
         }
       }
     },
+    "Search modpacks...": {
+      "comment": "[Placeholder] Search modpacks placeholder."
+    },
     "Select a mod loader and version to enable mod support for this instance.": {
       "comment": "[Text] Mod loader description.",
       "localizations": {
@@ -3496,6 +3538,9 @@
           }
         }
       }
+    },
+    "Sort by:": {
+      "comment": "[Label] Sort by label."
     },
     "Starting local callback server...": {
       "comment": "[Status] Starting callback server.",

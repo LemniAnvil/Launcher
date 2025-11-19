@@ -93,6 +93,64 @@ enum APIService {
     }
   }
 
+  // MARK: - CurseForge APIs
+
+  enum CurseForge {
+    /// Base URL for CurseForge API
+    private static let baseURL = "https://api.curseforge.com/v1"
+
+    /// Minecraft game ID on CurseForge
+    static let minecraftGameId = 432
+
+    /// Modpack class ID on CurseForge
+    static let modpackClassId = 4471
+
+    /// Default page size for search results
+    static let pageSize = 25
+
+    /// Get modpack search URL
+    /// - Parameters:
+    ///   - searchTerm: Optional search term to filter modpacks
+    ///   - sortField: Sort field index (1-8, see CurseForgeSortMethod)
+    ///   - offset: Pagination offset (index)
+    /// - Returns: Complete search URL with parameters
+    static func searchURL(searchTerm: String? = nil, sortField: Int = 1, offset: Int = 0) -> String {
+      guard let components = URLComponents(string: "\(baseURL)/mods/search") else {
+        return ""
+      }
+      var mutableComponents = components
+      var queryItems = [
+        URLQueryItem(name: "gameId", value: "\(minecraftGameId)"),
+        URLQueryItem(name: "classId", value: "\(modpackClassId)"),
+        URLQueryItem(name: "index", value: "\(offset)"),
+        URLQueryItem(name: "pageSize", value: "\(pageSize)"),
+        URLQueryItem(name: "sortField", value: "\(sortField)"),
+        URLQueryItem(name: "sortOrder", value: "desc"),
+      ]
+
+      if let searchTerm = searchTerm, !searchTerm.isEmpty {
+        queryItems.append(URLQueryItem(name: "searchFilter", value: searchTerm))
+      }
+
+      mutableComponents.queryItems = queryItems
+      return mutableComponents.url?.absoluteString ?? ""
+    }
+
+    /// Get modpack details URL
+    /// - Parameter modpackId: Modpack ID
+    /// - Returns: Modpack details endpoint URL
+    static func modpackDetailsURL(modpackId: Int) -> String {
+      return "\(baseURL)/mods/\(modpackId)"
+    }
+
+    /// Get modpack description URL
+    /// - Parameter modpackId: Modpack ID
+    /// - Returns: Modpack description endpoint URL
+    static func modpackDescriptionURL(modpackId: Int) -> String {
+      return "\(baseURL)/mods/\(modpackId)/description"
+    }
+  }
+
   // MARK: - Helper Methods
 
   /// Create URL from string

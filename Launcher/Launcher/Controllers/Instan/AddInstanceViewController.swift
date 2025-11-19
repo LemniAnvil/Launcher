@@ -20,10 +20,20 @@ class AddInstanceViewController: NSViewController {
   private let instanceManager = InstanceManager.shared
   private let versionManager = VersionManager.shared
   private let modLoaderManager = ModLoaderManager.shared
+  private let curseForgeAPI = CurseForgeAPIClient.shared
   private var selectedVersionId: String?
   private var selectedModLoader: ModLoader = .NONE
   private var selectedModLoaderVersion: String?
   private var availableModLoaderVersions: [String] = []
+
+  // CurseForge properties
+  private var curseForgeModpacks: [CurseForgeModpack] = []
+  private var currentSearchTerm: String = ""
+  private var currentSortMethod: CurseForgeSortMethod = .featured
+  private var currentPaginationIndex: Int = 0
+  private var isLoadingMore: Bool = false
+  private var hasMoreResults: Bool = true
+  private var searchDebounceTimer: Timer?
 
   // MARK: - Enums & Models
 
@@ -121,6 +131,24 @@ class AddInstanceViewController: NSViewController {
 
     static func == (lhs: Self, rhs: Self) -> Bool {
       return lhs.versionId == rhs.versionId
+    }
+  }
+
+  // Modpack data model for CurseForge table
+  struct ModpackItem: Hashable {
+    let modpack: CurseForgeModpack
+
+    var id: Int { modpack.id }
+    var name: String { modpack.name }
+    var author: String { modpack.primaryAuthor }
+    var downloads: String { modpack.formattedDownloadCount }
+
+    func hash(into hasher: inout Hasher) {
+      hasher.combine(modpack.id)
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+      return lhs.modpack.id == rhs.modpack.id
     }
   }
 
@@ -331,6 +359,95 @@ class AddInstanceViewController: NSViewController {
     view.layer?.borderColor = NSColor.separatorColor.cgColor
     view.isHidden = true
     return view
+  }()
+
+  // MARK: - CurseForge UI Components
+
+  private let curseForgeSearchField: NSSearchField = {
+    let field = NSSearchField()
+    field.placeholderString = Localized.AddInstance.searchPlaceholder
+    field.font = .systemFont(ofSize: 13)
+    return field
+  }()
+
+  private lazy var curseForgeSortLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.AddInstance.sortByLabel,
+      font: .systemFont(ofSize: 12, weight: .medium),
+      textColor: .labelColor,
+      alignment: .left
+    )
+    return label
+  }()
+
+  private lazy var curseForgeSortPopup: NSPopUpButton = {
+    let button = NSPopUpButton()
+    button.font = .systemFont(ofSize: 12)
+    // Add sort options
+    for sortMethod in CurseForgeSortMethod.allCases {
+      button.addItem(withTitle: sortMethod.displayName)
+    }
+    button.target = self
+    button.action = #selector(curseForgeSortChanged)
+    return button
+  }()
+
+  private lazy var curseForgeModpackTableView: VersionTableView<ModpackItem> = {
+    let columns: [VersionTableView<ModpackItem>.ColumnConfig] = [
+      .init(
+        identifier: "ModpackColumn",
+        title: Localized.AddInstance.columnModpackName,
+        width: 250,
+        valueProvider: { $0.name },
+        fontProvider: { _ in .systemFont(ofSize: 13, weight: .medium) },
+        colorProvider: { _ in .labelColor }
+      ),
+      .init(
+        identifier: "AuthorColumn",
+        title: Localized.AddInstance.columnModpackAuthor,
+        width: 120,
+        valueProvider: { $0.author },
+        fontProvider: { _ in .systemFont(ofSize: 13) },
+        colorProvider: { _ in .secondaryLabelColor }
+      ),
+      .init(
+        identifier: "DownloadsColumn",
+        title: Localized.AddInstance.columnModpackDownloads,
+        width: 80,
+        valueProvider: { $0.downloads },
+        fontProvider: { _ in .systemFont(ofSize: 13) },
+        colorProvider: { _ in .tertiaryLabelColor }
+      ),
+    ]
+
+    let tableView = VersionTableView<ModpackItem>(
+      columns: columns,
+      onSelectionChanged: { [weak self] item in
+        // Handle modpack selection
+        guard let self = self, let item = item else { return }
+        // TODO: Show modpack details or enable instance creation
+      }
+    )
+    return tableView
+  }()
+
+  private lazy var curseForgeLoadingIndicator: NSProgressIndicator = {
+    let indicator = NSProgressIndicator()
+    indicator.style = .spinning
+    indicator.controlSize = .regular
+    indicator.isHidden = true
+    return indicator
+  }()
+
+  private let curseForgeEmptyLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.AddInstance.noModpacksFound,
+      font: .systemFont(ofSize: 13),
+      textColor: .secondaryLabelColor,
+      alignment: .center
+    )
+    label.isHidden = true
+    return label
   }()
 
   private let versionTitleLabel: BRLabel = {
@@ -1039,11 +1156,66 @@ class AddInstanceViewController: NSViewController {
     // Setup placeholder content for other views
     setupPlaceholderContent(for: importContentView, title: Localized.AddInstance.categoryImport)
     setupPlaceholderContent(for: atLauncherContentView, title: "ATLauncher")
-    setupPlaceholderContent(for: curseForgeContentView, title: "CurseForge")
+    setupCurseForgeContentView()  // Functional CurseForge implementation
     setupPlaceholderContent(for: ftbLegacyContentView, title: "FTB Legacy")
     setupPlaceholderContent(for: ftbImportContentView, title: Localized.AddInstance.categoryFTBImport)
     setupPlaceholderContent(for: modrinthContentView, title: "Modrinth")
     setupPlaceholderContent(for: technicContentView, title: "Technic")
+  }
+
+  private func setupCurseForgeContentView() {
+    // Add UI components to CurseForge content view
+    curseForgeContentView.addSubview(curseForgeSearchField)
+    curseForgeContentView.addSubview(curseForgeSortLabel)
+    curseForgeContentView.addSubview(curseForgeSortPopup)
+    curseForgeContentView.addSubview(curseForgeModpackTableView)
+    curseForgeContentView.addSubview(curseForgeLoadingIndicator)
+    curseForgeContentView.addSubview(curseForgeEmptyLabel)
+
+    // Setup constraints
+    curseForgeSearchField.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(15)
+      make.left.equalToSuperview().offset(15)
+      make.right.equalToSuperview().offset(-15)
+      make.height.equalTo(28)
+    }
+
+    curseForgeSortLabel.snp.makeConstraints { make in
+      make.top.equalTo(curseForgeSearchField.snp.bottom).offset(12)
+      make.left.equalToSuperview().offset(15)
+      make.width.equalTo(60)
+    }
+
+    curseForgeSortPopup.snp.makeConstraints { make in
+      make.centerY.equalTo(curseForgeSortLabel)
+      make.left.equalTo(curseForgeSortLabel.snp.right).offset(8)
+      make.width.equalTo(150)
+      make.height.equalTo(24)
+    }
+
+    curseForgeModpackTableView.snp.makeConstraints { make in
+      make.top.equalTo(curseForgeSortLabel.snp.bottom).offset(12)
+      make.left.equalToSuperview().offset(15)
+      make.right.equalToSuperview().offset(-15)
+      make.bottom.equalToSuperview().offset(-15)
+    }
+
+    curseForgeLoadingIndicator.snp.makeConstraints { make in
+      make.center.equalTo(curseForgeModpackTableView)
+      make.width.height.equalTo(32)
+    }
+
+    curseForgeEmptyLabel.snp.makeConstraints { make in
+      make.center.equalTo(curseForgeModpackTableView)
+      make.width.equalTo(200)
+    }
+
+    // Setup search field delegate
+    curseForgeSearchField.target = self
+    curseForgeSearchField.action = #selector(curseForgeSearchChanged)
+
+    // Perform initial load when view appears
+    loadCurseForgeModpacks(reset: true)
   }
 
   private func setupPlaceholderContent(for contentView: NSView, title: String) {
@@ -1194,6 +1366,106 @@ class AddInstanceViewController: NSViewController {
           self.modLoaderVersionTableView.tableView.isEnabled = false
 
           // Error alert removed - silently fail and show placeholder instead
+        }
+      }
+    }
+  }
+
+  // MARK: - CurseForge Methods
+
+  @objc private func curseForgeSearchChanged() {
+    // Debounce search input
+    searchDebounceTimer?.invalidate()
+    searchDebounceTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
+      self?.performCurseForgeSearch()
+    }
+  }
+
+  private func performCurseForgeSearch() {
+    currentSearchTerm = curseForgeSearchField.stringValue
+    loadCurseForgeModpacks(reset: true)
+  }
+
+  @objc private func curseForgeSortChanged() {
+    let selectedIndex = curseForgeSortPopup.indexOfSelectedItem
+    guard selectedIndex >= 0, selectedIndex < CurseForgeSortMethod.allCases.count else { return }
+    currentSortMethod = CurseForgeSortMethod.allCases[selectedIndex]
+    loadCurseForgeModpacks(reset: true)
+  }
+
+  private func loadCurseForgeModpacks(reset: Bool) {
+    if reset {
+      currentPaginationIndex = 0
+      curseForgeModpacks.removeAll()
+      hasMoreResults = true
+    }
+
+    guard !isLoadingMore else { return }
+    guard hasMoreResults else { return }
+
+    isLoadingMore = true
+
+    // Show loading indicator
+    curseForgeLoadingIndicator.isHidden = false
+    curseForgeLoadingIndicator.startAnimation(nil)
+    curseForgeEmptyLabel.isHidden = true
+
+    Task {
+      do {
+        let searchTerm = currentSearchTerm.isEmpty ? nil : currentSearchTerm
+        let response = try await curseForgeAPI.searchModpacks(
+          searchTerm: searchTerm,
+          sortMethod: currentSortMethod,
+          offset: currentPaginationIndex
+        )
+
+        await MainActor.run {
+          // Update modpacks list
+          if reset {
+            self.curseForgeModpacks = response.data
+          } else {
+            self.curseForgeModpacks.append(contentsOf: response.data)
+          }
+
+          // Update pagination state
+          self.currentPaginationIndex = response.pagination.nextIndex
+          self.hasMoreResults = response.pagination.hasMoreResults
+
+          // Update table view
+          let modpackItems = self.curseForgeModpacks.map { ModpackItem(modpack: $0) }
+          self.curseForgeModpackTableView.updateItems(modpackItems)
+
+          // Hide loading indicator
+          self.curseForgeLoadingIndicator.stopAnimation(nil)
+          self.curseForgeLoadingIndicator.isHidden = true
+          self.isLoadingMore = false
+
+          // Show empty message if no results
+          if self.curseForgeModpacks.isEmpty {
+            self.curseForgeEmptyLabel.isHidden = false
+          } else {
+            self.curseForgeEmptyLabel.isHidden = true
+          }
+        }
+      } catch {
+        await MainActor.run {
+          print("Failed to load CurseForge modpacks: \(error)")
+          self.curseForgeLoadingIndicator.stopAnimation(nil)
+          self.curseForgeLoadingIndicator.isHidden = true
+          self.isLoadingMore = false
+
+          // Show error alert
+          let alert = NSAlert()
+          alert.messageText = Localized.AddInstance.errorLoadModpacksFailed
+          alert.informativeText = error.localizedDescription
+          alert.alertStyle = .warning
+          alert.addButton(withTitle: Localized.AddInstance.okButton)
+
+          if let window = self.view.window {
+            alert.beginSheetModal(for: window)
+          } else {
+            alert.runModal()
+          }
         }
       }
     }

@@ -314,5 +314,33 @@ extension Localized {
     static let errorTitle = String(localized: "Error", comment: "[Alert] Error title.")
     static let errorEmptyName = String(localized: "Instance name cannot be empty.", comment: "[Error] Empty name error.")
     static let errorNoVersionSelected = String(localized: "Please select a version.", comment: "[Error] No version selected error.")
+
+    // MARK: - CurseForge Section
+
+    static let curseForgeTitle = String(localized: "CurseForge Modpacks", comment: "[Text] CurseForge section title.")
+    static let searchPlaceholder = String(localized: "Search modpacks...", comment: "[Placeholder] Search modpacks placeholder.")
+    static let sortByLabel = String(localized: "Sort by:", comment: "[Label] Sort by label.")
+
+    // Sort Options
+    static let sortFeatured = String(localized: "Featured", comment: "[Sort] Featured sort option.")
+    static let sortPopularity = String(localized: "Popularity", comment: "[Sort] Popularity sort option.")
+    static let sortLastUpdated = String(localized: "Last Updated", comment: "[Sort] Last Updated sort option.")
+    static let sortName = String(localized: "Name", comment: "[Sort] Name sort option.")
+    static let sortAuthor = String(localized: "Author", comment: "[Sort] Author sort option.")
+    static let sortDownloads = String(localized: "Downloads", comment: "[Sort] Downloads sort option.")
+
+    // Table Columns
+    static let columnModpackName = String(localized: "Modpack", comment: "[Table] Modpack name column.")
+    static let columnModpackAuthor = String(localized: "Author", comment: "[Table] Author column.")
+    static let columnModpackDownloads = String(localized: "Downloads", comment: "[Table] Downloads column.")
+
+    // Status Messages
+    static let loadingModpacks = String(localized: "Loading modpacks...", comment: "[Status] Loading modpacks status.")
+    static let noModpacksFound = String(localized: "No modpacks found", comment: "[Status] No modpacks found.")
+    static let loadMoreResults = String(localized: "Loading more...", comment: "[Status] Loading more results.")
+
+    // Errors
+    static let errorLoadModpacksFailed = String(localized: "Failed to load modpacks", comment: "[Error] Failed to load modpacks.")
+    static let errorNoAPIKey = String(localized: "CurseForge API key not configured", comment: "[Error] No API key configured.")
   }
 }
