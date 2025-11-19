@@ -334,6 +334,13 @@ extension Localized {
     static let columnModpackAuthor = String(localized: "Author", comment: "[Table] Author column.")
     static let columnModpackDownloads = String(localized: "Downloads", comment: "[Table] Downloads column.")
 
+    // Category Filter
+    static let categoriesFilterTitle = String(localized: "Categories", comment: "[Text] Categories filter title.")
+    static let errorLoadCategoriesFailed = String(localized: "Failed to load categories", comment: "[Error] Failed to load categories.")
+
+    // Version Selection
+    static let versionSelectedLabel = String(localized: "Version selected:", comment: "[Label] Version selected label.")
+
     // Status Messages
     static let loadingModpacks = String(localized: "Loading modpacks...", comment: "[Status] Loading modpacks status.")
     static let noModpacksFound = String(localized: "No modpacks found", comment: "[Status] No modpacks found.")

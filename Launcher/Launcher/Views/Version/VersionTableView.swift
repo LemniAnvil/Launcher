@@ -51,7 +51,7 @@ class VersionTableView<Item: Hashable>: NSView {
 
   // MARK: - UI Components
 
-  private lazy var scrollView: NSScrollView = {
+  lazy var scrollView: NSScrollView = {
     let scrollView = NSScrollView()
     scrollView.hasVerticalScroller = true
     scrollView.hasHorizontalScroller = false
@@ -59,6 +59,7 @@ class VersionTableView<Item: Hashable>: NSView {
     scrollView.borderType = .bezelBorder
     return scrollView
   }()
+
 
   private(set) lazy var tableView: NSTableView = {
     let tableView = NSTableView()

@@ -45,12 +45,14 @@ class CurseForgeAPIClient {
   ///   - searchTerm: Optional search term to filter modpacks
   ///   - sortMethod: Sort method for results
   ///   - offset: Pagination offset (default: 0)
+  ///   - categoryIds: Optional array of category IDs to filter by
   /// - Returns: Search response with modpacks and pagination info
   /// - Throws: APIError if request fails
   func searchModpacks(
     searchTerm: String? = nil,
     sortMethod: CurseForgeSortMethod = .featured,
-    offset: Int = 0
+    offset: Int = 0,
+    categoryIds: [Int]? = nil
   ) async throws -> CurseForgeSearchResponse {
     // Validate API key
     guard !apiKey.isEmpty else {
@@ -61,7 +63,8 @@ class CurseForgeAPIClient {
     let urlString = APIService.CurseForge.searchURL(
       searchTerm: searchTerm,
       sortField: sortMethod.apiValue,
-      offset: offset
+      offset: offset,
+      categoryIds: categoryIds
     )
 
     guard let url = URL(string: urlString) else {
@@ -150,6 +153,108 @@ class CurseForgeAPIClient {
       }
       let detailResponse = try decoder.decode(Response.self, from: data)
       return detailResponse.data
+    } catch {
+      throw APIError.decodingError(error)
+    }
+  }
+
+  /// Get available files (versions) for a specific modpack
+  /// - Parameter modpackId: Modpack ID
+  /// - Returns: Array of modpack files/versions
+  /// - Throws: APIError if request fails
+  func getModpackFiles(modpackId: Int) async throws -> [CurseForgeModpackFile] {
+    // Validate API key
+    guard !apiKey.isEmpty else {
+      throw APIError.authenticationFailed
+    }
+
+    // Build URL
+    let urlString = APIService.CurseForge.modpackFilesURL(modpackId: modpackId)
+
+    guard let url = URL(string: urlString) else {
+      throw APIError.invalidURL(urlString)
+    }
+
+    // Create request with API key
+    var request = URLRequest(url: url)
+    request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+    request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+    // Perform request
+    let (data, response) = try await urlSession.data(for: request)
+
+    // Validate response
+    guard let httpResponse = response as? HTTPURLResponse else {
+      throw APIError.invalidResponse
+    }
+
+    guard (200...299).contains(httpResponse.statusCode) else {
+      if httpResponse.statusCode == 401 {
+        throw APIError.unauthorized
+      } else if httpResponse.statusCode >= 500 {
+        throw APIError.serverError(httpResponse.statusCode)
+      } else {
+        throw APIError.httpError(httpResponse.statusCode)
+      }
+    }
+
+    // Decode response
+    do {
+      let decoder = JSONDecoder()
+      let filesResponse = try decoder.decode(CurseForgeModpackFilesResponse.self, from: data)
+      return filesResponse.data
+    } catch {
+      throw APIError.decodingError(error)
+    }
+  }
+
+  /// Get available categories for modpacks
+  /// - Parameters:
+  ///   - gameId: Game ID (default: 432 for Minecraft)
+  ///   - classId: Class ID (default: 4471 for Modpacks)
+  /// - Returns: Array of categories
+  /// - Throws: APIError if request fails
+  func getCategories(gameId: Int = 432, classId: Int? = 4471) async throws -> [CurseForgeCategory] {
+    // Validate API key
+    guard !apiKey.isEmpty else {
+      throw APIError.authenticationFailed
+    }
+
+    // Build URL
+    let urlString = APIService.CurseForge.categoriesURL(gameId: gameId, classId: classId)
+
+    guard let url = URL(string: urlString) else {
+      throw APIError.invalidURL(urlString)
+    }
+
+    // Create request with API key
+    var request = URLRequest(url: url)
+    request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+    request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+    // Perform request
+    let (data, response) = try await urlSession.data(for: request)
+
+    // Validate response
+    guard let httpResponse = response as? HTTPURLResponse else {
+      throw APIError.invalidResponse
+    }
+
+    guard (200...299).contains(httpResponse.statusCode) else {
+      if httpResponse.statusCode == 401 {
+        throw APIError.unauthorized
+      } else if httpResponse.statusCode >= 500 {
+        throw APIError.serverError(httpResponse.statusCode)
+      } else {
+        throw APIError.httpError(httpResponse.statusCode)
+      }
+    }
+
+    // Decode response
+    do {
+      let decoder = JSONDecoder()
+      let categoriesResponse = try decoder.decode(CurseForgeCategoriesResponse.self, from: data)
+      return categoriesResponse.data
     } catch {
       throw APIError.decodingError(error)
     }

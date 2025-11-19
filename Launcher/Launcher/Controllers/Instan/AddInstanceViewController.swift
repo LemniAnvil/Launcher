@@ -28,12 +28,19 @@ class AddInstanceViewController: NSViewController {
 
   // CurseForge properties
   private var curseForgeModpacks: [CurseForgeModpack] = []
+  private var selectedModpack: CurseForgeModpack?
+  private var modpackFiles: [CurseForgeModpackFile] = []
+  private var selectedModpackFile: CurseForgeModpackFile?
   private var currentSearchTerm: String = ""
   private var currentSortMethod: CurseForgeSortMethod = .featured
   private var currentPaginationIndex: Int = 0
   private var isLoadingMore: Bool = false
   private var hasMoreResults: Bool = true
   private var searchDebounceTimer: Timer?
+  // Category filter properties
+  private var categories: [CurseForgeCategory] = []
+  private var selectedCategoryIds: Set<Int> = []
+  private var categoryCheckboxes: [Int: NSButton] = [:]
 
   // MARK: - Enums & Models
 
@@ -424,8 +431,16 @@ class AddInstanceViewController: NSViewController {
       columns: columns,
       onSelectionChanged: { [weak self] item in
         // Handle modpack selection
-        guard let self = self, let item = item else { return }
-        // TODO: Show modpack details or enable instance creation
+        guard let self = self, let item = item else {
+          self?.selectedModpack = nil
+          self?.selectedModpackFile = nil
+          self?.modpackFiles = []
+          self?.curseForgeVersionPopup.removeAllItems()
+          self?.curseForgeVersionPopup.isEnabled = false
+          return
+        }
+        self.selectedModpack = item.modpack
+        self.loadModpackVersions(for: item.modpack)
       }
     )
     return tableView
@@ -450,7 +465,74 @@ class AddInstanceViewController: NSViewController {
     return label
   }()
 
+  private let curseForgeVersionLabel: BRLabel = {
+    let label = BRLabel(
+      text: Localized.AddInstance.versionSelectedLabel,
+      font: .systemFont(ofSize: 12, weight: .medium),
+      textColor: .labelColor,
+      alignment: .right
+    )
+    return label
+  }()
+
+  private lazy var curseForgeVersionPopup: NSPopUpButton = {
+    let button = NSPopUpButton()
+    button.font = .systemFont(ofSize: 12)
+    button.target = self
+    button.action = #selector(curseForgeVersionChanged)
+    button.isEnabled = false
+    return button
+  }()
+
+  private lazy var curseForgeVersionLoadingIndicator: NSProgressIndicator = {
+    let indicator = NSProgressIndicator()
+    indicator.style = .spinning
+    indicator.controlSize = .small
+    indicator.isHidden = true
+    return indicator
+  }()
+
+  // MARK: - CurseForge Filter UI Components
+
+  private let curseForgeFilterScrollView: NSScrollView = {
+    let scrollView = NSScrollView()
+    scrollView.hasVerticalScroller = true
+    scrollView.hasHorizontalScroller = false
+    scrollView.autohidesScrollers = true
+    scrollView.borderType = .noBorder
+    scrollView.drawsBackground = true
+    scrollView.backgroundColor = NSColor.controlBackgroundColor
+    scrollView.wantsLayer = true
+    scrollView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+    scrollView.layer?.cornerRadius = 8
+    scrollView.layer?.borderWidth = 1
+    scrollView.layer?.borderColor = NSColor.separatorColor.cgColor
+    return scrollView
+  }()
+
+  private let curseForgeFilterStackView: NSStackView = {
+    let stackView = NSStackView()
+    stackView.orientation = .vertical
+    stackView.alignment = .leading
+    stackView.spacing = 6
+    stackView.edgeInsets = NSEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    stackView.wantsLayer = true
+    return stackView
+  }()
+
+  private let curseForgeFilterTitleLabel: BRLabel = {
+
+    let label = BRLabel(
+      text: Localized.AddInstance.categoriesFilterTitle,
+      font: .systemFont(ofSize: 13, weight: .semibold),
+      textColor: .labelColor,
+      alignment: .left
+    )
+    return label
+  }()
+
   private let versionTitleLabel: BRLabel = {
+
     let label = BRLabel(
       text: Localized.AddInstance.customTitle,
       font: .systemFont(ofSize: 16, weight: .semibold),
@@ -1164,25 +1246,41 @@ class AddInstanceViewController: NSViewController {
   }
 
   private func setupCurseForgeContentView() {
-    // Add UI components to CurseForge content view
+    // Add filter panel (left) and main content area (right)
+    curseForgeContentView.addSubview(curseForgeFilterScrollView)
+    curseForgeFilterScrollView.documentView = curseForgeFilterStackView
+    
+    // Add search and sort controls
     curseForgeContentView.addSubview(curseForgeSearchField)
     curseForgeContentView.addSubview(curseForgeSortLabel)
     curseForgeContentView.addSubview(curseForgeSortPopup)
     curseForgeContentView.addSubview(curseForgeModpackTableView)
     curseForgeContentView.addSubview(curseForgeLoadingIndicator)
     curseForgeContentView.addSubview(curseForgeEmptyLabel)
+    curseForgeContentView.addSubview(curseForgeVersionLabel)
+    curseForgeContentView.addSubview(curseForgeVersionPopup)
+    curseForgeContentView.addSubview(curseForgeVersionLoadingIndicator)
 
-    // Setup constraints
-    curseForgeSearchField.snp.makeConstraints { make in
+    // Left filter panel constraints (fixed width ~220pt)
+    curseForgeFilterScrollView.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(15)
       make.left.equalToSuperview().offset(15)
+      make.width.equalTo(220)
+      make.bottom.equalToSuperview().offset(-50) // Leave space for version selector at bottom
+    }
+
+    // Right content area - search field
+    curseForgeSearchField.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(15)
+      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(15)
       make.right.equalToSuperview().offset(-15)
       make.height.equalTo(28)
     }
 
+    // Sort controls (on the right side)
     curseForgeSortLabel.snp.makeConstraints { make in
       make.top.equalTo(curseForgeSearchField.snp.bottom).offset(12)
-      make.left.equalToSuperview().offset(15)
+      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(15)
       make.width.equalTo(60)
     }
 
@@ -1193,11 +1291,12 @@ class AddInstanceViewController: NSViewController {
       make.height.equalTo(24)
     }
 
+    // Modpack table view
     curseForgeModpackTableView.snp.makeConstraints { make in
       make.top.equalTo(curseForgeSortLabel.snp.bottom).offset(12)
-      make.left.equalToSuperview().offset(15)
+      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(15)
       make.right.equalToSuperview().offset(-15)
-      make.bottom.equalToSuperview().offset(-15)
+      make.bottom.equalTo(curseForgeVersionLabel.snp.top).offset(-12)
     }
 
     curseForgeLoadingIndicator.snp.makeConstraints { make in
@@ -1210,13 +1309,69 @@ class AddInstanceViewController: NSViewController {
       make.width.equalTo(200)
     }
 
+    // Version selection UI at bottom (spans entire width)
+    curseForgeVersionLabel.snp.makeConstraints { make in
+      make.bottom.equalToSuperview().offset(-15)
+      make.left.equalTo(curseForgeSortPopup.snp.right).offset(20)
+      make.width.equalTo(120)
+    }
+
+    curseForgeVersionPopup.snp.makeConstraints { make in
+      make.centerY.equalTo(curseForgeVersionLabel)
+      make.left.equalTo(curseForgeVersionLabel.snp.right).offset(8)
+      make.right.equalToSuperview().offset(-15)
+      make.height.equalTo(24)
+    }
+
+    curseForgeVersionLoadingIndicator.snp.makeConstraints { make in
+      make.centerY.equalTo(curseForgeVersionPopup)
+      make.left.equalTo(curseForgeVersionLabel.snp.left).offset(-24)
+      make.width.height.equalTo(16)
+    }
+
     // Setup search field delegate
     curseForgeSearchField.target = self
     curseForgeSearchField.action = #selector(curseForgeSearchChanged)
 
-    // Perform initial load when view appears
-    loadCurseForgeModpacks(reset: true)
+    // Setup infinite scroll
+    setupInfiniteScroll()
+
+    // Don't load data here - wait until CurseForge is actually selected
+    // Data will be loaded in updateContentView() when category is selected
   }
+
+  /// Setup infinite scroll for modpack list
+  private func setupInfiniteScroll() {
+    // Monitor scroll events
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(modpackScrollViewDidScroll(_:)),
+      name: NSScrollView.didLiveScrollNotification,
+      object: curseForgeModpackTableView.scrollView
+    )
+  }
+
+  @objc private func modpackScrollViewDidScroll(_ notification: Notification) {
+    guard let scrollView = notification.object as? NSScrollView else { return }
+    
+    // Don't load if already loading or no more results
+    guard !isLoadingMore, hasMoreResults else { return }
+    
+    // Calculate scroll position
+    let contentView = scrollView.contentView
+    let documentRect = contentView.documentRect
+    let visibleRect = contentView.documentVisibleRect
+    
+    // Trigger load when scrolled to 80% of content
+    let scrollPosition = (visibleRect.origin.y + visibleRect.height) / documentRect.height
+    let threshold: CGFloat = 0.8
+    
+    if scrollPosition > threshold {
+      print("🔄 Loading more modpacks (scroll position: \(Int(scrollPosition * 100))%)")
+      loadCurseForgeModpacks(reset: false)
+    }
+  }
+
 
   private func setupPlaceholderContent(for contentView: NSView, title: String) {
     let titleLabel = BRLabel(
@@ -1413,10 +1568,12 @@ class AddInstanceViewController: NSViewController {
     Task {
       do {
         let searchTerm = currentSearchTerm.isEmpty ? nil : currentSearchTerm
+        let categoryIds = selectedCategoryIds.isEmpty ? nil : Array(selectedCategoryIds)
         let response = try await curseForgeAPI.searchModpacks(
           searchTerm: searchTerm,
           sortMethod: currentSortMethod,
-          offset: currentPaginationIndex
+          offset: currentPaginationIndex,
+          categoryIds: categoryIds
         )
 
         await MainActor.run {
@@ -1471,7 +1628,170 @@ class AddInstanceViewController: NSViewController {
     }
   }
 
+  /// Load available versions for selected modpack
+  private func loadModpackVersions(for modpack: CurseForgeModpack) {
+    // Clear previous selections
+    curseForgeVersionPopup.removeAllItems()
+    selectedModpackFile = nil
+    curseForgeVersionPopup.isEnabled = false
+
+    // Show loading indicator
+    curseForgeVersionLoadingIndicator.isHidden = false
+    curseForgeVersionLoadingIndicator.startAnimation(nil)
+
+    Task {
+      do {
+        let files = try await curseForgeAPI.getModpackFiles(modpackId: modpack.id)
+
+        await MainActor.run {
+          self.modpackFiles = files
+
+          // Add versions to popup
+          for file in files {
+            self.curseForgeVersionPopup.addItem(withTitle: file.versionDisplayString)
+          }
+
+          // Select first version by default
+          if !files.isEmpty {
+            self.curseForgeVersionPopup.selectItem(at: 0)
+            self.selectedModpackFile = files[0]
+            self.curseForgeVersionPopup.isEnabled = true
+          }
+
+          // Hide loading indicator
+          self.curseForgeVersionLoadingIndicator.stopAnimation(nil)
+          self.curseForgeVersionLoadingIndicator.isHidden = true
+        }
+      } catch {
+        await MainActor.run {
+          print("Failed to load modpack versions: \(error)")
+          self.curseForgeVersionLoadingIndicator.stopAnimation(nil)
+          self.curseForgeVersionLoadingIndicator.isHidden = true
+
+          // Show error in popup
+          self.curseForgeVersionPopup.addItem(withTitle: "Failed to load versions")
+          self.curseForgeVersionPopup.isEnabled = false
+        }
+      }
+    }
+  }
+
+  // Track whether CurseForge content has been loaded
+  private var curseForgeContentLoaded = false
+
+  /// Lazy load CurseForge content only when needed
+  private func loadCurseForgeContentIfNeeded() {
+    guard !curseForgeContentLoaded else { return }
+    curseForgeContentLoaded = true
+    
+    print("🚀 Loading CurseForge content for the first time")
+    loadCategories()
+    loadCurseForgeModpacks(reset: true)
+  }
+
+  @objc private func curseForgeVersionChanged() {
+    let selectedIndex = curseForgeVersionPopup.indexOfSelectedItem
+    guard selectedIndex >= 0, selectedIndex < modpackFiles.count else {
+      selectedModpackFile = nil
+      return
+    }
+    selectedModpackFile = modpackFiles[selectedIndex]
+  }
+
+  // MARK: - Category Loading
+
+  /// Load available categories for modpacks
+  private func loadCategories() {
+    Task {
+      do {
+        let loadedCategories = try await curseForgeAPI.getCategories()
+        print("📦 Loaded \(loadedCategories.count) categories from API")
+
+        await MainActor.run {
+          // Show all categories (not just root categories)
+          // CurseForge API may not always set parentCategoryId correctly
+          self.categories = loadedCategories
+          print("📋 Displaying \(self.categories.count) categories in filter panel")
+          self.createCategoryCheckboxes()
+        }
+      } catch {
+        await MainActor.run {
+          print("❌ Failed to load categories: \(error)")
+          // Show error in UI by adding an error label to filter panel
+          self.showCategoryLoadError()
+        }
+      }
+    }
+  }
+
+  /// Show error message when categories fail to load
+  private func showCategoryLoadError() {
+    let errorLabel = BRLabel(
+      text: Localized.AddInstance.errorLoadCategoriesFailed,
+      font: .systemFont(ofSize: 11),
+      textColor: .systemRed,
+      alignment: .left
+    )
+    curseForgeFilterStackView.addArrangedSubview(curseForgeFilterTitleLabel)
+    curseForgeFilterStackView.addArrangedSubview(errorLabel)
+  }
+
+  /// Create checkboxes for each category
+  private func createCategoryCheckboxes() {
+    print("📝 Creating category checkboxes for \(categories.count) categories")
+    
+    // Clear existing checkboxes
+    curseForgeFilterStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    categoryCheckboxes.removeAll()
+
+    // Ensure stackView fills the scrollView width
+    curseForgeFilterStackView.snp.remakeConstraints { make in
+      make.edges.equalToSuperview()
+      make.width.equalTo(curseForgeFilterScrollView.snp.width)
+    }
+
+    // Add title label
+    curseForgeFilterStackView.addArrangedSubview(curseForgeFilterTitleLabel)
+    curseForgeFilterTitleLabel.snp.makeConstraints { make in
+      make.width.equalTo(200)
+    }
+
+    // Create checkbox for each category
+    for category in categories {
+      print("  ✓ Adding checkbox for category: \(category.name) (ID: \(category.id))")
+      let checkbox = NSButton(
+        checkboxWithTitle: category.name,
+        target: self,
+        action: #selector(categoryCheckboxChanged(_:))
+      )
+      checkbox.font = .systemFont(ofSize: 12)
+      checkbox.tag = category.id
+      checkbox.snp.makeConstraints { make in
+        make.width.equalTo(200)
+      }
+
+      categoryCheckboxes[category.id] = checkbox
+      curseForgeFilterStackView.addArrangedSubview(checkbox)
+    }
+
+    print("✅ Created \(categoryCheckboxes.count) category checkboxes")
+  }
+
+  @objc private func categoryCheckboxChanged(_ sender: NSButton) {
+    let categoryId = sender.tag
+
+    if sender.state == .on {
+      selectedCategoryIds.insert(categoryId)
+    } else {
+      selectedCategoryIds.remove(categoryId)
+    }
+
+    // Reload modpacks with new filter
+    loadCurseForgeModpacks(reset: true)
+  }
+
   @objc private func showHelp() {
+
     guard let url = URL(string: "https://github.com/LemniAnvil/Launcher/wiki") else { return }
     NSWorkspace.shared.open(url)
   }
@@ -1595,6 +1915,8 @@ extension AddInstanceViewController: NSTableViewDelegate {
     case .curseForge:
       iconImageView.contentTintColor = .systemRed
       curseForgeContentView.isHidden = false
+      // Lazy load CurseForge content when first selected
+      loadCurseForgeContentIfNeeded()
     case .ftbLegacy:
       iconImageView.contentTintColor = .systemPurple
       ftbLegacyContentView.isHidden = false

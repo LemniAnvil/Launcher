@@ -57,7 +57,52 @@ struct CurseForgeLinks: Codable, Hashable {
   }
 }
 
+// MARK: - Category
+
+/// Represents a CurseForge category
+struct CurseForgeCategory: Codable, Hashable, Identifiable {
+  let id: Int
+  let name: String
+  let iconUrl: String?
+  let parentCategoryId: Int?
+  let classId: Int?
+  let displayIndex: Int?
+
+  enum CodingKeys: String, CodingKey {
+    case id
+    case name
+    case iconUrl
+    case parentCategoryId
+    case classId
+    case displayIndex
+  }
+
+  // Hashable conformance
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(id)
+  }
+
+  static func == (lhs: Self, rhs: Self) -> Bool {
+    return lhs.id == rhs.id
+  }
+
+  /// Check if this is a root category (no parent)
+  var isRootCategory: Bool {
+    return parentCategoryId == nil || parentCategoryId == 0
+  }
+}
+
+/// Represents CurseForge categories API response
+struct CurseForgeCategoriesResponse: Codable {
+  let data: [CurseForgeCategory]
+
+  enum CodingKeys: String, CodingKey {
+    case data
+  }
+}
+
 // MARK: - Modpack
+
 
 /// Represents a CurseForge modpack
 struct CurseForgeModpack: Codable, Hashable, Identifiable {
@@ -196,5 +241,130 @@ enum CurseForgeSortMethod: Int, CaseIterable {
   /// API parameter value
   var apiValue: Int {
     return self.rawValue
+  }
+}
+
+// MARK: - Modpack File/Version
+
+/// Represents a CurseForge modpack file (version)
+struct CurseForgeModpackFile: Codable, Hashable, Identifiable {
+  let id: Int
+  let displayName: String
+  let fileName: String
+  let fileDate: String
+  let fileLength: Int
+  let downloadUrl: String?
+  let gameVersions: [String]
+  let sortableGameVersions: [CurseForgeSortableGameVersion]?
+  let dependencies: [CurseForgeFileDependency]?
+  let isServerPack: Bool?
+  let serverPackFileId: Int?
+  let fileFingerprint: Int?
+  let modules: [CurseForgeFileModule]?
+
+  enum CodingKeys: String, CodingKey {
+    case id
+    case displayName
+    case fileName
+    case fileDate
+    case fileLength
+    case downloadUrl
+    case gameVersions
+    case sortableGameVersions
+    case dependencies
+    case isServerPack
+    case serverPackFileId
+    case fileFingerprint
+    case modules
+  }
+
+  // Hashable conformance
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(id)
+  }
+
+  static func == (lhs: Self, rhs: Self) -> Bool {
+    return lhs.id == rhs.id
+  }
+
+  /// Get primary Minecraft version
+  var primaryMinecraftVersion: String? {
+    return gameVersions.first { version in
+      // Filter out non-version strings like "Forge", "Fabric", etc.
+      version.first?.isNumber == true
+    }
+  }
+
+  /// Format file size for display (e.g., "12.5 MB", "1.2 GB")
+  var formattedFileSize: String {
+    let bytes = Double(fileLength)
+    if bytes >= 1_073_741_824 {
+      return String(format: "%.1f GB", bytes / 1_073_741_824)
+    } else if bytes >= 1_048_576 {
+      return String(format: "%.1f MB", bytes / 1_048_576)
+    } else if bytes >= 1_024 {
+      return String(format: "%.1f KB", bytes / 1_024)
+    } else {
+      return "\(fileLength) B"
+    }
+  }
+
+  /// Get version display string for UI (e.g., "1.20.1 - v1.0.2")
+  var versionDisplayString: String {
+    if let mcVersion = primaryMinecraftVersion {
+      return "\(displayName) (MC \(mcVersion))"
+    } else {
+      return displayName
+    }
+  }
+}
+
+/// Represents a sortable game version in CurseForge API
+struct CurseForgeSortableGameVersion: Codable, Hashable {
+  let gameVersionName: String
+  let gameVersionPadded: String
+  let gameVersion: String
+  let gameVersionReleaseDate: String
+  let gameVersionTypeId: Int?
+
+  enum CodingKeys: String, CodingKey {
+    case gameVersionName
+    case gameVersionPadded
+    case gameVersion
+    case gameVersionReleaseDate
+    case gameVersionTypeId
+  }
+}
+
+/// Represents a file dependency in CurseForge API
+struct CurseForgeFileDependency: Codable, Hashable {
+  let modId: Int
+  let relationType: Int
+
+  enum CodingKeys: String, CodingKey {
+    case modId
+    case relationType
+  }
+}
+
+/// Represents a file module in CurseForge API
+struct CurseForgeFileModule: Codable, Hashable {
+  let name: String
+  let fingerprint: Int
+
+  enum CodingKeys: String, CodingKey {
+    case name
+    case fingerprint
+  }
+}
+
+/// Represents CurseForge modpack files API response
+struct CurseForgeModpackFilesResponse: Codable {
+  let data: [CurseForgeModpackFile]
+  let pagination: CurseForgePagination?
+
+  enum CodingKeys: String, CodingKey {
+    case data
+    case pagination
   }
 }
