@@ -140,11 +140,15 @@ extension Localized {
     // Buttons
     static let applyButton = String(localized: "Apply Settings", comment: "[Button] Apply settings button.")
     static let testButton = String(localized: "Test Proxy", comment: "[Button] Test proxy button.")
+    static let detectSystemProxyButton = String(localized: "Detect System Proxy", comment: "[Button] Detect system proxy button.")
     static let okButton = String(localized: "OK", comment: "[Button] OK button.")
 
     // Status Messages
     static let statusReady = String(localized: "Ready", comment: "[Status] Ready status.")
     static let statusDisabled = String(localized: "Proxy disabled", comment: "[Status] Proxy disabled.")
+    static let statusDetecting = String(localized: "Detecting system proxy...", comment: "[Status] Detecting system proxy.")
+    static let statusSystemProxyApplied = String(localized: "System proxy detected and applied", comment: "[Status] System proxy applied.")
+    static let statusNoSystemProxy = String(localized: "No system proxy detected", comment: "[Status] No system proxy found.")
     static let statusTesting = String(localized: "Testing proxy connection...", comment: "[Status] Testing proxy.")
     static let statusTestSuccess = String(localized: "Proxy connection test successful", comment: "[Status] Proxy test success.")
     static let statusTestFailed = String(localized: "Proxy connection test failed", comment: "[Status] Proxy test failed.")

@@ -22,42 +22,33 @@ class VersionCellView: NSView {
     return imageView
   }()
 
-  private let versionLabel: BRLabel = {
-    let label = BRLabel(
-      text: "",
-      font: .systemFont(ofSize: 14, weight: .medium),
-      textColor: .labelColor,
-      alignment: .left
-    )
-    return label
-  }()
+  private let versionLabel = BRLabel(
+    text: "",
+    font: .systemFont(ofSize: 14, weight: .medium),
+    textColor: .labelColor,
+    alignment: .left
+  )
 
-  private let typeLabel: BRLabel = {
-    let label = BRLabel(
-      text: "",
-      font: .systemFont(ofSize: 11),
-      textColor: .secondaryLabelColor,
-      alignment: .left
-    )
-    return label
-  }()
+  private let typeLabel = BRLabel(
+    text: "",
+    font: .systemFont(ofSize: 11),
+    textColor: .secondaryLabelColor,
+    alignment: .left
+  )
 
-  private let containerView: BRNSView = {
-    let view = BRNSView(
-      backgroundColor: .controlBackgroundColor,
-      cornerRadius: 8
-    )
-    return view
-  }()
+  private let containerView = BRNSView(
+    backgroundColor: .controlBackgroundColor,
+    cornerRadius: 8
+  )
 
   override init(frame frameRect: NSRect) {
     super.init(frame: frameRect)
     setupUI()
   }
 
+  @available(*, unavailable)
   required init?(coder: NSCoder) {
-    super.init(coder: coder)
-    setupUI()
+    fatalError("init(coder:) has not been implemented")
   }
 
   private func setupUI() {

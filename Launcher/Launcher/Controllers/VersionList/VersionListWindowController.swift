@@ -7,24 +7,20 @@
 
 import AppKit
 
-class VersionListWindowController: NSWindowController {
+class VersionListWindowController: BaseWindowController {
 
   convenience init() {
-    let window = NSWindow(
-      contentRect: NSRect(x: 0, y: 0, width: 1000, height: 680),
+    let configuration = WindowConfiguration(
+      width: 1000,
+      height: 680,
       styleMask: [.titled, .closable],
-      backing: .buffered,
-      defer: false
+      minWidth: 900,
+      minHeight: 600,
+      title: Localized.Instances.createInstanceTitle,
+      handlesModalStop: false
     )
 
-    window.title = Localized.Instances.createInstanceTitle
-    window.center()
-    window.minSize = NSSize(width: 900, height: 600)
-
-    // Set content view controller
-    let versionListViewController = VersionListViewController()
-    window.contentViewController = versionListViewController
-
-    self.init(window: window)
+    let viewController = VersionListViewController()
+    self.init(configuration: configuration, viewController: viewController)
   }
 }

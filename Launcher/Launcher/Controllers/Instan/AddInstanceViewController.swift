@@ -922,7 +922,7 @@ class AddInstanceViewController: NSViewController {
           try await versionManager.refreshVersionList()
         } catch {
           // Failed to refresh, just continue
-          print("Failed to refresh version list: \(error)")
+          Logger.shared.error("Failed to refresh version list: \(error)", category: "AddInstance")
         }
       }
 
@@ -1249,7 +1249,7 @@ class AddInstanceViewController: NSViewController {
     // Add filter panel (left) and main content area (right)
     curseForgeContentView.addSubview(curseForgeFilterScrollView)
     curseForgeFilterScrollView.documentView = curseForgeFilterStackView
-    
+
     // Add search and sort controls
     curseForgeContentView.addSubview(curseForgeSearchField)
     curseForgeContentView.addSubview(curseForgeSortLabel)
@@ -1353,25 +1353,24 @@ class AddInstanceViewController: NSViewController {
 
   @objc private func modpackScrollViewDidScroll(_ notification: Notification) {
     guard let scrollView = notification.object as? NSScrollView else { return }
-    
+
     // Don't load if already loading or no more results
     guard !isLoadingMore, hasMoreResults else { return }
-    
+
     // Calculate scroll position
     let contentView = scrollView.contentView
     let documentRect = contentView.documentRect
     let visibleRect = contentView.documentVisibleRect
-    
+
     // Trigger load when scrolled to 80% of content
     let scrollPosition = (visibleRect.origin.y + visibleRect.height) / documentRect.height
     let threshold: CGFloat = 0.8
-    
+
     if scrollPosition > threshold {
-      print("🔄 Loading more modpacks (scroll position: \(Int(scrollPosition * 100))%)")
+      Logger.shared.info("Loading more modpacks (scroll position: \(Int(scrollPosition * 100))%)", category: "AddInstance")
       loadCurseForgeModpacks(reset: false)
     }
   }
-
 
   private func setupPlaceholderContent(for contentView: NSView, title: String) {
     let titleLabel = BRLabel(
@@ -1421,7 +1420,7 @@ class AddInstanceViewController: NSViewController {
         }
       } catch {
         await MainActor.run {
-          print("Failed to refresh versions: \(error)")
+          Logger.shared.error("Failed to refresh versions: \(error)", category: "AddInstance")
           refreshButton.isEnabled = true
 
           // Show error alert
@@ -1513,7 +1512,7 @@ class AddInstanceViewController: NSViewController {
         }
       } catch {
         await MainActor.run {
-          print("Failed to load mod loader versions: \(error)")
+          Logger.shared.error("Failed to load mod loader versions: \(error)", category: "AddInstance")
           self.modLoaderVersionTableView.updateItems([])
           self.modLoaderVersionLoadingIndicator.stopAnimation(nil)
           self.modLoaderVersionLoadingIndicator.isHidden = true
@@ -1606,7 +1605,7 @@ class AddInstanceViewController: NSViewController {
         }
       } catch {
         await MainActor.run {
-          print("Failed to load CurseForge modpacks: \(error)")
+          Logger.shared.error("Failed to load CurseForge modpacks: \(error)", category: "AddInstance")
           self.curseForgeLoadingIndicator.stopAnimation(nil)
           self.curseForgeLoadingIndicator.isHidden = true
           self.isLoadingMore = false
@@ -1664,7 +1663,7 @@ class AddInstanceViewController: NSViewController {
         }
       } catch {
         await MainActor.run {
-          print("Failed to load modpack versions: \(error)")
+          Logger.shared.error("Failed to load modpack versions: \(error)", category: "AddInstance")
           self.curseForgeVersionLoadingIndicator.stopAnimation(nil)
           self.curseForgeVersionLoadingIndicator.isHidden = true
 
@@ -1683,8 +1682,8 @@ class AddInstanceViewController: NSViewController {
   private func loadCurseForgeContentIfNeeded() {
     guard !curseForgeContentLoaded else { return }
     curseForgeContentLoaded = true
-    
-    print("🚀 Loading CurseForge content for the first time")
+
+    Logger.shared.info("Loading CurseForge content for the first time", category: "AddInstance")
     loadCategories()
     loadCurseForgeModpacks(reset: true)
   }
@@ -1705,18 +1704,18 @@ class AddInstanceViewController: NSViewController {
     Task {
       do {
         let loadedCategories = try await curseForgeAPI.getCategories()
-        print("📦 Loaded \(loadedCategories.count) categories from API")
+        Logger.shared.info("Loaded \(loadedCategories.count) categories from API", category: "AddInstance")
 
         await MainActor.run {
           // Show all categories (not just root categories)
           // CurseForge API may not always set parentCategoryId correctly
           self.categories = loadedCategories
-          print("📋 Displaying \(self.categories.count) categories in filter panel")
+          Logger.shared.info("Displaying \(self.categories.count) categories in filter panel", category: "AddInstance")
           self.createCategoryCheckboxes()
         }
       } catch {
         await MainActor.run {
-          print("❌ Failed to load categories: \(error)")
+          Logger.shared.error("Failed to load categories: \(error)", category: "AddInstance")
           // Show error in UI by adding an error label to filter panel
           self.showCategoryLoadError()
         }
@@ -1738,8 +1737,8 @@ class AddInstanceViewController: NSViewController {
 
   /// Create checkboxes for each category
   private func createCategoryCheckboxes() {
-    print("📝 Creating category checkboxes for \(categories.count) categories")
-    
+    Logger.shared.debug("Creating category checkboxes for \(categories.count) categories", category: "AddInstance")
+
     // Clear existing checkboxes
     curseForgeFilterStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
     categoryCheckboxes.removeAll()
@@ -1758,7 +1757,7 @@ class AddInstanceViewController: NSViewController {
 
     // Create checkbox for each category
     for category in categories {
-      print("  ✓ Adding checkbox for category: \(category.name) (ID: \(category.id))")
+      Logger.shared.debug("Adding checkbox for category: \(category.name) (ID: \(category.id))", category: "AddInstance")
       let checkbox = NSButton(
         checkboxWithTitle: category.name,
         target: self,
@@ -1774,7 +1773,7 @@ class AddInstanceViewController: NSViewController {
       curseForgeFilterStackView.addArrangedSubview(checkbox)
     }
 
-    print("✅ Created \(categoryCheckboxes.count) category checkboxes")
+    Logger.shared.debug("Created \(categoryCheckboxes.count) category checkboxes", category: "AddInstance")
   }
 
   @objc private func categoryCheckboxChanged(_ sender: NSButton) {

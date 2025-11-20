@@ -7,20 +7,18 @@
 
 import AppKit
 
-class InstanceDetailWindowController: NSWindowController {
+class InstanceDetailWindowController: BaseWindowController {
 
   convenience init(instance: Instance) {
-    let viewController = InstanceDetailViewController(instance: instance)
-    let window = NSWindow(
-      contentRect: NSRect(x: 0, y: 0, width: 500, height: 600),
+    let configuration = WindowConfiguration(
+      width: 500,
+      height: 600,
       styleMask: [.titled, .closable],
-      backing: .buffered,
-      defer: false
+      title: Localized.InstanceDetail.windowTitle,
+      handlesModalStop: false
     )
-    window.title = Localized.InstanceDetail.windowTitle
-    window.contentViewController = viewController
-    window.center()
 
-    self.init(window: window)
+    let viewController = InstanceDetailViewController(instance: instance)
+    self.init(configuration: configuration, viewController: viewController)
   }
 }

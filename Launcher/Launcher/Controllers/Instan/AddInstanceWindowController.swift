@@ -7,35 +7,19 @@
 
 import AppKit
 
-class AddInstanceWindowController: NSWindowController, NSWindowDelegate {
+class AddInstanceWindowController: BaseWindowController {
 
   convenience init() {
-    let window = NSWindow(
-      contentRect: NSRect(x: 0, y: 0, width: 1000, height: 700),
+    let configuration = WindowConfiguration(
+      width: 1000,
+      height: 700,
       styleMask: [.titled, .closable, .resizable],
-      backing: .buffered,
-      defer: false
+      minWidth: 900,
+      minHeight: 600,
+      title: Localized.AddInstance.windowTitle
     )
 
-    window.title = Localized.AddInstance.windowTitle
-    window.center()
-    window.isReleasedWhenClosed = false
-    window.minSize = NSSize(width: 900, height: 600)
-
     let viewController = AddInstanceViewController()
-    window.contentViewController = viewController
-
-    self.init(window: window)
-    window.delegate = self
-  }
-
-  override func windowDidLoad() {
-    super.windowDidLoad()
-
-    window?.makeKeyAndOrderFront(nil)
-  }
-
-  func windowWillClose(_ notification: Notification) {
-    NSApplication.shared.stopModal()
+    self.init(configuration: configuration, viewController: viewController)
   }
 }

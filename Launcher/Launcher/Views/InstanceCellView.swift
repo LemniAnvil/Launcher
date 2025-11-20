@@ -55,9 +55,9 @@ class InstanceCellView: NSView {
     setupUI()
   }
 
+  @available(*, unavailable)
   required init?(coder: NSCoder) {
-    super.init(coder: coder)
-    setupUI()
+    fatalError("init(coder:) has not been implemented")
   }
 
   private func setupUI() {

@@ -130,6 +130,23 @@ class SettingsViewController: NSViewController {
     return button
   }()
 
+  private lazy var detectSystemProxyButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "wifi.circle.fill",
+      cornerRadius: 6,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+        ? NSColor.white.withAlphaComponent(0.1)
+        : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemOrange,
+      accessibilityLabel: Localized.Settings.detectSystemProxyButton
+    )
+    button.target = self
+    button.action = #selector(detectSystemProxy)
+    return button
+  }()
+
   private lazy var testProxyButton: BRImageButton = {
     let button = BRImageButton(
       symbolName: "network",
@@ -365,6 +382,7 @@ class SettingsViewController: NSViewController {
     view.addSubview(proxyPortField)
     view.addSubview(proxySeparator)
     view.addSubview(applyProxyButton)
+    view.addSubview(detectSystemProxyButton)
     view.addSubview(testProxyButton)
     view.addSubview(statusLabel)
     view.addSubview(downloadSeparator)
@@ -463,9 +481,15 @@ class SettingsViewController: NSViewController {
       make.width.height.equalTo(36)
     }
 
-    applyProxyButton.snp.makeConstraints { make in
+    detectSystemProxyButton.snp.makeConstraints { make in
       make.centerY.equalTo(testProxyButton)
       make.right.equalTo(testProxyButton.snp.left).offset(-12)
+      make.width.height.equalTo(36)
+    }
+
+    applyProxyButton.snp.makeConstraints { make in
+      make.centerY.equalTo(testProxyButton)
+      make.right.equalTo(detectSystemProxyButton.snp.left).offset(-12)
       make.width.height.equalTo(36)
     }
 
@@ -636,6 +660,50 @@ class SettingsViewController: NSViewController {
     } else {
       statusLabel.stringValue = Localized.Settings.statusDisabled
       Logger.shared.info("Proxy disabled", category: "Settings")
+    }
+  }
+
+  @objc private func detectSystemProxy() {
+    statusLabel.stringValue = Localized.Settings.statusDetecting
+    Logger.shared.info("Detecting system proxy...", category: "Settings")
+
+    // Detect system proxy on background thread
+    DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+      guard let self = self else { return }
+
+      let success = self.proxyManager.applySystemProxy()
+
+      DispatchQueue.main.async {
+        if success {
+          // Update UI with detected proxy settings
+          self.proxyEnableCheckbox.state = .on
+          self.proxyHostField.stringValue = self.proxyManager.proxyHost
+          self.proxyPortField.stringValue = "\(self.proxyManager.proxyPort)"
+
+          // Update proxy type popup
+          if let index = ProxyManager.ProxyType.allCases.firstIndex(of: self.proxyManager.proxyType) {
+            self.proxyTypePopup.selectItem(at: index)
+          }
+
+          // Enable input fields
+          self.proxyHostField.isEnabled = true
+          self.proxyPortField.isEnabled = true
+          self.proxyTypePopup.isEnabled = true
+          self.colonLabel.textColor = .labelColor
+
+          // Reconfigure download session
+          self.downloadManager.reconfigureSession()
+
+          self.statusLabel.stringValue = Localized.Settings.statusSystemProxyApplied
+          Logger.shared.info(
+            "System proxy applied: \(self.proxyManager.proxyType.rawValue) \(self.proxyManager.proxyHost):\(self.proxyManager.proxyPort)",
+            category: "Settings"
+          )
+        } else {
+          self.statusLabel.stringValue = Localized.Settings.statusNoSystemProxy
+          Logger.shared.warning("No system proxy detected", category: "Settings")
+        }
+      }
     }
   }
 

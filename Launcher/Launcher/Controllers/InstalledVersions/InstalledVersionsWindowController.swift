@@ -7,33 +7,20 @@
 
 import AppKit
 
-class InstalledVersionsWindowController: NSWindowController {
+class InstalledVersionsWindowController: BaseWindowController {
 
   convenience init() {
-    // Create window
-    let window = NSWindow(
-      contentRect: NSRect(x: 0, y: 0, width: 400, height: 600),
+    let configuration = WindowConfiguration(
+      width: 400,
+      height: 600,
       styleMask: [.titled, .closable, .resizable, .miniaturizable],
-      backing: .buffered,
-      defer: false
+      minWidth: 350,
+      minHeight: 400,
+      title: Localized.InstalledVersions.windowTitle,
+      handlesModalStop: false
     )
 
-    window.title = Localized.InstalledVersions.windowTitle
-    window.center()
-    window.isReleasedWhenClosed = false
-    window.minSize = NSSize(width: 350, height: 400)
-
-    // Set content view controller
     let viewController = InstalledVersionsViewController()
-    window.contentViewController = viewController
-
-    self.init(window: window)
-  }
-
-  override func windowDidLoad() {
-    super.windowDidLoad()
-
-    // Window configuration
-    window?.makeKeyAndOrderFront(nil)
+    self.init(configuration: configuration, viewController: viewController)
   }
 }

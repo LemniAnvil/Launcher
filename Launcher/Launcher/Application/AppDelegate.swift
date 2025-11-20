@@ -51,12 +51,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func handleIncomingURL(_ url: URL) {
-    print("Received URL:", url.absoluteString)
+    Logger.shared.info("Received URL: \(url.absoluteString)", category: "AppDelegate")
 
     // Check if this is an auth callback
     guard url.scheme?.lowercased() == "lemnianvil-launcher",
           url.host == "auth" else {
-      print("Not an auth callback URL")
+      Logger.shared.debug("Not an auth callback URL", category: "AppDelegate")
       return
     }
 
@@ -67,16 +67,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let code = params.first { $0.name == "code" }?.value
     let state = params.first { $0.name == "state" }?.value
 
-    print("Extracted code:", code ?? "nil")
-    print("Extracted state:", state ?? "nil")
+    Logger.shared.debug("Extracted code: \(code ?? "nil")", category: "AppDelegate")
+    Logger.shared.debug("Extracted state: \(state ?? "nil")", category: "AppDelegate")
 
     // Notify the auth handler if available
     if let callback = Self.pendingAuthCallback {
       callback(url.absoluteString)
       Self.pendingAuthCallback = nil
-      print("Auth callback invoked")
+      Logger.shared.info("Auth callback invoked", category: "AppDelegate")
     } else {
-      print("Warning: No pending auth callback handler")
+      Logger.shared.warning("No pending auth callback handler", category: "AppDelegate")
     }
   }
 }

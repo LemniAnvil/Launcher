@@ -1691,6 +1691,9 @@
         }
       }
     },
+    "Detect System Proxy": {
+      "comment": "[Button] Detect system proxy button."
+    },
     "Detecting Java installation...": {
       "comment": "[Status] Detecting Java installation.",
       "localizations": {
@@ -1712,6 +1715,9 @@
           }
         }
       }
+    },
+    "Detecting system proxy...": {
+      "comment": "[Status] Detecting system proxy."
     },
     "Developer Mode": {
       "comment": "[Label] Developer mode toggle label.",
@@ -3023,6 +3029,9 @@
         }
       }
     },
+    "No system proxy detected": {
+      "comment": "[Status] No system proxy found."
+    },
     "No versions installed": {
       "comment": "[Text] No versions installed.",
       "localizations": {
@@ -3760,6 +3769,9 @@
           }
         }
       }
+    },
+    "System proxy detected and applied": {
+      "comment": "[Status] System proxy applied."
     },
     "Test file download completed": {
       "comment": "[Status] Test file download completed.",

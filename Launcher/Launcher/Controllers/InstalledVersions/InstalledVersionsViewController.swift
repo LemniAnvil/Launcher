@@ -18,15 +18,12 @@ class InstalledVersionsViewController: NSViewController {
   private var installedVersions: [String] = []
 
   // UI components
-  private let titleLabel: BRLabel = {
-    let label = BRLabel(
-      text: Localized.InstalledVersions.title,
-      font: .systemFont(ofSize: 20, weight: .semibold),
-      textColor: .labelColor,
-      alignment: .left
-    )
-    return label
-  }()
+  private let titleLabel = BRLabel(
+    text: Localized.InstalledVersions.title,
+    font: .systemFont(ofSize: 20, weight: .semibold),
+    textColor: .labelColor,
+    alignment: .left
+  )
 
   private let scrollView: NSScrollView = {
     let scrollView = NSScrollView()
@@ -58,22 +55,19 @@ class InstalledVersionsViewController: NSViewController {
 
     // Set context menu
     let menu = createContextMenu()
-    menu.delegate = self  // Set menu delegate for right-click handling
+    // Set menu delegate for right-click handling
+    menu.delegate = self
     tableView.menu = menu
 
     return tableView
   }()
 
-  private let emptyLabel: BRLabel = {
-    let label = BRLabel(
-      text: Localized.InstalledVersions.emptyMessage,
-      font: .systemFont(ofSize: 14),
-      textColor: .secondaryLabelColor,
-      alignment: .center
-    )
-    label.isHidden = true
-    return label
-  }()
+  private let emptyLabel = BRLabel(
+    text: Localized.InstalledVersions.emptyMessage,
+    font: .systemFont(ofSize: 14),
+    textColor: .secondaryLabelColor,
+    alignment: .center
+  )
 
   private lazy var refreshButton: BRImageButton = {
     let button = BRImageButton(
@@ -92,19 +86,14 @@ class InstalledVersionsViewController: NSViewController {
     return button
   }()
 
-  private let countLabel: BRLabel = {
-    let label = BRLabel(
-      text: "",
-      font: .systemFont(ofSize: 12),
-      textColor: .secondaryLabelColor,
-      alignment: .left
-    )
-    return label
-  }()
+  private let countLabel = BRLabel(
+    text: "",
+    font: .systemFont(ofSize: 12),
+    textColor: .secondaryLabelColor,
+    alignment: .left
+  )
 
-  private let headerSeparator: BRSeparator = {
-    return BRSeparator.horizontal()
-  }()
+  private let headerSeparator: BRSeparator = BRSeparator.horizontal()
 
   // MARK: - Lifecycle
 
@@ -188,13 +177,10 @@ class InstalledVersionsViewController: NSViewController {
   }
 
   private func updateCountLabel() {
-    let count = installedVersions.count
-    if count == 0 {
-      countLabel.stringValue = Localized.InstalledVersions.countNone
-    } else if count == 1 {
-      countLabel.stringValue = Localized.InstalledVersions.countOne
-    } else {
-      countLabel.stringValue = Localized.InstalledVersions.countMultiple(count)
+    countLabel.stringValue = switch installedVersions.count {
+    case 0: Localized.InstalledVersions.countNone
+    case 1: Localized.InstalledVersions.countOne
+    default: Localized.InstalledVersions.countMultiple(installedVersions.count)
     }
   }
 
