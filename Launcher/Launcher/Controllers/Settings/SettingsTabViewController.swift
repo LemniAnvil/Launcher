@@ -50,7 +50,7 @@ class SettingsTabViewController: NSViewController {
       tabView.topAnchor.constraint(equalTo: view.topAnchor),
       tabView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       tabView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      tabView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+      tabView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
     ])
   }
 }

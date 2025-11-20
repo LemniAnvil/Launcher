@@ -428,21 +428,20 @@ class AddInstanceViewController: NSViewController {
     ]
 
     let tableView = VersionTableView<ModpackItem>(
-      columns: columns,
-      onSelectionChanged: { [weak self] item in
-        // Handle modpack selection
-        guard let self = self, let item = item else {
-          self?.selectedModpack = nil
-          self?.selectedModpackFile = nil
-          self?.modpackFiles = []
-          self?.curseForgeVersionPopup.removeAllItems()
-          self?.curseForgeVersionPopup.isEnabled = false
-          return
-        }
-        self.selectedModpack = item.modpack
-        self.loadModpackVersions(for: item.modpack)
+      columns: columns
+    ) { [weak self] item in
+      // Handle modpack selection
+      guard let self = self, let item = item else {
+        self?.selectedModpack = nil
+        self?.selectedModpackFile = nil
+        self?.modpackFiles = []
+        self?.curseForgeVersionPopup.removeAllItems()
+        self?.curseForgeVersionPopup.isEnabled = false
+        return
       }
-    )
+      self.selectedModpack = item.modpack
+      self.loadModpackVersions(for: item.modpack)
+    }
     return tableView
   }()
 
@@ -644,17 +643,16 @@ class AddInstanceViewController: NSViewController {
     ]
 
     let tableView = VersionTableView<VersionItem>(
-      columns: columns,
-      onSelectionChanged: { [weak self] item in
-        self?.selectedVersionId = item?.id
-        if let versionId = item?.id {
-          self?.updateNameFromVersion(versionId)
-          if self?.selectedModLoader != .NONE {
-            self?.loadModLoaderVersions()
-          }
+      columns: columns
+    ) { [weak self] item in
+      self?.selectedVersionId = item?.id
+      if let versionId = item?.id {
+        self?.updateNameFromVersion(versionId)
+        if self?.selectedModLoader != .NONE {
+          self?.loadModLoaderVersions()
         }
       }
-    )
+    }
     return tableView
   }()
 
@@ -731,11 +729,10 @@ class AddInstanceViewController: NSViewController {
     ]
 
     let tableView = VersionTableView<LoaderVersionItem>(
-      columns: columns,
-      onSelectionChanged: { [weak self] item in
-        self?.selectedModLoaderVersion = item?.id
-      }
-    )
+      columns: columns
+    ) { [weak self] item in
+      self?.selectedModLoaderVersion = item?.id
+    }
     // Always show table (placeholder will overlay when needed)
     tableView.isHidden = false
     return tableView
@@ -1017,7 +1014,7 @@ class AddInstanceViewController: NSViewController {
       ftbLegacyContentView,
       ftbImportContentView,
       modrinthContentView,
-      technicContentView
+      technicContentView,
     ]
 
     for contentView in contentViews {

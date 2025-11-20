@@ -22,9 +22,9 @@ class NeoForgeModLoader: ModLoaderProtocol {
 
     func getMinecraftVersions(stableOnly: Bool) async throws -> [String] {
         let response = try await fetchMetadata()
-        
+    
         var versionDict: [String: Bool] = [:]
-        
+
         for version in response.versions {
             // Find the Minecraft dependency
             if let mcRequirement = version.requires.first(where: { $0.uid == "net.minecraft" }),
@@ -32,32 +32,32 @@ class NeoForgeModLoader: ModLoaderProtocol {
                 versionDict[mcVersion] = true
             }
         }
-        
+
         // Return sorted versions (descending)
         return Array(versionDict.keys).sorted { $0.compare($1, options: .numeric) == .orderedDescending }
     }
 
     func getLoaderVersions(minecraftVersion: String, stableOnly: Bool) async throws -> [String] {
         let response = try await fetchMetadata()
-        
+
         var versionList: [String] = []
-        
+
         for version in response.versions {
             // Check if this loader version is for the requested Minecraft version
             if let mcRequirement = version.requires.first(where: { $0.uid == "net.minecraft" }),
                mcRequirement.equals == minecraftVersion {
-                
+
                 // Skip unstable versions if requested
                 // NeoForge versions often have -beta suffix, but some might be considered stable.
                 // For now, we'll trust the user's preference if they want stable only.
                 if stableOnly && version.type != "release" {
                     continue
                 }
-                
+
                 versionList.append(version.version)
             }
         }
-        
+
         return versionList
     }
 

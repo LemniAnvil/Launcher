@@ -184,7 +184,6 @@ enum APIService {
     }
   }
 
-
   // MARK: - Helper Methods
 
   /// Create URL from string

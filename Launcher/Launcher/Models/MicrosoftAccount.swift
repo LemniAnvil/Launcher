@@ -180,7 +180,14 @@ class MicrosoftAccountManager {
   // MARK: - Update Account from Refresh
 
   /// Updates account with refreshed data (all fields including tokens and skins/capes)
-  func updateAccountFromRefresh(id: String, name: String, accessToken: String, refreshToken: String, skins: [Skin]?, capes: [Cape]?) {
+  func updateAccountFromRefresh(
+    id: String,
+    name: String,
+    accessToken: String,
+    refreshToken: String,
+    skins: [Skin]?,
+    capes: [Cape]?
+  ) {
     var accountsDict = UserDefaults.standard.dictionary(forKey: accountsKey) ?? [:]
 
     if var accountData = accountsDict[id] as? [String: Any] {

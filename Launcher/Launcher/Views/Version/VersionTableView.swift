@@ -60,7 +60,6 @@ class VersionTableView<Item: Hashable>: NSView {
     return scrollView
   }()
 
-
   private(set) lazy var tableView: NSTableView = {
     let tableView = NSTableView()
     // Finder-style appearance

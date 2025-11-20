@@ -13,15 +13,12 @@ class VersionCollectionViewItem: NSCollectionViewItem {
 
   static let identifier = NSUserInterfaceItemIdentifier("VersionCollectionViewItem")
 
-  private let containerView: BRNSView = {
-    let view = BRNSView(
-      backgroundColor: .controlBackgroundColor,
-      cornerRadius: 12,
-      borderWidth: 1,
-      borderColor: .separatorColor.withAlphaComponent(0.1)
-    )
-    return view
-  }()
+  private let containerView = BRNSView(
+    backgroundColor: .controlBackgroundColor,
+    cornerRadius: 12,
+    borderWidth: 1,
+    borderColor: .separatorColor.withAlphaComponent(0.1)
+  )
 
   private let iconImageView: NSImageView = {
     let imageView = NSImageView()
@@ -31,26 +28,20 @@ class VersionCollectionViewItem: NSCollectionViewItem {
     return imageView
   }()
 
-  private let versionLabel: BRLabel = {
-    let label = BRLabel(
-      text: "",
-      font: .systemFont(ofSize: 15, weight: .semibold),
-      textColor: .labelColor,
-      alignment: .center,
-      lineBreakMode: .byTruncatingTail
-    )
-    return label
-  }()
+  private let versionLabel = BRLabel(
+    text: "",
+    font: .systemFont(ofSize: 15, weight: .semibold),
+    textColor: .labelColor,
+    alignment: .center,
+    lineBreakMode: .byTruncatingTail
+  )
 
-  private let typeLabel: BRLabel = {
-    let label = BRLabel(
-      text: "",
-      font: .systemFont(ofSize: 11),
-      textColor: .secondaryLabelColor,
-      alignment: .center
-    )
-    return label
-  }()
+  private let typeLabel = BRLabel(
+    text: "",
+    font: .systemFont(ofSize: 11),
+    textColor: .secondaryLabelColor,
+    alignment: .center
+  )
 
   override func loadView() {
     self.view = NSView()

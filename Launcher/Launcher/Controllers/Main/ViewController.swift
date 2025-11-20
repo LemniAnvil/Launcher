@@ -22,10 +22,11 @@ class ViewController: NSViewController {
   private var microsoftAuthWindowObserver: NSObjectProtocol?
   private var installedVersionsWindowObserver: NSObjectProtocol?
 
-  // Instance management
-  private let instanceManager = InstanceManager.shared
-  private let versionManager = VersionManager.shared
-  private let gameLauncher = GameLauncher.shared
+  // MARK: - Dependency Injection
+  // ✅ Depend on protocols rather than concrete implementations
+  private let instanceManager: InstanceManaging
+  private let versionManager: VersionManaging
+  private let gameLauncher: GameLaunching
   private var instances: [Instance] = []
 
   // UI elements
@@ -208,6 +209,28 @@ class ViewController: NSViewController {
   private let headerSeparator: BRSeparator = {
     return BRSeparator.horizontal()
   }()
+
+  // MARK: - Initialization
+
+  /// Dependency injection via constructor
+  /// Provides default parameters for backward compatibility
+  init(
+    instanceManager: InstanceManaging = InstanceManager.shared,
+    versionManager: VersionManaging = VersionManager.shared,
+    gameLauncher: GameLaunching = GameLauncher.shared
+  ) {
+    self.instanceManager = instanceManager
+    self.versionManager = versionManager
+    self.gameLauncher = gameLauncher
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  @available(*, unavailable)
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  // MARK: - Lifecycle
 
   override func loadView() {
     self.view = NSView(frame: NSRect(x: 0, y: 0, width: 800, height: 600))

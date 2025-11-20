@@ -103,7 +103,6 @@ struct CurseForgeCategoriesResponse: Codable {
 
 // MARK: - Modpack
 
-
 /// Represents a CurseForge modpack
 struct CurseForgeModpack: Codable, Hashable, Identifiable {
   let id: Int

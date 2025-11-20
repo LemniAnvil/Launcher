@@ -9,8 +9,9 @@ import Combine
 import Foundation
 
 /// Version Manager
+/// Implements VersionManaging protocol, providing concrete implementation for version management
 @MainActor
-class VersionManager: ObservableObject {
+class VersionManager: ObservableObject, VersionManaging {  // ✅ Conforms to protocol
   // swiftlint:disable:previous type_body_length
   static let shared = VersionManager()
 
@@ -225,6 +226,40 @@ class VersionManager: ObservableObject {
           && isVersionInstalled(versionId: url.lastPathComponent)
       }
       .map { $0.lastPathComponent }
+  }
+
+  // MARK: - Protocol Required Methods
+
+  /// Get version by ID
+  /// Implements VersionManaging protocol required method
+  func getVersion(byId id: String) -> MinecraftVersion? {
+    return versions.first { $0.id == id }
+  }
+
+  /// Download and install version
+  /// Implements VersionManaging protocol required method
+  /// - Parameter versionId: Version ID
+  func downloadVersion(versionId: String) async throws {
+    logger.info("Starting version download: \(versionId)", category: "VersionManager")
+
+    // 1. Get version details
+    let versionDetails = try await getVersionDetails(versionId: versionId)
+
+    // 2. Download version files (JAR, libraries, etc.)
+    try await DownloadManager.shared.downloadVersion(versionDetails)
+
+    // 3. Download assets
+    try await DownloadManager.shared.downloadAssets(assetIndexId: versionDetails.assetIndex.id)
+
+    // 4. Save version JSON to disk
+    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(versionId)
+    try FileUtils.ensureDirectoryExists(at: versionDir)
+
+    let versionFile = versionDir.appendingPathComponent("\(versionId).json")
+    let jsonData = try JSONEncoder().encode(versionDetails)
+    try jsonData.write(to: versionFile)
+
+    logger.info("Version download completed: \(versionId)", category: "VersionManager")
   }
 
   // MARK: - Private Methods

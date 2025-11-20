@@ -329,10 +329,8 @@ class OfflineLaunchViewController: NSViewController {
     }
 
     // Load image asynchronously
-    URLSession.shared.dataTask(with: url) { data, response, error in
-      guard let data = data,
-            error == nil,
-            let image = NSImage(data: data) else {
+    URLSession.shared.dataTask(with: url) { data, _, error in
+      guard let data = data, error == nil, let image = NSImage(data: data) else {
         completion(nil)
         return
       }

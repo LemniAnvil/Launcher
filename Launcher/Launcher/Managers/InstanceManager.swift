@@ -9,8 +9,9 @@ import Combine
 import Foundation
 
 /// Instance Manager
+/// Implements InstanceManaging protocol, providing concrete implementation for instance management
 @MainActor
-class InstanceManager: ObservableObject {
+class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to protocol
   static let shared = InstanceManager()
 
   // MARK: - Published Properties
@@ -21,10 +22,15 @@ class InstanceManager: ObservableObject {
 
   private let logger = Logger.shared
   private let instancesDirectory: URL
+  // ✅ Inject VersionManager dependency, no longer hardcoded
+  private let versionManager: VersionManaging
 
   // MARK: - Initialization
 
-  private init() {
+  // ✅ Changed to public initialization method, supports dependency injection
+  // Provides default parameters for backward compatibility
+  init(versionManager: VersionManaging = VersionManager.shared) {
+    self.versionManager = versionManager
     self.instancesDirectory = FileUtils.getInstancesDirectory()
 
     logger.info("InstanceManager initializing...", category: "InstanceManager")
@@ -54,7 +60,8 @@ class InstanceManager: ObservableObject {
 
     // Validate version exists in version manifest
     // Note: We don't require the version to be installed - it will be downloaded when launching
-    guard VersionManager.shared.versions.contains(where: { $0.id == versionId }) else {
+    // ✅ Use injected versionManager instead of hardcoded VersionManager.shared
+    guard versionManager.versions.contains(where: { $0.id == versionId }) else {
       throw InstanceManagerError.versionNotFound(versionId)
     }
 

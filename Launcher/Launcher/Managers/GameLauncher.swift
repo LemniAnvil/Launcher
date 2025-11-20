@@ -9,7 +9,8 @@ import Foundation
 import CryptoKit
 
 /// Game launcher manager
-class GameLauncher {
+/// Implements GameLaunching protocol, providing concrete implementation for game launching
+class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
   // swiftlint:disable:previous type_body_length
   nonisolated(unsafe) static let shared = GameLauncher()
 
