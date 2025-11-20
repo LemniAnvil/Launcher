@@ -176,6 +176,146 @@ class ProxyManager {
     configureProxy(enabled: false, host: "", port: 0, type: .http)
   }
 
+  /// Detect system proxy settings
+  func detectSystemProxy() -> (enabled: Bool, host: String, port: Int, type: ProxyType)? {
+    // swiftlint:disable:previous large_tuple
+    // Try to get the primary network interface (usually Wi-Fi or Ethernet)
+    let interfaces = ["Wi-Fi", "Ethernet", "USB Ethernet"]
+
+    for interface in interfaces {
+      // Check HTTP proxy first
+      if let httpProxy = getProxySettings(for: interface, proxyType: "-getwebproxy") {
+        return httpProxy
+      }
+
+      // Check HTTPS proxy
+      if let httpsProxy = getProxySettings(for: interface, proxyType: "-getsecurewebproxy") {
+        return httpsProxy
+      }
+
+      // Check SOCKS proxy
+      if let socksProxy = getProxySettings(for: interface, proxyType: "-getsocksfirewallproxy") {
+        return socksProxy
+      }
+    }
+
+    return nil
+  }
+
+  /// Apply detected system proxy settings
+  func applySystemProxy() -> Bool {
+    guard let systemProxy = detectSystemProxy() else {
+      logger.warning("No system proxy detected", category: "ProxyManager")
+      return false
+    }
+
+    if systemProxy.enabled {
+      configureProxy(
+        enabled: true,
+        host: systemProxy.host,
+        port: systemProxy.port,
+        type: systemProxy.type
+      )
+      logger.info(
+        "System proxy applied: \(systemProxy.type.rawValue) \(systemProxy.host):\(systemProxy.port)",
+        category: "ProxyManager"
+      )
+      return true
+    } else {
+      logger.info("System proxy is disabled", category: "ProxyManager")
+      return false
+    }
+  }
+
+  // MARK: - Helper Methods
+
+  private func getProxySettings(
+    for interface: String,
+    proxyType: String
+  ) -> (enabled: Bool, host: String, port: Int, type: ProxyType)? {
+    // swiftlint:disable:previous large_tuple
+    let task = Process()
+    task.launchPath = "/usr/sbin/networksetup"
+    task.arguments = [proxyType, interface]
+
+    let pipe = Pipe()
+    task.standardOutput = pipe
+    task.standardError = Pipe()
+
+    do {
+      try task.run()
+      task.waitUntilExit()
+
+      guard task.terminationStatus == 0 else {
+        return nil
+      }
+
+      let data = pipe.fileHandleForReading.readDataToEndOfFile()
+      guard let output = String(data: data, encoding: .utf8) else {
+        return nil
+      }
+
+      return parseProxyOutput(output, proxyType: proxyType)
+    } catch {
+      logger.error(
+        "Failed to execute networksetup: \(error.localizedDescription)",
+        category: "ProxyManager"
+      )
+      return nil
+    }
+  }
+
+  private func parseProxyOutput(
+    _ output: String,
+    proxyType: String
+  ) -> (enabled: Bool, host: String, port: Int, type: ProxyType)? {
+    // swiftlint:disable:previous large_tuple
+    var enabled = false
+    var host = ""
+    var port = 0
+
+    let lines = output.components(separatedBy: .newlines)
+
+    for line in lines {
+      let trimmedLine = line.trimmingCharacters(in: .whitespaces)
+
+      if trimmedLine.hasPrefix("Enabled:") {
+        enabled = trimmedLine.contains("Yes")
+      } else if trimmedLine.hasPrefix("Server:") {
+        let components = trimmedLine.components(separatedBy: ":")
+        if components.count > 1 {
+          host = components[1].trimmingCharacters(in: .whitespaces)
+        }
+      } else if trimmedLine.hasPrefix("Port:") {
+        let components = trimmedLine.components(separatedBy: ":")
+        if components.count > 1 {
+          let portString = components[1].trimmingCharacters(in: .whitespaces)
+          port = Int(portString) ?? 0
+        }
+      }
+    }
+
+    // Only return valid proxy settings
+    guard enabled, !host.isEmpty, port > 0 else {
+      return nil
+    }
+
+    // Determine proxy type based on the command used
+    let type: ProxyType
+    switch proxyType {
+    case "-getwebproxy":
+      type = .http
+    case "-getsecurewebproxy":
+      type = .https
+    case "-getsocksfirewallproxy":
+      type = .socks5
+    default:
+      type = .http
+    }
+
+    return (enabled: enabled, host: host, port: port, type: type)
+  }
+
   // MARK: - Private Methods
 
   private func saveProxySettings() {
