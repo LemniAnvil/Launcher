@@ -115,6 +115,11 @@ extension Localized {
     static let subtitle = String(localized: "Configure application settings", comment: "[Text] Settings subtitle.")
     static let openSettingsButton = String(localized: "Settings", comment: "[Button] Open settings window.")
 
+    // Tab Titles
+    static let proxyTabTitle = String(localized: "Network Proxy", comment: "[Tab] Network proxy settings tab title.")
+    static let downloadTabTitle = String(localized: "Download", comment: "[Tab] Download settings tab title.")
+
+
     // Proxy Section
     static let proxySectionTitle = String(localized: "Network Proxy", comment: "[Text] Proxy section title.")
     static let enableProxy = String(localized: "Enable Proxy", comment: "[Checkbox] Enable proxy checkbox.")

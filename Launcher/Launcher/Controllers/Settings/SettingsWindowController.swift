@@ -12,14 +12,14 @@ class SettingsWindowController: BaseWindowController {
   convenience init() {
     let configuration = WindowConfiguration(
       width: 500,
-      height: 400,
+      height: 500,
       styleMask: [.titled, .closable, .resizable, .miniaturizable],
       minWidth: 450,
-      minHeight: 350,
+      minHeight: 400,
       title: Localized.Settings.windowTitle
     )
 
-    let viewController = SettingsViewController()
+    let viewController = SettingsTabViewController()
     self.init(configuration: configuration, viewController: viewController)
   }
 }

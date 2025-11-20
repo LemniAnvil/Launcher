@@ -1731,7 +1731,7 @@
       }
     },
     "Download": {
-      "comment": "[Button] Download button.",
+      "comment": "[Button] Download button.\n[Tab] Download settings tab title.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2876,7 +2876,7 @@
       }
     },
     "Network Proxy": {
-      "comment": "[Text] Proxy section title.",
+      "comment": "[Tab] Network proxy settings tab title.\n[Text] Proxy section title.",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
