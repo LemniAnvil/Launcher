@@ -10,6 +10,7 @@ import SnapKit
 import Yatagarasu
 
 class ProxySettingsViewController: NSViewController {
+  // swiftlint:disable:previous type_body_length
   // MARK: - Properties
 
   private let proxyManager = ProxyManager.shared

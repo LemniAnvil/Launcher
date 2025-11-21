@@ -66,11 +66,11 @@ struct MicrosoftAccount: Codable {
   }
 
   var activeSkin: Skin? {
-    return skins?.first(where: { $0.isActive })
+    return skins?.first { $0.isActive }
   }
 
   var activeCape: Cape? {
-    return capes?.first(where: { $0.isActive })
+    return capes?.first { $0.isActive }
   }
 
   var hasSkins: Bool {

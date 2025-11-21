@@ -22,7 +22,7 @@ class NeoForgeModLoader: ModLoaderProtocol {
 
     func getMinecraftVersions(stableOnly: Bool) async throws -> [String] {
         let response = try await fetchMetadata()
-    
+
         var versionDict: [String: Bool] = [:]
 
         for version in response.versions {

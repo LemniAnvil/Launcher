@@ -1225,7 +1225,9 @@ class AddInstanceViewController: NSViewController {
     }
 
     modLoaderRefreshButton.snp.makeConstraints { make in
-      make.top.equalTo(modLoaderRadioButtons.last!.snp.bottom).offset(12)
+      if let lastButton = modLoaderRadioButtons.last {
+        make.top.equalTo(lastButton.snp.bottom).offset(12)
+      }
       make.left.equalToSuperview().offset(10)
       make.width.equalTo(100)
     }

@@ -9,6 +9,8 @@ import Foundation
 
 /// Proxy Manager
 class ProxyManager {
+  // swiftlint:disable:previous type_body_length
+
   static let shared = ProxyManager()
 
   // MARK: - Properties

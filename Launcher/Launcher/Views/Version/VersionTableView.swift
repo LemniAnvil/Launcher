@@ -129,11 +129,9 @@ class VersionTableView<Item: Hashable>: NSView {
   }
 
   private func setupDelegate() {
-    tableDelegate = TableViewDelegateWrapper(
-      selectionChangedHandler: { [weak self] in
-        self?.handleSelectionChanged()
-      }
-    )
+    tableDelegate = TableViewDelegateWrapper { [weak self] in
+      self?.handleSelectionChanged()
+    }
     tableView.delegate = tableDelegate
   }
 
