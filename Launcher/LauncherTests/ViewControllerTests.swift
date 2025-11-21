@@ -80,7 +80,7 @@ final class ViewControllerTests: XCTestCase {
     let versionId = "1.20.1"
 
     // Add version to Mock Manager
-    await mockVersionManager.refreshVersionList()
+    try await mockVersionManager.refreshVersionList()
 
     // When
     let instance = try mockInstanceManager.createInstance(

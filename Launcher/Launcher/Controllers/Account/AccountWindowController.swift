@@ -11,11 +11,8 @@ class AccountWindowController: BaseWindowController {
 
   convenience init() {
     let configuration = WindowConfiguration(
-      width: 400,
-      height: 500,
-      styleMask: [.titled, .closable],
-      minWidth: 350,
-      minHeight: 400,
+      size: .small,
+      style: .modal,
       title: Localized.Account.windowTitle
     )
 

@@ -11,9 +11,8 @@ class InstanceDetailWindowController: BaseWindowController {
 
   convenience init(instance: Instance) {
     let configuration = WindowConfiguration(
-      width: 500,
-      height: 600,
-      styleMask: [.titled, .closable],
+      size: .medium,
+      style: .modal,
       title: Localized.InstanceDetail.windowTitle,
       handlesModalStop: false
     )

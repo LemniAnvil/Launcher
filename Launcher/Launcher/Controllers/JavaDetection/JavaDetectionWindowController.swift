@@ -11,11 +11,8 @@ class JavaDetectionWindowController: BaseWindowController {
 
   convenience init() {
     let configuration = WindowConfiguration(
-      width: 800,
-      height: 600,
-      styleMask: [.titled, .closable, .miniaturizable, .resizable],
-      minWidth: 700,
-      minHeight: 500,
+      size: .large,
+      style: .full,
       title: Localized.JavaDetection.windowTitle
     )
 

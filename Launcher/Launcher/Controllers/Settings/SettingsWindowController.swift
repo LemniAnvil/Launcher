@@ -11,11 +11,8 @@ class SettingsWindowController: BaseWindowController {
 
   convenience init() {
     let configuration = WindowConfiguration(
-      width: 500,
-      height: 500,
-      styleMask: [.titled, .closable, .resizable, .miniaturizable],
-      minWidth: 450,
-      minHeight: 400,
+      size: .smallWide,
+      style: .full,
       title: Localized.Settings.windowTitle
     )
 

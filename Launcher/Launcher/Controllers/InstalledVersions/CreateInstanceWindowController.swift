@@ -11,9 +11,8 @@ class CreateInstanceWindowController: BaseWindowController {
 
   convenience init() {
     let configuration = WindowConfiguration(
-      width: 1000,
-      height: 680,
-      styleMask: [.titled, .closable],
+      size: .xlarge,
+      style: .modal,
       title: Localized.Instances.createInstanceTitle,
       handlesModalStop: false
     )
