@@ -1245,6 +1245,7 @@ class AddInstanceViewController: NSViewController {
   private func setupCurseForgeContentView() {
     // Add filter panel (left) and main content area (right)
     curseForgeContentView.addSubview(curseForgeFilterScrollView)
+    curseForgeFilterStackView.translatesAutoresizingMaskIntoConstraints = false
     curseForgeFilterScrollView.documentView = curseForgeFilterStackView
 
     // Add search and sort controls

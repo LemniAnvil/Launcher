@@ -180,8 +180,8 @@ class VersionTableView<Item: Hashable>: NSView {
 
       // Pin to edges with better padding for Finder-style appearance
       textField.snp.makeConstraints { make in
-        make.left.equalToSuperview().offset(4)
-        make.right.equalToSuperview().offset(-4)
+        // make.left.equalToSuperview().offset(4)
+        // make.right.equalToSuperview().offset(-4)
         make.centerY.equalToSuperview()
       }
     }
