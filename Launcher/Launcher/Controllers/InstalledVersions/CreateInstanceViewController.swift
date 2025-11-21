@@ -41,7 +41,7 @@ class CreateInstanceViewController: NSViewController {
 
     // Create a simple grass block-like icon using system symbols
     let config = NSImage.SymbolConfiguration(pointSize: 80, weight: .regular)
-    let cubeImage = NSImage(systemSymbolName: "cube.fill", accessibilityDescription: nil)
+    let cubeImage = NSImage(systemSymbolName: BRIcons.version, accessibilityDescription: nil)
     let configuredImage = cubeImage?.withSymbolConfiguration(config)
     imageView.image = configuredImage
     imageView.contentTintColor = .systemGreen

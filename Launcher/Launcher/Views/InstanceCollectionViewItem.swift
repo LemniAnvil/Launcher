@@ -15,18 +15,18 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
 
   private let containerView: BRNSView = {
     let view = BRNSView(
-      backgroundColor: .controlBackgroundColor,
-      cornerRadius: 12,
-      borderWidth: 1,
-      borderColor: .separatorColor.withAlphaComponent(0.1)
+      backgroundColor: BRColorPalette.background,
+      cornerRadius: BRSpacing.cornerRadiusMedium,
+      borderWidth: BRSpacing.borderWidthStandard,
+      borderColor: BRColorPalette.subtleSeparator
     )
     return view
   }()
 
   private let iconImageView: NSImageView = {
     let imageView = NSImageView()
-    imageView.image = NSImage(systemSymbolName: "cube.box.fill", accessibilityDescription: nil)
-    imageView.contentTintColor = .systemGreen
+    imageView.image = NSImage(systemSymbolName: BRIcons.instance, accessibilityDescription: nil)
+    imageView.contentTintColor = BRColorPalette.releaseVersion
     imageView.imageScaling = .scaleProportionallyDown
     return imageView
   }()
@@ -35,7 +35,7 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
     let label = BRLabel(
       text: "",
       font: .systemFont(ofSize: 15, weight: .semibold),
-      textColor: .labelColor,
+      textColor: BRColorPalette.text,
       alignment: .center,
       lineBreakMode: .byTruncatingTail
     )
@@ -46,7 +46,7 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
     let label = BRLabel(
       text: "",
       font: .systemFont(ofSize: 11),
-      textColor: .secondaryLabelColor,
+      textColor: BRColorPalette.secondaryText,
       alignment: .center
     )
     return label
@@ -69,24 +69,24 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
     containerView.addSubview(versionLabel)
 
     containerView.snp.makeConstraints { make in
-      make.edges.equalToSuperview().inset(8)
+      make.edges.equalToSuperview().inset(BRSpacing.small)
     }
 
     iconImageView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(20)
+      make.top.equalToSuperview().offset(BRSpacing.extraLarge)
       make.centerX.equalToSuperview()
       make.width.height.equalTo(64)
     }
 
     nameLabel.snp.makeConstraints { make in
-      make.top.equalTo(iconImageView.snp.bottom).offset(12)
-      make.left.right.equalToSuperview().inset(12)
+      make.top.equalTo(iconImageView.snp.bottom).offset(BRSpacing.medium)
+      make.left.right.equalToSuperview().inset(BRSpacing.medium)
     }
 
     versionLabel.snp.makeConstraints { make in
-      make.top.equalTo(nameLabel.snp.bottom).offset(4)
-      make.left.right.equalToSuperview().inset(12)
-      make.bottom.lessThanOrEqualToSuperview().offset(-16)
+      make.top.equalTo(nameLabel.snp.bottom).offset(BRSpacing.extraSmall)
+      make.left.right.equalToSuperview().inset(BRSpacing.medium)
+      make.bottom.lessThanOrEqualToSuperview().offset(-BRSpacing.extraLarge)
     }
   }
 
@@ -97,20 +97,20 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
     // Determine version type color
     let versionId = instance.versionId
     if versionId.contains("w") || versionId.contains("-pre") || versionId.contains("-rc") {
-      iconImageView.contentTintColor = .systemOrange
-      containerView.layer?.borderColor = NSColor.systemOrange.withAlphaComponent(0.2).cgColor
+      iconImageView.contentTintColor = BRColorPalette.snapshotVersion
+      containerView.layer?.borderColor = BRColorPalette.snapshotVersion.withAlphaComponent(0.2).cgColor
     } else if versionId.hasPrefix("1.") {
-      iconImageView.contentTintColor = .systemGreen
-      containerView.layer?.borderColor = NSColor.systemGreen.withAlphaComponent(0.2).cgColor
+      iconImageView.contentTintColor = BRColorPalette.releaseVersion
+      containerView.layer?.borderColor = BRColorPalette.releaseVersion.withAlphaComponent(0.2).cgColor
     } else if versionId.contains("a") || versionId.contains("alpha") {
-      iconImageView.contentTintColor = .systemPurple
-      containerView.layer?.borderColor = NSColor.systemPurple.withAlphaComponent(0.2).cgColor
+      iconImageView.contentTintColor = BRColorPalette.alphaVersion
+      containerView.layer?.borderColor = BRColorPalette.alphaVersion.withAlphaComponent(0.2).cgColor
     } else if versionId.contains("b") || versionId.contains("beta") {
-      iconImageView.contentTintColor = .systemBlue
-      containerView.layer?.borderColor = NSColor.systemBlue.withAlphaComponent(0.2).cgColor
+      iconImageView.contentTintColor = BRColorPalette.betaVersion
+      containerView.layer?.borderColor = BRColorPalette.betaVersion.withAlphaComponent(0.2).cgColor
     } else {
-      iconImageView.contentTintColor = .systemGray
-      containerView.layer?.borderColor = NSColor.systemGray.withAlphaComponent(0.2).cgColor
+      iconImageView.contentTintColor = BRColorPalette.unknownVersion
+      containerView.layer?.borderColor = BRColorPalette.unknownVersion.withAlphaComponent(0.2).cgColor
     }
   }
 
@@ -122,13 +122,13 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
 
   private func updateSelectionState() {
     if isSelected {
-      containerView.layer?.borderWidth = 2
-      containerView.layer?.shadowColor = NSColor.controlAccentColor.cgColor
+      containerView.layer?.borderWidth = BRSpacing.borderWidthEmphasized
+      containerView.layer?.shadowColor = BRColorPalette.selectionShadow.cgColor
       containerView.layer?.shadowOpacity = 0.3
-      containerView.layer?.shadowRadius = 8
-      containerView.layer?.shadowOffset = NSSize(width: 0, height: 2)
+      containerView.layer?.shadowRadius = BRSpacing.shadowRadiusStandard
+      containerView.layer?.shadowOffset = BRSpacing.shadowOffsetStandard
     } else {
-      containerView.layer?.borderWidth = 1
+      containerView.layer?.borderWidth = BRSpacing.borderWidthStandard
       containerView.layer?.shadowOpacity = 0
     }
   }

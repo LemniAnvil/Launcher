@@ -17,8 +17,8 @@ class InstanceCellView: NSView {
 
   private let iconImageView: NSImageView = {
     let imageView = NSImageView()
-    imageView.image = NSImage(systemSymbolName: "cube.box.fill", accessibilityDescription: nil)
-    imageView.contentTintColor = .systemGreen
+    imageView.image = NSImage(systemSymbolName: BRIcons.instance, accessibilityDescription: nil)
+    imageView.contentTintColor = BRColorPalette.releaseVersion
     return imageView
   }()
 
@@ -26,7 +26,7 @@ class InstanceCellView: NSView {
     let label = BRLabel(
       text: "",
       font: .systemFont(ofSize: 14, weight: .medium),
-      textColor: .labelColor,
+      textColor: BRColorPalette.text,
       alignment: .left
     )
     return label
@@ -36,7 +36,7 @@ class InstanceCellView: NSView {
     let label = BRLabel(
       text: "",
       font: .systemFont(ofSize: 11),
-      textColor: .secondaryLabelColor,
+      textColor: BRColorPalette.secondaryText,
       alignment: .left
     )
     return label
@@ -44,8 +44,8 @@ class InstanceCellView: NSView {
 
   private let containerView: BRNSView = {
     let view = BRNSView(
-      backgroundColor: .controlBackgroundColor,
-      cornerRadius: 8
+      backgroundColor: BRColorPalette.background,
+      cornerRadius: BRSpacing.cornerRadiusSmall
     )
     return view
   }()
@@ -67,25 +67,25 @@ class InstanceCellView: NSView {
     containerView.addSubview(versionLabel)
 
     containerView.snp.makeConstraints { make in
-      make.edges.equalToSuperview().inset(4)
+      make.edges.equalToSuperview().inset(BRSpacing.extraSmall)
     }
 
     iconImageView.snp.makeConstraints { make in
-      make.left.equalToSuperview().offset(12)
+      make.left.equalToSuperview().offset(BRSpacing.medium)
       make.centerY.equalToSuperview()
       make.width.height.equalTo(36)
     }
 
     nameLabel.snp.makeConstraints { make in
-      make.left.equalTo(iconImageView.snp.right).offset(12)
-      make.right.equalToSuperview().offset(-12)
-      make.top.equalToSuperview().offset(10)
+      make.left.equalTo(iconImageView.snp.right).offset(BRSpacing.medium)
+      make.right.equalToSuperview().offset(-BRSpacing.medium)
+      make.top.equalToSuperview().offset(BRSpacing.smallMedium)
     }
 
     versionLabel.snp.makeConstraints { make in
       make.left.equalTo(nameLabel)
-      make.right.equalToSuperview().offset(-12)
-      make.top.equalTo(nameLabel.snp.bottom).offset(4)
+      make.right.equalToSuperview().offset(-BRSpacing.medium)
+      make.top.equalTo(nameLabel.snp.bottom).offset(BRSpacing.extraSmall)
     }
   }
 
@@ -96,15 +96,15 @@ class InstanceCellView: NSView {
     // Determine version type color
     let versionId = instance.versionId
     if versionId.contains("w") || versionId.contains("-pre") || versionId.contains("-rc") {
-      iconImageView.contentTintColor = .systemOrange
+      iconImageView.contentTintColor = BRColorPalette.snapshotVersion
     } else if versionId.hasPrefix("1.") {
-      iconImageView.contentTintColor = .systemGreen
+      iconImageView.contentTintColor = BRColorPalette.releaseVersion
     } else if versionId.contains("a") || versionId.contains("alpha") {
-      iconImageView.contentTintColor = .systemPurple
+      iconImageView.contentTintColor = BRColorPalette.alphaVersion
     } else if versionId.contains("b") || versionId.contains("beta") {
-      iconImageView.contentTintColor = .systemBlue
+      iconImageView.contentTintColor = BRColorPalette.betaVersion
     } else {
-      iconImageView.contentTintColor = .systemGray
+      iconImageView.contentTintColor = BRColorPalette.unknownVersion
     }
   }
 
@@ -121,13 +121,13 @@ class InstanceCellView: NSView {
       // Enhanced highlight color for better visibility
       let highlightColor: NSColor
       if NSApp.effectiveAppearance.name == .darkAqua {
-        highlightColor = NSColor.systemBlue.withAlphaComponent(0.35)
+        highlightColor = BRColorPalette.highlight
       } else {
-        highlightColor = NSColor.systemBlue.withAlphaComponent(0.2)
+        highlightColor = BRColorPalette.subtleHighlight
       }
       containerView.layer?.backgroundColor = highlightColor.cgColor
     } else {
-      containerView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+      containerView.layer?.backgroundColor = BRColorPalette.background.cgColor
     }
   }
 

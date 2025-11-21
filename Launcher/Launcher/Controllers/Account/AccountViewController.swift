@@ -32,14 +32,14 @@ class AccountViewController: NSViewController {
   // UI components
   private let titleLabel = BRLabel(
     text: Localized.Account.title,
-    font: .systemFont(ofSize: 20, weight: .semibold),
+    font: BRFonts.largeTitle,
     textColor: .labelColor,
     alignment: .left
   )
 
   private let subtitleLabel = BRLabel(
     text: Localized.Account.subtitle,
-    font: .systemFont(ofSize: 12),
+    font: BRFonts.caption,
     textColor: .secondaryLabelColor,
     alignment: .left
   )
@@ -97,7 +97,7 @@ class AccountViewController: NSViewController {
   private let emptyLabel: BRLabel = {
     let label = BRLabel(
       text: Localized.Account.emptyMicrosoftMessage,
-      font: .systemFont(ofSize: 14),
+      font: BRFonts.body,
       textColor: .secondaryLabelColor,
       alignment: .center
     )
@@ -117,7 +117,7 @@ class AccountViewController: NSViewController {
 
   private let developerModeLabel = BRLabel(
     text: Localized.Account.developerModeLabel,
-    font: .systemFont(ofSize: 12),
+    font: BRFonts.caption,
     textColor: .secondaryLabelColor,
     alignment: .left
   )

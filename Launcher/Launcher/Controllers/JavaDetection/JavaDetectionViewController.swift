@@ -99,22 +99,22 @@ class JavaDetectionViewController: NSViewController {
     // Version column
     let versionColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("version"))
     versionColumn.title = Localized.JavaDetection.columnVersion
-    versionColumn.width = 120
+    versionColumn.width = 80
     versionColumn.minWidth = 80
     table.addTableColumn(versionColumn)
 
     // Type column
     let typeColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("type"))
     typeColumn.title = Localized.JavaDetection.columnType
-    typeColumn.width = 150
+    typeColumn.width = 100
     typeColumn.minWidth = 100
     table.addTableColumn(typeColumn)
 
     // Status column
     let statusColumn = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("status"))
     statusColumn.title = Localized.JavaDetection.columnStatus
-    statusColumn.width = 100
-    statusColumn.minWidth = 80
+    statusColumn.width = 30
+    statusColumn.minWidth = 30
     table.addTableColumn(statusColumn)
 
     // DataSource will be set after configuration

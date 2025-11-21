@@ -44,7 +44,7 @@ class VersionListViewController: NSViewController {
 
     // Create a simple grass block-like icon using system symbols
     let config = NSImage.SymbolConfiguration(pointSize: 60, weight: .regular)
-    let cubeImage = NSImage(systemSymbolName: "cube.fill", accessibilityDescription: nil)
+    let cubeImage = NSImage(systemSymbolName: BRIcons.version, accessibilityDescription: nil)
     let configuredImage = cubeImage?.withSymbolConfiguration(config)
     imageView.image = configuredImage
     imageView.contentTintColor = .systemGreen
@@ -84,7 +84,7 @@ class VersionListViewController: NSViewController {
 
   private lazy var refreshVersionButton: BRImageButton = {
     let button = BRImageButton(
-      symbolName: "arrow.clockwise",
+      symbolName: BRIcons.refresh,
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua

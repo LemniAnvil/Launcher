@@ -17,7 +17,7 @@ extension InstanceDetailViewController {
     imageView.imageScaling = .scaleProportionallyUpOrDown
     let config = NSImage.SymbolConfiguration(pointSize: 80, weight: .regular)
     let image = NSImage(
-      systemSymbolName: "cube.box.fill",
+      systemSymbolName: BRIcons.instance,
       accessibilityDescription: nil
     )
     imageView.image = image?.withSymbolConfiguration(config)

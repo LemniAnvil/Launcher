@@ -28,7 +28,7 @@ extension AccountViewController {
     iconView.layer?.masksToBounds = true
 
     // Set default image first
-    iconView.image = NSImage(systemSymbolName: "person.crop.circle.fill", accessibilityDescription: nil)
+    iconView.image = NSImage(systemSymbolName: BRIcons.accountFilled, accessibilityDescription: nil)
     iconView.contentTintColor = .systemGreen
 
     // Load avatar asynchronously
@@ -59,7 +59,7 @@ extension AccountViewController {
     iconView.layer?.masksToBounds = true
 
     // Set default image first
-    iconView.image = NSImage(systemSymbolName: "person.crop.circle", accessibilityDescription: nil)
+    iconView.image = NSImage(systemSymbolName: BRIcons.accountOutline, accessibilityDescription: nil)
     iconView.contentTintColor = .systemBlue
 
     // Load avatar asynchronously (offline accounts use Steve skin by default)

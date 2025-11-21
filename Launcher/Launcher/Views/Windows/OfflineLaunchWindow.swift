@@ -398,7 +398,7 @@ extension OfflineLaunchViewController: NSTableViewDelegate {
     if row < microsoftAccounts.count {
       let account = microsoftAccounts[row]
       nameLabel.stringValue = account.name
-      iconView.image = NSImage(systemSymbolName: "person.crop.circle.fill", accessibilityDescription: nil)
+      iconView.image = NSImage(systemSymbolName: BRIcons.accountFilled, accessibilityDescription: nil)
       iconView.contentTintColor = .systemGreen
 
       // Load avatar asynchronously
@@ -413,7 +413,7 @@ extension OfflineLaunchViewController: NSTableViewDelegate {
     } else {
       let account = offlineAccounts[row - microsoftAccounts.count]
       nameLabel.stringValue = "\(account.name) \(Localized.OfflineLaunch.offlineAccountSuffix)"
-      iconView.image = NSImage(systemSymbolName: "person.crop.circle", accessibilityDescription: nil)
+      iconView.image = NSImage(systemSymbolName: BRIcons.accountOutline, accessibilityDescription: nil)
       iconView.contentTintColor = .systemBlue
 
       // Load avatar asynchronously (offline accounts use Steve skin by default)

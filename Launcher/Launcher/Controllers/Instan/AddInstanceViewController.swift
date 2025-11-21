@@ -73,8 +73,8 @@ class AddInstanceViewController: NSViewController {
 
     var iconName: String {
       switch self {
-      case .custom: return "cube.fill"
-      case .import1: return "folder.fill"
+      case .custom: return BRIcons.version
+      case .import1: return BRIcons.folder
       case .atLauncher: return "rocket.fill"
       case .curseForge: return "flame.fill"
       case .ftbLegacy: return "f.square.fill"

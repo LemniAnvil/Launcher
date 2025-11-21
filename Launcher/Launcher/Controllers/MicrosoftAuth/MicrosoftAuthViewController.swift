@@ -44,7 +44,7 @@ class MicrosoftAuthViewController: NSViewController {
 
   private let iconImageView: NSImageView = {
     let imageView = NSImageView()
-    imageView.image = NSImage(systemSymbolName: "person.crop.circle.badge.checkmark", accessibilityDescription: nil)
+    imageView.image = NSImage(systemSymbolName: BRIcons.accountVerified, accessibilityDescription: nil)
     imageView.contentTintColor = .systemGreen
     return imageView
   }()

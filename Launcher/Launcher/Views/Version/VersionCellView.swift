@@ -17,28 +17,28 @@ class VersionCellView: NSView {
 
   private let iconImageView: NSImageView = {
     let imageView = NSImageView()
-    imageView.image = NSImage(systemSymbolName: "cube.box.fill", accessibilityDescription: nil)
-    imageView.contentTintColor = .systemGreen
+    imageView.image = NSImage(systemSymbolName: BRIcons.instance, accessibilityDescription: nil)
+    imageView.contentTintColor = BRColorPalette.releaseVersion
     return imageView
   }()
 
   private let versionLabel = BRLabel(
     text: "",
     font: .systemFont(ofSize: 14, weight: .medium),
-    textColor: .labelColor,
+    textColor: BRColorPalette.text,
     alignment: .left
   )
 
   private let typeLabel = BRLabel(
     text: "",
     font: .systemFont(ofSize: 11),
-    textColor: .secondaryLabelColor,
+    textColor: BRColorPalette.secondaryText,
     alignment: .left
   )
 
   private let containerView = BRNSView(
-    backgroundColor: .controlBackgroundColor,
-    cornerRadius: 8
+    backgroundColor: BRColorPalette.background,
+    cornerRadius: BRSpacing.cornerRadiusSmall
   )
 
   override init(frame frameRect: NSRect) {
@@ -58,25 +58,25 @@ class VersionCellView: NSView {
     containerView.addSubview(typeLabel)
 
     containerView.snp.makeConstraints { make in
-      make.edges.equalToSuperview().inset(4)
+      make.edges.equalToSuperview().inset(BRSpacing.extraSmall)
     }
 
     iconImageView.snp.makeConstraints { make in
-      make.left.equalToSuperview().offset(12)
+      make.left.equalToSuperview().offset(BRSpacing.medium)
       make.centerY.equalToSuperview()
       make.width.height.equalTo(36)
     }
 
     versionLabel.snp.makeConstraints { make in
-      make.left.equalTo(iconImageView.snp.right).offset(12)
-      make.right.equalToSuperview().offset(-12)
-      make.top.equalToSuperview().offset(10)
+      make.left.equalTo(iconImageView.snp.right).offset(BRSpacing.medium)
+      make.right.equalToSuperview().offset(-BRSpacing.medium)
+      make.top.equalToSuperview().offset(BRSpacing.smallMedium)
     }
 
     typeLabel.snp.makeConstraints { make in
       make.left.equalTo(versionLabel)
-      make.right.equalToSuperview().offset(-12)
-      make.top.equalTo(versionLabel.snp.bottom).offset(4)
+      make.right.equalToSuperview().offset(-BRSpacing.medium)
+      make.top.equalTo(versionLabel.snp.bottom).offset(BRSpacing.extraSmall)
     }
   }
 
@@ -86,19 +86,19 @@ class VersionCellView: NSView {
     // Determine version type
     if versionId.contains("w") || versionId.contains("-pre") || versionId.contains("-rc") {
       typeLabel.stringValue = Localized.InstalledVersions.typeSnapshot
-      iconImageView.contentTintColor = .systemOrange
+      iconImageView.contentTintColor = BRColorPalette.snapshotVersion
     } else if versionId.hasPrefix("1.") {
       typeLabel.stringValue = Localized.InstalledVersions.typeRelease
-      iconImageView.contentTintColor = .systemGreen
+      iconImageView.contentTintColor = BRColorPalette.releaseVersion
     } else if versionId.contains("a") || versionId.contains("alpha") {
       typeLabel.stringValue = Localized.InstalledVersions.typeAlpha
-      iconImageView.contentTintColor = .systemPurple
+      iconImageView.contentTintColor = BRColorPalette.alphaVersion
     } else if versionId.contains("b") || versionId.contains("beta") {
       typeLabel.stringValue = Localized.InstalledVersions.typeBeta
-      iconImageView.contentTintColor = .systemBlue
+      iconImageView.contentTintColor = BRColorPalette.betaVersion
     } else {
       typeLabel.stringValue = Localized.InstalledVersions.typeUnknown
-      iconImageView.contentTintColor = .systemGray
+      iconImageView.contentTintColor = BRColorPalette.unknownVersion
     }
   }
 
@@ -115,13 +115,13 @@ class VersionCellView: NSView {
       // Enhanced highlight color for better visibility
       let highlightColor: NSColor
       if NSApp.effectiveAppearance.name == .darkAqua {
-        highlightColor = NSColor.systemBlue.withAlphaComponent(0.35)
+        highlightColor = BRColorPalette.highlight
       } else {
-        highlightColor = NSColor.systemBlue.withAlphaComponent(0.2)
+        highlightColor = BRColorPalette.subtleHighlight
       }
       containerView.layer?.backgroundColor = highlightColor.cgColor
     } else {
-      containerView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+      containerView.layer?.backgroundColor = BRColorPalette.background.cgColor
     }
   }
 
