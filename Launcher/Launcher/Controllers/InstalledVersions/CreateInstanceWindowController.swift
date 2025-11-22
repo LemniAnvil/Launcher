@@ -6,11 +6,12 @@
 //
 
 import AppKit
+import Yatagarasu
 
-class CreateInstanceWindowController: BaseWindowController {
+class CreateInstanceWindowController: BRWindowController {
 
   convenience init() {
-    let configuration = WindowConfiguration(
+    let configuration = BRWindowConfiguration(
       size: .xlarge,
       style: .modal,
       title: Localized.Instances.createInstanceTitle,

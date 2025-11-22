@@ -6,11 +6,12 @@
 //
 
 import AppKit
+import Yatagarasu
 
-class JavaDetectionWindowController: BaseWindowController {
+class JavaDetectionWindowController: BRWindowController {
 
   convenience init() {
-    let configuration = WindowConfiguration(
+    let configuration = BRWindowConfiguration(
       size: .large,
       style: .full,
       title: Localized.JavaDetection.windowTitle

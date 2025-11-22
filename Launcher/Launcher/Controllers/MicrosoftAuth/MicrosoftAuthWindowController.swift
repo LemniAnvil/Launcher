@@ -6,11 +6,12 @@
 //
 
 import AppKit
+import Yatagarasu
 
-class MicrosoftAuthWindowController: BaseWindowController {
+class MicrosoftAuthWindowController: BRWindowController {
 
   convenience init() {
-    let configuration = WindowConfiguration(
+    let configuration = BRWindowConfiguration(
       size: .mediumWide,
       style: .full,
       title: Localized.MicrosoftAuth.windowTitle,
