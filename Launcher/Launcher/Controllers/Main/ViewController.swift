@@ -6,6 +6,7 @@
 import AppKit
 import SnapKit
 import Yatagarasu
+import MojangAPI
 
 class ViewController: NSViewController {
   // swiftlint:disable:previous type_body_length
@@ -505,7 +506,7 @@ extension ViewController {
 
     // Setup callbacks
     if let viewController = microsoftAuthWindowController?.window?.contentViewController as? MicrosoftAuthViewController {
-      viewController.onAuthSuccess = { loginResponse in
+      viewController.onAuthSuccess = { (loginResponse: CompleteLoginResponse) in
         Logger.shared.info("Microsoft authentication successful: \(loginResponse.name)", category: "MainWindow")
         // You can handle the login response here (e.g., save account, update UI)
       }

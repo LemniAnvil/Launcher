@@ -239,7 +239,7 @@ final class AuthenticationServiceTests: XCTestCase {
 
     // Assert
     XCTAssertNotNil(error.errorDescription)
-    XCTAssertTrue(error.errorDescription!.contains("网络错误"))
+    XCTAssertTrue(error.errorDescription!.contains("Network error"))
   }
 
   func testMojangAPIError_Unauthorized() {
@@ -248,7 +248,7 @@ final class AuthenticationServiceTests: XCTestCase {
 
     // Assert
     XCTAssertNotNil(error.errorDescription)
-    XCTAssertTrue(error.errorDescription!.contains("未授权"))
+    XCTAssertTrue(error.errorDescription!.contains("Unauthorized"))
   }
 
   func testMojangAPIError_RateLimited() {
@@ -257,7 +257,7 @@ final class AuthenticationServiceTests: XCTestCase {
 
     // Assert
     XCTAssertNotNil(error.errorDescription)
-    XCTAssertTrue(error.errorDescription!.contains("频繁"))
+    XCTAssertTrue(error.errorDescription!.contains("Rate limited"))
   }
 
   func testMojangAPIError_TokenExpired() {
@@ -266,6 +266,6 @@ final class AuthenticationServiceTests: XCTestCase {
 
     // Assert
     XCTAssertNotNil(error.errorDescription)
-    XCTAssertTrue(error.errorDescription!.contains("过期"))
+    XCTAssertTrue(error.errorDescription!.contains("Token has expired"))
   }
 }

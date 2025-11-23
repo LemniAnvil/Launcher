@@ -2,39 +2,11 @@
 //  AccountViewController+AvatarLoading.swift
 //  Launcher
 //
-//  Avatar loading methods for AccountViewController
+//  Avatar loading methods for AccountViewController using MojangAPI
 //
 
 import AppKit
-
-// MARK: - Mojang Profile Response Models
-
-private struct MojangProfileResponse: Codable {
-  let id: String
-  let name: String
-  let properties: [ProfileProperty]
-}
-
-private struct ProfileProperty: Codable {
-  let name: String
-  let value: String
-}
-
-private struct TexturesProperty: Codable {
-  let timestamp: Int64
-  let profileId: String
-  let profileName: String
-  let textures: Textures
-}
-
-private struct Textures: Codable {
-  let SKIN: TextureInfo?
-  let CAPE: TextureInfo?
-}
-
-private struct TextureInfo: Codable {
-  let url: String
-}
+import MojangAPI
 
 extension AccountViewController {
   // MARK: - Avatar Loading
@@ -54,38 +26,49 @@ extension AccountViewController {
   // MARK: - Mojang API Avatar Loading
 
   private func loadAvatarFromMojangAPI(uuid: String, completion: @escaping (NSImage?) -> Void) {
-    // Step 1: Fetch player profile from Mojang session server
-    let cleanUUID = uuid.replacingOccurrences(of: "-", with: "")
-    let profileURLString = "https://sessionserver.mojang.com/session/minecraft/profile/\(cleanUUID)"
 
-    guard let profileURL = URL(string: profileURLString) else {
-      completion(nil)
-      return
-    }
+    Task {
+      do {
+        // Convert string UUID to UUID type
+        // UUID(uuidString:) requires format with hyphens: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        let formattedUUID: String
+        if uuid.contains("-") {
+          formattedUUID = uuid
+        } else {
+          // Insert hyphens if missing: 8ec3a0474f0d4bae8e5e08d6e6e3a867 -> 8ec3a047-4f0d-4bae-8e5e-08d6e6e3a867
+          let chars = Array(uuid)
+          formattedUUID = "\(String(chars[0..<8]))-\(String(chars[8..<12]))-\(String(chars[12..<16]))-\(String(chars[16..<20]))-\(String(chars[20..<32]))"
+        }
 
-    URLSession.shared.dataTask(with: profileURL) { [weak self] data, _, error in
-      guard let data = data,
-            error == nil,
-            let profileResponse = try? JSONDecoder().decode(MojangProfileResponse.self, from: data) else {
+        guard let playerUUID = UUID(uuidString: formattedUUID) else {
+
+          await MainActor.run {
+            self.loadAvatarFromFallbackService(uuid: uuid, completion: completion)
+          }
+          return
+        }
+
+        // Use MojangAPI to fetch player profile
+        let mojangAPI = MojangAPI()
+        let profile = try await mojangAPI.playerService.getPlayerProfile(uuid: playerUUID)
+
+        // Extract skin URL from profile
+        guard let skinURL = profile.skins.first?.url else {
+          await MainActor.run {
+            self.loadAvatarFromFallbackService(uuid: uuid, completion: completion)
+          }
+          return
+        }
+
+        // Download skin and extract avatar
+        await downloadSkinAndExtractAvatar(from: skinURL.absoluteString, completion: completion)
+      } catch {
         // Fallback to Crafatar if API fails
-        self?.loadAvatarFromFallbackService(uuid: uuid, completion: completion)
-        return
+        await MainActor.run {
+          self.loadAvatarFromFallbackService(uuid: uuid, completion: completion)
+        }
       }
-
-      // Step 2: Decode base64 textures property
-      guard let texturesProperty = profileResponse.properties.first(where: { $0.name == "textures" }),
-            let texturesData = Data(base64Encoded: texturesProperty.value),
-            let textures = try? JSONDecoder().decode(TexturesProperty.self, from: texturesData),
-            let skinURL = textures.textures.SKIN?.url else {
-        // Fallback if no skin texture found
-        self?.loadAvatarFromFallbackService(uuid: uuid, completion: completion)
-        return
-      }
-
-      // Step 3: Download skin texture and extract avatar
-      self?.downloadSkinAndExtractAvatar(from: skinURL, completion: completion)
     }
-    .resume()
   }
 
   private func downloadSkinAndExtractAvatar(from urlString: String, completion: @escaping (NSImage?) -> Void) {

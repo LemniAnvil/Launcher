@@ -1,6 +1,42 @@
 {
-  "originHash" : "f46ad089506da069669be2e83615455ea055f5ce88af14d4c0797842f100f356",
+  "originHash" : "11bed669bb32c2a9cd850df9d5db4cea5154171a4478e0033b6f423e9fae7743",
   "pins" : [
+    {
+      "identity" : "choreographer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/unixzii/Choreographer",
+      "state" : {
+        "revision" : "fa8cf25b0a16c499b299d357c1a64db6760a83ef",
+        "version" : "0.1.0"
+      }
+    },
+    {
+      "identity" : "glyphixtextfx",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ktiays/GlyphixTextFx.git",
+      "state" : {
+        "revision" : "e1d0aa71c1849363a1bbef061d3d92f10481e62c",
+        "version" : "2.3.6"
+      }
+    },
+    {
+      "identity" : "nsskinrender",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/irisWirisW/NSSkinRender",
+      "state" : {
+        "revision" : "494a66b2d81facf72ce2e055c32a7b59d1203a87",
+        "version" : "0.3.1"
+      }
+    },
+    {
+      "identity" : "respring",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ktiays/Respring",
+      "state" : {
+        "revision" : "5efa8274a25dc44e418b3695f9fcfea9ef771087",
+        "version" : "1.0.0"
+      }
+    },
     {
       "identity" : "snapkit",
       "kind" : "remoteSourceControl",
@@ -17,6 +53,15 @@
       "state" : {
         "revision" : "ecafb5b056cb7995324f0d310a61f30661d00cad",
         "version" : "0.62.2"
+      }
+    },
+    {
+      "identity" : "with",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ktiays/With",
+      "state" : {
+        "revision" : "d8788e5c3733f5b8f12582487f508e6f9617e7ab",
+        "version" : "2.1.0"
       }
     }
   ],

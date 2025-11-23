@@ -512,10 +512,15 @@ class AddInstanceViewController: NSViewController {
   private let curseForgeFilterStackView: NSStackView = {
     let stackView = NSStackView()
     stackView.orientation = .vertical
-    stackView.alignment = .leading
+    stackView.alignment = .leading  // Keep leading for checkbox alignment
+    stackView.distribution = .fill  // Use fill instead of gravityAreas
     stackView.spacing = 6
     stackView.edgeInsets = NSEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     stackView.wantsLayer = true
+    // Lower hugging priority to allow stackView to be flexible
+    // But keep default compression resistance so content isn't clipped
+    stackView.setHuggingPriority(.defaultLow, for: .horizontal)
+    stackView.setHuggingPriority(.defaultLow, for: .vertical)
     return stackView
   }()
 
@@ -1265,7 +1270,7 @@ class AddInstanceViewController: NSViewController {
     curseForgeFilterScrollView.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(15)
       make.left.equalToSuperview().offset(15)
-      make.width.equalTo(220)
+      make.width.equalTo(220).priority(.required)  // Force this width constraint
       make.bottom.equalToSuperview().offset(-50) // Leave space for version selector at bottom
     }
 
@@ -1743,17 +1748,16 @@ class AddInstanceViewController: NSViewController {
     curseForgeFilterStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
     categoryCheckboxes.removeAll()
 
-    // Ensure stackView fills the scrollView width
+    // Set stackView constraints - use lessThanOrEqualTo to prevent window expansion
     curseForgeFilterStackView.snp.remakeConstraints { make in
-      make.edges.equalToSuperview()
-      make.width.equalTo(curseForgeFilterScrollView.snp.width)
+      make.top.bottom.equalToSuperview()
+      make.left.equalToSuperview()
+      make.width.lessThanOrEqualTo(curseForgeFilterScrollView.snp.width).offset(-20)
+      make.width.greaterThanOrEqualTo(180)
     }
 
     // Add title label
     curseForgeFilterStackView.addArrangedSubview(curseForgeFilterTitleLabel)
-    curseForgeFilterTitleLabel.snp.makeConstraints { make in
-      make.width.equalTo(200)
-    }
 
     // Create checkbox for each category
     for category in categories {
@@ -1765,9 +1769,9 @@ class AddInstanceViewController: NSViewController {
       )
       checkbox.font = .systemFont(ofSize: 12)
       checkbox.tag = category.id
-      checkbox.snp.makeConstraints { make in
-        make.width.equalTo(200)
-      }
+      checkbox.lineBreakMode = .byTruncatingTail
+      // Ensure checkbox doesn't get compressed
+      checkbox.setContentCompressionResistancePriority(.required, for: .horizontal)
 
       categoryCheckboxes[category.id] = checkbox
       curseForgeFilterStackView.addArrangedSubview(checkbox)
