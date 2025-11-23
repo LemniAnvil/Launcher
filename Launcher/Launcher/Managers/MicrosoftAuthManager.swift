@@ -107,10 +107,32 @@ struct SecureLoginData {
 // MARK: - Microsoft Authentication Manager
 
 class MicrosoftAuthManager: MicrosoftAuthProtocol {
+  // swiftlint:disable:previous type_body_length
+
   static let shared = MicrosoftAuthManager()
 
   // Azure Application Configuration
-  private let clientID = "00000000-0000-0000-0000-000000000000"
+  // Loaded from Info.plist, which gets the value from Config.xcconfig
+  private let clientID: String = {
+    guard let id = Bundle.main.infoDictionary?["MicrosoftClientID"] as? String,
+          !id.isEmpty,
+          !id.contains("YOUR_"),
+          !id.contains("00000000-0000-0000-0000-000000000000") else {
+      fatalError("""
+        ❌ Microsoft Client ID not configured!
+
+        Please follow these steps:
+        1. Ensure Config.xcconfig exists and contains MICROSOFT_CLIENT_ID
+        2. Replace YOUR_MICROSOFT_CLIENT_ID_HERE with your actual client ID
+        3. Configure the xcconfig file in Xcode project settings
+        4. Clean build folder (⌘⇧K) and rebuild
+
+        Get your client ID from: https://portal.azure.com/
+        """)
+    }
+    return id
+  }()
+
   private let redirectURI = "LemniAnvil-launcher://auth"
   private let scope = "XboxLive.signin offline_access"
 

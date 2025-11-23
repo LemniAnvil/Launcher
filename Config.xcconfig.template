@@ -10,3 +10,7 @@
 // CurseForge API Key
 // Get your API key from: https://console.curseforge.com/
 CURSEFORGE_API_KEY = YOUR_CURSEFORGE_API_KEY_HERE
+
+// Microsoft Azure Application Client ID
+// Get your client ID from: https://portal.azure.com/
+MICROSOFT_CLIENT_ID = YOUR_MICROSOFT_CLIENT_ID_HERE
