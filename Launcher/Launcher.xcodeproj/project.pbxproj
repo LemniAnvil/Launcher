@@ -10,6 +10,7 @@
 		030D1F982ECB9F100065E234 /* Yatagarasu in Frameworks */ = {isa = PBXBuildFile; productRef = 030D1F972ECB9F100065E234 /* Yatagarasu */; };
 		0314F4872EB5029300591FBC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0314F4862EB5029300591FBC /* SnapKit */; };
 		03A183772ECD5538007A5ADF /* SkinRenderKit in Frameworks */ = {isa = PBXBuildFile; productRef = 03A183762ECD5538007A5ADF /* SkinRenderKit */; };
+		03D7FB142ED3226B006D5694 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 03D7FB132ED3226B006D5694 /* Config.xcconfig */; };
 		03E0D2F82ED26AE200E6D375 /* MojangAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 03E0D2F72ED26AE200E6D375 /* MojangAPI */; };
 		03EEB01E2ED0992B00498292 /* Yatagarasu in Frameworks */ = {isa = PBXBuildFile; productRef = 03EEB01D2ED0992B00498292 /* Yatagarasu */; };
 /* End PBXBuildFile section */
@@ -32,6 +33,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		03D7FB132ED3226B006D5694 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		03FBFF4F2EB1235E00FD7CE4 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03FBFF5F2EB1235F00FD7CE4 /* LauncherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LauncherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03FBFF692EB1235F00FD7CE4 /* LauncherUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LauncherUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +107,7 @@
 				03FBFF622EB1235F00FD7CE4 /* LauncherTests */,
 				03FBFF6C2EB1235F00FD7CE4 /* LauncherUITests */,
 				03FBFF502EB1235E00FD7CE4 /* Products */,
+				03D7FB132ED3226B006D5694 /* Config.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -252,6 +255,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03D7FB142ED3226B006D5694 /* Config.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,6 +445,7 @@
 		};
 		03FBFF742EB1235F00FD7CE4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 03D7FB132ED3226B006D5694 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -478,6 +483,7 @@
 		};
 		03FBFF752EB1235F00FD7CE4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 03D7FB132ED3226B006D5694 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

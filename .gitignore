@@ -63,3 +63,6 @@ fastlane/test_output
 
 dev/
 settings.local.json
+
+# Configuration files with sensitive data
+Config.xcconfig

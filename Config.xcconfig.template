@@ -1,0 +1,12 @@
+//
+// Config.xcconfig.template
+// Launcher Configuration Template
+//
+// Instructions:
+// 1. Copy this file and rename it to Config.xcconfig
+// 2. Replace the placeholder values with your actual API keys
+// 3. Configure the xcconfig file in your Xcode project settings
+
+// CurseForge API Key
+// Get your API key from: https://console.curseforge.com/
+CURSEFORGE_API_KEY = YOUR_CURSEFORGE_API_KEY_HERE
