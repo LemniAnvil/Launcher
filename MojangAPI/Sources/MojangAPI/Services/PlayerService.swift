@@ -22,6 +22,14 @@ public class PlayerService {
     try await client.request(.getPlayerUUID(name: name))
   }
 
+  /// Get Player UUID by Username (convenience method that returns UUID directly)
+  /// - Parameter username: Player Username
+  /// - Returns: Player UUID
+  public func getUUID(username: String) async throws -> UUID {
+    let response: PlayerUUIDResponse = try await getPlayerUUID(name: username)
+    return response.id
+  }
+
   /// Get Player Profile by UUID
   /// - Parameter uuid: Player UUID
   /// - Returns: Player Profile Information
@@ -30,6 +38,14 @@ public class PlayerService {
       .getSessionProfile(uuid: uuid)
     )
     return try parseSessionProfile(response)
+  }
+
+  /// Get Player Profile by Username
+  /// - Parameter username: Player Username
+  /// - Returns: Player Profile Information
+  public func getPlayerProfile(username: String) async throws -> PlayerProfile {
+    let uuid = try await getUUID(username: username)
+    return try await getPlayerProfile(uuid: uuid)
   }
 
   /// Get Player Name History
@@ -80,7 +96,7 @@ public class PlayerService {
     }
 
     return PlayerProfile(
-      id: UUID(uuidString: response.id) ?? UUID(),
+      id: UUID(flexibleString: response.id) ?? UUID(),
       name: response.name,
       skins: skins,
       capes: capes
@@ -115,4 +131,29 @@ extension JSONDecoder {
     decoder.dateDecodingStrategy = .millisecondsSince1970
     return decoder
   }()
+}
+
+// MARK: - UUID Extension
+
+extension UUID {
+  /// Initialize UUID from string with or without hyphens
+  /// - Parameter flexibleString: UUID string with or without hyphens
+  /// - Returns: UUID if parsing succeeds, nil otherwise
+  public init?(flexibleString: String) {
+    // If string already contains hyphens, try direct parsing
+    if flexibleString.contains("-") {
+      self.init(uuidString: flexibleString)
+      return
+    }
+
+    // If no hyphens, insert them in standard format
+    guard flexibleString.count == 32 else {
+      return nil
+    }
+
+    let chars = Array(flexibleString)
+    let formatted = "\(String(chars[0..<8]))-\(String(chars[8..<12]))-\(String(chars[12..<16]))-\(String(chars[16..<20]))-\(String(chars[20..<32]))"
+
+    self.init(uuidString: formatted)
+  }
 }

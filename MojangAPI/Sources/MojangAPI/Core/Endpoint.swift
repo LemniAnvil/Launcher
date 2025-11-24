@@ -86,7 +86,7 @@ public enum MojangEndpoint: Equatable {
     case .getNameHistory(let uuid):
       return "/user/profiles/\(uuid.uuidString)/names"
     case .getSessionProfile(let uuid):
-      return "/session/minecraft/profile/\(uuid.uuidString)"
+      return "/session/minecraft/profile/\(uuid.uuidString.replacingOccurrences(of: "-", with: ""))"
     case .validateSession:
       return "/validate"
     case .refreshSession:
@@ -137,12 +137,8 @@ public enum MojangEndpoint: Equatable {
     var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)
     components?.path = path
 
-    switch self {
-    case .getPlayerUUID(let name):
-      components?.queryItems = [URLQueryItem(name: "name", value: name)]
-    default:
-      break
-    }
+    // No query items needed for current endpoints
+
 
     guard let url = components?.url else {
       throw MojangAPIError.invalidURL

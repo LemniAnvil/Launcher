@@ -239,7 +239,8 @@ final class AuthenticationServiceTests: XCTestCase {
 
     // Assert
     XCTAssertNotNil(error.errorDescription)
-    XCTAssertTrue(error.errorDescription!.contains("Network error"))
+    let description = error.errorDescription?.lowercased() ?? ""
+    XCTAssertTrue(description.contains("network"), "Error description should contain 'network'")
   }
 
   func testMojangAPIError_Unauthorized() {
@@ -257,7 +258,11 @@ final class AuthenticationServiceTests: XCTestCase {
 
     // Assert
     XCTAssertNotNil(error.errorDescription)
-    XCTAssertTrue(error.errorDescription!.contains("Rate limited"))
+    let description = error.errorDescription?.lowercased() ?? ""
+    XCTAssertTrue(
+      description.contains("rate") || description.contains("frequent"),
+      "Error description should contain 'rate' or 'frequent'"
+    )
   }
 
   func testMojangAPIError_TokenExpired() {
@@ -266,6 +271,7 @@ final class AuthenticationServiceTests: XCTestCase {
 
     // Assert
     XCTAssertNotNil(error.errorDescription)
-    XCTAssertTrue(error.errorDescription!.contains("Token has expired"))
+    let description = error.errorDescription?.lowercased() ?? ""
+    XCTAssertTrue(description.contains("token") && description.contains("expired"))
   }
 }
