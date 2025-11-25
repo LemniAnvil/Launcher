@@ -666,9 +666,7 @@ extension ViewController {
 
     // Show offline launch window
     let windowController = OfflineLaunchWindowController()
-    if let viewController = windowController.window?.contentViewController
-      as? OfflineLaunchViewController
-    {
+    if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
       viewController.onLaunch = { [weak self] accountInfo in
         self?.performLaunch(instance: instance, accountInfo: accountInfo)
       }
@@ -854,9 +852,7 @@ extension ViewController {
   private func downloadVersionForInstance(_ instance: Instance) {
     // Show download progress window
     let progressWindowController = DownloadProgressWindowController()
-    if let progressViewController = progressWindowController.window?.contentViewController
-      as? DownloadProgressViewController
-    {
+    if let progressViewController = progressWindowController.window?.contentViewController as? DownloadProgressViewController {
       progressViewController.setVersion(instance.versionId)
 
       // Handle completion
@@ -904,7 +900,6 @@ extension ViewController {
           "Version download completed: \(instance.versionId)",
           category: "MainWindow"
         )
-
       } catch {
         Logger.shared.error(
           "Failed to download version: \(error.localizedDescription)",
@@ -945,9 +940,7 @@ extension ViewController {
     versionListWindowController = VersionListWindowController()
 
     // Setup callbacks for instance creation
-    if let viewController = versionListWindowController?.window?.contentViewController
-      as? VersionListViewController
-    {
+    if let viewController = versionListWindowController?.window?.contentViewController as? VersionListViewController {
       // Preselect the version that needs to be downloaded
       viewController.preselectVersion(versionId)
       viewController.onInstanceCreated = { [weak self] _ in

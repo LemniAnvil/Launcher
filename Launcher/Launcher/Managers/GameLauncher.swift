@@ -523,10 +523,8 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
     // Find matching Java version
     for installation in installations {
       let versionComponents = installation.version.split(separator: ".")
-      if let firstComponent = versionComponents.first,
-        let majorVersion = Int(firstComponent.replacingOccurrences(of: "\"", with: "")),
-        majorVersion >= requiredMajorVersion
-      {
+      if let firstComponent = versionComponents.first, let majorVersion = Int(firstComponent.replacingOccurrences(of: "\"", with: "")),
+        majorVersion >= requiredMajorVersion {
         return installation
       }
     }

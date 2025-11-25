@@ -237,9 +237,7 @@ class InstalledVersionsViewController: NSViewController {
 
     // Show offline launch window
     let windowController = OfflineLaunchWindowController()
-    if let viewController = windowController.window?.contentViewController
-      as? OfflineLaunchViewController
-    {
+    if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
       viewController.onLaunch = { [weak self] accountInfo in
         self?.performLaunch(versionId: versionId, accountInfo: accountInfo)
       }
@@ -431,9 +429,7 @@ extension InstalledVersionsViewController: NSTableViewDelegate {
   func tableViewSelectionDidChange(_ notification: Notification) {
     // Update all visible cells to reflect selection state
     for row in 0..<installedVersions.count {
-      if let cellView = tableView.view(atColumn: 0, row: row, makeIfNecessary: false)
-        as? VersionCellView
-      {
+      if let cellView = tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? VersionCellView {
         cellView.setHighlighted(row == tableView.selectedRow)
       }
     }
@@ -446,7 +442,8 @@ extension InstalledVersionsViewController: NSTableViewDelegate {
   }
 
   func tableView(
-    _ tableView: NSTableView, shouldTypeSelectFor event: NSEvent,
+    _ tableView: NSTableView,
+    shouldTypeSelectFor event: NSEvent,
     withCurrentSearch searchString: String?
   ) -> Bool {
     return true

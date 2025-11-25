@@ -196,35 +196,24 @@ extension Localized {
     static let downloadButton = String(localized: "Download", comment: "[Button] Download button.")
 
     // Download Status
-    static let downloadingTitle = String(
-      localized: "Downloading Game Files", comment: "[Title] Downloading game files title.")
-    static let downloadCompleteTitle = String(
-      localized: "Download Complete", comment: "[Title] Download complete title.")
-    static let downloadFailedTitle = String(
-      localized: "Download Failed", comment: "[Title] Download failed title.")
+    static let downloadingTitle = String(localized: "Downloading Game Files", comment: "[Title] Downloading game files title.")
+    static let downloadCompleteTitle = String(localized: "Download Complete", comment: "[Title] Download complete title.")
+    static let downloadFailedTitle = String(localized: "Download Failed", comment: "[Title] Download failed title.")
 
     static func downloadingMessage(_ versionId: String) -> String {
-      String(
-        localized: "Downloading Minecraft \(versionId)...",
-        comment: "[Message] Downloading version message.")
+      String(localized: "Downloading Minecraft \(versionId)...", comment: "[Message] Downloading version message.")
     }
 
     static func downloadCompleteMessage(_ versionId: String) -> String {
-      String(
-        localized: "Minecraft \(versionId) has been downloaded successfully!",
-        comment: "[Message] Download complete message.")
+      String(localized: "Minecraft \(versionId) has been downloaded successfully!", comment: "[Message] Download complete message.")
     }
 
     static func downloadFailedMessage(_ versionId: String, _ error: String) -> String {
-      String(
-        localized: "Failed to download Minecraft \(versionId).\n\nError: \(error)",
-        comment: "[Message] Download failed message.")
+      String(localized: "Failed to download Minecraft \(versionId).\n\nError: \(error)", comment: "[Message] Download failed message.")
     }
 
     static func launchNowMessage(_ instanceName: String) -> String {
-      String(
-        localized: "Would you like to launch \"\(instanceName)\" now?",
-        comment: "[Message] Launch now message after download.")
+      String(localized: "Would you like to launch \"\(instanceName)\" now?", comment: "[Message] Launch now message after download.")
     }
 
     // Alerts

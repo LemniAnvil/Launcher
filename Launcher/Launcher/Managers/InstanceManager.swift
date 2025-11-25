@@ -243,9 +243,7 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
 
     // Try to load from instance.json first (backward compatibility)
     let instanceFile = directory.appendingPathComponent("instance.json")
-    if let data = try? Data(contentsOf: instanceFile),
-      let instance = try? JSONDecoder().decode(Instance.self, from: data)
-    {
+    if let data = try? Data(contentsOf: instanceFile), let instance = try? JSONDecoder().decode(Instance.self, from: data) {
       return instance
     }
 
@@ -272,7 +270,10 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
     // Create instance from MMC data with directory name from file system
     let directoryName = directory.lastPathComponent
     let instance = Instance(
-      name: config.name, versionId: minecraftComponent.version, directoryName: directoryName)
+      name: config.name,
+      versionId: minecraftComponent.version,
+      directoryName: directoryName
+    )
 
     return instance
   }
