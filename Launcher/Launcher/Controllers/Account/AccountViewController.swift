@@ -27,7 +27,19 @@ class AccountViewController: NSViewController {
 
   // Microsoft authentication properties
   var loginData: SecureLoginData?
-  let authManager = MicrosoftAuthManager.shared
+  let authManager: MicrosoftAuthProtocol
+
+  // MARK: - Initialization
+
+  init(authManager: MicrosoftAuthProtocol = MicrosoftAuthManager.shared) {
+    self.authManager = authManager
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  required init?(coder: NSCoder) {
+    self.authManager = MicrosoftAuthManager.shared
+    super.init(coder: coder)
+  }
 
   // UI components
   private let titleLabel = BRLabel(

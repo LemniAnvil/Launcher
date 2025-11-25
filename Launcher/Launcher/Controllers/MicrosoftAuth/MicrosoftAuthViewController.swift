@@ -7,6 +7,7 @@
 //
 
 import AppKit
+import MojangAPI
 import SnapKit
 import Yatagarasu
 
@@ -14,22 +15,31 @@ class MicrosoftAuthViewController: NSViewController {
 
   // MARK: - Properties
 
-  private let authManager = MicrosoftAuthManager.shared
+  private let authManager: MicrosoftAuthProtocol
   private var loginData: SecureLoginData?
+
+  // MARK: - Initialization
+
+  init(authManager: MicrosoftAuthProtocol = MicrosoftAuthManager.shared) {
+    self.authManager = authManager
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  required init?(coder: NSCoder) {
+    self.authManager = MicrosoftAuthManager.shared
+    super.init(coder: coder)
+  }
 
   var onAuthSuccess: ((CompleteLoginResponse) -> Void)?
   var onAuthFailure: ((Error) -> Void)?
 
   // UI components
-  private let titleLabel: BRLabel = {
-    let label = BRLabel(
-      text: Localized.MicrosoftAuth.title,
-      font: .systemFont(ofSize: 20, weight: .semibold),
-      textColor: .labelColor,
-      alignment: .center
-    )
-    return label
-  }()
+  private let titleLabel = BRLabel(
+    text: Localized.MicrosoftAuth.title,
+    font: .systemFont(ofSize: 20, weight: .semibold),
+    textColor: .labelColor,
+    alignment: .center
+  )
 
   private let subtitleLabel: BRLabel = {
     let label = BRLabel(
@@ -86,9 +96,7 @@ class MicrosoftAuthViewController: NSViewController {
     return indicator
   }()
 
-  private let separator: BRSeparator = {
-    return BRSeparator.horizontal()
-  }()
+  private let separator: BRSeparator = BRSeparator.horizontal()
 
   // MARK: - Lifecycle
 

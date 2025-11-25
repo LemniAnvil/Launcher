@@ -7,94 +7,7 @@
 //
 
 import Foundation
-import CryptoKit
-
-// MARK: - Response Models
-
-struct AuthorizationTokenResponse: Codable {
-  let accessToken: String
-  let tokenType: String
-  let expiresIn: Int
-  let scope: String
-  let refreshToken: String
-
-  enum CodingKeys: String, CodingKey {
-    case accessToken = "access_token"
-    case tokenType = "token_type"
-    case expiresIn = "expires_in"
-    case scope
-    case refreshToken = "refresh_token"
-  }
-}
-
-struct XBLResponse: Codable {
-  let issueInstant: String
-  let notAfter: String
-  let token: String
-  let displayClaims: DisplayClaims
-
-  struct DisplayClaims: Codable {
-    let xui: [UserInfo]
-  }
-
-  struct UserInfo: Codable {
-    let uhs: String
-  }
-
-  enum CodingKeys: String, CodingKey {
-    case issueInstant = "IssueInstant"
-    case notAfter = "NotAfter"
-    case token = "Token"
-    case displayClaims = "DisplayClaims"
-  }
-}
-
-struct MinecraftAuthResponse: Codable {
-  let username: String?
-  let roles: [String]?
-  let accessToken: String
-  let tokenType: String
-  let expiresIn: Int
-
-  enum CodingKeys: String, CodingKey {
-    case username
-    case roles
-    case accessToken = "access_token"
-    case tokenType = "token_type"
-    case expiresIn = "expires_in"
-  }
-}
-
-struct MinecraftProfileResponse: Codable {
-  let id: String
-  let name: String
-  let skins: [Skin]?
-  let capes: [Cape]?
-
-  struct Skin: Codable {
-    let id: String
-    let state: String
-    let url: String
-    let variant: String
-    let alias: String?
-  }
-
-  struct Cape: Codable {
-    let id: String
-    let state: String
-    let url: String
-    let alias: String?
-  }
-}
-
-struct CompleteLoginResponse: Codable {
-  let id: String
-  let name: String
-  let accessToken: String
-  let refreshToken: String
-  let skins: [MinecraftProfileResponse.Skin]?
-  let capes: [MinecraftProfileResponse.Cape]?
-}
+import MojangAPI
 
 // MARK: - Secure Login Data
 
@@ -109,44 +22,29 @@ struct SecureLoginData {
 class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // swiftlint:disable:previous type_body_length
 
-  static let shared = MicrosoftAuthManager()
+  static let shared = MicrosoftAuthManager(configuration: .fromBundleOrFatal())
 
-  // Azure Application Configuration
-  // Loaded from Info.plist, which gets the value from Config.xcconfig
-  private let clientID: String = {
-    guard let id = Bundle.main.infoDictionary?["MicrosoftClientID"] as? String,
-          !id.isEmpty,
-          !id.contains("YOUR_"),
-          !id.contains("00000000-0000-0000-0000-000000000000") else {
-      fatalError("""
-        ❌ Microsoft Client ID not configured!
+  // Authentication Configuration
+  private let configuration: AuthConfiguration
 
-        Please follow these steps:
-        1. Ensure Config.xcconfig exists and contains MICROSOFT_CLIENT_ID
-        2. Replace YOUR_MICROSOFT_CLIENT_ID_HERE with your actual client ID
-        3. Configure the xcconfig file in Xcode project settings
-        4. Clean build folder (⌘⇧K) and rebuild
+  private var clientID: String { configuration.clientID }
+  private var redirectURI: String { configuration.redirectURI }
+  private var scope: String { configuration.scope }
 
-        Get your client ID from: https://portal.azure.com/
-        """)
-    }
-    return id
-  }()
-
-  private let redirectURI = "LemniAnvil-launcher://auth"
-  private let scope = "XboxLive.signin offline_access"
-
-  private init() {}
+  init(configuration: AuthConfiguration) {
+    self.configuration = configuration
+  }
 
   // MARK: - Step 1: Generate Secure Login Data
 
   /// Generates secure login data with PKCE and state for authentication
   func getSecureLoginData() -> SecureLoginData {
-    let state = generateState()
-    let codeVerifier = generateCodeVerifier()
-    let codeChallenge = generateCodeChallenge(from: codeVerifier)
+    let state = PKCEHelper.generateState()
+    let codePair = PKCEHelper.generateCodePair()
 
-    guard var components = URLComponents(string: APIService.MicrosoftAuth.authorize) else {
+    let endpoint = MojangEndpoint.microsoftOAuthAuthorize
+    let url = try! endpoint.buildURL()
+    guard var components = URLComponents(string: url.absoluteString) else {
       fatalError("Invalid Microsoft Auth URL configuration")
     }
     components.queryItems = [
@@ -156,7 +54,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
       URLQueryItem(name: "response_mode", value: "query"),
       URLQueryItem(name: "scope", value: scope),
       URLQueryItem(name: "state", value: state),
-      URLQueryItem(name: "code_challenge", value: codeChallenge),
+      URLQueryItem(name: "code_challenge", value: codePair.challenge),
       URLQueryItem(name: "code_challenge_method", value: "S256"),
     ]
 
@@ -167,7 +65,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     return SecureLoginData(
       url: url.absoluteString,
       state: state,
-      codeVerifier: codeVerifier
+      codeVerifier: codePair.verifier
     )
   }
 
@@ -176,13 +74,15 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   /// Parses authorization code from callback URL
   func parseAuthCodeURL(_ urlString: String, expectedState: String) throws -> String {
     guard let url = URL(string: urlString),
-          let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+      let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+    else {
       throw MicrosoftAuthError.invalidURL
     }
 
     // Check state to prevent CSRF attacks
     if let stateItem = components.queryItems?.first(where: { $0.name == "state" }),
-       let state = stateItem.value {
+      let state = stateItem.value
+    {
       guard state == expectedState else {
         throw MicrosoftAuthError.stateMismatch
       }
@@ -190,7 +90,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
 
     // Get authorization code
     guard let codeItem = components.queryItems?.first(where: { $0.name == "code" }),
-          let code = codeItem.value else {
+      let code = codeItem.value
+    else {
       throw MicrosoftAuthError.authCodeNotFound
     }
 
@@ -200,7 +101,9 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // MARK: - Step 3: Get Authorization Token
 
   /// Exchanges authorization code for access token and refresh token
-  func getAuthorizationToken(authCode: String, codeVerifier: String) async throws -> AuthorizationTokenResponse {
+  func getAuthorizationToken(authCode: String, codeVerifier: String) async throws
+    -> AuthorizationTokenResponse
+  {
     guard let url = URL(string: APIService.MicrosoftAuth.token) else {
       throw MicrosoftAuthError.invalidURL
     }
@@ -217,15 +120,19 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
       "code_verifier": codeVerifier,
     ]
 
-    request.httpBody = parameters
-      .map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")" }
+    request.httpBody =
+      parameters
+      .map {
+        "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+      }
       .joined(separator: "&")
       .data(using: .utf8)
 
     let (data, response) = try await URLSession.shared.data(for: request)
 
     guard let httpResponse = response as? HTTPURLResponse,
-          (200...299).contains(httpResponse.statusCode) else {
+      (200...299).contains(httpResponse.statusCode)
+    else {
       throw MicrosoftAuthError.httpError
     }
 
@@ -259,7 +166,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     let (data, response) = try await URLSession.shared.data(for: request)
 
     guard let httpResponse = response as? HTTPURLResponse,
-          (200...299).contains(httpResponse.statusCode) else {
+      (200...299).contains(httpResponse.statusCode)
+    else {
       throw MicrosoftAuthError.xblAuthFailed
     }
 
@@ -292,7 +200,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     let (data, response) = try await URLSession.shared.data(for: request)
 
     guard let httpResponse = response as? HTTPURLResponse,
-          (200...299).contains(httpResponse.statusCode) else {
+      (200...299).contains(httpResponse.statusCode)
+    else {
       throw MicrosoftAuthError.xstsAuthFailed
     }
 
@@ -302,7 +211,9 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // MARK: - Step 6: Authenticate with Minecraft
 
   /// Authenticates with Minecraft using XSTS token
-  func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws -> MinecraftAuthResponse {
+  func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws
+    -> MinecraftAuthResponse
+  {
     guard let url = URL(string: APIService.MinecraftServices.loginWithXbox) else {
       throw MicrosoftAuthError.invalidURL
     }
@@ -320,7 +231,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     let (data, response) = try await URLSession.shared.data(for: request)
 
     guard let httpResponse = response as? HTTPURLResponse,
-          (200...299).contains(httpResponse.statusCode) else {
+      (200...299).contains(httpResponse.statusCode)
+    else {
       throw MicrosoftAuthError.minecraftAuthFailed
     }
 
@@ -341,7 +253,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     let (data, response) = try await URLSession.shared.data(for: request)
 
     guard let httpResponse = response as? HTTPURLResponse,
-          (200...299).contains(httpResponse.statusCode) else {
+      (200...299).contains(httpResponse.statusCode)
+    else {
       throw MicrosoftAuthError.profileFetchFailed
     }
 
@@ -353,7 +266,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   /// Completes the entire login flow from authorization code to profile
   func completeLogin(authCode: String, codeVerifier: String) async throws -> CompleteLoginResponse {
     // Step 3: Get authorization token
-    let tokenResponse = try await getAuthorizationToken(authCode: authCode, codeVerifier: codeVerifier)
+    let tokenResponse = try await getAuthorizationToken(
+      authCode: authCode, codeVerifier: codeVerifier)
 
     // Step 4: Authenticate with XBL
     let xblResponse = try await authenticateWithXBL(accessToken: tokenResponse.accessToken)
@@ -365,7 +279,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     let xstsToken = xstsResponse.token
 
     // Step 6: Authenticate with Minecraft
-    let minecraftAuth = try await authenticateWithMinecraft(userHash: userHash, xstsToken: xstsToken)
+    let minecraftAuth = try await authenticateWithMinecraft(
+      userHash: userHash, xstsToken: xstsToken)
 
     // Check if access token is present (indicates success)
     guard !minecraftAuth.accessToken.isEmpty else {
@@ -375,13 +290,10 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     // Step 7: Get Minecraft profile
     let profile = try await getProfile(accessToken: minecraftAuth.accessToken)
 
-    return CompleteLoginResponse(
-      id: profile.id,
-      name: profile.name,
+    return buildCompleteLoginResponse(
+      profile: profile,
       accessToken: minecraftAuth.accessToken,
-      refreshToken: tokenResponse.refreshToken,
-      skins: profile.skins,
-      capes: profile.capes
+      refreshToken: tokenResponse.refreshToken
     )
   }
 
@@ -403,15 +315,19 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
       "grant_type": "refresh_token",
     ]
 
-    request.httpBody = parameters
-      .map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")" }
+    request.httpBody =
+      parameters
+      .map {
+        "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+      }
       .joined(separator: "&")
       .data(using: .utf8)
 
     let (data, response) = try await URLSession.shared.data(for: request)
 
     guard let httpResponse = response as? HTTPURLResponse,
-          (200...299).contains(httpResponse.statusCode) else {
+      (200...299).contains(httpResponse.statusCode)
+    else {
       throw MicrosoftAuthError.invalidRefreshToken
     }
 
@@ -431,49 +347,52 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     let xstsResponse = try await authenticateWithXSTS(xblToken: xblToken)
     let xstsToken = xstsResponse.token
 
-    let minecraftAuth = try await authenticateWithMinecraft(userHash: userHash, xstsToken: xstsToken)
+    let minecraftAuth = try await authenticateWithMinecraft(
+      userHash: userHash, xstsToken: xstsToken)
     let profile = try await getProfile(accessToken: minecraftAuth.accessToken)
 
-    return CompleteLoginResponse(
-      id: profile.id,
-      name: profile.name,
+    return buildCompleteLoginResponse(
+      profile: profile,
       accessToken: minecraftAuth.accessToken,
-      refreshToken: tokenResponse.refreshToken,
-      skins: profile.skins,
-      capes: profile.capes
+      refreshToken: tokenResponse.refreshToken
     )
   }
 
   // MARK: - Helper Functions
 
-  /// Generates a random state for CSRF protection
-  private func generateState() -> String {
-    let bytes = (0..<16).map { _ in UInt8.random(in: 0...255) }
-    return Data(bytes).base64EncodedString()
-      .replacingOccurrences(of: "+", with: "-")
-      .replacingOccurrences(of: "/", with: "_")
-      .replacingOccurrences(of: "=", with: "")
-  }
+  /// Converts MinecraftProfileResponse to CompleteLoginResponse
+  private func buildCompleteLoginResponse(
+    profile: MinecraftProfileResponse,
+    accessToken: String,
+    refreshToken: String
+  ) -> CompleteLoginResponse {
+    let skins = profile.skins?.map { skin in
+      SkinInfo(
+        id: skin.id,
+        url: skin.url,
+        state: skin.state,
+        variant: skin.variant,
+        alias: skin.alias
+      )
+    }
 
-  /// Generates a code verifier for PKCE
-  private func generateCodeVerifier() -> String {
-    let bytes = (0..<96).map { _ in UInt8.random(in: 0...255) }
-    let base64 = Data(bytes).base64EncodedString()
-      .replacingOccurrences(of: "+", with: "-")
-      .replacingOccurrences(of: "/", with: "_")
-      .replacingOccurrences(of: "=", with: "")
-    return String(base64.prefix(128))
-  }
+    let capes = profile.capes?.map { cape in
+      CapeInfo(
+        id: cape.id,
+        url: cape.url,
+        state: cape.state,
+        alias: cape.alias
+      )
+    }
 
-  /// Generates a code challenge from code verifier using SHA256
-  private func generateCodeChallenge(from verifier: String) -> String {
-    let data = Data(verifier.utf8)
-    let hash = SHA256.hash(data: data)
-    let base64 = Data(hash).base64EncodedString()
-      .replacingOccurrences(of: "+", with: "-")
-      .replacingOccurrences(of: "/", with: "_")
-      .replacingOccurrences(of: "=", with: "")
-    return base64
+    return CompleteLoginResponse(
+      id: profile.id,
+      name: profile.name,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      skins: skins,
+      capes: capes
+    )
   }
 }
 

@@ -105,7 +105,7 @@ extension Localized {
     }
 
     static func versionStatisticsTitle() -> String {
-      String(localized: "\n📊 Version type statistics:", comment: "[Log] Version statistics title.")
+      String(localized: "📊 Version type statistics:", comment: "[Log] Version statistics title.")
     }
 
     static func releaseCount(_ count: Int) -> String {

@@ -199,7 +199,7 @@ public struct MinecraftAuthRequest: Codable {
 
 /// Minecraft Service Authentication Response
 public struct MinecraftAuthResponse: Codable {
-  public let username: String
+  public let username: String?
   public let roles: [String]?
   public let accessToken: String
   public let tokenType: String
@@ -208,23 +208,9 @@ public struct MinecraftAuthResponse: Codable {
   enum CodingKeys: String, CodingKey {
     case username
     case roles
-    case accessToken
-    case tokenType
-    case expiresIn
-  }
-
-  public init(
-    username: String,
-    roles: [String]? = nil,
-    accessToken: String,
-    tokenType: String,
-    expiresIn: Int
-  ) {
-    self.username = username
-    self.roles = roles
-    self.accessToken = accessToken
-    self.tokenType = tokenType
-    self.expiresIn = expiresIn
+    case accessToken = "access_token"
+    case tokenType = "token_type"
+    case expiresIn = "expires_in"
   }
 }
 
@@ -374,24 +360,32 @@ public struct SkinInfo: Codable {
   public let url: String
   public let metadata: SkinInfoMetadata?
   public let state: String
+  public let variant: String?
+  public let alias: String?
 
   enum CodingKeys: String, CodingKey {
     case id
     case url
     case metadata
     case state
+    case variant
+    case alias
   }
 
   public init(
     id: String,
     url: String,
     metadata: SkinInfoMetadata? = nil,
-    state: String = "ACTIVE"
+    state: String = "ACTIVE",
+    variant: String? = nil,
+    alias: String? = nil
   ) {
     self.id = id
     self.url = url
     self.metadata = metadata
     self.state = state
+    self.variant = variant
+    self.alias = alias
   }
 }
 
@@ -413,17 +407,20 @@ public struct CapeInfo: Codable {
   public let id: String
   public let url: String
   public let state: String
+  public let alias: String?
 
   enum CodingKeys: String, CodingKey {
     case id
     case url
     case state
+    case alias
   }
 
-  public init(id: String, url: String, state: String = "ACTIVE") {
+  public init(id: String, url: String, state: String = "ACTIVE", alias: String? = nil) {
     self.id = id
     self.url = url
     self.state = state
+    self.alias = alias
   }
 }
 
@@ -463,3 +460,6 @@ public struct CompleteLoginResponse: Codable {
     self.capes = capes
   }
 }
+
+/// Minecraft Profile Response from API (alias for MinecraftProfileResponse)
+public typealias MinecraftProfileResponseAPI = MinecraftProfileResponse

@@ -7,6 +7,7 @@
 
 import AppKit
 import Yatagarasu
+import MojangAPI
 
 // MARK: - Mojang Username API Response Models
 
@@ -91,7 +92,7 @@ extension AccountViewController {
           id: responseSkin.id,
           state: responseSkin.state,
           url: responseSkin.url,
-          variant: responseSkin.variant,
+          variant: responseSkin.variant ?? "CLASSIC",
           alias: responseSkin.alias
         )
       }
@@ -321,7 +322,7 @@ extension AccountViewController {
             id: responseSkin.id,
             state: responseSkin.state,
             url: responseSkin.url,
-            variant: responseSkin.variant,
+            variant: responseSkin.variant ?? "CLASSIC",
             alias: responseSkin.alias
           )
         }

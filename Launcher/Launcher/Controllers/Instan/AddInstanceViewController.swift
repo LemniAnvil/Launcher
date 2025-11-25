@@ -377,15 +377,12 @@ class AddInstanceViewController: NSViewController {
     return field
   }()
 
-  private lazy var curseForgeSortLabel: BRLabel = {
-    let label = BRLabel(
-      text: Localized.AddInstance.sortByLabel,
-      font: .systemFont(ofSize: 12, weight: .medium),
-      textColor: .labelColor,
-      alignment: .left
-    )
-    return label
-  }()
+  private lazy var curseForgeSortLabel = BRLabel(
+    text: Localized.AddInstance.sortByLabel,
+    font: .systemFont(ofSize: 12, weight: .medium),
+    textColor: .labelColor,
+    alignment: .left
+  )
 
   private lazy var curseForgeSortPopup: NSPopUpButton = {
     let button = NSPopUpButton()
@@ -464,15 +461,12 @@ class AddInstanceViewController: NSViewController {
     return label
   }()
 
-  private let curseForgeVersionLabel: BRLabel = {
-    let label = BRLabel(
-      text: Localized.AddInstance.versionSelectedLabel,
-      font: .systemFont(ofSize: 12, weight: .medium),
-      textColor: .labelColor,
-      alignment: .right
-    )
-    return label
-  }()
+  private let curseForgeVersionLabel = BRLabel(
+    text: Localized.AddInstance.versionSelectedLabel,
+    font: .systemFont(ofSize: 12, weight: .medium),
+    textColor: .labelColor,
+    alignment: .right
+  )
 
   private lazy var curseForgeVersionPopup: NSPopUpButton = {
     let button = NSPopUpButton()

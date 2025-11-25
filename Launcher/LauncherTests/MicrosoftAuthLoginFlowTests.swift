@@ -5,7 +5,9 @@
 //  Complete login flow tests for Microsoft Authentication
 //
 
+import MojangAPI
 import XCTest
+
 @testable import Launcher
 
 final class MicrosoftAuthLoginFlowTests: XCTestCase {
@@ -46,7 +48,8 @@ final class MicrosoftAuthLoginFlowTests: XCTestCase {
     )
 
     // When
-    let response = try await mockAuthManager.completeLogin(authCode: authCode, codeVerifier: codeVerifier)
+    let response = try await mockAuthManager.completeLogin(
+      authCode: authCode, codeVerifier: codeVerifier)
 
     // Then
     XCTAssertEqual(response.id, "test_uuid")
@@ -66,10 +69,15 @@ final class MicrosoftAuthLoginFlowTests: XCTestCase {
     _ = try await mockAuthManager.completeLogin(authCode: authCode, codeVerifier: codeVerifier)
 
     // Then
-    XCTAssertEqual(mockAuthManager.getAuthorizationTokenCallCount, 1, "Should call getAuthorizationToken")
-    XCTAssertEqual(mockAuthManager.authenticateWithXBLCallCount, 1, "Should call authenticateWithXBL")
-    XCTAssertEqual(mockAuthManager.authenticateWithXSTSCallCount, 1, "Should call authenticateWithXSTS")
-    XCTAssertEqual(mockAuthManager.authenticateWithMinecraftCallCount, 1, "Should call authenticateWithMinecraft")
+    XCTAssertEqual(
+      mockAuthManager.getAuthorizationTokenCallCount, 1, "Should call getAuthorizationToken")
+    XCTAssertEqual(
+      mockAuthManager.authenticateWithXBLCallCount, 1, "Should call authenticateWithXBL")
+    XCTAssertEqual(
+      mockAuthManager.authenticateWithXSTSCallCount, 1, "Should call authenticateWithXSTS")
+    XCTAssertEqual(
+      mockAuthManager.authenticateWithMinecraftCallCount, 1, "Should call authenticateWithMinecraft"
+    )
     XCTAssertEqual(mockAuthManager.getProfileCallCount, 1, "Should call getProfile")
   }
 

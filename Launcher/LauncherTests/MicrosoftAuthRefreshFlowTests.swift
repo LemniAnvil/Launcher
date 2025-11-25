@@ -5,7 +5,9 @@
 //  Refresh token flow and individual step tests for Microsoft Authentication
 //
 
+import MojangAPI
 import XCTest
+
 @testable import Launcher
 
 final class MicrosoftAuthRefreshFlowTests: XCTestCase {
@@ -55,10 +57,16 @@ final class MicrosoftAuthRefreshFlowTests: XCTestCase {
     _ = try await mockAuthManager.completeRefresh(refreshToken: refreshToken)
 
     // Then
-    XCTAssertEqual(mockAuthManager.refreshAuthorizationTokenCallCount, 1, "Should call refreshAuthorizationToken")
-    XCTAssertEqual(mockAuthManager.authenticateWithXBLCallCount, 1, "Should call authenticateWithXBL")
-    XCTAssertEqual(mockAuthManager.authenticateWithXSTSCallCount, 1, "Should call authenticateWithXSTS")
-    XCTAssertEqual(mockAuthManager.authenticateWithMinecraftCallCount, 1, "Should call authenticateWithMinecraft")
+    XCTAssertEqual(
+      mockAuthManager.refreshAuthorizationTokenCallCount, 1, "Should call refreshAuthorizationToken"
+    )
+    XCTAssertEqual(
+      mockAuthManager.authenticateWithXBLCallCount, 1, "Should call authenticateWithXBL")
+    XCTAssertEqual(
+      mockAuthManager.authenticateWithXSTSCallCount, 1, "Should call authenticateWithXSTS")
+    XCTAssertEqual(
+      mockAuthManager.authenticateWithMinecraftCallCount, 1, "Should call authenticateWithMinecraft"
+    )
     XCTAssertEqual(mockAuthManager.getProfileCallCount, 1, "Should call getProfile")
   }
 
@@ -98,7 +106,8 @@ final class MicrosoftAuthRefreshFlowTests: XCTestCase {
     let codeVerifier = "test_code_verifier"
 
     // When
-    let response = try await mockAuthManager.getAuthorizationToken(authCode: authCode, codeVerifier: codeVerifier)
+    let response = try await mockAuthManager.getAuthorizationToken(
+      authCode: authCode, codeVerifier: codeVerifier)
 
     // Then
     XCTAssertEqual(response.accessToken, "mock_access_token")
@@ -140,7 +149,8 @@ final class MicrosoftAuthRefreshFlowTests: XCTestCase {
     let xstsToken = "test_xsts_token"
 
     // When
-    let response = try await mockAuthManager.authenticateWithMinecraft(userHash: userHash, xstsToken: xstsToken)
+    let response = try await mockAuthManager.authenticateWithMinecraft(
+      userHash: userHash, xstsToken: xstsToken)
 
     // Then
     XCTAssertEqual(response.username, "MockPlayer")

@@ -5,7 +5,9 @@
 //  Unit tests for Microsoft Authentication Manager
 //
 
+import MojangAPI
 import XCTest
+
 @testable import Launcher
 
 final class MicrosoftAuthManagerTests: XCTestCase {
@@ -44,7 +46,8 @@ final class MicrosoftAuthManagerTests: XCTestCase {
     XCTAssertTrue(loginData.url.contains("scope="), "URL should contain scope")
     XCTAssertTrue(loginData.url.contains("state="), "URL should contain state")
     XCTAssertTrue(loginData.url.contains("code_challenge="), "URL should contain code_challenge")
-    XCTAssertTrue(loginData.url.contains("code_challenge_method=S256"), "URL should use S256 method")
+    XCTAssertTrue(
+      loginData.url.contains("code_challenge_method=S256"), "URL should use S256 method")
   }
 
   func testGetSecureLoginData_GeneratesUniqueState() {
@@ -62,7 +65,9 @@ final class MicrosoftAuthManagerTests: XCTestCase {
     let loginData2 = sut.getSecureLoginData()
 
     // Then
-    XCTAssertNotEqual(loginData1.codeVerifier, loginData2.codeVerifier, "Each call should generate unique code verifier")
+    XCTAssertNotEqual(
+      loginData1.codeVerifier, loginData2.codeVerifier,
+      "Each call should generate unique code verifier")
   }
 
   func testGetSecureLoginData_StateIsBase64URLSafe() {
@@ -91,8 +96,10 @@ final class MicrosoftAuthManagerTests: XCTestCase {
 
     // Then
     // PKCE spec requires code verifier to be 43-128 characters
-    XCTAssertGreaterThanOrEqual(loginData.codeVerifier.count, 43, "Code verifier should be at least 43 characters")
-    XCTAssertLessThanOrEqual(loginData.codeVerifier.count, 128, "Code verifier should be at most 128 characters")
+    XCTAssertGreaterThanOrEqual(
+      loginData.codeVerifier.count, 43, "Code verifier should be at least 43 characters")
+    XCTAssertLessThanOrEqual(
+      loginData.codeVerifier.count, 128, "Code verifier should be at most 128 characters")
   }
 
   // MARK: - URL Parsing Tests
@@ -117,7 +124,8 @@ final class MicrosoftAuthManagerTests: XCTestCase {
     let expectedState = "test_state"
 
     // When/Then
-    XCTAssertThrowsError(try sut.parseAuthCodeURL(invalidURL, expectedState: expectedState)) { error in
+    XCTAssertThrowsError(try sut.parseAuthCodeURL(invalidURL, expectedState: expectedState)) {
+      error in
       // Should throw either invalidURL or authCodeNotFound error
       XCTAssertTrue(
         error is MicrosoftAuthError,
@@ -133,8 +141,10 @@ final class MicrosoftAuthManagerTests: XCTestCase {
     let urlString = "LemniAnvil-launcher://auth?code=auth_code&state=\(actualState)"
 
     // When/Then
-    XCTAssertThrowsError(try sut.parseAuthCodeURL(urlString, expectedState: expectedState)) { error in
-      XCTAssertEqual(error as? MicrosoftAuthError, .stateMismatch, "Should throw stateMismatch error")
+    XCTAssertThrowsError(try sut.parseAuthCodeURL(urlString, expectedState: expectedState)) {
+      error in
+      XCTAssertEqual(
+        error as? MicrosoftAuthError, .stateMismatch, "Should throw stateMismatch error")
     }
   }
 
@@ -144,8 +154,10 @@ final class MicrosoftAuthManagerTests: XCTestCase {
     let urlString = "LemniAnvil-launcher://auth?state=\(expectedState)"
 
     // When/Then
-    XCTAssertThrowsError(try sut.parseAuthCodeURL(urlString, expectedState: expectedState)) { error in
-      XCTAssertEqual(error as? MicrosoftAuthError, .authCodeNotFound, "Should throw authCodeNotFound error")
+    XCTAssertThrowsError(try sut.parseAuthCodeURL(urlString, expectedState: expectedState)) {
+      error in
+      XCTAssertEqual(
+        error as? MicrosoftAuthError, .authCodeNotFound, "Should throw authCodeNotFound error")
     }
   }
 
@@ -167,14 +179,14 @@ final class MicrosoftAuthManagerTests: XCTestCase {
   func testAuthorizationTokenResponse_Decoding() throws {
     // Given
     let json = """
-    {
-      "access_token": "test_access_token",
-      "token_type": "Bearer",
-      "expires_in": 3600,
-      "scope": "XboxLive.signin offline_access",
-      "refresh_token": "test_refresh_token"
-    }
-    """
+      {
+        "access_token": "test_access_token",
+        "token_type": "Bearer",
+        "expires_in": 3600,
+        "scope": "XboxLive.signin offline_access",
+        "refresh_token": "test_refresh_token"
+      }
+      """
     let data = json.data(using: .utf8)!
 
     // When
@@ -191,19 +203,19 @@ final class MicrosoftAuthManagerTests: XCTestCase {
   func testXBLResponse_Decoding() throws {
     // Given
     let json = """
-    {
-      "IssueInstant": "2024-01-01T00:00:00.0000000Z",
-      "NotAfter": "2024-01-02T00:00:00.0000000Z",
-      "Token": "test_xbl_token",
-      "DisplayClaims": {
-        "xui": [
-          {
-            "uhs": "test_user_hash"
-          }
-        ]
+      {
+        "IssueInstant": "2024-01-01T00:00:00.0000000Z",
+        "NotAfter": "2024-01-02T00:00:00.0000000Z",
+        "Token": "test_xbl_token",
+        "DisplayClaims": {
+          "xui": [
+            {
+              "uhs": "test_user_hash"
+            }
+          ]
+        }
       }
-    }
-    """
+      """
     let data = json.data(using: .utf8)!
 
     // When
@@ -219,14 +231,14 @@ final class MicrosoftAuthManagerTests: XCTestCase {
   func testMinecraftAuthResponse_Decoding() throws {
     // Given
     let json = """
-    {
-      "username": "TestPlayer",
-      "roles": [],
-      "access_token": "test_minecraft_token",
-      "token_type": "Bearer",
-      "expires_in": 86400
-    }
-    """
+      {
+        "username": "TestPlayer",
+        "roles": [],
+        "access_token": "test_minecraft_token",
+        "token_type": "Bearer",
+        "expires_in": 86400
+      }
+      """
     let data = json.data(using: .utf8)!
 
     // When
@@ -242,21 +254,21 @@ final class MicrosoftAuthManagerTests: XCTestCase {
   func testMinecraftProfileResponse_Decoding() throws {
     // Given
     let json = """
-    {
-      "id": "00000000000000000000000000000000",
-      "name": "TestPlayer",
-      "skins": [
-        {
-          "id": "skin_id",
-          "state": "ACTIVE",
-          "url": "https://textures.minecraft.net/texture/test",
-          "variant": "CLASSIC",
-          "alias": null
-        }
-      ],
-      "capes": []
-    }
-    """
+      {
+        "id": "00000000000000000000000000000000",
+        "name": "TestPlayer",
+        "skins": [
+          {
+            "id": "skin_id",
+            "state": "ACTIVE",
+            "url": "https://textures.minecraft.net/texture/test",
+            "variant": "CLASSIC",
+            "alias": null
+          }
+        ],
+        "capes": []
+      }
+      """
     let data = json.data(using: .utf8)!
 
     // When
@@ -274,16 +286,26 @@ final class MicrosoftAuthManagerTests: XCTestCase {
   func testMicrosoftAuthError_LocalizedDescription() {
     // Given/When/Then
     XCTAssertEqual(MicrosoftAuthError.invalidURL.errorDescription, "Invalid URL")
-    XCTAssertEqual(MicrosoftAuthError.stateMismatch.errorDescription, "State mismatch - possible CSRF attack")
-    XCTAssertEqual(MicrosoftAuthError.authCodeNotFound.errorDescription, "Authorization code not found in callback URL")
+    XCTAssertEqual(
+      MicrosoftAuthError.stateMismatch.errorDescription, "State mismatch - possible CSRF attack")
+    XCTAssertEqual(
+      MicrosoftAuthError.authCodeNotFound.errorDescription,
+      "Authorization code not found in callback URL")
     XCTAssertEqual(MicrosoftAuthError.httpError.errorDescription, "HTTP error occurred")
-    XCTAssertEqual(MicrosoftAuthError.xblAuthFailed.errorDescription, "Xbox Live authentication failed")
+    XCTAssertEqual(
+      MicrosoftAuthError.xblAuthFailed.errorDescription, "Xbox Live authentication failed")
     XCTAssertEqual(MicrosoftAuthError.xstsAuthFailed.errorDescription, "XSTS authentication failed")
-    XCTAssertEqual(MicrosoftAuthError.minecraftAuthFailed.errorDescription, "Minecraft authentication failed")
-    XCTAssertEqual(MicrosoftAuthError.profileFetchFailed.errorDescription, "Failed to fetch Minecraft profile")
-    XCTAssertEqual(MicrosoftAuthError.azureAppNotPermitted.errorDescription, "Azure application not permitted to access Minecraft API")
-    XCTAssertEqual(MicrosoftAuthError.accountNotOwnMinecraft.errorDescription, "Account does not own Minecraft")
-    XCTAssertEqual(MicrosoftAuthError.invalidRefreshToken.errorDescription, "Invalid or expired refresh token")
+    XCTAssertEqual(
+      MicrosoftAuthError.minecraftAuthFailed.errorDescription, "Minecraft authentication failed")
+    XCTAssertEqual(
+      MicrosoftAuthError.profileFetchFailed.errorDescription, "Failed to fetch Minecraft profile")
+    XCTAssertEqual(
+      MicrosoftAuthError.azureAppNotPermitted.errorDescription,
+      "Azure application not permitted to access Minecraft API")
+    XCTAssertEqual(
+      MicrosoftAuthError.accountNotOwnMinecraft.errorDescription, "Account does not own Minecraft")
+    XCTAssertEqual(
+      MicrosoftAuthError.invalidRefreshToken.errorDescription, "Invalid or expired refresh token")
   }
 
   // MARK: - SecureLoginData Tests

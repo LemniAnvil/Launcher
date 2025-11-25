@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MojangAPI
 
 /// Protocol defining Microsoft authentication operations
 protocol MicrosoftAuthProtocol {

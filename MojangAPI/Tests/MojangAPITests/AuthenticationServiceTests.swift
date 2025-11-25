@@ -210,9 +210,9 @@ final class AuthenticationServiceTests: XCTestCase {
       {
           "username": "test-username",
           "roles": ["user"],
-          "accessToken": "test-access-token",
-          "tokenType": "Bearer",
-          "expiresIn": 86400
+          "access_token": "test-access-token",
+          "token_type": "Bearer",
+          "expires_in": 86400
       }
       """
 

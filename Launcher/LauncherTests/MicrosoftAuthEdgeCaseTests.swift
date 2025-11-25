@@ -5,7 +5,9 @@
 //  Edge case, mock reset, and response validation tests for Microsoft Authentication
 //
 
+import MojangAPI
 import XCTest
+
 @testable import Launcher
 
 final class MicrosoftAuthEdgeCaseTests: XCTestCase {
@@ -68,7 +70,8 @@ final class MicrosoftAuthEdgeCaseTests: XCTestCase {
     _ = try await mockAuthManager.completeLogin(authCode: authCode, codeVerifier: codeVerifier)
 
     // Then
-    XCTAssertEqual(mockAuthManager.getAuthorizationTokenCallCount, 1, "Should still attempt API call")
+    XCTAssertEqual(
+      mockAuthManager.getAuthorizationTokenCallCount, 1, "Should still attempt API call")
   }
 
   func testCompleteLogin_EmptyCodeVerifier_StillCallsAPI() async throws {
@@ -80,7 +83,8 @@ final class MicrosoftAuthEdgeCaseTests: XCTestCase {
     _ = try await mockAuthManager.completeLogin(authCode: authCode, codeVerifier: codeVerifier)
 
     // Then
-    XCTAssertEqual(mockAuthManager.getAuthorizationTokenCallCount, 1, "Should still attempt API call")
+    XCTAssertEqual(
+      mockAuthManager.getAuthorizationTokenCallCount, 1, "Should still attempt API call")
   }
 
   func testCompleteRefresh_EmptyRefreshToken_StillCallsAPI() async throws {
@@ -91,7 +95,8 @@ final class MicrosoftAuthEdgeCaseTests: XCTestCase {
     _ = try await mockAuthManager.completeRefresh(refreshToken: refreshToken)
 
     // Then
-    XCTAssertEqual(mockAuthManager.refreshAuthorizationTokenCallCount, 1, "Should still attempt API call")
+    XCTAssertEqual(
+      mockAuthManager.refreshAuthorizationTokenCallCount, 1, "Should still attempt API call")
   }
 
   // MARK: - Response Validation Tests
@@ -111,7 +116,8 @@ final class MicrosoftAuthEdgeCaseTests: XCTestCase {
     )
 
     // When
-    let response = try await mockAuthManager.completeLogin(authCode: authCode, codeVerifier: codeVerifier)
+    let response = try await mockAuthManager.completeLogin(
+      authCode: authCode, codeVerifier: codeVerifier)
 
     // Then
     XCTAssertFalse(response.id.isEmpty, "ID should not be empty")
@@ -150,7 +156,8 @@ final class MicrosoftAuthEdgeCaseTests: XCTestCase {
     )
 
     // When
-    let response = try await mockAuthManager.completeLogin(authCode: authCode, codeVerifier: codeVerifier)
+    let response = try await mockAuthManager.completeLogin(
+      authCode: authCode, codeVerifier: codeVerifier)
 
     // Then
     XCTAssertNotNil(response.skins, "Skins should not be nil")
