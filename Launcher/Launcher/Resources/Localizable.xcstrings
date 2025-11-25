@@ -1812,6 +1812,17 @@
         }
       }
     },
+    "Download Complete" : {
+      "comment" : "[Title] Download complete title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载完成"
+          }
+        }
+      }
+    },
     "Download Completed" : {
       "comment" : "[Alert] Download completed title.",
       "localizations" : {
@@ -1846,7 +1857,7 @@
       }
     },
     "Download Failed" : {
-      "comment" : "[Alert] Download failed title.",
+      "comment" : "[Alert] Download failed title.\n[Title] Download failed title.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1874,6 +1885,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "下载设置"
+          }
+        }
+      }
+    },
+    "Downloading Game Files" : {
+      "comment" : "[Title] Downloading game files title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载游戏文件"
+          }
+        }
+      }
+    },
+    "Downloading Minecraft %@..." : {
+      "comment" : "[Message] Downloading version message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载 Minecraft %@..."
           }
         }
       }
@@ -2067,6 +2100,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "创建实例对话框失败"
+          }
+        }
+      }
+    },
+    "Failed to download Minecraft %@.\n\nError: %@" : {
+      "comment" : "[Message] Download failed message.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Failed to download Minecraft %1$@.\n\nError: %2$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载 Minecraft %1$@ 失败。\n\n错误：%2$@"
           }
         }
       }
@@ -2876,6 +2926,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Minecraft %@"
+          }
+        }
+      }
+    },
+    "Minecraft %@ has been downloaded successfully!" : {
+      "comment" : "[Message] Download complete message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minecraft %@ 已成功下载！"
           }
         }
       }
@@ -4346,6 +4407,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "等待浏览器认证...\n请在浏览器中完成登录过程。"
+          }
+        }
+      }
+    },
+    "Would you like to launch \"%@\" now?" : {
+      "comment" : "[Message] Launch now message after download.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是否立即启动 \"%@\"？"
           }
         }
       }

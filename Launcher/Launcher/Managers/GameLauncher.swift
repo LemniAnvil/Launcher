@@ -5,8 +5,8 @@
 //  Game launching manager - responsible for launching Minecraft with Java
 //
 
-import Foundation
 import CryptoKit
+import Foundation
 
 /// Game launcher manager
 /// Implements GameLaunching protocol, providing concrete implementation for game launching
@@ -67,8 +67,8 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
     let username: String
     let uuid: String
     let accessToken: String
-    let maxMemory: Int // In MB
-    let minMemory: Int // In MB
+    let maxMemory: Int  // In MB
+    let minMemory: Int  // In MB
     let windowWidth: Int
     let windowHeight: Int
 
@@ -414,8 +414,9 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
     // Extract native libraries
     for library in versionDetails.libraries where library.isApplicable() {
       guard let nativeName = library.getNativeName(),
-            let classifiers = library.downloads?.classifiers,
-            let nativeArtifact = classifiers[nativeName] else {
+        let classifiers = library.downloads?.classifiers,
+        let nativeArtifact = classifiers[nativeName]
+      else {
         continue
       }
 
@@ -451,7 +452,8 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
 
       for fileURL in contents {
         let relativePath = fileURL.lastPathComponent
-        for pattern in exclude where relativePath.contains(pattern.replacingOccurrences(of: "META-INF/", with: "")) {
+        for pattern in exclude
+        where relativePath.contains(pattern.replacingOccurrences(of: "META-INF/", with: "")) {
           try? fileManager.removeItem(at: fileURL)
         }
       }
@@ -522,8 +524,9 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
     for installation in installations {
       let versionComponents = installation.version.split(separator: ".")
       if let firstComponent = versionComponents.first,
-         let majorVersion = Int(firstComponent.replacingOccurrences(of: "\"", with: "")),
-         majorVersion >= requiredMajorVersion {
+        let majorVersion = Int(firstComponent.replacingOccurrences(of: "\"", with: "")),
+        majorVersion >= requiredMajorVersion
+      {
         return installation
       }
     }

@@ -45,7 +45,11 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
   // MARK: - Public Methods
 
   /// Create a new instance
-  func createInstance(name: String, versionId: String, modLoader: String? = nil) throws -> Instance {
+  func createInstance(
+    name: String,
+    versionId: String,
+    modLoader: String? = nil
+  ) throws -> Instance {
     logger.info("Creating instance: \(name) with version: \(versionId)", category: "InstanceManager")
 
     // Validate name
@@ -53,10 +57,8 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
       throw InstanceManagerError.invalidName("Instance name cannot be empty")
     }
 
-    // Check if instance name already exists
-    if instances.contains(where: { $0.name.lowercased() == name.lowercased() }) {
-      throw InstanceManagerError.duplicateName(name)
-    }
+    // Note: Removed duplicate name check - users can create multiple instances with the same name
+    // Each instance will have a unique directory based on version and UUID
 
     // Validate version exists in version manifest
     // Note: We don't require the version to be installed - it will be downloaded when launching
@@ -65,7 +67,7 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
       throw InstanceManagerError.versionNotFound(versionId)
     }
 
-    // Create instance
+    // Create instance (automatically generates directoryName: "versionId-shortId")
     let instance = Instance(name: name, versionId: versionId)
 
     // Save instance to disk with MMC format
@@ -74,7 +76,10 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
     // Add to list
     instances.append(instance)
 
-    logger.info("Instance created successfully: \(instance.id)", category: "InstanceManager")
+    logger.info(
+      "Instance created successfully: \(instance.id) at directory: \(instance.directoryName)",
+      category: "InstanceManager"
+    )
 
     return instance
   }
@@ -83,8 +88,8 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
   func deleteInstance(_ instance: Instance) throws {
     logger.info("Deleting instance: \(instance.id)", category: "InstanceManager")
 
-    // Remove instance directory (use instance.name as directory name, not instance.id)
-    let instanceDir = instancesDirectory.appendingPathComponent(instance.name)
+    // Remove instance directory (use instance.directoryName)
+    let instanceDir = instancesDirectory.appendingPathComponent(instance.directoryName)
     if FileManager.default.fileExists(atPath: instanceDir.path) {
       try FileManager.default.removeItem(at: instanceDir)
     }
@@ -102,8 +107,8 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
 
   /// Get instance directory
   func getInstanceDirectory(for instance: Instance) -> URL {
-    // Instance directory uses name (like Prism Launcher), not ID
-    return instancesDirectory.appendingPathComponent(instance.name)
+    // Instance directory uses directoryName (format: "versionId-shortId")
+    return instancesDirectory.appendingPathComponent(instance.directoryName)
   }
 
   /// Refresh instances list
@@ -117,10 +122,12 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
   private func loadInstances() {
     instances = []
 
-    guard let contents = try? FileManager.default.contentsOfDirectory(
-      at: instancesDirectory,
-      includingPropertiesForKeys: nil
-    ) else {
+    guard
+      let contents = try? FileManager.default.contentsOfDirectory(
+        at: instancesDirectory,
+        includingPropertiesForKeys: nil
+      )
+    else {
       logger.warning("Failed to read instances directory", category: "InstanceManager")
       return
     }
@@ -128,7 +135,8 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
     for url in contents {
       var isDirectory: ObjCBool = false
       guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory),
-            isDirectory.boolValue else {
+        isDirectory.boolValue
+      else {
         continue
       }
 
@@ -141,8 +149,9 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
       // Fallback to old format (instance.json)
       let instanceFile = url.appendingPathComponent("instance.json")
       guard FileManager.default.fileExists(atPath: instanceFile.path),
-            let data = try? Data(contentsOf: instanceFile),
-            let instance = try? JSONDecoder().decode(Instance.self, from: data) else {
+        let data = try? Data(contentsOf: instanceFile),
+        let instance = try? JSONDecoder().decode(Instance.self, from: data)
+      else {
         continue
       }
 
@@ -171,15 +180,17 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
 
   /// Save instance with MMC format
   private func saveInstanceMMCFormat(_ instance: Instance, modLoader: String?) throws {
-    // Use instance name as directory name (like Prism Launcher)
-    let instanceDir = instancesDirectory.appendingPathComponent(instance.name)
+    // Use instance.directoryName (format: "versionId-shortId")
+    let instanceDir = instancesDirectory.appendingPathComponent(instance.directoryName)
     try FileUtils.ensureDirectoryExists(at: instanceDir)
 
     // Create minecraft subdirectories
     let minecraftDir = instanceDir.appendingPathComponent("minecraft")
     try FileUtils.ensureDirectoryExists(at: minecraftDir)
 
-    let subdirectories = ["mods", "saves", "resourcepacks", "screenshots", "shaderpacks", "texturepacks", "coremods"]
+    let subdirectories = [
+      "mods", "saves", "resourcepacks", "screenshots", "shaderpacks", "texturepacks", "coremods",
+    ]
     for subdir in subdirectories {
       let subdirPath = minecraftDir.appendingPathComponent(subdir)
       try FileUtils.ensureDirectoryExists(at: subdirPath)
@@ -225,36 +236,43 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
 
     // Check if both files exist
     guard FileManager.default.fileExists(atPath: configFile.path),
-          FileManager.default.fileExists(atPath: packFile.path) else {
+      FileManager.default.fileExists(atPath: packFile.path)
+    else {
       return nil
     }
 
     // Try to load from instance.json first (backward compatibility)
     let instanceFile = directory.appendingPathComponent("instance.json")
     if let data = try? Data(contentsOf: instanceFile),
-       let instance = try? JSONDecoder().decode(Instance.self, from: data) {
+      let instance = try? JSONDecoder().decode(Instance.self, from: data)
+    {
       return instance
     }
 
     // Parse instance.cfg
     guard let configContent = try? String(contentsOf: configFile, encoding: .utf8),
-          let config = InstanceConfig.fromConfigString(configContent) else {
+      let config = InstanceConfig.fromConfigString(configContent)
+    else {
       return nil
     }
 
     // Parse mmc-pack.json
     guard let packContent = try? String(contentsOf: packFile, encoding: .utf8),
-          let pack = try? MMCPack.fromJSONString(packContent) else {
+      let pack = try? MMCPack.fromJSONString(packContent)
+    else {
       return nil
     }
 
     // Find Minecraft version from components
-    guard let minecraftComponent = pack.components.first(where: { $0.uid == "net.minecraft" }) else {
+    guard let minecraftComponent = pack.components.first(where: { $0.uid == "net.minecraft" })
+    else {
       return nil
     }
 
-    // Create instance from MMC data
-    let instance = Instance(name: config.name, versionId: minecraftComponent.version)
+    // Create instance from MMC data with directory name from file system
+    let directoryName = directory.lastPathComponent
+    let instance = Instance(
+      name: config.name, versionId: minecraftComponent.version, directoryName: directoryName)
 
     return instance
   }

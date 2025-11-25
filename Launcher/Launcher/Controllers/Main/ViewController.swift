@@ -4,9 +4,9 @@
 //
 
 import AppKit
+import MojangAPI
 import SnapKit
 import Yatagarasu
-import MojangAPI
 
 class ViewController: NSViewController {
   // swiftlint:disable:previous type_body_length
@@ -57,8 +57,8 @@ class ViewController: NSViewController {
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemOrange,
       accessibilityLabel: Localized.JavaDetection.openJavaDetectionButton
@@ -74,8 +74,8 @@ class ViewController: NSViewController {
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemPurple,
       accessibilityLabel: Localized.Account.openAccountButton
@@ -91,8 +91,8 @@ class ViewController: NSViewController {
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemGray,
       accessibilityLabel: Localized.Settings.openSettingsButton
@@ -108,8 +108,8 @@ class ViewController: NSViewController {
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemTeal,
       accessibilityLabel: Localized.InstalledVersions.windowTitle
@@ -125,8 +125,8 @@ class ViewController: NSViewController {
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemGreen,
       accessibilityLabel: Localized.AddInstance.openAddInstanceButton
@@ -142,8 +142,8 @@ class ViewController: NSViewController {
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
       accessibilityLabel: Localized.Instances.refreshButton
@@ -539,7 +539,8 @@ extension ViewController {
   @objc private func handleDoubleClick(_ sender: NSClickGestureRecognizer) {
     let point = sender.location(in: collectionView)
     guard let indexPath = collectionView.indexPathForItem(at: point),
-          indexPath.item < instances.count else {
+      indexPath.item < instances.count
+    else {
       return
     }
 
@@ -665,7 +666,9 @@ extension ViewController {
 
     // Show offline launch window
     let windowController = OfflineLaunchWindowController()
-    if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
+    if let viewController = windowController.window?.contentViewController
+      as? OfflineLaunchViewController
+    {
       viewController.onLaunch = { [weak self] accountInfo in
         self?.performLaunch(instance: instance, accountInfo: accountInfo)
       }
@@ -841,8 +844,91 @@ extension ViewController {
     guard let window = view.window else { return }
     alert.beginSheetModal(for: window) { [weak self] response in
       if response == .alertFirstButtonReturn {
-        // User chose to download
-        self?.openVersionListWindowForDownload(versionId: instance.versionId)
+        // User chose to download - directly download the version
+        self?.downloadVersionForInstance(instance)
+      }
+    }
+  }
+
+  /// Download version directly for the instance
+  private func downloadVersionForInstance(_ instance: Instance) {
+    // Show download progress window
+    let progressWindowController = DownloadProgressWindowController()
+    if let progressViewController = progressWindowController.window?.contentViewController
+      as? DownloadProgressViewController
+    {
+      progressViewController.setVersion(instance.versionId)
+
+      // Handle completion
+      progressViewController.onComplete = { [weak self, weak progressWindowController] in
+        progressWindowController?.close()
+
+        // Ask if user wants to launch now
+        let launchAlert = NSAlert()
+        launchAlert.messageText = Localized.GameLauncher.downloadCompleteTitle
+        launchAlert.informativeText = Localized.GameLauncher.launchNowMessage(instance.name)
+        launchAlert.alertStyle = .informational
+        launchAlert.addButton(withTitle: Localized.GameLauncher.launchButton)
+        launchAlert.addButton(withTitle: Localized.Instances.cancelButton)
+
+        if let window = self?.view.window {
+          launchAlert.beginSheetModal(for: window) { [weak self] response in
+            if response == .alertFirstButtonReturn {
+              // User wants to launch now
+              self?.launchGame(nil)
+            }
+          }
+        }
+      }
+
+      // Handle cancel
+      progressViewController.onCancel = { [weak progressWindowController] in
+        progressWindowController?.close()
+      }
+    }
+
+    progressWindowController.showWindow(nil)
+
+    // Start download in background
+    Task { @MainActor in
+      do {
+        Logger.shared.info(
+          "Starting version download for instance '\(instance.name)': \(instance.versionId)",
+          category: "MainWindow"
+        )
+
+        // Download the version
+        try await versionManager.downloadVersion(versionId: instance.versionId)
+
+        Logger.shared.info(
+          "Version download completed: \(instance.versionId)",
+          category: "MainWindow"
+        )
+
+      } catch {
+        Logger.shared.error(
+          "Failed to download version: \(error.localizedDescription)",
+          category: "MainWindow"
+        )
+
+        // Close progress window
+        progressWindowController.close()
+
+        // Show error alert
+        let errorAlert = NSAlert()
+        errorAlert.messageText = Localized.GameLauncher.downloadFailedTitle
+        errorAlert.informativeText = Localized.GameLauncher.downloadFailedMessage(
+          instance.versionId,
+          error.localizedDescription
+        )
+        errorAlert.alertStyle = .critical
+        errorAlert.addButton(withTitle: Localized.Instances.okButton)
+
+        if let window = self.view.window {
+          errorAlert.beginSheetModal(for: window, completionHandler: nil)
+        } else {
+          errorAlert.runModal()
+        }
       }
     }
   }
@@ -859,7 +945,9 @@ extension ViewController {
     versionListWindowController = VersionListWindowController()
 
     // Setup callbacks for instance creation
-    if let viewController = versionListWindowController?.window?.contentViewController as? VersionListViewController {
+    if let viewController = versionListWindowController?.window?.contentViewController
+      as? VersionListViewController
+    {
       // Preselect the version that needs to be downloaded
       viewController.preselectVersion(versionId)
       viewController.onInstanceCreated = { [weak self] _ in
@@ -891,10 +979,12 @@ extension ViewController {
   func getClickedInstance() -> Instance? {
     let point = collectionView.convert(view.window?.mouseLocationOutsideOfEventStream ?? .zero, from: nil)
     guard let indexPath = collectionView.indexPathForItem(at: point),
-          indexPath.item < instances.count else {
+      indexPath.item < instances.count
+    else {
       // If no item clicked, try to get selected item
       guard let selectedIndexPath = collectionView.selectionIndexPaths.first,
-            selectedIndexPath.item < instances.count else {
+        selectedIndexPath.item < instances.count
+      else {
         return nil
       }
       return instances[selectedIndexPath.item]
@@ -907,15 +997,23 @@ extension ViewController {
 
 extension ViewController: NSCollectionViewDataSource {
 
-  func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+  func collectionView(
+    _ collectionView: NSCollectionView,
+    numberOfItemsInSection section: Int
+  ) -> Int {
     return instances.count
   }
 
-  func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-    guard let item = collectionView.makeItem(
-      withIdentifier: InstanceCollectionViewItem.identifier,
-      for: indexPath
-    ) as? InstanceCollectionViewItem else {
+  func collectionView(
+    _ collectionView: NSCollectionView,
+    itemForRepresentedObjectAt indexPath: IndexPath
+  ) -> NSCollectionViewItem {
+    guard
+      let item = collectionView.makeItem(
+        withIdentifier: InstanceCollectionViewItem.identifier,
+        for: indexPath
+      ) as? InstanceCollectionViewItem
+    else {
       return NSCollectionViewItem()
     }
 
@@ -930,15 +1028,22 @@ extension ViewController: NSCollectionViewDataSource {
 
 extension ViewController: NSCollectionViewDelegate {
 
-  func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
+  func collectionView(
+    _ collectionView: NSCollectionView,
+    didSelectItemsAt indexPaths: Set<IndexPath>
+  ) {
     guard let indexPath = indexPaths.first,
-          indexPath.item < instances.count else { return }
+      indexPath.item < instances.count
+    else { return }
 
     let selectedInstance = instances[indexPath.item]
     Logger.shared.info("Selected instance: \(selectedInstance.name)", category: "MainWindow")
   }
 
-  func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
+  func collectionView(
+    _ collectionView: NSCollectionView,
+    didDeselectItemsAt indexPaths: Set<IndexPath>
+  ) {
     // Handle deselection if needed
   }
 }

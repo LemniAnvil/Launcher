@@ -75,8 +75,8 @@ class InstalledVersionsViewController: NSViewController {
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
       accessibilityLabel: Localized.InstalledVersions.refreshButton
@@ -178,9 +178,9 @@ class InstalledVersionsViewController: NSViewController {
 
   private func updateCountLabel() {
     countLabel.stringValue = switch installedVersions.count {
-    case 0: Localized.InstalledVersions.countNone
-    case 1: Localized.InstalledVersions.countOne
-    default: Localized.InstalledVersions.countMultiple(installedVersions.count)
+      case 0: Localized.InstalledVersions.countNone
+      case 1: Localized.InstalledVersions.countOne
+      default: Localized.InstalledVersions.countMultiple(installedVersions.count)
     }
   }
 
@@ -228,7 +228,8 @@ class InstalledVersionsViewController: NSViewController {
 
   @objc private func launchGame(_ sender: Any?) {
     guard tableView.clickedRow >= 0,
-          tableView.clickedRow < installedVersions.count else {
+      tableView.clickedRow < installedVersions.count
+    else {
       return
     }
 
@@ -236,7 +237,9 @@ class InstalledVersionsViewController: NSViewController {
 
     // Show offline launch window
     let windowController = OfflineLaunchWindowController()
-    if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
+    if let viewController = windowController.window?.contentViewController
+      as? OfflineLaunchViewController
+    {
       viewController.onLaunch = { [weak self] accountInfo in
         self?.performLaunch(versionId: versionId, accountInfo: accountInfo)
       }
@@ -244,7 +247,10 @@ class InstalledVersionsViewController: NSViewController {
     windowController.showWindow(nil)
   }
 
-  private func performLaunch(versionId: String, accountInfo: OfflineLaunchViewController.AccountInfo) {
+  private func performLaunch(
+    versionId: String,
+    accountInfo: OfflineLaunchViewController.AccountInfo
+  ) {
     Task { @MainActor in
       do {
         Logger.shared.info(Localized.GameLauncher.logLaunchingVersion(versionId), category: "InstalledVersions")
@@ -306,7 +312,8 @@ class InstalledVersionsViewController: NSViewController {
 
   @objc private func openVersionFolder(_ sender: Any?) {
     guard tableView.clickedRow >= 0,
-          tableView.clickedRow < installedVersions.count else {
+      tableView.clickedRow < installedVersions.count
+    else {
       return
     }
 
@@ -318,7 +325,8 @@ class InstalledVersionsViewController: NSViewController {
 
   @objc private func deleteVersion(_ sender: Any?) {
     guard tableView.clickedRow >= 0,
-          tableView.clickedRow < installedVersions.count else {
+      tableView.clickedRow < installedVersions.count
+    else {
       return
     }
 
@@ -423,7 +431,9 @@ extension InstalledVersionsViewController: NSTableViewDelegate {
   func tableViewSelectionDidChange(_ notification: Notification) {
     // Update all visible cells to reflect selection state
     for row in 0..<installedVersions.count {
-      if let cellView = tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? VersionCellView {
+      if let cellView = tableView.view(atColumn: 0, row: row, makeIfNecessary: false)
+        as? VersionCellView
+      {
         cellView.setHighlighted(row == tableView.selectedRow)
       }
     }
@@ -435,7 +445,10 @@ extension InstalledVersionsViewController: NSTableViewDelegate {
     }
   }
 
-  func tableView(_ tableView: NSTableView, shouldTypeSelectFor event: NSEvent, withCurrentSearch searchString: String?) -> Bool {
+  func tableView(
+    _ tableView: NSTableView, shouldTypeSelectFor event: NSEvent,
+    withCurrentSearch searchString: String?
+  ) -> Bool {
     return true
   }
 }
