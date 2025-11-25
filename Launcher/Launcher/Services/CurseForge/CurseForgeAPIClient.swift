@@ -24,14 +24,14 @@ class CurseForgeAPIClient {
           !key.contains("YOUR_") else {
       fatalError("""
         ❌ CurseForge API key not configured!
-        
+
         Please follow these steps:
         1. Copy Config.xcconfig.template to Config.xcconfig
         2. Replace YOUR_CURSEFORGE_API_KEY_HERE with your actual API key
         3. In Xcode, select your project → Info tab → Configurations
         4. Set Config.xcconfig for both Debug and Release configurations
         5. Clean build folder (⌘⇧K) and rebuild
-        
+
         Get your API key from: https://console.curseforge.com/
         """)
     }

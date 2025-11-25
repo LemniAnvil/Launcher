@@ -25,9 +25,9 @@ final class MicrosoftAuthManagerTests: XCTestCase {
 
   // MARK: - PKCE Generation Tests
 
-  func testGetSecureLoginData_GeneratesValidData() {
+  func testGetSecureLoginData_GeneratesValidData() throws {
     // When
-    let loginData = sut.getSecureLoginData()
+    let loginData = try sut.getSecureLoginData()
 
     // Then
     XCTAssertFalse(loginData.url.isEmpty, "URL should not be empty")
@@ -35,9 +35,9 @@ final class MicrosoftAuthManagerTests: XCTestCase {
     XCTAssertFalse(loginData.codeVerifier.isEmpty, "Code verifier should not be empty")
   }
 
-  func testGetSecureLoginData_URLContainsRequiredParameters() {
+  func testGetSecureLoginData_URLContainsRequiredParameters() throws {
     // When
-    let loginData = sut.getSecureLoginData()
+    let loginData = try sut.getSecureLoginData()
 
     // Then
     XCTAssertTrue(loginData.url.contains("client_id="), "URL should contain client_id")
@@ -50,19 +50,19 @@ final class MicrosoftAuthManagerTests: XCTestCase {
       loginData.url.contains("code_challenge_method=S256"), "URL should use S256 method")
   }
 
-  func testGetSecureLoginData_GeneratesUniqueState() {
+  func testGetSecureLoginData_GeneratesUniqueState() throws {
     // When
-    let loginData1 = sut.getSecureLoginData()
-    let loginData2 = sut.getSecureLoginData()
+    let loginData1 = try sut.getSecureLoginData()
+    let loginData2 = try sut.getSecureLoginData()
 
     // Then
     XCTAssertNotEqual(loginData1.state, loginData2.state, "Each call should generate unique state")
   }
 
-  func testGetSecureLoginData_GeneratesUniqueCodeVerifier() {
+  func testGetSecureLoginData_GeneratesUniqueCodeVerifier() throws {
     // When
-    let loginData1 = sut.getSecureLoginData()
-    let loginData2 = sut.getSecureLoginData()
+    let loginData1 = try sut.getSecureLoginData()
+    let loginData2 = try sut.getSecureLoginData()
 
     // Then
     XCTAssertNotEqual(
@@ -70,9 +70,9 @@ final class MicrosoftAuthManagerTests: XCTestCase {
       "Each call should generate unique code verifier")
   }
 
-  func testGetSecureLoginData_StateIsBase64URLSafe() {
+  func testGetSecureLoginData_StateIsBase64URLSafe() throws {
     // When
-    let loginData = sut.getSecureLoginData()
+    let loginData = try sut.getSecureLoginData()
 
     // Then
     XCTAssertFalse(loginData.state.contains("+"), "State should not contain +")
@@ -80,9 +80,9 @@ final class MicrosoftAuthManagerTests: XCTestCase {
     XCTAssertFalse(loginData.state.contains("="), "State should not contain =")
   }
 
-  func testGetSecureLoginData_CodeVerifierIsBase64URLSafe() {
+  func testGetSecureLoginData_CodeVerifierIsBase64URLSafe() throws {
     // When
-    let loginData = sut.getSecureLoginData()
+    let loginData = try sut.getSecureLoginData()
 
     // Then
     XCTAssertFalse(loginData.codeVerifier.contains("+"), "Code verifier should not contain +")
@@ -90,9 +90,9 @@ final class MicrosoftAuthManagerTests: XCTestCase {
     XCTAssertFalse(loginData.codeVerifier.contains("="), "Code verifier should not contain =")
   }
 
-  func testGetSecureLoginData_CodeVerifierHasCorrectLength() {
+  func testGetSecureLoginData_CodeVerifierHasCorrectLength() throws {
     // When
-    let loginData = sut.getSecureLoginData()
+    let loginData = try sut.getSecureLoginData()
 
     // Then
     // PKCE spec requires code verifier to be 43-128 characters

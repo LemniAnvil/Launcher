@@ -7,6 +7,7 @@ import Foundation
 
 /// Authentication Service
 public class AuthenticationService {
+  // swiftlint:disable:previous type_body_length
   private let client: MojangAPIClientProtocol
 
   public init(client: MojangAPIClientProtocol = MojangAPIClient()) {
@@ -298,6 +299,7 @@ public class AuthenticationService {
   /// - Parameter accessToken: Minecraft access token
   /// - Returns: Profile information with skins and capes
   public func getMinecraftProfile(accessToken: String) async throws -> (
+    // swiftlint:disable:previous large_tuple
     id: String, name: String, skins: [SkinInfo]?, capes: [CapeInfo]?
   ) {
     guard

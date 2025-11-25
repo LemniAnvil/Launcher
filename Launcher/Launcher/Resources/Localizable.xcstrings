@@ -332,6 +332,17 @@
         }
       }
     },
+    "✓ Account refreshed successfully!" : {
+      "comment" : "[Status] Refresh completed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 账号刷新成功！"
+          }
+        }
+      }
+    },
     "✓ Logged In" : {
       "comment" : "[Status] Logged in status.",
       "localizations" : {
@@ -405,6 +416,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "❌ 代理测试失败：%@"
+          }
+        }
+      }
+    },
+    "❌ Refresh failed: %@" : {
+      "comment" : "[Status] Refresh failed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "❌ 刷新失败：%@"
           }
         }
       }
@@ -1372,6 +1394,28 @@
         }
       }
     },
+    "Authenticating with Minecraft..." : {
+      "comment" : "[Status] Refresh step: Minecraft.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在与 Minecraft 认证..."
+          }
+        }
+      }
+    },
+    "Authenticating with Xbox Live..." : {
+      "comment" : "[Status] Refresh step: XBL.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在与 Xbox Live 认证..."
+          }
+        }
+      }
+    },
     "Author" : {
       "comment" : "[Sort] Author sort option.\n[Table] Author column.",
       "localizations" : {
@@ -2133,6 +2177,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "精选"
+          }
+        }
+      }
+    },
+    "Fetching player profile..." : {
+      "comment" : "[Status] Refresh step: profile.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在获取玩家资料..."
           }
         }
       }
@@ -3122,6 +3177,17 @@
         }
       }
     },
+    "Obtaining XSTS token..." : {
+      "comment" : "[Status] Refresh step: XSTS.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在获取 XSTS 令牌..."
+          }
+        }
+      }
+    },
     "Offline" : {
       "comment" : "[Label] Offline account type.",
       "localizations" : {
@@ -3491,6 +3557,28 @@
         }
       }
     },
+    "Refreshing account: %@" : {
+      "comment" : "[Status] Refreshing account.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在刷新账号：%@"
+          }
+        }
+      }
+    },
+    "Refreshing authorization token..." : {
+      "comment" : "[Status] Refresh step: token.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在刷新授权令牌..."
+          }
+        }
+      }
+    },
     "Refreshing version list..." : {
       "comment" : "[Status] Refreshing version list.",
       "localizations" : {
@@ -3575,6 +3663,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "保存"
+          }
+        }
+      }
+    },
+    "Saving account data..." : {
+      "comment" : "[Status] Refresh step: saving.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在保存账号数据..."
           }
         }
       }

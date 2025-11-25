@@ -29,6 +29,9 @@ class AccountViewController: NSViewController {
   var loginData: SecureLoginData?
   let authManager: MicrosoftAuthProtocol
 
+  // Refresh status view
+  let refreshStatusView = AccountRefreshStatusView()
+
   // MARK: - Initialization
 
   init(authManager: MicrosoftAuthProtocol = MicrosoftAuthManager.shared) {
@@ -90,17 +93,20 @@ class AccountViewController: NSViewController {
     tableView.rowHeight = 64
     tableView.headerView = nil
     tableView.backgroundColor = .clear
-    tableView.selectionHighlightStyle = .regular
+    tableView.selectionHighlightStyle = .none  // Disable default highlight, use custom
     tableView.usesAlternatingRowBackgroundColors = false
-    tableView.intercellSpacing = NSSize(width: 0, height: 4)
+    tableView.intercellSpacing = NSSize(width: 0, height: 0)
 
+    // Set data source and delegate
     tableView.dataSource = self
     tableView.delegate = self
 
+    // Add column
     let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("AccountColumn"))
     column.width = 300
     tableView.addTableColumn(column)
 
+    // Set context menu
     tableView.menu = createContextMenu()
 
     return tableView
@@ -160,6 +166,7 @@ class AccountViewController: NSViewController {
     view.addSubview(addOfflineAccountButton)
     view.addSubview(scrollView)
     view.addSubview(emptyLabel)
+    view.addSubview(refreshStatusView)
 
     scrollView.documentView = tableView
 
@@ -213,6 +220,13 @@ class AccountViewController: NSViewController {
     emptyLabel.snp.makeConstraints { make in
       make.center.equalTo(scrollView)
       make.left.right.equalToSuperview().inset(40)
+    }
+
+    // Position refresh status view to overlay on top of scroll view
+    refreshStatusView.snp.makeConstraints { make in
+      make.top.equalTo(loginMicrosoftButton.snp.bottom).offset(16)
+      make.left.right.equalToSuperview().inset(20)
+      make.height.equalTo(0)  // Initially collapsed
     }
   }
 

@@ -11,7 +11,7 @@ import MojangAPI
 /// Protocol defining Microsoft authentication operations
 protocol MicrosoftAuthProtocol {
   /// Generates secure login data with PKCE and state for authentication
-  func getSecureLoginData() -> SecureLoginData
+  func getSecureLoginData() throws -> SecureLoginData
 
   /// Parses authorization code from callback URL
   func parseAuthCodeURL(_ urlString: String, expectedState: String) throws -> String

@@ -46,7 +46,7 @@ class MockMicrosoftAuthManager: MicrosoftAuthProtocol {
 
   // MARK: - Protocol Implementation
 
-  func getSecureLoginData() -> SecureLoginData {
+  func getSecureLoginData() throws -> SecureLoginData {
     getSecureLoginDataCallCount += 1
     return mockSecureLoginData
       ?? SecureLoginData(

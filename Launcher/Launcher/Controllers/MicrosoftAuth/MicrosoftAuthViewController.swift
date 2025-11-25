@@ -12,7 +12,7 @@ import SnapKit
 import Yatagarasu
 
 class MicrosoftAuthViewController: NSViewController {
-
+  // swiftlint:disable:previous type_body_length
   // MARK: - Properties
 
   private let authManager: MicrosoftAuthProtocol
@@ -195,7 +195,7 @@ class MicrosoftAuthViewController: NSViewController {
 
     do {
       // Step 1: Generate login URL
-      loginData = authManager.getSecureLoginData()
+      loginData = try authManager.getSecureLoginData()
 
       guard let loginData = loginData else {
         throw MicrosoftAuthError.invalidURL

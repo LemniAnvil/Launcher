@@ -89,6 +89,23 @@ extension Localized {
     static let invalidUsernameFormatMessage = String(localized: "Username can only contain letters, numbers, and underscores.", comment: "[Alert] Invalid username format error.")
     static let duplicateUsernameTitle = String(localized: "Duplicate Username", comment: "[Alert] Duplicate username title.")
     static let duplicateUsernameMessage = String(localized: "This username already exists.", comment: "[Alert] Duplicate username error.")
+
+    // Refresh Steps
+    static func refreshingAccount(_ name: String) -> String {
+      String(localized: "Refreshing account: \(name)", comment: "[Status] Refreshing account.")
+    }
+
+    static let refreshStepToken = String(localized: "Refreshing authorization token...", comment: "[Status] Refresh step: token.")
+    static let refreshStepXBL = String(localized: "Authenticating with Xbox Live...", comment: "[Status] Refresh step: XBL.")
+    static let refreshStepXSTS = String(localized: "Obtaining XSTS token...", comment: "[Status] Refresh step: XSTS.")
+    static let refreshStepMinecraft = String(localized: "Authenticating with Minecraft...", comment: "[Status] Refresh step: Minecraft.")
+    static let refreshStepProfile = String(localized: "Fetching player profile...", comment: "[Status] Refresh step: profile.")
+    static let refreshStepSaving = String(localized: "Saving account data...", comment: "[Status] Refresh step: saving.")
+    static let refreshStepCompleted = String(localized: "✓ Account refreshed successfully!", comment: "[Status] Refresh completed.")
+
+    static func refreshStepFailed(_ error: String) -> String {
+      String(localized: "❌ Refresh failed: \(error)", comment: "[Status] Refresh failed.")
+    }
   }
 
   // MARK: - Microsoft Authentication

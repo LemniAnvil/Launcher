@@ -6,8 +6,8 @@
 //
 
 import AppKit
-import Yatagarasu
 import MojangAPI
+import Yatagarasu
 
 // MARK: - Mojang Username API Response Models
 
@@ -36,7 +36,7 @@ extension AccountViewController {
   private func performMicrosoftLogin() async {
     do {
       // Step 1: Generate login URL
-      loginData = authManager.getSecureLoginData()
+      loginData = try authManager.getSecureLoginData()
 
       guard let loginData = loginData else {
         throw MicrosoftAuthError.invalidURL
@@ -120,7 +120,10 @@ extension AccountViewController {
       // Save account
       accountManager.saveAccount(account)
       loadAccounts()
-      Logger.shared.info("Account added: \(loginResponse.name) with \(skins?.count ?? 0) skins and \(capes?.count ?? 0) capes", category: "Account")
+      Logger.shared.info(
+        "Account added: \(loginResponse.name) with \(skins?.count ?? 0) skins and \(capes?.count ?? 0) capes",
+        category: "Account"
+      )
 
       // Show success alert
       showAlert(
@@ -128,7 +131,9 @@ extension AccountViewController {
         message: Localized.MicrosoftAuth.alertSuccessMessage(loginResponse.name, loginResponse.id)
       )
     } catch {
-      Logger.shared.error("Callback handling failed: \(error.localizedDescription)", category: "MicrosoftAuth")
+      Logger.shared.error(
+        "Callback handling failed: \(error.localizedDescription)", category: "MicrosoftAuth"
+      )
       showAlert(
         title: Localized.MicrosoftAuth.alertLoginFailedTitle,
         message: Localized.MicrosoftAuth.alertLoginFailedMessage(error.localizedDescription)
@@ -163,25 +168,37 @@ extension AccountViewController {
     let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
 
     if trimmedUsername.isEmpty {
-      showAlert(title: Localized.Account.invalidUsernameTitle, message: Localized.Account.emptyUsernameMessage)
+      showAlert(
+        title: Localized.Account.invalidUsernameTitle,
+        message: Localized.Account.emptyUsernameMessage
+      )
       return
     }
 
     if trimmedUsername.count < 3 || trimmedUsername.count > 16 {
-      showAlert(title: Localized.Account.invalidUsernameTitle, message: Localized.Account.invalidUsernameLengthMessage)
+      showAlert(
+        title: Localized.Account.invalidUsernameTitle,
+        message: Localized.Account.invalidUsernameLengthMessage
+      )
       return
     }
 
     // Check if username contains only valid characters (letters, numbers, underscores)
     let validCharacterSet = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_"))
     if trimmedUsername.rangeOfCharacter(from: validCharacterSet.inverted) != nil {
-      showAlert(title: Localized.Account.invalidUsernameTitle, message: Localized.Account.invalidUsernameFormatMessage)
+      showAlert(
+        title: Localized.Account.invalidUsernameTitle,
+        message: Localized.Account.invalidUsernameFormatMessage
+      )
       return
     }
 
     // Check for duplicates
     if offlineAccounts.contains(where: { $0.name.lowercased() == trimmedUsername.lowercased() }) {
-      showAlert(title: Localized.Account.duplicateUsernameTitle, message: Localized.Account.duplicateUsernameMessage)
+      showAlert(
+        title: Localized.Account.duplicateUsernameTitle,
+        message: Localized.Account.duplicateUsernameMessage
+      )
       return
     }
 
@@ -205,7 +222,10 @@ extension AccountViewController {
 
         self.offlineAccountManager.saveAccount(account)
         self.loadAccounts()
-        Logger.shared.info("Offline account added: \(finalUsername)\(validatedUsername != nil ? " (validated)" : "")", category: "Account")
+        Logger.shared.info(
+          "Offline account added: \(finalUsername)\(validatedUsername != nil ? " (validated)" : "")",
+          category: "Account"
+        )
       }
     }
   }
@@ -216,7 +236,10 @@ extension AccountViewController {
   /// - Parameters:
   ///   - username: The username to validate
   ///   - completion: Completion handler with validated username (nil if not found or error)
-  private func validateUsernameWithMojang(_ username: String, completion: @escaping (String?) -> Void) {
+  private func validateUsernameWithMojang(
+    _ username: String,
+    completion: @escaping (String?) -> Void
+  ) {
     // Try both Mojang API endpoints
     // 1. First try the modern endpoint
     let modernURL = "https://api.minecraftservices.com/minecraft/profile/lookup/name/\(username)"
@@ -234,7 +257,10 @@ extension AccountViewController {
     }
   }
 
-  private func validateUsernameAtEndpoint(_ urlString: String, completion: @escaping (String?) -> Void) {
+  private func validateUsernameAtEndpoint(
+    _ urlString: String,
+    completion: @escaping (String?) -> Void
+  ) {
     guard let url = URL(string: urlString) else {
       completion(nil)
       return
@@ -243,8 +269,9 @@ extension AccountViewController {
     URLSession.shared.dataTask(with: url) { data, response, error in
       // Check for errors or invalid response
       guard let data = data,
-            error == nil,
-            let httpResponse = response as? HTTPURLResponse else {
+        error == nil,
+        let httpResponse = response as? HTTPURLResponse
+      else {
         completion(nil)
         return
       }
@@ -295,7 +322,8 @@ extension AccountViewController {
 
   @objc func refreshAccount(_ sender: Any?) {
     guard tableView.clickedRow >= 0,
-          tableView.clickedRow < microsoftAccounts.count + offlineAccounts.count else {
+      tableView.clickedRow < microsoftAccounts.count + offlineAccounts.count
+    else {
       return
     }
 
@@ -310,11 +338,34 @@ extension AccountViewController {
 
     let account = microsoftAccounts[tableView.clickedRow]
 
+    // Show status view
+    refreshStatusView.startRefresh(accountName: account.name)
+
     Task { @MainActor in
       do {
-        // Refresh the account using refresh token
+        // Refresh the account using refresh token with progress callbacks
         let authManager = MicrosoftAuthManager.shared
-        let response = try await authManager.completeRefresh(refreshToken: account.refreshToken)
+        let response = try await authManager.completeRefreshWithProgress(
+          refreshToken: account.refreshToken
+        ) { [weak self] step in
+          // Update status view based on refresh step
+          let statusStep: AccountRefreshStatusView.RefreshStep
+          switch step {
+          case .refreshingToken:
+            statusStep = .refreshingToken
+          case .authenticatingXBL:
+            statusStep = .authenticatingXBL
+          case .authenticatingXSTS:
+            statusStep = .authenticatingXSTS
+          case .authenticatingMinecraft:
+            statusStep = .authenticatingMinecraft
+          case .fetchingProfile:
+            statusStep = .fetchingProfile
+          case .completed:
+            statusStep = .savingAccount
+          }
+          self?.refreshStatusView.updateStep(statusStep)
+        }
 
         // Convert skin and cape data from response
         let skins = response.skins?.compactMap { responseSkin -> Skin in
@@ -337,6 +388,7 @@ extension AccountViewController {
         }
 
         // Save the refreshed account data with skins and capes
+        refreshStatusView.updateStep(.savingAccount)
         accountManager.updateAccountFromRefresh(
           id: response.id,
           name: response.name,
@@ -346,26 +398,25 @@ extension AccountViewController {
           capes: capes
         )
 
-        Logger.shared.info("Account refreshed: \(response.name) with \(skins?.count ?? 0) skins and \(capes?.count ?? 0) capes", category: "Account")
+        Logger.shared.info(
+          "Account refreshed: \(response.name) with \(skins?.count ?? 0) skins and \(capes?.count ?? 0) capes",
+          category: "Account"
+        )
         loadAccounts()
 
-        showAlert(
-          title: Localized.Account.refreshSuccessTitle,
-          message: Localized.Account.refreshSuccessMessage(response.name)
-        )
+        // Show completion
+        refreshStatusView.updateStep(.completed)
       } catch {
         Logger.shared.error("Refresh failed: \(error.localizedDescription)", category: "Account")
-        showAlert(
-          title: Localized.Account.refreshFailedTitle,
-          message: error.localizedDescription
-        )
+        refreshStatusView.updateStep(.failed(error.localizedDescription))
       }
     }
   }
 
   @objc func deleteAccount(_ sender: Any?) {
     guard tableView.clickedRow >= 0,
-          tableView.clickedRow < microsoftAccounts.count + offlineAccounts.count else {
+      tableView.clickedRow < microsoftAccounts.count + offlineAccounts.count
+    else {
       return
     }
 

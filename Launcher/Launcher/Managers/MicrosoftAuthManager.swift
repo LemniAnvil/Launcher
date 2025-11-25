@@ -38,14 +38,14 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // MARK: - Step 1: Generate Secure Login Data
 
   /// Generates secure login data with PKCE and state for authentication
-  func getSecureLoginData() -> SecureLoginData {
+  func getSecureLoginData() throws -> SecureLoginData {
     let state = PKCEHelper.generateState()
     let codePair = PKCEHelper.generateCodePair()
 
     let endpoint = MojangEndpoint.microsoftOAuthAuthorize
-    let url = try! endpoint.buildURL()
+    let url = try endpoint.buildURL()
     guard var components = URLComponents(string: url.absoluteString) else {
-      fatalError("Invalid Microsoft Auth URL configuration")
+      throw MicrosoftAuthError.invalidURL
     }
     components.queryItems = [
       URLQueryItem(name: "client_id", value: clientID),
@@ -59,7 +59,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     ]
 
     guard let url = components.url else {
-      fatalError("Failed to construct authorization URL")
+      throw MicrosoftAuthError.invalidURL
     }
 
     return SecureLoginData(
@@ -80,9 +80,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     }
 
     // Check state to prevent CSRF attacks
-    if let stateItem = components.queryItems?.first(where: { $0.name == "state" }),
-      let state = stateItem.value
-    {
+    if let stateItem = components.queryItems?.first(where: { $0.name == "state" }), let state = stateItem.value {
       guard state == expectedState else {
         throw MicrosoftAuthError.stateMismatch
       }
@@ -101,9 +99,10 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // MARK: - Step 3: Get Authorization Token
 
   /// Exchanges authorization code for access token and refresh token
-  func getAuthorizationToken(authCode: String, codeVerifier: String) async throws
-    -> AuthorizationTokenResponse
-  {
+  func getAuthorizationToken(
+    authCode: String,
+    codeVerifier: String
+  ) async throws -> AuthorizationTokenResponse {
     guard let url = URL(string: APIService.MicrosoftAuth.token) else {
       throw MicrosoftAuthError.invalidURL
     }
@@ -211,9 +210,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // MARK: - Step 6: Authenticate with Minecraft
 
   /// Authenticates with Minecraft using XSTS token
-  func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws
-    -> MinecraftAuthResponse
-  {
+  func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws -> MinecraftAuthResponse {
     guard let url = URL(string: APIService.MinecraftServices.loginWithXbox) else {
       throw MicrosoftAuthError.invalidURL
     }
@@ -267,7 +264,9 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   func completeLogin(authCode: String, codeVerifier: String) async throws -> CompleteLoginResponse {
     // Step 3: Get authorization token
     let tokenResponse = try await getAuthorizationToken(
-      authCode: authCode, codeVerifier: codeVerifier)
+      authCode: authCode,
+      codeVerifier: codeVerifier
+    )
 
     // Step 4: Authenticate with XBL
     let xblResponse = try await authenticateWithXBL(accessToken: tokenResponse.accessToken)
@@ -280,7 +279,9 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
 
     // Step 6: Authenticate with Minecraft
     let minecraftAuth = try await authenticateWithMinecraft(
-      userHash: userHash, xstsToken: xstsToken)
+      userHash: userHash,
+      xstsToken: xstsToken
+    )
 
     // Check if access token is present (indicates success)
     guard !minecraftAuth.accessToken.isEmpty else {
@@ -348,7 +349,9 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     let xstsToken = xstsResponse.token
 
     let minecraftAuth = try await authenticateWithMinecraft(
-      userHash: userHash, xstsToken: xstsToken)
+      userHash: userHash,
+      xstsToken: xstsToken
+    )
     let profile = try await getProfile(accessToken: minecraftAuth.accessToken)
 
     return buildCompleteLoginResponse(
@@ -361,7 +364,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // MARK: - Helper Functions
 
   /// Converts MinecraftProfileResponse to CompleteLoginResponse
-  private func buildCompleteLoginResponse(
+  func buildCompleteLoginResponse(
     profile: MinecraftProfileResponse,
     accessToken: String,
     refreshToken: String
