@@ -337,6 +337,24 @@ extension AccountViewController {
 
     menu.addItem(NSMenuItem.separator())
 
+    let setDefaultItem = NSMenuItem(
+      title: Localized.Account.menuSetDefault,
+      action: #selector(setAsDefaultAccount(_:)),
+      keyEquivalent: ""
+    )
+    setDefaultItem.target = self
+    menu.addItem(setDefaultItem)
+
+    let clearDefaultItem = NSMenuItem(
+      title: Localized.Account.menuClearDefault,
+      action: #selector(clearDefaultAccount(_:)),
+      keyEquivalent: ""
+    )
+    clearDefaultItem.target = self
+    menu.addItem(clearDefaultItem)
+
+    menu.addItem(NSMenuItem.separator())
+
     let deleteItem = NSMenuItem(
       title: Localized.Account.menuDelete,
       action: #selector(deleteAccount(_:)),
@@ -487,8 +505,69 @@ extension AccountViewController {
     } else {
       accountManager.deleteAccount(id: accountId)
     }
+
+    // Clear default account if this was the default
+    let defaultManager = DefaultAccountManager.shared
+    if let defaultId = defaultManager.getDefaultAccountId(), defaultId == accountId {
+      defaultManager.clearDefaultAccount()
+      Logger.shared.info("Cleared default account as it was deleted", category: "Account")
+    }
+
     loadAccounts()
     Logger.shared.info("Deleted account: \(accountId)", category: "Account")
+  }
+
+  @objc func setAsDefaultAccount(_ sender: Any?) {
+    guard tableView.clickedRow >= 0,
+      tableView.clickedRow < microsoftAccounts.count + offlineAccounts.count
+    else {
+      return
+    }
+
+    let rowIndex = tableView.clickedRow
+    let isMicrosoftAccount = rowIndex < microsoftAccounts.count
+
+    if isMicrosoftAccount {
+      let account = microsoftAccounts[rowIndex]
+      DefaultAccountManager.shared.setDefaultAccount(
+        id: account.id,
+        type: .microsoft
+      )
+      Logger.shared.info("Set default account: \(account.name)", category: "Account")
+
+      showAlert(
+        title: Localized.Account.defaultAccountSetTitle,
+        message: Localized.Account.defaultAccountSetMessage
+      )
+    } else {
+      let account = offlineAccounts[rowIndex - microsoftAccounts.count]
+      DefaultAccountManager.shared.setDefaultAccount(
+        id: account.id,
+        type: .offline
+      )
+      Logger.shared.info("Set default account: \(account.name)", category: "Account")
+
+      showAlert(
+        title: Localized.Account.defaultAccountSetTitle,
+        message: Localized.Account.defaultAccountSetMessage
+      )
+    }
+
+    // Reload table to show default badge
+    tableView.reloadData()
+  }
+
+  @objc func clearDefaultAccount(_ sender: Any?) {
+    DefaultAccountManager.shared.clearDefaultAccount()
+    Logger.shared.info("Cleared default account", category: "Account")
+
+    showAlert(
+      title: Localized.Account.defaultAccountClearedTitle,
+      message: Localized.Account.defaultAccountClearedMessage
+    )
+
+    // Reload table to update badges
+    tableView.reloadData()
   }
 
   func showAlert(title: String, message: String) {

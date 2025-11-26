@@ -111,6 +111,15 @@ extension Localized {
     static func refreshStepFailed(_ error: String) -> String {
       String(localized: "❌ Refresh failed: \(error)", comment: "[Status] Refresh failed.")
     }
+
+    // Default Account
+    static let menuSetDefault = String(localized: "Set as Default Account", comment: "[Menu] Set as default account.")
+    static let menuClearDefault = String(localized: "Clear Default Account", comment: "[Menu] Clear default account.")
+    static let defaultBadge = String(localized: "Default", comment: "[Badge] Default account badge.")
+    static let defaultAccountSetTitle = String(localized: "Default Account Set", comment: "[Alert] Default account set title.")
+    static let defaultAccountSetMessage = String(localized: "This account will be automatically used when launching games.", comment: "[Alert] Default account set message.")
+    static let defaultAccountClearedTitle = String(localized: "Default Account Cleared", comment: "[Alert] Default account cleared title.")
+    static let defaultAccountClearedMessage = String(localized: "You will be prompted to select an account when launching games.", comment: "[Alert] Default account cleared message.")
   }
 
   // MARK: - Microsoft Authentication

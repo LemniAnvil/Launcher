@@ -50,6 +50,26 @@ class AccountCellView: NSView {
     alignment: .left
   )
 
+  private let defaultBadgeView: NSView = {
+    let view = NSView()
+    view.wantsLayer = true
+    view.layer?.backgroundColor = NSColor.systemGreen.cgColor
+    view.layer?.cornerRadius = 3
+    view.isHidden = true
+
+    let label = NSTextField(labelWithString: Localized.Account.defaultBadge)
+    label.font = .systemFont(ofSize: 10, weight: .semibold)
+    label.textColor = .white
+    label.alignment = .center
+    view.addSubview(label)
+
+    label.snp.makeConstraints { make in
+      make.edges.equalToSuperview().inset(NSEdgeInsets(top: 2, left: 6, bottom: 2, right: 6))
+    }
+
+    return view
+  }()
+
   var detailLabels: [NSView] = []
 
   // MARK: - Initialization
@@ -75,6 +95,7 @@ class AccountCellView: NSView {
 
     containerView.addSubview(iconImageView)
     containerView.addSubview(nameLabel)
+    containerView.addSubview(defaultBadgeView)
 
     iconImageView.snp.makeConstraints { make in
       make.left.equalToSuperview().offset(BRSpacing.medium)
@@ -85,15 +106,24 @@ class AccountCellView: NSView {
     nameLabel.snp.makeConstraints { make in
       make.left.equalTo(iconImageView.snp.right).offset(BRSpacing.medium)
       make.top.equalToSuperview().offset(BRSpacing.smallMedium)
+      make.right.equalTo(defaultBadgeView.snp.left).offset(-BRSpacing.small)
+    }
+
+    defaultBadgeView.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(BRSpacing.smallMedium)
       make.right.equalToSuperview().offset(-BRSpacing.medium)
+      make.height.equalTo(18)
     }
   }
 
   // MARK: - Configuration
 
-  func configure(with accountType: AccountType, isDeveloperMode: Bool) {
+  func configure(with accountType: AccountType, isDeveloperMode: Bool, isDefault: Bool = false) {
     self.currentAccountType = accountType
     self.isDeveloperMode = isDeveloperMode
+
+    // Update default badge visibility
+    defaultBadgeView.isHidden = !isDefault
 
     // Clear previous detail labels
     detailLabels.forEach { $0.removeFromSuperview() }

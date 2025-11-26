@@ -30,16 +30,23 @@ extension AccountViewController: NSTableViewDelegate {
     // Create custom cell view
     let cellView = AccountCellView()
 
-    // Determine account type
+    // Determine account type and check if default
     let accountType: AccountCellView.AccountType
+    let isDefault: Bool
+    let defaultManager = DefaultAccountManager.shared
+
     if row < microsoftAccounts.count {
-      accountType = .microsoft(microsoftAccounts[row])
+      let account = microsoftAccounts[row]
+      accountType = .microsoft(account)
+      isDefault = defaultManager.isDefaultAccount(id: account.id, type: .microsoft)
     } else {
-      accountType = .offline(offlineAccounts[row - microsoftAccounts.count])
+      let account = offlineAccounts[row - microsoftAccounts.count]
+      accountType = .offline(account)
+      isDefault = defaultManager.isDefaultAccount(id: account.id, type: .offline)
     }
 
     // Configure cell
-    cellView.configure(with: accountType, isDeveloperMode: isDeveloperMode)
+    cellView.configure(with: accountType, isDeveloperMode: isDeveloperMode, isDefault: isDefault)
 
     // Set initial highlight state
     cellView.setHighlighted(tableView.selectedRow == row)

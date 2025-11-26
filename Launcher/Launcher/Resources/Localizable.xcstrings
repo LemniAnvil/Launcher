@@ -1471,6 +1471,17 @@
         }
       }
     },
+    "Clear Default Account" : {
+      "comment" : "[Menu] Clear default account.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消默认账户"
+          }
+        }
+      }
+    },
     "Clear Log" : {
       "comment" : "[Button] Clear log.",
       "localizations" : {
@@ -1643,6 +1654,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自定义"
+          }
+        }
+      }
+    },
+    "Default" : {
+      "comment" : "[Badge] Default account badge.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "默认"
+          }
+        }
+      }
+    },
+    "Default Account Cleared" : {
+      "comment" : "[Alert] Default account cleared title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已取消默认账户"
+          }
+        }
+      }
+    },
+    "Default Account Set" : {
+      "comment" : "[Alert] Default account set title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已设置默认账户"
           }
         }
       }
@@ -3816,6 +3860,17 @@
         }
       }
     },
+    "Set as Default Account" : {
+      "comment" : "[Menu] Set as default account.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设为默认账户"
+          }
+        }
+      }
+    },
     "Settings" : {
       "comment" : "[Button] Open settings window.\n[Text] Settings title.\n[Text] Settings window title.",
       "localizations" : {
@@ -4016,6 +4071,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在测试代理连接..."
+          }
+        }
+      }
+    },
+    "This account will be automatically used when launching games." : {
+      "comment" : "[Alert] Default account set message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动游戏时将自动使用此账户。"
           }
         }
       }
@@ -4440,6 +4506,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "是否立即启动 \"%@\"？"
+          }
+        }
+      }
+    },
+    "You will be prompted to select an account when launching games." : {
+      "comment" : "[Alert] Default account cleared message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动游戏时将提示您选择账户。"
           }
         }
       }
