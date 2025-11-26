@@ -5,23 +5,22 @@
 //  Version Manager - responsible for fetching and managing Minecraft versions
 //
 
-import Combine
 import Foundation
 
 /// Version Manager
 /// Implements VersionManaging protocol, providing concrete implementation for version management
 @MainActor
-class VersionManager: ObservableObject, VersionManaging {  // ✅ Conforms to protocol
+class VersionManager: VersionManaging {
   // swiftlint:disable:previous type_body_length
   static let shared = VersionManager()
 
-  // MARK: - Published Properties
+  // MARK: - Properties
 
-  @Published var versions: [MinecraftVersion] = []
-  @Published var latestRelease: String?
-  @Published var latestSnapshot: String?
-  @Published var isLoading = false
-  @Published var error: Error?
+  var versions: [MinecraftVersion] = []
+  var latestRelease: String?
+  var latestSnapshot: String?
+  var isLoading = false
+  var error: Error?
 
   // MARK: - Private Properties
 

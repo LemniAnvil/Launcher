@@ -178,9 +178,9 @@ class InstalledVersionsViewController: NSViewController {
 
   private func updateCountLabel() {
     countLabel.stringValue = switch installedVersions.count {
-      case 0: Localized.InstalledVersions.countNone
-      case 1: Localized.InstalledVersions.countOne
-      default: Localized.InstalledVersions.countMultiple(installedVersions.count)
+    case 0: Localized.InstalledVersions.countNone
+    case 1: Localized.InstalledVersions.countOne
+    default: Localized.InstalledVersions.countMultiple(installedVersions.count)
     }
   }
 
