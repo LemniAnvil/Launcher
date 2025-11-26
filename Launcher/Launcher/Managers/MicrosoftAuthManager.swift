@@ -103,9 +103,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     authCode: String,
     codeVerifier: String
   ) async throws -> AuthorizationTokenResponse {
-    guard let url = URL(string: APIService.MicrosoftAuth.token) else {
-      throw MicrosoftAuthError.invalidURL
-    }
+    let endpoint = MojangEndpoint.microsoftOAuthToken
+    let url = try endpoint.buildURL()
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
@@ -302,9 +301,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
 
   /// Refreshes authentication using refresh token
   func refreshAuthorizationToken(refreshToken: String) async throws -> AuthorizationTokenResponse {
-    guard let url = URL(string: APIService.MicrosoftAuth.refreshToken) else {
-      throw MicrosoftAuthError.invalidURL
-    }
+    let endpoint = MojangEndpoint.microsoftOAuthToken
+    let url = try endpoint.buildURL()
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")

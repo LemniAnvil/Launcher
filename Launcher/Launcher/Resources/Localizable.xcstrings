@@ -2809,6 +2809,17 @@
         }
       }
     },
+    "Logging in: %@" : {
+      "comment" : "[Status] Logging in account.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在登录：%@"
+          }
+        }
+      }
+    },
     "Login Failed" : {
       "comment" : "[Alert] Login failed title.",
       "localizations" : {
@@ -3234,6 +3245,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "同时下载的文件数量（1-64）"
+          }
+        }
+      }
+    },
+    "Obtaining authorization token..." : {
+      "comment" : "[Status] Login step: token.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在获取授权令牌..."
           }
         }
       }

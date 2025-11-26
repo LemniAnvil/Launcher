@@ -78,11 +78,34 @@ extension AccountViewController {
       let authCode = try authManager.parseAuthCodeURL(callbackURL, expectedState: loginData.state)
       Logger.shared.info("Authorization code received", category: "MicrosoftAuth")
 
-      // Step 4-7: Complete login flow
-      let loginResponse = try await authManager.completeLogin(
+      // Show status view
+      refreshStatusView.startLogin(accountName: "Microsoft Account")
+
+      // Step 4-7: Complete login flow with progress tracking
+      let loginResponse = try await authManager.completeLoginWithProgress(
         authCode: authCode,
         codeVerifier: loginData.codeVerifier
-      )
+      ) { [weak self] (step: MicrosoftAuthManager.LoginStep) in
+        // Update status view based on login step
+        let statusStep: AccountRefreshStatusView.LoginStep
+        switch step {
+        case .gettingToken:
+          statusStep = .gettingToken
+        case .authenticatingXBL:
+          statusStep = .authenticatingXBL
+        case .authenticatingXSTS:
+          statusStep = .authenticatingXSTS
+        case .authenticatingMinecraft:
+          statusStep = .authenticatingMinecraft
+        case .fetchingProfile:
+          statusStep = .fetchingProfile
+        case .savingAccount:
+          statusStep = .savingAccount
+        case .completed:
+          statusStep = .completed
+        }
+        self?.refreshStatusView.updateLoginStep(statusStep)
+      }
 
       Logger.shared.info("Login successful: \(loginResponse.name)", category: "MicrosoftAuth")
 
@@ -118,12 +141,16 @@ extension AccountViewController {
       )
 
       // Save account
+      refreshStatusView.updateLoginStep(.savingAccount)
       accountManager.saveAccount(account)
       loadAccounts()
       Logger.shared.info(
         "Account added: \(loginResponse.name) with \(skins?.count ?? 0) skins and \(capes?.count ?? 0) capes",
         category: "Account"
       )
+
+      // Show completion
+      refreshStatusView.updateLoginStep(.completed)
 
       // Show success alert
       showAlert(
@@ -134,6 +161,7 @@ extension AccountViewController {
       Logger.shared.error(
         "Callback handling failed: \(error.localizedDescription)", category: "MicrosoftAuth"
       )
+      refreshStatusView.updateLoginStep(.failed(error.localizedDescription))
       showAlert(
         title: Localized.MicrosoftAuth.alertLoginFailedTitle,
         message: Localized.MicrosoftAuth.alertLoginFailedMessage(error.localizedDescription)

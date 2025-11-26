@@ -34,9 +34,22 @@ protocol MicrosoftAuthProtocol {
   /// Completes the entire login flow from authorization code to profile
   func completeLogin(authCode: String, codeVerifier: String) async throws -> CompleteLoginResponse
 
+  /// Completes the entire login flow from authorization code to profile with progress callbacks
+  func completeLoginWithProgress(
+    authCode: String,
+    codeVerifier: String,
+    onProgress: @escaping (MicrosoftAuthManager.LoginStep) -> Void
+  ) async throws -> CompleteLoginResponse
+
   /// Refreshes authentication using refresh token
   func refreshAuthorizationToken(refreshToken: String) async throws -> AuthorizationTokenResponse
 
   /// Completes refresh flow to get new access token and profile
   func completeRefresh(refreshToken: String) async throws -> CompleteLoginResponse
+
+  /// Completes refresh flow to get new access token and profile with progress callbacks
+  func completeRefreshWithProgress(
+    refreshToken: String,
+    onProgress: @escaping (MicrosoftAuthManager.RefreshStep) -> Void
+  ) async throws -> CompleteLoginResponse
 }

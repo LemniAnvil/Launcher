@@ -95,7 +95,12 @@ extension Localized {
       String(localized: "Refreshing account: \(name)", comment: "[Status] Refreshing account.")
     }
 
+    static func loggingInAccount(_ name: String) -> String {
+      String(localized: "Logging in: \(name)", comment: "[Status] Logging in account.")
+    }
+
     static let refreshStepToken = String(localized: "Refreshing authorization token...", comment: "[Status] Refresh step: token.")
+    static let loginStepToken = String(localized: "Obtaining authorization token...", comment: "[Status] Login step: token.")
     static let refreshStepXBL = String(localized: "Authenticating with Xbox Live...", comment: "[Status] Refresh step: XBL.")
     static let refreshStepXSTS = String(localized: "Obtaining XSTS token...", comment: "[Status] Refresh step: XSTS.")
     static let refreshStepMinecraft = String(localized: "Authenticating with Minecraft...", comment: "[Status] Refresh step: Minecraft.")
