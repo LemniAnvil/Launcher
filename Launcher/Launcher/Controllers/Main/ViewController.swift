@@ -211,6 +211,15 @@ class ViewController: NSViewController {
     return BRSeparator.horizontal()
   }()
 
+  private let sidebarSeparator: BRSeparator = {
+    return BRSeparator.vertical()
+  }()
+
+  private lazy var sidebarView: InstanceSidebarView = {
+    let sidebar = InstanceSidebarView()
+    return sidebar
+  }()
+
   // MARK: - Initialization
 
   /// Dependency injection via constructor
@@ -249,57 +258,28 @@ class ViewController: NSViewController {
     // Add all UI elements
     view.addSubview(titleLabel)
     view.addSubview(countLabel)
+    view.addSubview(headerSeparator)
+    view.addSubview(scrollView)
+    view.addSubview(emptyLabel)
+
+    // Add sidebar first
+    view.addSubview(sidebarView)
+    view.addSubview(sidebarSeparator)
+
+    // Add buttons last so they're on top
     view.addSubview(addInstanceButton)
     view.addSubview(refreshButton)
     view.addSubview(javaDetectionButton)
     view.addSubview(accountButton)
     view.addSubview(settingsButton)
     view.addSubview(installedVersionsButton)
-    view.addSubview(headerSeparator)
-    view.addSubview(scrollView)
-    view.addSubview(emptyLabel)
 
     scrollView.documentView = collectionView
 
-    // Layout constraints using SnapKit
-    // Top-right button group (from left to right: add, refresh, installedVersions, java, account, settings)
-    addInstanceButton.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-236)
-      make.width.height.equalTo(36)
-    }
+    // Sidebar width constant
+    let sidebarWidth: CGFloat = 250
 
-    refreshButton.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-192)
-      make.width.height.equalTo(36)
-    }
-
-    installedVersionsButton.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-148)
-      make.width.height.equalTo(36)
-    }
-
-    javaDetectionButton.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-104)
-      make.width.height.equalTo(36)
-    }
-
-    accountButton.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-60)
-      make.width.height.equalTo(36)
-    }
-
-    settingsButton.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(16)
-      make.right.equalToSuperview().offset(-16)
-      make.width.height.equalTo(36)
-    }
-
-    // Title and count
+    // Title and count - positioned on the left
     titleLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
       make.left.equalToSuperview().offset(20)
@@ -308,28 +288,125 @@ class ViewController: NSViewController {
     countLabel.snp.makeConstraints { make in
       make.top.equalTo(titleLabel.snp.bottom).offset(8)
       make.left.equalToSuperview().offset(20)
-      make.right.equalTo(addInstanceButton.snp.left).offset(-10)
     }
 
+    // Header separator - extends full width
     headerSeparator.snp.makeConstraints { make in
       make.top.equalTo(countLabel.snp.bottom).offset(12)
       make.left.right.equalToSuperview().inset(20)
       make.height.equalTo(1)
     }
 
-    // Version list
+    // Layout sidebar - starts from top, overlays the header area
+    sidebarView.snp.makeConstraints { make in
+      make.top.equalToSuperview()
+      make.right.equalToSuperview()
+      make.bottom.equalToSuperview()
+      make.width.equalTo(sidebarWidth)
+    }
+
+    sidebarSeparator.snp.makeConstraints { make in
+      make.top.equalToSuperview()
+      make.right.equalTo(sidebarView.snp.left)
+      make.bottom.equalToSuperview()
+      make.width.equalTo(1)
+    }
+
+    // Top-right buttons - position from right to left, on top of sidebar area
+    // These buttons should appear above the sidebar in Z-order
+    settingsButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalTo(sidebarSeparator.snp.left).offset(-16)
+      make.width.height.equalTo(36)
+    }
+
+    accountButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalTo(settingsButton.snp.left).offset(-8)
+      make.width.height.equalTo(36)
+    }
+
+    javaDetectionButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalTo(accountButton.snp.left).offset(-8)
+      make.width.height.equalTo(36)
+    }
+
+    installedVersionsButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalTo(javaDetectionButton.snp.left).offset(-8)
+      make.width.height.equalTo(36)
+    }
+
+    refreshButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalTo(installedVersionsButton.snp.left).offset(-8)
+      make.width.height.equalTo(36)
+    }
+
+    addInstanceButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalTo(refreshButton.snp.left).offset(-8)
+      make.width.height.equalTo(36)
+    }
+
+    // Scroll view - main content area, excluding sidebar
     scrollView.snp.makeConstraints { make in
       make.top.equalTo(headerSeparator.snp.bottom).offset(12)
-      make.left.right.bottom.equalToSuperview().inset(20)
+      make.left.equalToSuperview().offset(20)
+      make.right.equalTo(sidebarSeparator.snp.left).offset(-20)
+      make.bottom.equalToSuperview().offset(-20)
     }
 
     emptyLabel.snp.makeConstraints { make in
       make.center.equalTo(scrollView)
-      make.left.right.equalToSuperview().inset(40)
+      make.left.right.equalTo(scrollView).inset(40)
     }
+
+    // Setup sidebar callbacks
+    setupSidebarCallbacks()
   }
 
   // MARK: - Data Loading
+
+  private func setupSidebarCallbacks() {
+    sidebarView.onLaunch = { [weak self] instance in
+      self?.launchGameFromSidebar(instance)
+    }
+
+    sidebarView.onEdit = { [weak self] instance in
+      self?.openInstanceDetailWindow(for: instance)
+    }
+
+    sidebarView.onOpenFolder = { [weak self] instance in
+      self?.openInstanceFolderFromSidebar(instance)
+    }
+
+    sidebarView.onDelete = { [weak self] instance in
+      self?.deleteInstanceFromSidebar(instance)
+    }
+
+    sidebarView.onCopy = { [weak self] instance in
+      self?.copyInstance(instance)
+    }
+
+    // Placeholder callbacks for unimplemented features
+    sidebarView.onKill = { instance in
+      Logger.shared.info("Kill process for instance: \(instance.name)", category: "MainWindow")
+    }
+
+    sidebarView.onRename = { instance in
+      Logger.shared.info("Rename instance: \(instance.name)", category: "MainWindow")
+    }
+
+    sidebarView.onExport = { instance in
+      Logger.shared.info("Export instance: \(instance.name)", category: "MainWindow")
+    }
+
+    sidebarView.onCreateShortcut = { instance in
+      Logger.shared.info("Create shortcut for instance: \(instance.name)", category: "MainWindow")
+    }
+  }
 
   private func loadInstances() {
     instanceManager.refreshInstances()
@@ -996,6 +1073,106 @@ extension ViewController {
     }
     return instances[indexPath.item]
   }
+
+  // MARK: - Sidebar Actions
+
+  private func launchGameFromSidebar(_ instance: Instance) {
+    // Check if version is installed
+    if !versionManager.isVersionInstalled(versionId: instance.versionId) {
+      showVersionNotInstalledAlert(for: instance)
+      return
+    }
+
+    // Check if there's a default account
+    if let defaultAccountInfo = DefaultAccountManager.shared.getDefaultAccountInfo() {
+      Logger.shared.info("Using default account: \(defaultAccountInfo.username)", category: "MainWindow")
+      let accountInfo = OfflineLaunchViewController.AccountInfo(
+        username: defaultAccountInfo.username,
+        uuid: defaultAccountInfo.uuid,
+        accessToken: defaultAccountInfo.accessToken
+      )
+      performLaunch(instance: instance, accountInfo: accountInfo)
+    } else {
+      // No default account, show account selection window
+      let windowController = OfflineLaunchWindowController()
+      if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
+        viewController.onLaunch = { [weak self] accountInfo in
+          self?.performLaunch(instance: instance, accountInfo: accountInfo)
+        }
+      }
+      windowController.showWindow(nil)
+    }
+  }
+
+  private func openInstanceFolderFromSidebar(_ instance: Instance) {
+    let instanceDir = instanceManager.getInstanceDirectory(for: instance)
+    NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: instanceDir.path)
+  }
+
+  private func deleteInstanceFromSidebar(_ instance: Instance) {
+    // Show confirmation dialog
+    let alert = NSAlert()
+    alert.messageText = Localized.Instances.deleteConfirmTitle
+    alert.informativeText = Localized.Instances.deleteConfirmMessage(instance.name)
+    alert.alertStyle = .warning
+    alert.addButton(withTitle: Localized.Instances.deleteButton)
+    alert.addButton(withTitle: Localized.Instances.cancelButton)
+
+    guard let window = view.window else { return }
+    alert.beginSheetModal(for: window) { [weak self] response in
+      guard response == .alertFirstButtonReturn else { return }
+      self?.performDelete(instance: instance)
+    }
+  }
+
+  private func copyInstance(_ instance: Instance) {
+    do {
+      // Create a copy with the instance manager
+      let copyName = Localized.Instances.copyName(instance.name)
+      let copiedInstance = try instanceManager.createInstance(name: copyName, versionId: instance.versionId, modLoader: nil)
+
+      // Copy instance directory contents
+      let sourceDir = instanceManager.getInstanceDirectory(for: instance)
+      let destDir = instanceManager.getInstanceDirectory(for: copiedInstance)
+
+      // Copy all files from source to destination (except the instance.json which is already created)
+      let fileManager = FileManager.default
+      let contents = try fileManager.contentsOfDirectory(at: sourceDir, includingPropertiesForKeys: nil)
+
+      for fileURL in contents {
+        let fileName = fileURL.lastPathComponent
+        // Skip instance.json as it's already created with new ID
+        if fileName != "instance.json" {
+          let destURL = destDir.appendingPathComponent(fileName)
+          try? fileManager.copyItem(at: fileURL, to: destURL)
+        }
+      }
+
+      Logger.shared.info("Copied instance: \(instance.name) -> \(copyName)", category: "Instances")
+
+      // Refresh list
+      loadInstances()
+
+      // Show success notification
+      showNotification(
+        title: Localized.Instances.copySuccessTitle,
+        message: Localized.Instances.copySuccessMessage(instance.name)
+      )
+    } catch {
+      Logger.shared.error("Failed to copy instance: \(error.localizedDescription)", category: "Instances")
+
+      // Show error dialog
+      let alert = NSAlert()
+      alert.messageText = Localized.Instances.copyFailedTitle
+      alert.informativeText = Localized.Instances.copyFailedMessage(instance.name, error.localizedDescription)
+      alert.alertStyle = .critical
+      alert.addButton(withTitle: Localized.Instances.okButton)
+
+      if let window = view.window {
+        alert.beginSheetModal(for: window)
+      }
+    }
+  }
 }
 
 // MARK: - NSCollectionViewDataSource
@@ -1043,12 +1220,16 @@ extension ViewController: NSCollectionViewDelegate {
 
     let selectedInstance = instances[indexPath.item]
     Logger.shared.info("Selected instance: \(selectedInstance.name)", category: "MainWindow")
+
+    // Update sidebar with selected instance
+    sidebarView.configure(with: selectedInstance)
   }
 
   func collectionView(
     _ collectionView: NSCollectionView,
     didDeselectItemsAt indexPaths: Set<IndexPath>
   ) {
-    // Handle deselection if needed
+    // Clear sidebar when deselecting
+    sidebarView.clearSelection()
   }
 }

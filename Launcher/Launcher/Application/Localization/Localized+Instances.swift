@@ -61,6 +61,35 @@ extension Localized {
       String(localized: "Unable to delete instance \"\(name)\": \(error)", comment: "[Alert] Delete failed message.")
     }
 
+    // Copy Instance
+    static func copyName(_ name: String) -> String {
+      String(localized: "\(name) (Copy)", comment: "[Text] Copied instance name suffix.")
+    }
+
+    static let copySuccessTitle = String(localized: "Instance Copied", comment: "[Notification] Copy instance success title.")
+
+    static func copySuccessMessage(_ name: String) -> String {
+      String(localized: "Instance \"\(name)\" has been copied successfully.", comment: "[Notification] Copy instance success message.")
+    }
+
+    static let copyFailedTitle = String(localized: "Copy Failed", comment: "[Alert] Copy instance failed title.")
+
+    static func copyFailedMessage(_ name: String, _ error: String) -> String {
+      String(localized: "Unable to copy instance \"\(name)\": \(error)", comment: "[Alert] Copy instance failed message.")
+    }
+
+    // Sidebar Actions
+    static let sidebarLaunch = String(localized: "Launch (L)", comment: "[Button] Launch selected instance from sidebar.")
+    static let sidebarKill = String(localized: "Kill Process (K)", comment: "[Button] Kill running instance from sidebar.")
+    static let sidebarEdit = String(localized: "Edit (E)", comment: "[Button] Edit selected instance from sidebar.")
+    static let sidebarChangeGroup = String(localized: "Change Group (C)", comment: "[Button] Change instance group from sidebar.")
+    static let sidebarOpenFolder = String(localized: "Open Instance Folder (F)", comment: "[Button] Open instance folder from sidebar.")
+    static let sidebarExport = String(localized: "Export (X)", comment: "[Button] Export instance from sidebar.")
+    static let sidebarCopy = String(localized: "Copy (Y)", comment: "[Button] Copy instance from sidebar.")
+    static let sidebarDelete = String(localized: "Delete (T)", comment: "[Button] Delete instance from sidebar.")
+    static let sidebarCreateShortcut = String(localized: "Create Shortcut (S)", comment: "[Button] Create shortcut for instance from sidebar.")
+    static let sidebarEmptyState = String(localized: "Select an instance to view details", comment: "[Text] Empty state for sidebar when no instance is selected.")
+
     // Errors
     static let errorTitle = String(localized: "Error", comment: "[Alert] Error title.")
     static let errorEmptyName = String(localized: "Instance name cannot be empty.", comment: "[Error] Empty name error.")
