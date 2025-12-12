@@ -17,8 +17,11 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
   private let logger = Logger.shared
   private let versionManager = VersionManager.shared
   private let javaManager = JavaManager.shared
+  private let pathManager: PathManager
 
-  private init() {}
+  private init(pathManager: PathManager = .shared) {
+    self.pathManager = pathManager
+  }
 
   // MARK: - Offline UUID Generation
 
@@ -157,8 +160,7 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
 
     // Logging configuration
     if let logging = versionDetails.logging?.client {
-      let loggingFile = FileUtils.getAssetsDirectory()
-        .appendingPathComponent("log_configs")
+      let loggingFile = pathManager.getPath(for: .logConfigs)
         .appendingPathComponent(logging.file.id)
       args.append(logging.argument.replacingOccurrences(of: "${path}", with: loggingFile.path))
     }
@@ -344,8 +346,8 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
     config: LaunchConfig,
     versionDetails: VersionDetails
   ) -> String {
-    let minecraftDir = FileUtils.getMinecraftDirectory()
-    let assetsDir = FileUtils.getAssetsDirectory()
+    let minecraftDir = pathManager.getPath(for: .minecraftRoot)
+    let assetsDir = pathManager.getPath(for: .assets)
     let nativesDir = getNativesDirectory(versionId: config.versionId)
 
     var result = argument
@@ -379,7 +381,7 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
     var classpathItems: [String] = []
 
     // Add all applicable libraries
-    let librariesDir = FileUtils.getLibrariesDirectory()
+    let librariesDir = pathManager.getPath(for: .libraries)
 
     for library in versionDetails.libraries where library.isApplicable() {
       if let artifact = library.downloads?.artifact {
@@ -391,7 +393,7 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
     }
 
     // Add game jar
-    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(versionId)
+    let versionDir = pathManager.getVersionPath(versionId)
     let gameJar = versionDir.appendingPathComponent("\(versionId).jar")
     if FileManager.default.fileExists(atPath: gameJar.path) {
       classpathItems.append(gameJar.path)
@@ -403,7 +405,7 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
   /// Extract native libraries
   private func extractNatives(versionDetails: VersionDetails, versionId: String) async throws {
     let nativesDir = getNativesDirectory(versionId: versionId)
-    let librariesDir = FileUtils.getLibrariesDirectory()
+    let librariesDir = pathManager.getPath(for: .libraries)
 
     // Clean and recreate natives directory
     if FileManager.default.fileExists(atPath: nativesDir.path) {
@@ -462,7 +464,7 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
 
   /// Get natives directory
   private func getNativesDirectory(versionId: String) -> URL {
-    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(versionId)
+    let versionDir = pathManager.getVersionPath(versionId)
     return versionDir.appendingPathComponent("\(versionId)-natives")
   }
 
@@ -477,7 +479,7 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
     let process = Process()
     process.executableURL = URL(fileURLWithPath: javaBinary)
     process.arguments = arguments
-    process.currentDirectoryURL = FileUtils.getMinecraftDirectory()
+    process.currentDirectoryURL = pathManager.getPath(for: .minecraftRoot)
 
     // Setup pipes for output
     let outputPipe = Pipe()

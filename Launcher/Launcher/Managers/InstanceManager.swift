@@ -21,7 +21,10 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
   // MARK: - Private Properties
 
   private let logger = Logger.shared
-  private let instancesDirectory: URL
+  private let pathManager: PathManager
+  private var instancesDirectory: URL {
+    pathManager.getPath(for: .instances)
+  }
   // ✅ Inject VersionManager dependency, no longer hardcoded
   private let versionManager: VersionManaging
 
@@ -29,9 +32,12 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
 
   // ✅ Changed to public initialization method, supports dependency injection
   // Provides default parameters for backward compatibility
-  init(versionManager: VersionManaging = VersionManager.shared) {
+  init(
+    versionManager: VersionManaging = VersionManager.shared,
+    pathManager: PathManager = .shared
+  ) {
     self.versionManager = versionManager
-    self.instancesDirectory = FileUtils.getInstancesDirectory()
+    self.pathManager = pathManager
 
     logger.info("InstanceManager initializing...", category: "InstanceManager")
     logger.info("Instances directory: \(instancesDirectory.path)", category: "InstanceManager")
@@ -89,7 +95,7 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
     logger.info("Deleting instance: \(instance.id)", category: "InstanceManager")
 
     // Remove instance directory (use instance.directoryName)
-    let instanceDir = instancesDirectory.appendingPathComponent(instance.directoryName)
+    let instanceDir = pathManager.getInstancePath(instanceId: instance.directoryName)
     if FileManager.default.fileExists(atPath: instanceDir.path) {
       try FileManager.default.removeItem(at: instanceDir)
     }
@@ -108,7 +114,7 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
   /// Get instance directory
   func getInstanceDirectory(for instance: Instance) -> URL {
     // Instance directory uses directoryName (format: "versionId-shortId")
-    return instancesDirectory.appendingPathComponent(instance.directoryName)
+    return pathManager.getInstancePath(instanceId: instance.directoryName)
   }
 
   /// Refresh instances list
@@ -166,8 +172,8 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
 
   /// Save instance to disk
   private func saveInstance(_ instance: Instance) throws {
-    let instanceDir = instancesDirectory.appendingPathComponent(instance.id)
-    try FileUtils.ensureDirectoryExists(at: instanceDir)
+    let instanceDir = pathManager.getInstancePath(instanceId: instance.directoryName)
+    try pathManager.ensureDirectoryExists(at: instanceDir)
 
     let instanceFile = instanceDir.appendingPathComponent("instance.json")
     let encoder = JSONEncoder()
@@ -181,19 +187,32 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
   /// Save instance with MMC format
   private func saveInstanceMMCFormat(_ instance: Instance, modLoader: String?) throws {
     // Use instance.directoryName (format: "versionId-shortId")
-    let instanceDir = instancesDirectory.appendingPathComponent(instance.directoryName)
-    try FileUtils.ensureDirectoryExists(at: instanceDir)
+    let instanceId = instance.directoryName
+    let instanceDir = pathManager.getInstancePath(instanceId: instanceId)
 
-    // Create minecraft subdirectories
-    let minecraftDir = instanceDir.appendingPathComponent("minecraft")
-    try FileUtils.ensureDirectoryExists(at: minecraftDir)
-
-    let subdirectories = [
-      "mods", "saves", "resourcepacks", "screenshots", "shaderpacks", "texturepacks", "coremods",
+    // Create all standard directories via PathManager to keep names consistent
+    let subdirectories: [PathType] = [
+      .instanceMinecraft,
+      .instanceMods,
+      .instanceSaves,
+      .instanceResourcePacks,
+      .instanceShaderPacks,
+      .instanceScreenshots,
+      .instanceCrashReports,
+      .instanceConfig,
     ]
+
     for subdir in subdirectories {
-      let subdirPath = minecraftDir.appendingPathComponent(subdir)
-      try FileUtils.ensureDirectoryExists(at: subdirPath)
+      let subdirPath = pathManager.getInstancePath(instanceId: instanceId, subPath: subdir)
+      try pathManager.ensureDirectoryExists(at: subdirPath)
+    }
+
+    // Legacy/extra directories not covered by PathType
+    let minecraftDir = pathManager.getInstancePath(instanceId: instanceId, subPath: .instanceMinecraft)
+    let extraDirs = ["texturepacks", "coremods"]
+    for extra in extraDirs {
+      let extraPath = minecraftDir.appendingPathComponent(extra)
+      try pathManager.ensureDirectoryExists(at: extraPath)
     }
 
     // Create instance.cfg

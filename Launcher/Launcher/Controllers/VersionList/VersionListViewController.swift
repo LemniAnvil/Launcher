@@ -621,7 +621,7 @@ class VersionListViewController: NSViewController {
 
     Task {
       do {
-        let tempDir = FileUtils.getTemporaryDirectory()
+        let tempDir = PathManager.shared.getPath(for: .temp)
         let destination = tempDir.appendingPathComponent("test_manifest.json")
 
         logMessage(Localized.LogMessages.startingDownloadManifest)

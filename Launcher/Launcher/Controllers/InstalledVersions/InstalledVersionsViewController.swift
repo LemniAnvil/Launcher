@@ -316,7 +316,7 @@ class InstalledVersionsViewController: NSViewController {
     }
 
     let versionId = installedVersions[tableView.clickedRow]
-    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(versionId)
+    let versionDir = PathManager.shared.getVersionPath(versionId)
 
     NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: versionDir.path)
   }
@@ -346,7 +346,7 @@ class InstalledVersionsViewController: NSViewController {
   }
 
   private func performDelete(versionId: String) {
-    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(versionId)
+    let versionDir = PathManager.shared.getVersionPath(versionId)
 
     do {
       try FileManager.default.removeItem(at: versionDir)

@@ -126,18 +126,8 @@ class Logger {
   /// Save log to file
   func saveToFile() throws {
     let fileManager = FileManager.default
-    let logsDirectory = try fileManager.url(
-      for: .applicationSupportDirectory,
-      in: .userDomainMask,
-      appropriateFor: nil,
-      create: true
-    )
-    .appendingPathComponent("Launcher/logs", isDirectory: true)
-
-    try fileManager.createDirectory(
-      at: logsDirectory,
-      withIntermediateDirectories: true
-    )
+    let logsDirectory = PathManager.shared.getPath(for: .logs)
+    try PathManager.shared.ensureDirectoryExists(at: logsDirectory)
 
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"

@@ -28,7 +28,10 @@ class VersionManager: VersionManaging {
   private let parser = VersionManifestParser()
   private let downloadSettingsManager = DownloadSettingsManager.shared
   private var cachedManifest: VersionManifest?
-  private let cacheURL: URL
+  private let pathManager: PathManager
+  private var cacheURL: URL {
+    pathManager.getPath(for: .cache).appendingPathComponent("version_cache.json")
+  }
 
   private var versionManifestURL: String {
     APIService.MinecraftVersion.getManifestURL(useV2: downloadSettingsManager.useV2Manifest)
@@ -50,9 +53,8 @@ class VersionManager: VersionManaging {
 
   // MARK: - Initialization
 
-  private init() {
-    let launcherDir = FileUtils.getLauncherDirectory()
-    self.cacheURL = launcherDir.appendingPathComponent("version_cache.json")
+  private init(pathManager: PathManager = .shared) {
+    self.pathManager = pathManager
 
     logger.info("VersionManager initializing...", category: "VersionManager")
     logger.info("Cache path: \(cacheURL.path)", category: "VersionManager")
@@ -191,9 +193,7 @@ class VersionManager: VersionManaging {
 
   /// Check if version is installed
   func isVersionInstalled(versionId: String) -> Bool {
-    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(
-      versionId
-    )
+    let versionDir = pathManager.getVersionPath(versionId)
     let jarFile = versionDir.appendingPathComponent("\(versionId).jar")
     let jsonFile = versionDir.appendingPathComponent("\(versionId).json")
 
@@ -203,7 +203,7 @@ class VersionManager: VersionManaging {
 
   /// Get list of installed versions
   func getInstalledVersions() -> [String] {
-    let versionsDir = FileUtils.getVersionsDirectory()
+    let versionsDir = pathManager.getPath(for: .versions)
 
     guard
       let contents = try? FileManager.default.contentsOfDirectory(
@@ -251,8 +251,8 @@ class VersionManager: VersionManaging {
     try await DownloadManager.shared.downloadAssets(assetIndexId: versionDetails.assetIndex.id)
 
     // 4. Save version JSON to disk
-    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(versionId)
-    try FileUtils.ensureDirectoryExists(at: versionDir)
+    let versionDir = pathManager.getVersionPath(versionId)
+    try pathManager.ensureDirectoryExists(at: versionDir)
 
     let versionFile = versionDir.appendingPathComponent("\(versionId).json")
     let jsonData = try JSONEncoder().encode(versionDetails)
@@ -485,10 +485,8 @@ class VersionManager: VersionManaging {
 
   /// Save version details to local
   private func saveVersionDetails(_ details: VersionDetails, versionId: String) throws {
-    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(
-      versionId
-    )
-    try FileUtils.ensureDirectoryExists(at: versionDir)
+    let versionDir = pathManager.getVersionPath(versionId)
+    try pathManager.ensureDirectoryExists(at: versionDir)
 
     let jsonFile = versionDir.appendingPathComponent("\(versionId).json")
     let encoder = JSONEncoder()
@@ -504,9 +502,7 @@ class VersionManager: VersionManaging {
 
   /// Load cached version details
   private func loadCachedVersionDetails(versionId: String) -> VersionDetails? {
-    let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(
-      versionId
-    )
+    let versionDir = pathManager.getVersionPath(versionId)
     let jsonFile = versionDir.appendingPathComponent("\(versionId).json")
 
     guard FileManager.default.fileExists(atPath: jsonFile.path),

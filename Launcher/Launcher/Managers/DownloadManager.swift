@@ -24,6 +24,7 @@ class DownloadManager: NSObject, ObservableObject {
 
   private let logger = Logger.shared
   private let downloadSettingsManager = DownloadSettingsManager.shared
+  private let pathManager = PathManager.shared
   private var session: URLSession?
   private var downloadTasks: [UUID: DownloadTask] = [:]
   private var taskQueue: [DownloadQueueItem] = []
@@ -158,7 +159,7 @@ class DownloadManager: NSObject, ObservableObject {
 
     // Ensure destination directory exists before moving
     let directory = destination.deletingLastPathComponent()
-    try FileUtils.ensureDirectoryExists(at: directory)
+    try pathManager.ensureDirectoryExists(at: directory)
 
     // Move file to destination
     try FileUtils.moveFileSafely(from: tempURL, to: destination)
@@ -276,9 +277,7 @@ class DownloadManager: NSObject, ObservableObject {
 
     // 1. Download game core JAR
     if let clientDownload = versionDetails.downloads.client {
-      let versionDir = FileUtils.getVersionsDirectory().appendingPathComponent(
-        versionDetails.id
-      )
+      let versionDir = pathManager.getVersionPath(versionDetails.id)
       let jarPath = versionDir.appendingPathComponent(
         "\(versionDetails.id).jar"
       )
@@ -301,8 +300,7 @@ class DownloadManager: NSObject, ObservableObject {
     // 3. Download asset index
     let assetIndexItem = DownloadQueueItem(
       url: versionDetails.assetIndex.url,
-      destination: FileUtils.getAssetsDirectory()
-        .appendingPathComponent("indexes")
+      destination: pathManager.getPath(for: .assetIndexes)
         .appendingPathComponent("\(versionDetails.assetIndex.id).json"),
       size: versionDetails.assetIndex.size,
       sha1: versionDetails.assetIndex.sha1,
@@ -314,8 +312,7 @@ class DownloadManager: NSObject, ObservableObject {
     if let logging = versionDetails.logging?.client {
       let loggingItem = DownloadQueueItem(
         url: logging.file.url,
-        destination: FileUtils.getAssetsDirectory()
-          .appendingPathComponent("log_configs")
+        destination: pathManager.getPath(for: .logConfigs)
           .appendingPathComponent(logging.file.id),
         size: logging.file.size,
         sha1: logging.file.sha1,
@@ -344,8 +341,7 @@ class DownloadManager: NSObject, ObservableObject {
     )
 
     // Read asset index file
-    let indexPath = FileUtils.getAssetsDirectory()
-      .appendingPathComponent("indexes")
+    let indexPath = pathManager.getPath(for: .assetIndexes)
       .appendingPathComponent("\(assetIndexId).json")
 
     guard FileManager.default.fileExists(atPath: indexPath.path) else {
@@ -361,9 +357,7 @@ class DownloadManager: NSObject, ObservableObject {
     )
 
     // Create download tasks
-    let objectsDir = FileUtils.getAssetsDirectory().appendingPathComponent(
-      "objects"
-    )
+    let objectsDir = pathManager.getPath(for: .assetObjects)
     var downloadItems: [DownloadQueueItem] = []
 
     for (_, object) in assetIndex.objects {
@@ -414,7 +408,7 @@ class DownloadManager: NSObject, ObservableObject {
     )
 
     for directory in directories {
-      try FileUtils.ensureDirectoryExists(at: directory)
+      try pathManager.ensureDirectoryExists(at: directory)
     }
   }
 
@@ -462,7 +456,7 @@ class DownloadManager: NSObject, ObservableObject {
   /// Get library file download items
   private func getLibraryDownloadItems(from libraries: [Library]) -> [DownloadQueueItem] {
     var items: [DownloadQueueItem] = []
-    let librariesDir = FileUtils.getLibrariesDirectory()
+    let librariesDir = pathManager.getPath(for: .libraries)
 
     for library in libraries {
       // Check if library is applicable to current system

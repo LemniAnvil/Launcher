@@ -9,93 +9,43 @@ import CryptoKit
 import Foundation
 
 /// File utility enum
+/// Note: Path-related functions now delegate to PathManager for better maintainability
 enum FileUtils {
 
   /// Get Minecraft directory
+  /// - Note: This function delegates to PathManager. Consider using PathManager.shared directly.
   static func getMinecraftDirectory() -> URL {
-    let fileManager = FileManager.default
-    let homeDir = fileManager.homeDirectoryForCurrentUser
-    let minecraftDir = homeDir.appendingPathComponent(".minecraft")
-
-    // Ensure directory exists
-    try? fileManager.createDirectory(
-      at: minecraftDir,
-      withIntermediateDirectories: true
-    )
-
-    return minecraftDir
+    PathManager.shared.getPath(for: .minecraftRoot)
   }
 
   /// Get launcher data directory
+  /// - Note: This function delegates to PathManager. Consider using PathManager.shared directly.
   static func getLauncherDirectory() -> URL {
-    let fileManager = FileManager.default
-    // swiftlint:disable:next force_try
-    let appSupport = try! fileManager.url(
-      for: .applicationSupportDirectory,
-      in: .userDomainMask,
-      appropriateFor: nil,
-      create: true
-    )
-    let launcherDir = appSupport.appendingPathComponent("Launcher")
-
-    try? fileManager.createDirectory(
-      at: launcherDir,
-      withIntermediateDirectories: true
-    )
-
-    return launcherDir
+    PathManager.shared.getPath(for: .launcherRoot)
   }
 
   /// Get versions directory
+  /// - Note: This function delegates to PathManager. Consider using PathManager.shared directly.
   static func getVersionsDirectory() -> URL {
-    let minecraftDir = getMinecraftDirectory()
-    let versionsDir = minecraftDir.appendingPathComponent("versions")
-
-    try? FileManager.default.createDirectory(
-      at: versionsDir,
-      withIntermediateDirectories: true
-    )
-
-    return versionsDir
+    PathManager.shared.getPath(for: .versions)
   }
 
   /// Get instances directory
+  /// - Note: This function delegates to PathManager. Consider using PathManager.shared directly.
   static func getInstancesDirectory() -> URL {
-    let launcherDir = getLauncherDirectory()
-    let instancesDir = launcherDir.appendingPathComponent("instances")
-
-    try? FileManager.default.createDirectory(
-      at: instancesDir,
-      withIntermediateDirectories: true
-    )
-
-    return instancesDir
+    PathManager.shared.getPath(for: .instances)
   }
 
   /// Get libraries directory
+  /// - Note: This function delegates to PathManager. Consider using PathManager.shared directly.
   static func getLibrariesDirectory() -> URL {
-    let minecraftDir = getMinecraftDirectory()
-    let librariesDir = minecraftDir.appendingPathComponent("libraries")
-
-    try? FileManager.default.createDirectory(
-      at: librariesDir,
-      withIntermediateDirectories: true
-    )
-
-    return librariesDir
+    PathManager.shared.getPath(for: .libraries)
   }
 
   /// Get assets directory
+  /// - Note: This function delegates to PathManager. Consider using PathManager.shared directly.
   static func getAssetsDirectory() -> URL {
-    let minecraftDir = getMinecraftDirectory()
-    let assetsDir = minecraftDir.appendingPathComponent("assets")
-
-    try? FileManager.default.createDirectory(
-      at: assetsDir,
-      withIntermediateDirectories: true
-    )
-
-    return assetsDir
+    PathManager.shared.getPath(for: .assets)
   }
 
   /// Calculate SHA1 hash of file
@@ -175,16 +125,9 @@ enum FileUtils {
   }
 
   /// Get temporary directory
+  /// - Note: This function delegates to PathManager. Consider using PathManager.shared directly.
   static func getTemporaryDirectory() -> URL {
-    let tempDir = FileManager.default.temporaryDirectory
-    let launcherTempDir = tempDir.appendingPathComponent("Launcher")
-
-    try? FileManager.default.createDirectory(
-      at: launcherTempDir,
-      withIntermediateDirectories: true
-    )
-
-    return launcherTempDir
+    PathManager.shared.getPath(for: .temp)
   }
 }
 
