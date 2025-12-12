@@ -40,6 +40,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     return true
   }
 
+  func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+    return true
+  }
+
   func application(
     _ application: NSApplication,
     open urls: [URL]
