@@ -78,6 +78,11 @@ extension Localized {
       String(localized: "Unable to copy instance \"\(name)\": \(error)", comment: "[Alert] Copy instance failed message.")
     }
 
+    static let openSkinLibraryButton = String(
+      localized: "Open Skin Library",
+      comment: "[Button] Open skin library window."
+    )
+
     // Sidebar Actions
     static let sidebarLaunch = String(localized: "Launch (L)", comment: "[Button] Launch selected instance from sidebar.")
     static let sidebarKill = String(localized: "Kill Process (K)", comment: "[Button] Kill running instance from sidebar.")

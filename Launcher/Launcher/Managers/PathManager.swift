@@ -24,6 +24,8 @@ enum PathType: String, CaseIterable {
   case logs = "logs"
   case cache = "cache"
   case temp = "temp"
+  case skins = "skins"
+  case capes = "capes"
 
   // Java paths
   case javaInstallations = "java_installations"
@@ -52,6 +54,8 @@ enum PathType: String, CaseIterable {
     case .logs: return "Launcher logs"
     case .cache: return "Cache directory"
     case .temp: return "Temporary files"
+    case .skins: return "User skins"
+    case .capes: return "User capes"
     case .javaInstallations: return "Java installations"
     case .instanceMinecraft: return "Instance Minecraft directory"
     case .instanceMods: return "Instance mods"
@@ -412,6 +416,11 @@ final class PathManager {
 
     case .temp:
       return fileManager.temporaryDirectory.appendingPathComponent("Launcher")
+
+    case .skins:
+      return resolvePath(for: .launcherRoot).appendingPathComponent("Skins")
+    case .capes:
+      return resolvePath(for: .skins).appendingPathComponent("Capes")
 
     // Java paths
     case .javaInstallations:

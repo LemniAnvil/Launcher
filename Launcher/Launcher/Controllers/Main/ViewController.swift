@@ -18,6 +18,7 @@ class ViewController: NSViewController {
   private var instanceDetailWindowController: InstanceDetailWindowController?
   private var microsoftAuthWindowController: MicrosoftAuthWindowController?
   private var installedVersionsWindowController: InstalledVersionsWindowController?
+  private var skinLibraryWindowController: NSWindowController?
   private var windowObserver: NSObjectProtocol?
   private var instanceDetailWindowObserver: NSObjectProtocol?
   private var microsoftAuthWindowObserver: NSObjectProtocol?
@@ -133,6 +134,23 @@ class ViewController: NSViewController {
     )
     button.target = self
     button.action = #selector(openAddInstanceWindow)
+    return button
+  }()
+
+  private lazy var skinLibraryButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "paintpalette.fill",
+      cornerRadius: 6,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemPink,
+      accessibilityLabel: Localized.Instances.openSkinLibraryButton
+    )
+    button.target = self
+    button.action = #selector(openSkinLibraryWindow)
     return button
   }()
 
@@ -269,6 +287,7 @@ class ViewController: NSViewController {
     // Add buttons last so they're on top
     view.addSubview(addInstanceButton)
     view.addSubview(refreshButton)
+    view.addSubview(skinLibraryButton)
     view.addSubview(javaDetectionButton)
     view.addSubview(accountButton)
     view.addSubview(settingsButton)
@@ -338,9 +357,15 @@ class ViewController: NSViewController {
       make.width.height.equalTo(36)
     }
 
-    refreshButton.snp.makeConstraints { make in
+    skinLibraryButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalTo(installedVersionsButton.snp.left).offset(-8)
+      make.width.height.equalTo(36)
+    }
+
+    refreshButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalTo(skinLibraryButton.snp.left).offset(-8)
       make.width.height.equalTo(36)
     }
 
@@ -567,6 +592,37 @@ extension ViewController {
         NotificationCenter.default.removeObserver(observer)
         self?.installedVersionsWindowObserver = nil
       }
+    }
+  }
+
+  @objc private func openSkinLibraryWindow() {
+    if let existing = skinLibraryWindowController {
+      existing.showWindow(nil)
+      existing.window?.makeKeyAndOrderFront(nil)
+      return
+    }
+
+    let contentVC = SkinLibraryCollectionViewController()
+    let window = NSWindow(
+      contentRect: NSRect(x: 0, y: 0, width: 840, height: 720),
+      styleMask: [.titled, .closable, .resizable],
+      backing: .buffered,
+      defer: false
+    )
+    window.contentViewController = contentVC
+    window.title = Localized.Instances.openSkinLibraryButton
+
+    let controller = NSWindowController(window: window)
+    skinLibraryWindowController = controller
+    controller.showWindow(nil)
+    controller.window?.center()
+
+    NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification,
+      object: controller.window,
+      queue: .main
+    ) { [weak self] _ in
+      self?.skinLibraryWindowController = nil
     }
   }
 

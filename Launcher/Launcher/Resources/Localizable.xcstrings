@@ -111,6 +111,9 @@
         }
       }
     },
+    "%@ (Copy)" : {
+      "comment" : "[Text] Copied instance name suffix."
+    },
     "%lld installed versions" : {
       "comment" : "[Text] Multiple installed versions count.",
       "localizations" : {
@@ -1471,6 +1474,9 @@
         }
       }
     },
+    "Change Group (C)" : {
+      "comment" : "[Button] Change instance group from sidebar."
+    },
     "Clear Default Account" : {
       "comment" : "[Menu] Clear default account.",
       "localizations" : {
@@ -1581,6 +1587,12 @@
         }
       }
     },
+    "Copy (Y)" : {
+      "comment" : "[Button] Copy instance from sidebar."
+    },
+    "Copy Failed" : {
+      "comment" : "[Alert] Copy instance failed title."
+    },
     "Create" : {
       "comment" : "[Button] Create button.",
       "localizations" : {
@@ -1602,6 +1614,9 @@
           }
         }
       }
+    },
+    "Create Shortcut (S)" : {
+      "comment" : "[Button] Create shortcut for instance from sidebar."
     },
     "Created:" : {
       "comment" : "[Label] Created date label.",
@@ -1701,6 +1716,9 @@
           }
         }
       }
+    },
+    "Delete (T)" : {
+      "comment" : "[Button] Delete instance from sidebar."
     },
     "Delete Account" : {
       "comment" : "[Menu] Delete account.",
@@ -2049,6 +2067,9 @@
         }
       }
     },
+    "Edit (E)" : {
+      "comment" : "[Button] Edit selected instance from sidebar."
+    },
     "Enable Proxy" : {
       "comment" : "[Checkbox] Enable proxy checkbox.",
       "localizations" : {
@@ -2114,6 +2135,9 @@
           }
         }
       }
+    },
+    "Export (X)" : {
+      "comment" : "[Button] Export instance from sidebar."
     },
     "Extracting native libraries..." : {
       "comment" : "[Status] Extracting native libraries.",
@@ -2506,6 +2530,9 @@
         }
       }
     },
+    "Instance \"%@\" has been copied successfully." : {
+      "comment" : "[Notification] Copy instance success message."
+    },
     "Instance \"%@\" has been deleted" : {
       "comment" : "[Notification] Delete success message.",
       "localizations" : {
@@ -2544,6 +2571,9 @@
           }
         }
       }
+    },
+    "Instance Copied" : {
+      "comment" : "[Notification] Copy instance success title."
     },
     "Instance created successfully: %@" : {
       "comment" : "[Log] Instance created successfully.",
@@ -2765,6 +2795,9 @@
         }
       }
     },
+    "Kill Process (K)" : {
+      "comment" : "[Button] Kill running instance from sidebar."
+    },
     "Last Updated" : {
       "comment" : "[Sort] Last Updated sort option.",
       "localizations" : {
@@ -2786,6 +2819,9 @@
           }
         }
       }
+    },
+    "Launch (L)" : {
+      "comment" : "[Button] Launch selected instance from sidebar."
     },
     "Launch Failed" : {
       "comment" : "[Alert] Launch failed title.",
@@ -3359,6 +3395,12 @@
         }
       }
     },
+    "Open Instance Folder (F)" : {
+      "comment" : "[Button] Open instance folder from sidebar."
+    },
+    "Open Skin Library" : {
+      "comment" : "[Button] Open skin library window."
+    },
     "Open Version List" : {
       "comment" : "[Button] Open version list window.",
       "localizations" : {
@@ -3860,6 +3902,9 @@
         }
       }
     },
+    "Select an instance to view details" : {
+      "comment" : "[Text] Empty state for sidebar when no instance is selected."
+    },
     "Set as Default Account" : {
       "comment" : "[Menu] Set as default account.",
       "localizations" : {
@@ -4126,6 +4171,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "类型："
+          }
+        }
+      }
+    },
+    "Unable to copy instance \"%@\": %@" : {
+      "comment" : "[Alert] Copy instance failed message.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unable to copy instance \"%1$@\": %2$@"
           }
         }
       }
