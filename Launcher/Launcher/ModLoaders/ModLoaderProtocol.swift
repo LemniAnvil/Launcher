@@ -40,13 +40,31 @@ protocol ModLoaderProtocol {
 
 /// Mod loader manager that provides access to all available mod loaders
 class ModLoaderManager {
+    /// Default singleton using built-in ModLoader implementations
     static let shared = ModLoaderManager()
 
     private let modLoaders: [ModLoaderProtocol]
 
-    private init() {
-        // Initialize all available mod loaders
-        modLoaders = [
+    /// Creates a ModLoaderManager instance
+    /// - Parameter modLoaders: Optional array of ModLoaders for dependency injection.
+    ///                         If nil, uses the default built-in implementations.
+    ///                         Pass a custom array for unit testing.
+    /// - Example:
+    ///   ```swift
+    ///   // Production - use singleton
+    ///   let manager = ModLoaderManager.shared
+    ///
+    ///   // Unit testing - inject mock
+    ///   let mockLoader = MockModLoader()
+    ///   let testManager = ModLoaderManager(modLoaders: [mockLoader])
+    ///   ```
+    init(modLoaders: [ModLoaderProtocol]? = nil) {
+        self.modLoaders = modLoaders ?? Self.createDefaultModLoaders()
+    }
+
+    /// Creates the default list of ModLoader implementations
+    private static func createDefaultModLoaders() -> [ModLoaderProtocol] {
+        return [
             FabricModLoader(),
             ForgeModLoader(),
             NeoForgeModLoader(),
@@ -59,6 +77,11 @@ class ModLoaderManager {
         return modLoaders.map { $0.getId() }
     }
 
+    /// Returns a list of all available mod loaders
+    func getAllModLoaders() -> [ModLoaderProtocol] {
+        return modLoaders
+    }
+
     /// Returns the mod loader with the given ID
     /// - Parameter id: The mod loader ID
     /// - Throws: An error if the mod loader is not found
@@ -67,6 +90,13 @@ class ModLoaderManager {
             throw ModLoaderError.notFound(id)
         }
         return loader
+    }
+
+    /// Check if a mod loader with the given ID exists
+    /// - Parameter id: The mod loader ID
+    /// - Returns: true if the mod loader exists
+    func hasModLoader(id: String) -> Bool {
+        return modLoaders.contains { $0.getId() == id }
     }
 }
 
