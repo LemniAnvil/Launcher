@@ -103,35 +103,11 @@ class JavaManager {
 
   /// Check system Java installation
   private func checkSystemJava() async -> JavaInstallation? {
-    let process = Process()
-    process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-    process.arguments = ["java", "-version"]
-
-    let pipe = Pipe()
-    process.standardError = pipe
-    process.standardOutput = pipe
-
-    do {
-      try process.run()
-      process.waitUntilExit()
-
-      let data = pipe.fileHandleForReading.readDataToEndOfFile()
-      if let output = String(data: data, encoding: .utf8) {
-        if let version = parseJavaVersion(from: output) {
-          let type = detectJavaType(from: output)
-          return JavaInstallation(
-            path: "/usr/bin/java",
-            version: version,
-            type: type,
-            isValid: true
-          )
-        }
-      }
-    } catch {
-      logger.error("Failed to check system Java: \(error.localizedDescription)")
-    }
-
-    return nil
+    return await runJavaVersionCheck(
+      executablePath: "/usr/bin/env",
+      arguments: ["java", "-version"],
+      javaPath: "/usr/bin/java"
+    )
   }
 
   /// Check Java installations in /Library/Java/JavaVirtualMachines
@@ -188,35 +164,71 @@ class JavaManager {
       return nil
     }
 
-    let process = Process()
-    process.executableURL = URL(fileURLWithPath: javaBinary)
-    process.arguments = ["-version"]
+    return await runJavaVersionCheck(
+      executablePath: javaBinary,
+      arguments: ["-version"],
+      javaPath: path
+    )
+  }
 
-    let pipe = Pipe()
-    process.standardError = pipe
-    process.standardOutput = pipe
+  // MARK: - Process Execution
 
-    do {
-      try process.run()
-      process.waitUntilExit()
+  /// Asynchronously execute Java version check to avoid blocking the main thread
+  /// - Parameters:
+  ///   - executablePath: Path to Java executable
+  ///   - arguments: Command line arguments
+  ///   - javaPath: Java path to use in the returned result
+  /// - Returns: JavaInstallation or nil
+  private func runJavaVersionCheck(
+    executablePath: String,
+    arguments: [String],
+    javaPath: String
+  ) async -> JavaInstallation? {
+    await withCheckedContinuation { continuation in
+      DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        guard let self = self else {
+          continuation.resume(returning: nil)
+          return
+        }
 
-      let data = pipe.fileHandleForReading.readDataToEndOfFile()
-      if let output = String(data: data, encoding: .utf8) {
-        let version = parseJavaVersion(from: output) ?? "Unknown"
-        let type = detectJavaType(from: output)
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: executablePath)
+        process.arguments = arguments
 
-        return JavaInstallation(
-          path: path,
-          version: version,
-          type: type,
-          isValid: process.terminationStatus == 0
-        )
+        let pipe = Pipe()
+        process.standardError = pipe
+        process.standardOutput = pipe
+
+        do {
+          try process.run()
+
+          // Use terminationHandler to avoid blocking
+          process.terminationHandler = { [weak self] terminatedProcess in
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+
+            guard let output = String(data: data, encoding: .utf8) else {
+              continuation.resume(returning: nil)
+              return
+            }
+
+            let version = self?.parseJavaVersion(from: output) ?? "Unknown"
+            let type = self?.detectJavaType(from: output) ?? .unknown
+
+            let installation = JavaInstallation(
+              path: javaPath,
+              version: version,
+              type: type,
+              isValid: terminatedProcess.terminationStatus == 0
+            )
+
+            continuation.resume(returning: installation)
+          }
+        } catch {
+          self.logger.error("Failed to check Java at \(javaPath): \(error.localizedDescription)")
+          continuation.resume(returning: nil)
+        }
       }
-    } catch {
-      logger.error("Failed to check Java at \(path): \(error.localizedDescription)")
     }
-
-    return nil
   }
 
   // MARK: - Version Parsing

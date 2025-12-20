@@ -340,38 +340,71 @@ class GameLauncher: GameLaunching {  // ✅ Conforms to protocol
     return true
   }
 
-  /// Replace variables in argument string
+  /// Replace variables in argument string using dictionary mapping for efficiency
   private func replaceVariables(
     in argument: String,
     config: LaunchConfig,
     versionDetails: VersionDetails
   ) -> String {
+    // Early exit if no variables to replace
+    guard argument.contains("${") else {
+      return argument
+    }
+
     let minecraftDir = pathManager.getPath(for: .minecraftRoot)
     let assetsDir = pathManager.getPath(for: .assets)
     let nativesDir = getNativesDirectory(versionId: config.versionId)
 
-    var result = argument
-    result = result.replacingOccurrences(of: "${auth_player_name}", with: config.username)
-    result = result.replacingOccurrences(of: "${version_name}", with: config.versionId)
-    result = result.replacingOccurrences(of: "${game_directory}", with: minecraftDir.path)
-    result = result.replacingOccurrences(of: "${assets_root}", with: assetsDir.path)
-    result = result.replacingOccurrences(of: "${assets_index_name}", with: versionDetails.assetIndex.id)
-    result = result.replacingOccurrences(of: "${auth_uuid}", with: config.uuid)
-    result = result.replacingOccurrences(of: "${auth_access_token}", with: config.accessToken)
-    result = result.replacingOccurrences(of: "${user_type}", with: "legacy")
-    result = result.replacingOccurrences(of: "${user_properties}", with: "{}")
-    result = result.replacingOccurrences(of: "${version_type}", with: versionDetails.type)
-    result = result.replacingOccurrences(of: "${resolution_width}", with: "\(config.windowWidth)")
-    result = result.replacingOccurrences(of: "${resolution_height}", with: "\(config.windowHeight)")
-    result = result.replacingOccurrences(of: "${game_assets}", with: assetsDir.path)
-    result = result.replacingOccurrences(of: "${natives_directory}", with: nativesDir.path)
-    result = result.replacingOccurrences(of: "${launcher_name}", with: "Launcher")
-    result = result.replacingOccurrences(of: "${launcher_version}", with: "1.0")
-    result = result.replacingOccurrences(of: "${classpath}", with: "")
+    // Build variable mapping dictionary
+    let variableMapping: [String: String] = [
+      "${auth_player_name}": config.username,
+      "${version_name}": config.versionId,
+      "${game_directory}": minecraftDir.path,
+      "${assets_root}": assetsDir.path,
+      "${assets_index_name}": versionDetails.assetIndex.id,
+      "${auth_uuid}": config.uuid,
+      "${auth_access_token}": config.accessToken,
+      "${user_type}": "legacy",
+      "${user_properties}": "{}",
+      "${version_type}": versionDetails.type,
+      "${resolution_width}": "\(config.windowWidth)",
+      "${resolution_height}": "\(config.windowHeight)",
+      "${game_assets}": assetsDir.path,
+      "${natives_directory}": nativesDir.path,
+      "${launcher_name}": "Launcher",
+      "${launcher_version}": "1.0",
+      "${classpath}": "",
+      // Client ID for Microsoft authentication (optional, use placeholder)
+      "${clientid}": "",
+      "${auth_xuid}": "",
+    ]
 
-    // Client ID for Microsoft authentication (optional, use placeholder)
-    result = result.replacingOccurrences(of: "${clientid}", with: "")
-    result = result.replacingOccurrences(of: "${auth_xuid}", with: "")
+    return replaceVariablesWithMapping(in: argument, mapping: variableMapping)
+  }
+
+  /// Perform variable replacement using regex for efficient single-pass substitution
+  private func replaceVariablesWithMapping(in argument: String, mapping: [String: String]) -> String {
+    // Use regex to find all ${...} patterns and replace in a single pass
+    let pattern = "\\$\\{[^}]+\\}"
+
+    guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+      return argument
+    }
+
+    let range = NSRange(argument.startIndex..., in: argument)
+    var result = argument
+
+    // Find all matches in reverse order to preserve indices during replacement
+    let matches = regex.matches(in: argument, options: [], range: range).reversed()
+
+    for match in matches {
+      guard let swiftRange = Range(match.range, in: result) else { continue }
+      let variable = String(result[swiftRange])
+
+      if let replacement = mapping[variable] {
+        result.replaceSubrange(swiftRange, with: replacement)
+      }
+    }
 
     return result
   }
