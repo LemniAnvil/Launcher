@@ -231,6 +231,29 @@ struct MMCPack: Codable {
     var uid: String
     var version: String
 
+    enum CodingKeys: String, CodingKey {
+      case cachedName
+      case cachedRequires
+      case cachedVersion
+      case cachedVolatile
+      case dependencyOnly
+      case important
+      case uid
+      case version
+    }
+
+    init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      cachedName = try container.decode(String.self, forKey: .cachedName)
+      cachedRequires = try container.decodeIfPresent([MMCRequirement].self, forKey: .cachedRequires)
+      cachedVersion = try container.decode(String.self, forKey: .cachedVersion)
+      cachedVolatile = try container.decodeIfPresent(Bool.self, forKey: .cachedVolatile) ?? false
+      dependencyOnly = try container.decodeIfPresent(Bool.self, forKey: .dependencyOnly) ?? false
+      important = try container.decodeIfPresent(Bool.self, forKey: .important) ?? false
+      uid = try container.decode(String.self, forKey: .uid)
+      version = try container.decode(String.self, forKey: .version)
+    }
+
     init(
       uid: String,
       version: String,
