@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Skin Model
 
-struct Skin: Codable {
+struct SkinResponse: Codable {
   let id: String
   let state: String
   let url: String
@@ -42,19 +42,17 @@ struct MicrosoftAccount: Codable {
   let accessToken: String     // Minecraft access token
   let refreshToken: String    // Refresh token
   let timestamp: TimeInterval // Save timestamp
-  let skins: [Skin]?          // Player skins
+  let skins: [SkinResponse]?  // Player skins
   let capes: [Cape]?          // Player capes
 
   var isExpired: Bool {
     // Access tokens typically expire after 24 hours
-    let expirationTime: TimeInterval = 24 * 60 * 60 // 24 hours
-    return Date().timeIntervalSince1970 - timestamp > expirationTime
+    return Date().timeIntervalSince1970 - timestamp > AppConstants.Auth.tokenExpirationSeconds
   }
 
   var expirationDate: Date {
     // Token expires 24 hours after timestamp
-    let expirationTime: TimeInterval = 24 * 60 * 60 // 24 hours
-    return Date(timeIntervalSince1970: timestamp + expirationTime)
+    return Date(timeIntervalSince1970: timestamp + AppConstants.Auth.tokenExpirationSeconds)
   }
 
   var displayName: String {
@@ -65,7 +63,7 @@ struct MicrosoftAccount: Codable {
     return String(id.prefix(8))
   }
 
-  var activeSkin: Skin? {
+  var activeSkin: SkinResponse? {
     return skins?.first { $0.isActive }
   }
 
@@ -109,9 +107,9 @@ class MicrosoftAccountManager {
          let timestamp = accountData["timestamp"] as? TimeInterval {
 
         // Load skins if available
-        var skins: [Skin]?
+        var skins: [SkinResponse]?
         if let skinsData = accountData["skins"] as? Data {
-          skins = try? JSONDecoder().decode([Skin].self, from: skinsData)
+          skins = try? JSONDecoder().decode([SkinResponse].self, from: skinsData)
         }
 
         // Load capes if available
@@ -185,7 +183,7 @@ class MicrosoftAccountManager {
     name: String,
     accessToken: String,
     refreshToken: String,
-    skins: [Skin]?,
+    skins: [SkinResponse]?,
     capes: [Cape]?
   ) {
     var accountsDict = UserDefaults.standard.dictionary(forKey: accountsKey) ?? [:]

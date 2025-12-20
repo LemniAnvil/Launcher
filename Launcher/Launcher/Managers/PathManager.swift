@@ -336,7 +336,7 @@ final class PathManager {
   /// Clean cache files older than specified days
   func cleanOldCache(olderThanDays days: Int) throws {
     let cacheDir = getPath(for: .cache)
-    let cutoffDate = Date().addingTimeInterval(-Double(days) * 24 * 3600)
+    let cutoffDate = Date().addingTimeInterval(-Double(days) * AppConstants.Cache.secondsPerDay)
 
     guard let enumerator = fileManager.enumerator(
       at: cacheDir,

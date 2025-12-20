@@ -110,8 +110,8 @@ extension AccountViewController {
       Logger.shared.info("Login successful: \(loginResponse.name)", category: "MicrosoftAuth")
 
       // Convert skin and cape data from response
-      let skins = loginResponse.skins?.compactMap { responseSkin -> Skin in
-        Skin(
+      let skins = loginResponse.skins?.compactMap { responseSkin -> SkinResponse in
+        SkinResponse(
           id: responseSkin.id,
           state: responseSkin.state,
           url: responseSkin.url,
@@ -414,8 +414,8 @@ extension AccountViewController {
         }
 
         // Convert skin and cape data from response
-        let skins = response.skins?.compactMap { responseSkin -> Skin in
-          Skin(
+        let skins = response.skins?.compactMap { responseSkin -> SkinResponse in
+          SkinResponse(
             id: responseSkin.id,
             state: responseSkin.state,
             url: responseSkin.url,

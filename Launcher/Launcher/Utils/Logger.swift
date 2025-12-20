@@ -17,7 +17,7 @@ class Logger {
     category: "general"
   )
   private var logHistory: [LogEntry] = []
-  private let maxHistoryCount = 1000
+  private let maxHistoryCount = AppConstants.Logging.maxHistoryCount
   private let logQueue = DispatchQueue(
     label: "com.launcher.logger",
     qos: .utility
