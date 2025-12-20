@@ -37,18 +37,9 @@ class VersionManager: VersionManaging {
     APIService.MinecraftVersion.getManifestURL(useV2: downloadSettingsManager.useV2Manifest)
   }
 
-  // URLSession with proxy support
+  // URLSession with proxy support (uses factory for consistent configuration)
   private var urlSession: URLSession {
-    let config = URLSessionConfiguration.default
-    config.timeoutIntervalForRequest = 30
-    config.timeoutIntervalForResource = 300
-
-    // Apply proxy configuration if enabled
-    if let proxyDict = ProxyManager.shared.getProxyConfigurationForBoth() {
-      config.connectionProxyDictionary = proxyDict
-    }
-
-    return URLSession(configuration: config)
+    URLSessionFactory.createSession()
   }
 
   // MARK: - Initialization

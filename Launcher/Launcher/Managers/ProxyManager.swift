@@ -140,14 +140,10 @@ class ProxyManager {
       throw ProxyError.invalidConfiguration
     }
 
-    let config = URLSessionConfiguration.default
-    config.timeoutIntervalForRequest = 10
-
-    if let proxyDict = getProxyConfiguration() {
-      config.connectionProxyDictionary = proxyDict
-    }
-
-    let session = URLSession(configuration: config)
+    // Use factory with custom timeout for proxy testing
+    let session = URLSessionFactory.createSession(
+      requestTimeout: AppConstants.Network.proxyTestTimeout
+    )
 
     guard let testURL = URL(string: APIService.MinecraftVersion.manifestOfficial) else {
       throw ProxyError.invalidConfiguration

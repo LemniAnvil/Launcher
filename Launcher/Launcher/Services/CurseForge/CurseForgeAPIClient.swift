@@ -38,18 +38,9 @@ class CurseForgeAPIClient {
     return key
   }()
 
-  /// URLSession configuration with proxy support
+  /// URLSession configuration with proxy support (uses factory for consistent configuration)
   private var urlSession: URLSession {
-    let config = URLSessionConfiguration.default
-    config.timeoutIntervalForRequest = 30
-    config.timeoutIntervalForResource = 300
-
-    // Add proxy configuration if enabled
-    if let proxyConfig = ProxyManager.shared.getProxyConfiguration() {
-      config.connectionProxyDictionary = proxyConfig
-    }
-
-    return URLSession(configuration: config)
+    URLSessionFactory.createSession()
   }
 
   // MARK: - Initialization

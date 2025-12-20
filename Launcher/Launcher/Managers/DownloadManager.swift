@@ -60,24 +60,17 @@ class DownloadManager: NSObject, ObservableObject {
     logger.info("Download manager initialized", category: "DownloadManager")
   }
 
-  /// Configure URLSession with proxy settings
+  /// Configure URLSession with proxy settings (uses factory for consistent configuration)
   private func configureSession() {
-    let config = URLSessionConfiguration.default
+    self.session = URLSessionFactory.createDownloadSession(
+      requestTimeout: TimeInterval(downloadSettingsManager.requestTimeout),
+      resourceTimeout: TimeInterval(downloadSettingsManager.resourceTimeout),
+      maxConcurrentDownloads: maxConcurrentDownloads,
+      delegate: self,
+      delegateQueue: nil
+    )
 
-    // Timeout configuration from settings
-    config.timeoutIntervalForRequest = TimeInterval(downloadSettingsManager.requestTimeout)
-    config.timeoutIntervalForResource = TimeInterval(downloadSettingsManager.resourceTimeout)
-
-    // Connection configuration
-    config.httpMaximumConnectionsPerHost = maxConcurrentDownloads
-
-    // Cache configuration - disable for downloads to save memory
-    config.requestCachePolicy = .reloadIgnoringLocalCacheData
-    config.urlCache = nil
-
-    // Apply proxy configuration if enabled
-    if let proxyDict = ProxyManager.shared.getProxyConfigurationForBoth() {
-      config.connectionProxyDictionary = proxyDict
+    if ProxyManager.shared.proxyEnabled {
       logger.info(
         "Proxy enabled for downloads: \(ProxyManager.shared.proxyType.rawValue) \(ProxyManager.shared.proxyHost):\(ProxyManager.shared.proxyPort)",
         category: "DownloadManager"
@@ -85,12 +78,6 @@ class DownloadManager: NSObject, ObservableObject {
     } else {
       logger.debug("Proxy not configured for downloads", category: "DownloadManager")
     }
-
-    self.session = URLSession(
-      configuration: config,
-      delegate: self,
-      delegateQueue: nil
-    )
   }
 
   /// Reconfigure session with updated proxy settings
@@ -101,12 +88,19 @@ class DownloadManager: NSObject, ObservableObject {
 
   // MARK: - Public Methods
 
-  /// Download single file
+  /// Download single file with automatic retry on failure
+  /// - Parameters:
+  ///   - urlString: URL to download from
+  ///   - destination: Local destination path
+  ///   - expectedSize: Expected file size for validation
+  ///   - expectedSHA1: Optional SHA1 hash for verification
+  ///   - maxRetries: Maximum retry attempts (default from AppConstants)
   func downloadFile(
     from urlString: String,
     to destination: URL,
     expectedSize: Int,
-    expectedSHA1: String? = nil
+    expectedSHA1: String? = nil,
+    maxRetries: Int = AppConstants.Download.defaultRetryAttempts
   ) async throws {
     logger.info(
       "Starting file download: \(urlString)",
@@ -136,6 +130,57 @@ class DownloadManager: NSObject, ObservableObject {
       }
     }
 
+    // Download with retry
+    var lastError: Error?
+
+    for attempt in 0..<maxRetries {
+      do {
+        try await performDownload(
+          url: url,
+          to: destination,
+          expectedSize: expectedSize,
+          expectedSHA1: expectedSHA1
+        )
+        // Success - return immediately
+        logger.info(
+          "File download completed: \(destination.lastPathComponent)",
+          category: "DownloadManager"
+        )
+        return
+      } catch {
+        lastError = error
+
+        // Don't retry for certain errors
+        if case DownloadError.invalidURL = error { throw error }
+        if case DownloadError.downloadCancelled = error { throw error }
+
+        // Log retry attempt
+        if attempt < maxRetries - 1 {
+          let delay = calculateRetryDelay(attempt: attempt)
+          logger.warning(
+            "Download failed (attempt \(attempt + 1)/\(maxRetries)), retrying in \(String(format: "%.1f", delay))s: \(error.localizedDescription)",
+            category: "DownloadManager"
+          )
+          try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+        }
+      }
+    }
+
+    // All retries exhausted
+    logger.error(
+      "Download failed after \(maxRetries) attempts: \(urlString)",
+      category: "DownloadManager"
+    )
+    throw lastError ?? DownloadError.httpError(-1)
+  }
+
+  /// Performs the actual download operation (no retry logic)
+  private func performDownload(
+    url: URL,
+    to destination: URL,
+    expectedSize: Int,
+    expectedSHA1: String?
+  ) async throws {
     // Download file
     guard let session = session else {
       throw DownloadError.downloadCancelled
@@ -163,6 +208,35 @@ class DownloadManager: NSObject, ObservableObject {
 
     // Move file to destination
     try FileUtils.moveFileSafely(from: tempURL, to: destination)
+  }
+
+  /// Calculates retry delay using exponential backoff
+  /// - Parameter attempt: Current attempt number (0-indexed)
+  /// - Returns: Delay in seconds
+  private func calculateRetryDelay(attempt: Int) -> TimeInterval {
+    let baseDelay = AppConstants.Network.retryBaseDelay
+    let maxDelay = AppConstants.Network.retryMaxDelay
+    let delay = baseDelay * pow(2.0, Double(attempt))
+    return min(delay, maxDelay)
+  }
+
+  /// Download single file (legacy method without retry for internal use)
+  private func downloadFileDirect(
+    from urlString: String,
+    to destination: URL,
+    expectedSize: Int,
+    expectedSHA1: String? = nil
+  ) async throws {
+    guard let url = URL(string: urlString) else {
+      throw DownloadError.invalidURL(urlString)
+    }
+
+    try await performDownload(
+      url: url,
+      to: destination,
+      expectedSize: expectedSize,
+      expectedSHA1: expectedSHA1
+    )
 
     logger.info(
       "File download completed: \(destination.lastPathComponent)",
@@ -201,19 +275,21 @@ class DownloadManager: NSObject, ObservableObject {
 
     // Initialize progress
     let totalBytes = filteredItems.reduce(0) { $0 + Int64($1.size) }
+    let totalCount = filteredItems.count
+
     updateProgress(
-      total: filteredItems.count,
+      total: totalCount,
       completed: 0,
       failed: 0,
       totalBytes: totalBytes,
       downloadedBytes: 0
     )
 
+    // Use Actor to ensure thread-safe progress tracking
+    let progressTracker = DownloadProgressTracker(total: totalCount, totalBytes: totalBytes)
+
     // Use TaskGroup for concurrent downloads
     try await withThrowingTaskGroup(of: Void.self) { group in
-      var completed = 0
-      var failed = 0
-      var downloadedBytes: Int64 = 0
       var activeCount = 0
 
       for item in filteredItems {
@@ -221,7 +297,6 @@ class DownloadManager: NSObject, ObservableObject {
         while activeCount >= maxConcurrentDownloads {
           try await group.next()
           activeCount -= 1
-          completed += 1
         }
 
         group.addTask {
@@ -233,22 +308,33 @@ class DownloadManager: NSObject, ObservableObject {
               expectedSHA1: item.sha1
             )
 
+            // Thread-safe progress update
+            let progress = await progressTracker.markCompleted(bytes: Int64(item.size))
+
             await MainActor.run {
-              downloadedBytes += Int64(item.size)
               self.updateProgress(
-                total: filteredItems.count,
-                completed: completed,
-                failed: failed,
+                total: totalCount,
+                completed: progress.completed,
+                failed: progress.failed,
                 totalBytes: totalBytes,
-                downloadedBytes: downloadedBytes
+                downloadedBytes: progress.downloadedBytes
               )
             }
           } catch {
+            // Thread-safe failure marking
+            let progress = await progressTracker.markFailed()
+
             await MainActor.run {
-              failed += 1
               self.logger.error(
                 "File download failed: \(item.url) - \(error.localizedDescription)",
                 category: "DownloadManager"
+              )
+              self.updateProgress(
+                total: totalCount,
+                completed: progress.completed,
+                failed: progress.failed,
+                totalBytes: totalBytes,
+                downloadedBytes: progress.downloadedBytes
               )
             }
             throw error
@@ -259,7 +345,7 @@ class DownloadManager: NSObject, ObservableObject {
 
       // Wait for all remaining tasks to complete
       while try await group.next() != nil {
-        completed += 1
+        // Task completion is handled inside addTask
       }
     }
 
@@ -556,6 +642,45 @@ extension DownloadManager: URLSessionDownloadDelegate {
         category: "DownloadManager"
       )
     }
+  }
+}
+
+// MARK: - Download Progress Tracker
+
+/// Thread-safe download progress tracker
+/// Uses Actor to ensure thread safety during concurrent download progress updates
+private actor DownloadProgressTracker {
+  private(set) var completed: Int = 0
+  private(set) var failed: Int = 0
+  private(set) var downloadedBytes: Int64 = 0
+
+  let total: Int
+  let totalBytes: Int64
+
+  init(total: Int, totalBytes: Int64) {
+    self.total = total
+    self.totalBytes = totalBytes
+  }
+
+  /// Mark a task as completed
+  /// - Parameter bytes: Number of bytes downloaded
+  /// - Returns: Current progress snapshot
+  func markCompleted(bytes: Int64) -> (completed: Int, failed: Int, downloadedBytes: Int64) {
+    completed += 1
+    downloadedBytes += bytes
+    return (completed, failed, downloadedBytes)
+  }
+
+  /// Mark a task as failed
+  /// - Returns: Current progress snapshot
+  func markFailed() -> (completed: Int, failed: Int, downloadedBytes: Int64) {
+    failed += 1
+    return (completed, failed, downloadedBytes)
+  }
+
+  /// Get current progress snapshot
+  func getProgress() -> (completed: Int, failed: Int, downloadedBytes: Int64) {
+    return (completed, failed, downloadedBytes)
   }
 }
 
