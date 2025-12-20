@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoKit
 
 struct OfflineAccount: Codable {
   let id: String              // Player UUID (generated)
@@ -103,14 +104,50 @@ class OfflineAccountManager {
 
   // MARK: - UUID Generation
 
-  /// Generate a UUID similar to Minecraft's format (version 3 UUID based on name)
-  func generateUUID(for name: String) -> String {
-    // Generate a UUID from the username (similar to Minecraft offline UUID generation)
-    // In Minecraft, offline UUIDs are generated using MD5 hash of "OfflinePlayer:{username}"
-    let offlineString = "OfflinePlayer:\(name)"
+  /// Generate a UUID following Minecraft's offline UUID generation standard (UUID v3)
+  /// Based on MD5 hash of "OfflinePlayer:{username}"
+  /// This matches the Java implementation: UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8))
+  func generateOfflineUUID(for username: String) -> String {
+    let input = "OfflinePlayer:\(username)"
+    guard let data = input.data(using: .utf8) else {
+      // Fallback to random UUID if encoding fails
+      return UUID().uuidString.lowercased()
+    }
 
-    // For simplicity, we'll use Swift's UUID with a deterministic approach
-    // This generates a unique but consistent UUID for the same name
-    return UUID().uuidString.lowercased().replacingOccurrences(of: "-", with: "")
+    // Calculate MD5 hash
+    let hash = Insecure.MD5.hash(data: data)
+    var bytes = Array(hash)
+
+    // Set version to 3 (name-based MD5 hash)
+    // Set the high 4 bits of byte 6 to 0011 (version 3)
+    bytes[6] = (bytes[6] & 0x0F) | 0x30
+
+    // Set variant to IETF (RFC 4122)
+    // Set the high 2 bits of byte 8 to 10
+    bytes[8] = (bytes[8] & 0x3F) | 0x80
+
+    // Format as UUID string with dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+    let hexString = bytes.map { String(format: "%02x", $0) }.joined()
+    return formatUUID(from: hexString)
+  }
+
+  /// Format a 32-character hex string into Java UUID format
+  /// Example: 069a79f444e94726a5befca90e38aaf5 -> 069a79f4-44e9-4726-a5be-fca90e38aaf5
+  private func formatUUID(from hexString: String) -> String {
+    let start = hexString.startIndex
+
+    // Break down the index calculations to help the compiler
+    let idx8 = hexString.index(start, offsetBy: 8)
+    let idx12 = hexString.index(start, offsetBy: 12)
+    let idx16 = hexString.index(start, offsetBy: 16)
+    let idx20 = hexString.index(start, offsetBy: 20)
+
+    let part1 = String(hexString[start..<idx8])
+    let part2 = String(hexString[idx8..<idx12])
+    let part3 = String(hexString[idx12..<idx16])
+    let part4 = String(hexString[idx16..<idx20])
+    let part5 = String(hexString[idx20...])
+
+    return "\(part1)-\(part2)-\(part3)-\(part4)-\(part5)"
   }
 }

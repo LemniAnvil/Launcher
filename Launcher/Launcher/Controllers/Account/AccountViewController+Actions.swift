@@ -239,7 +239,7 @@ extension AccountViewController {
         let finalUsername = validatedUsername ?? trimmedUsername
 
         // Generate UUID for the account
-        let uuid = self.offlineAccountManager.generateUUID(for: finalUsername)
+        let uuid = self.offlineAccountManager.generateOfflineUUID(for: finalUsername)
 
         // Create and save the offline account
         let account = OfflineAccount(
