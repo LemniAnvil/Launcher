@@ -1,5 +1,5 @@
 {
-  "originHash" : "11bed669bb32c2a9cd850df9d5db4cea5154171a4478e0033b6f423e9fae7743",
+  "originHash" : "d066657cdc2297e4ecf268d464bb15fdfb81aac86a663969da05999405e043d4",
   "pins" : [
     {
       "identity" : "choreographer",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/irisWirisW/NSSkinRender",
       "state" : {
-        "revision" : "494a66b2d81facf72ce2e055c32a7b59d1203a87",
-        "version" : "0.3.1"
+        "revision" : "40bca93758512d38435472a498bd8e23219f039f",
+        "version" : "0.4.0"
       }
     },
     {

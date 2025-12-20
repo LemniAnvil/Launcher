@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		030D1F982ECB9F100065E234 /* Yatagarasu in Frameworks */ = {isa = PBXBuildFile; productRef = 030D1F972ECB9F100065E234 /* Yatagarasu */; };
 		0314F4872EB5029300591FBC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0314F4862EB5029300591FBC /* SnapKit */; };
-		03A183772ECD5538007A5ADF /* SkinRenderKit in Frameworks */ = {isa = PBXBuildFile; productRef = 03A183762ECD5538007A5ADF /* SkinRenderKit */; };
+		03AB8A822EF4623800C8D6EA /* SkinRenderKit in Frameworks */ = {isa = PBXBuildFile; productRef = 03AB8A812EF4623800C8D6EA /* SkinRenderKit */; };
 		03D7FB142ED3226B006D5694 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 03D7FB132ED3226B006D5694 /* Config.xcconfig */; };
 		03E0D2F82ED26AE200E6D375 /* MojangAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 03E0D2F72ED26AE200E6D375 /* MojangAPI */; };
 		03EEB01E2ED0992B00498292 /* Yatagarasu in Frameworks */ = {isa = PBXBuildFile; productRef = 03EEB01D2ED0992B00498292 /* Yatagarasu */; };
@@ -76,8 +76,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				03EEB01E2ED0992B00498292 /* Yatagarasu in Frameworks */,
+				03AB8A822EF4623800C8D6EA /* SkinRenderKit in Frameworks */,
 				030D1F982ECB9F100065E234 /* Yatagarasu in Frameworks */,
-				03A183772ECD5538007A5ADF /* SkinRenderKit in Frameworks */,
 				0314F4872EB5029300591FBC /* SnapKit in Frameworks */,
 				03E0D2F82ED26AE200E6D375 /* MojangAPI in Frameworks */,
 			);
@@ -144,9 +144,9 @@
 			packageProductDependencies = (
 				0314F4862EB5029300591FBC /* SnapKit */,
 				030D1F972ECB9F100065E234 /* Yatagarasu */,
-				03A183762ECD5538007A5ADF /* SkinRenderKit */,
 				03EEB01D2ED0992B00498292 /* Yatagarasu */,
 				03E0D2F72ED26AE200E6D375 /* MojangAPI */,
+				03AB8A812EF4623800C8D6EA /* SkinRenderKit */,
 			);
 			productName = Launcher;
 			productReference = 03FBFF4F2EB1235E00FD7CE4 /* Launcher.app */;
@@ -234,9 +234,9 @@
 			packageReferences = (
 				034304DE2EB25D030051F20A /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 				0314F4852EB5029300591FBC /* XCRemoteSwiftPackageReference "SnapKit" */,
-				03A183752ECD5538007A5ADF /* XCRemoteSwiftPackageReference "NSSkinRender" */,
 				03EEB01C2ED0992B00498292 /* XCLocalSwiftPackageReference "../../../Open Bilibili/Yatagarasu" */,
 				03E0D2F62ED26AE200E6D375 /* XCLocalSwiftPackageReference "../MojangAPI" */,
+				03AB8A802EF4623800C8D6EA /* XCRemoteSwiftPackageReference "NSSkinRender" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 03FBFF502EB1235E00FD7CE4 /* Products */;
@@ -676,12 +676,12 @@
 				minimumVersion = 0.62.2;
 			};
 		};
-		03A183752ECD5538007A5ADF /* XCRemoteSwiftPackageReference "NSSkinRender" */ = {
+		03AB8A802EF4623800C8D6EA /* XCRemoteSwiftPackageReference "NSSkinRender" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/irisWirisW/NSSkinRender";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.1;
+				minimumVersion = 0.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -696,9 +696,9 @@
 			package = 0314F4852EB5029300591FBC /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
-		03A183762ECD5538007A5ADF /* SkinRenderKit */ = {
+		03AB8A812EF4623800C8D6EA /* SkinRenderKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 03A183752ECD5538007A5ADF /* XCRemoteSwiftPackageReference "NSSkinRender" */;
+			package = 03AB8A802EF4623800C8D6EA /* XCRemoteSwiftPackageReference "NSSkinRender" */;
 			productName = SkinRenderKit;
 		};
 		03E0D2F72ED26AE200E6D375 /* MojangAPI */ = {
