@@ -39,9 +39,9 @@ class AccountViewController: NSViewController {
     super.init(nibName: nil, bundle: nil)
   }
 
+  @available(*, unavailable)
   required init?(coder: NSCoder) {
-    self.authManager = MicrosoftAuthManager.shared
-    super.init(coder: coder)
+    fatalError("init(coder:) has not been implemented")
   }
 
   // UI components
