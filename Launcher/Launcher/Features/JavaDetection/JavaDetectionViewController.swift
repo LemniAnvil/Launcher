@@ -11,7 +11,10 @@ import Yatagarasu
 
 class JavaDetectionViewController: NSViewController {
   // swiftlint:disable:previous type_body_length
-  private let javaManager = JavaManager.shared
+
+  // MARK: - Dependency Injection
+
+  private let javaManager: JavaManaging
   private let logger = Logger.shared
 
   // Using diffable data source for smooth updates
@@ -22,6 +25,20 @@ class JavaDetectionViewController: NSViewController {
   // Section for diffable data source
   enum Section: CaseIterable {
     case main
+  }
+
+  // MARK: - Initialization
+
+  /// Dependency injection via constructor
+  /// Provides default parameter for backward compatibility
+  init(javaManager: JavaManaging = JavaManager.shared) {
+    self.javaManager = javaManager
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  @available(*, unavailable)
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
 
   // MARK: - UI Elements
@@ -52,8 +69,8 @@ class JavaDetectionViewController: NSViewController {
       cornerRadius: 8,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
       accessibilityLabel: Localized.JavaDetection.detectButton
@@ -69,8 +86,8 @@ class JavaDetectionViewController: NSViewController {
       cornerRadius: 8,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
       accessibilityLabel: Localized.JavaDetection.refreshButton
@@ -335,7 +352,8 @@ class JavaDetectionViewController: NSViewController {
 
       // Auto-select first valid installation
       if let firstValid = installations.first(where: { $0.isValid }),
-         let index = installations.firstIndex(where: { $0.id == firstValid.id }) {
+        let index = installations.firstIndex(where: { $0.id == firstValid.id })
+      {
         javaTableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
         selectedInstallation = firstValid
         updateDetailsForSelectedJava()
@@ -353,9 +371,9 @@ class JavaDetectionViewController: NSViewController {
     let validationIcon = validation.isValid ? "✅" : "⚠️"
 
     detailsLabel.stringValue = """
-    \(validationIcon) \(validation.message)
-    Path: \(installation.path)
-    """
+      \(validationIcon) \(validation.message)
+      Path: \(installation.path)
+      """
   }
 
   private func updateJavaHomeLabel() {
@@ -369,8 +387,8 @@ class JavaDetectionViewController: NSViewController {
 
 // MARK: - Data Management
 
-private extension JavaDetectionViewController {
-  func applySnapshot(with installations: [JavaInstallation], animated: Bool = true) {
+extension JavaDetectionViewController {
+  fileprivate func applySnapshot(with installations: [JavaInstallation], animated: Bool = true) {
     var snapshot = NSDiffableDataSourceSnapshot<Section, JavaInstallation>()
     snapshot.appendSections([.main])
     snapshot.appendItems(installations, toSection: .main)
@@ -378,7 +396,7 @@ private extension JavaDetectionViewController {
     dataSource?.apply(snapshot, animatingDifferences: animated)
   }
 
-  func configureCell(
+  fileprivate func configureCell(
     for tableView: NSTableView,
     tableColumn: NSTableColumn,
     row: Int,

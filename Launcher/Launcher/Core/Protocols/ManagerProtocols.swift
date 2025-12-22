@@ -93,6 +93,31 @@ protocol VersionManaging: AnyObject {
   func downloadVersion(versionId: String) async throws
 }
 
+// MARK: - Java Management Protocol
+
+/// Java management protocol
+/// Defines core capabilities for detecting and managing Java installations
+protocol JavaManaging: AnyObject {
+  /// Detect all available Java installations on the system
+  /// - Returns: Array of detected Java installations
+  func detectJavaInstallations() async -> [JavaInstallation]
+
+  /// Validate if Java installation can run Minecraft
+  /// - Parameter installation: Java installation to validate
+  /// - Returns: Tuple containing validation result and message
+  func validateJavaForMinecraft(_ installation: JavaInstallation) -> (
+    isValid: Bool, message: String
+  )
+
+  /// Get JAVA_HOME environment variable
+  /// - Returns: JAVA_HOME path if set, nil otherwise
+  func getJavaHome() -> String?
+
+  /// Set JAVA_HOME for current process
+  /// - Parameter path: Path to set as JAVA_HOME
+  func setJavaHome(_ path: String)
+}
+
 // MARK: - Game Launch Protocol
 
 /// Game launch protocol

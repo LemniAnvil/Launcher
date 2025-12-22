@@ -37,7 +37,8 @@ struct JavaInstallation: Identifiable, Hashable {
 }
 
 /// Manager for detecting and managing Java installations
-class JavaManager {
+/// Implements JavaManaging protocol, providing concrete implementation for Java detection
+class JavaManager: JavaManaging {
   static let shared = JavaManager()
 
   private let logger = Logger.shared
@@ -245,7 +246,8 @@ class JavaManager {
     for pattern in patterns {
       if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
         let nsString = output as NSString
-        let results = regex.matches(in: output, options: [], range: NSRange(location: 0, length: nsString.length))
+        let results = regex.matches(
+          in: output, options: [], range: NSRange(location: 0, length: nsString.length))
 
         if let match = results.first, match.numberOfRanges > 1 {
           let versionRange = match.range(at: 1)
@@ -282,7 +284,9 @@ class JavaManager {
   // MARK: - Java Validation
 
   /// Validate if Java installation can run Minecraft
-  func validateJavaForMinecraft(_ installation: JavaInstallation) -> (isValid: Bool, message: String) {
+  func validateJavaForMinecraft(_ installation: JavaInstallation) -> (
+    isValid: Bool, message: String
+  ) {
     guard installation.isValid else {
       return (false, "Java installation is not valid")
     }
@@ -290,7 +294,8 @@ class JavaManager {
     // Extract major version
     let versionComponents = installation.version.split(separator: ".")
     guard let firstComponent = versionComponents.first,
-          let majorVersion = Int(firstComponent.replacingOccurrences(of: "\"", with: "")) else {
+      let majorVersion = Int(firstComponent.replacingOccurrences(of: "\"", with: ""))
+    else {
       return (false, "Cannot parse Java version")
     }
 
