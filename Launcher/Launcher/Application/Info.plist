@@ -15,6 +15,10 @@
 			</array>
 		</dict>
 	</array>
+	<key>CurseForgeAPIKey</key>
+	<string>$(CURSEFORGE_API_KEY)</string>
+	<key>MicrosoftClientID</key>
+	<string>$(MICROSOFT_CLIENT_ID)</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -28,9 +32,5 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>CurseForgeAPIKey</key>
-	<string>$(CURSEFORGE_API_KEY)</string>
-	<key>MicrosoftClientID</key>
-	<string>$(MICROSOFT_CLIENT_ID)</string>
 </dict>
 </plist>
