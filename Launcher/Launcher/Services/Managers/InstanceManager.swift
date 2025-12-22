@@ -28,6 +28,9 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
   // ✅ Inject VersionManager dependency, no longer hardcoded
   private let versionManager: VersionManaging
 
+  // PrismLauncher import tool for loading external instances
+  private let prismImportTool = MultiMCImportTool()
+
   // MARK: - Initialization
 
   // ✅ Changed to public initialization method, supports dependency injection
@@ -94,6 +97,12 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
   func deleteInstance(_ instance: Instance) throws {
     logger.info("Deleting instance: \(instance.id)", category: "InstanceManager")
 
+    // Cannot delete external instances
+    guard instance.isEditable else {
+      logger.warning("Cannot delete external instance: \(instance.id)", category: "InstanceManager")
+      throw InstanceManagerError.invalidName("Cannot delete external instance")
+    }
+
     // Remove instance directory (use instance.directoryName)
     let instanceDir = pathManager.getInstancePath(instanceId: instance.directoryName)
     if FileManager.default.fileExists(atPath: instanceDir.path) {
@@ -113,7 +122,11 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
 
   /// Get instance directory
   func getInstanceDirectory(for instance: Instance) -> URL {
-    // Instance directory uses directoryName (format: "versionId-shortId")
+    // External instances use their original path
+    if let externalPath = instance.externalPath {
+      return externalPath
+    }
+    // Native instances use directoryName (format: "versionId-shortId")
     return pathManager.getInstancePath(instanceId: instance.directoryName)
   }
 
@@ -128,6 +141,20 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
   private func loadInstances() {
     instances = []
 
+    // Load native instances
+    loadNativeInstances()
+
+    // Load PrismLauncher external instances
+    loadPrismInstances()
+
+    // Sort by last modified date (newest first)
+    instances.sort { $0.lastModified > $1.lastModified }
+
+    logger.info("Loaded \(instances.count) instances (native + external)", category: "InstanceManager")
+  }
+
+  /// Load native instances from the launcher's instances directory
+  private func loadNativeInstances() {
     guard
       let contents = try? FileManager.default.contentsOfDirectory(
         at: instancesDirectory,
@@ -164,10 +191,30 @@ class InstanceManager: ObservableObject, InstanceManaging {  // ✅ Conforms to 
       instances.append(instance)
     }
 
-    // Sort by last modified date (newest first)
-    instances.sort { $0.lastModified > $1.lastModified }
+    logger.debug("Loaded \(instances.count) native instances", category: "InstanceManager")
+  }
 
-    logger.info("Loaded \(instances.count) instances", category: "InstanceManager")
+  /// Load PrismLauncher external instances
+  private func loadPrismInstances() {
+    do {
+      let prismInstances = try prismImportTool.loadInstances()
+
+      for info in prismInstances {
+        let instance = Instance(
+          name: info.name,
+          versionId: info.versionId,
+          directoryName: info.directoryName,
+          source: .prism,
+          externalPath: info.path,
+          iconPath: info.iconPath
+        )
+        instances.append(instance)
+      }
+
+      logger.debug("Loaded \(prismInstances.count) PrismLauncher instances", category: "InstanceManager")
+    } catch {
+      logger.warning("Failed to load PrismLauncher instances: \(error.localizedDescription)", category: "InstanceManager")
+    }
   }
 
   /// Save instance to disk

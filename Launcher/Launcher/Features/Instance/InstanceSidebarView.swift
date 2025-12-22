@@ -43,6 +43,20 @@ class InstanceSidebarView: NSView {
     return label
   }()
 
+  /// Badge for external instance source
+  private let sourceBadge: BRLabel = {
+    let label = BRLabel(
+      text: "",
+      font: .systemFont(ofSize: 10, weight: .medium),
+      textColor: .white,
+      alignment: .center
+    )
+    label.wantsLayer = true
+    label.layer?.cornerRadius = 4
+    label.isHidden = true
+    return label
+  }()
+
   private let separator1: BRSeparator = {
     return BRSeparator.horizontal()
   }()
@@ -184,6 +198,7 @@ class InstanceSidebarView: NSView {
     addSubview(iconImageView)
     addSubview(instanceNameLabel)
     addSubview(versionLabel)
+    addSubview(sourceBadge)
     addSubview(separator1)
     addSubview(actionButtonsStackView)
     addSubview(emptyStateLabel)
@@ -223,8 +238,15 @@ class InstanceSidebarView: NSView {
       make.left.right.equalToSuperview().inset(16)
     }
 
+    sourceBadge.snp.makeConstraints { make in
+      make.top.equalTo(versionLabel.snp.bottom).offset(8)
+      make.centerX.equalToSuperview()
+      make.width.equalTo(80)
+      make.height.equalTo(20)
+    }
+
     separator1.snp.makeConstraints { make in
-      make.top.equalTo(versionLabel.snp.bottom).offset(16)
+      make.top.equalTo(sourceBadge.snp.bottom).offset(12)
       make.left.right.equalToSuperview().inset(16)
       make.height.equalTo(1)
     }
@@ -266,6 +288,28 @@ class InstanceSidebarView: NSView {
     instanceNameLabel.stringValue = instance.name
     versionLabel.stringValue = instance.versionId
 
+    // Configure icon
+    configureIcon(for: instance)
+
+    // Configure source badge
+    configureSourceBadge(for: instance)
+
+    // Configure button states based on instance editability
+    configureButtonStates(for: instance)
+
+    showInstanceDetails()
+  }
+
+  /// Configure icon based on instance
+  private func configureIcon(for instance: Instance) {
+    // Check for custom icon path first (external instances)
+    if let iconPath = instance.iconPath,
+      let iconImage = NSImage(contentsOf: iconPath)
+    {
+      iconImageView.image = iconImage
+      return
+    }
+
     // Load instance icon - use default Minecraft grass block icon
     if let defaultIcon = NSImage(named: "minecraft_icon") {
       iconImageView.image = defaultIcon
@@ -273,8 +317,43 @@ class InstanceSidebarView: NSView {
       // Fallback to system icon
       iconImageView.image = NSImage(systemSymbolName: "cube.fill", accessibilityDescription: nil)
     }
+  }
 
-    showInstanceDetails()
+  /// Configure source badge for external instances
+  private func configureSourceBadge(for instance: Instance) {
+    switch instance.source {
+    case .prism:
+      sourceBadge.stringValue = "PrismLauncher"
+      sourceBadge.layer?.backgroundColor = NSColor.systemPurple.withAlphaComponent(0.8).cgColor
+      sourceBadge.isHidden = false
+    case .native:
+      sourceBadge.isHidden = true
+    }
+  }
+
+  /// Configure button enabled states based on instance editability
+  private func configureButtonStates(for instance: Instance) {
+    let isEditable = instance.isEditable
+
+    // These actions are always available
+    launchButton.isEnabled = true
+    folderButton.isEnabled = true
+
+    // These actions are only available for native instances
+    editButton.isEnabled = isEditable
+    renameButton.isEnabled = isEditable
+    exportButton.isEnabled = isEditable
+    copyButton.isEnabled = isEditable
+    deleteButton.isEnabled = isEditable
+    shortcutButton.isEnabled = isEditable
+
+    // Update button appearance for disabled state
+    let disabledButtons = [
+      editButton, renameButton, exportButton, copyButton, deleteButton, shortcutButton,
+    ]
+    for button in disabledButtons {
+      button.alphaValue = button.isEnabled ? 1.0 : 0.5
+    }
   }
 
   func clearSelection() {
@@ -286,6 +365,7 @@ class InstanceSidebarView: NSView {
     iconImageView.isHidden = true
     instanceNameLabel.isHidden = true
     versionLabel.isHidden = true
+    sourceBadge.isHidden = true
     separator1.isHidden = true
     actionButtonsStackView.isHidden = true
     emptyStateLabel.isHidden = false
@@ -295,6 +375,7 @@ class InstanceSidebarView: NSView {
     iconImageView.isHidden = false
     instanceNameLabel.isHidden = false
     versionLabel.isHidden = false
+    // sourceBadge visibility is controlled by configureSourceBadge
     separator1.isHidden = false
     actionButtonsStackView.isHidden = false
     emptyStateLabel.isHidden = true

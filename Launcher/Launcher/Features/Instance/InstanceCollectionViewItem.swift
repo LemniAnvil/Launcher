@@ -28,6 +28,9 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
     imageView.image = NSImage(systemSymbolName: BRIcons.instance, accessibilityDescription: nil)
     imageView.contentTintColor = BRColorPalette.releaseVersion
     imageView.imageScaling = .scaleProportionallyDown
+    imageView.wantsLayer = true
+    imageView.layer?.cornerRadius = 8
+    imageView.layer?.masksToBounds = true
     return imageView
   }()
 
@@ -52,6 +55,21 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
     return label
   }()
 
+  /// Badge view for external instance indicator
+  private let externalBadge: BRLabel = {
+    let label = BRLabel(
+      text: "Prism",
+      font: .systemFont(ofSize: 9, weight: .medium),
+      textColor: .white,
+      alignment: .center
+    )
+    label.wantsLayer = true
+    label.layer?.backgroundColor = NSColor.systemPurple.withAlphaComponent(0.8).cgColor
+    label.layer?.cornerRadius = 4
+    label.isHidden = true
+    return label
+  }()
+
   override func loadView() {
     self.view = NSView()
     self.view.wantsLayer = true
@@ -67,6 +85,7 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
     containerView.addSubview(iconImageView)
     containerView.addSubview(nameLabel)
     containerView.addSubview(versionLabel)
+    containerView.addSubview(externalBadge)
 
     containerView.snp.makeConstraints { make in
       make.edges.equalToSuperview().inset(BRSpacing.small)
@@ -88,29 +107,80 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
       make.left.right.equalToSuperview().inset(BRSpacing.medium)
       make.bottom.lessThanOrEqualToSuperview().offset(-BRSpacing.extraLarge)
     }
+
+    externalBadge.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(BRSpacing.small)
+      make.right.equalToSuperview().offset(-BRSpacing.small)
+      make.width.equalTo(36)
+      make.height.equalTo(16)
+    }
   }
 
   func configure(with instance: Instance) {
     nameLabel.stringValue = instance.name
     versionLabel.stringValue = instance.versionId
 
-    // Determine version type color
+    // Configure icon
+    configureIcon(for: instance)
+
+    // Configure external badge
+    configureExternalBadge(for: instance)
+
+    // Determine version type color for border
+    let versionId = instance.versionId
+    if versionId.contains("w") || versionId.contains("-pre") || versionId.contains("-rc") {
+      containerView.layer?.borderColor =
+        BRColorPalette.snapshotVersion.withAlphaComponent(0.2).cgColor
+    } else if versionId.hasPrefix("1.") {
+      containerView.layer?.borderColor =
+        BRColorPalette.releaseVersion.withAlphaComponent(0.2).cgColor
+    } else if versionId.contains("a") || versionId.contains("alpha") {
+      containerView.layer?.borderColor = BRColorPalette.alphaVersion.withAlphaComponent(0.2).cgColor
+    } else if versionId.contains("b") || versionId.contains("beta") {
+      containerView.layer?.borderColor = BRColorPalette.betaVersion.withAlphaComponent(0.2).cgColor
+    } else {
+      containerView.layer?.borderColor =
+        BRColorPalette.unknownVersion.withAlphaComponent(0.2).cgColor
+    }
+  }
+
+  /// Configure icon based on instance type
+  private func configureIcon(for instance: Instance) {
+    // Check for custom icon path first
+    if let iconPath = instance.iconPath,
+      let iconImage = NSImage(contentsOf: iconPath)
+    {
+      iconImageView.image = iconImage
+      iconImageView.contentTintColor = nil  // Don't tint custom icons
+      return
+    }
+
+    // Use default icon with version-based tint color
+    iconImageView.image = NSImage(systemSymbolName: BRIcons.instance, accessibilityDescription: nil)
+
     let versionId = instance.versionId
     if versionId.contains("w") || versionId.contains("-pre") || versionId.contains("-rc") {
       iconImageView.contentTintColor = BRColorPalette.snapshotVersion
-      containerView.layer?.borderColor = BRColorPalette.snapshotVersion.withAlphaComponent(0.2).cgColor
     } else if versionId.hasPrefix("1.") {
       iconImageView.contentTintColor = BRColorPalette.releaseVersion
-      containerView.layer?.borderColor = BRColorPalette.releaseVersion.withAlphaComponent(0.2).cgColor
     } else if versionId.contains("a") || versionId.contains("alpha") {
       iconImageView.contentTintColor = BRColorPalette.alphaVersion
-      containerView.layer?.borderColor = BRColorPalette.alphaVersion.withAlphaComponent(0.2).cgColor
     } else if versionId.contains("b") || versionId.contains("beta") {
       iconImageView.contentTintColor = BRColorPalette.betaVersion
-      containerView.layer?.borderColor = BRColorPalette.betaVersion.withAlphaComponent(0.2).cgColor
     } else {
       iconImageView.contentTintColor = BRColorPalette.unknownVersion
-      containerView.layer?.borderColor = BRColorPalette.unknownVersion.withAlphaComponent(0.2).cgColor
+    }
+  }
+
+  /// Configure external instance badge
+  private func configureExternalBadge(for instance: Instance) {
+    switch instance.source {
+    case .prism:
+      externalBadge.stringValue = "Prism"
+      externalBadge.layer?.backgroundColor = NSColor.systemPurple.withAlphaComponent(0.8).cgColor
+      externalBadge.isHidden = false
+    case .native:
+      externalBadge.isHidden = true
     }
   }
 
@@ -131,5 +201,13 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
       containerView.layer?.borderWidth = BRSpacing.borderWidthStandard
       containerView.layer?.shadowOpacity = 0
     }
+  }
+
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    // Reset icon to default
+    iconImageView.image = NSImage(systemSymbolName: BRIcons.instance, accessibilityDescription: nil)
+    iconImageView.contentTintColor = BRColorPalette.releaseVersion
+    externalBadge.isHidden = true
   }
 }

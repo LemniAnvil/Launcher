@@ -7,6 +7,12 @@
 
 import Foundation
 
+/// Instance source type
+enum InstanceSource: String, Codable {
+  case native  // Created by this launcher
+  case prism  // PrismLauncher external instance
+}
+
 /// Minecraft instance model
 struct Instance: Codable, Identifiable {
   /// Unique identifier for the instance
@@ -27,6 +33,20 @@ struct Instance: Codable, Identifiable {
   /// Last modified date
   var lastModified: Date
 
+  /// Instance source (default: native)
+  let source: InstanceSource
+
+  /// External instance path (only for external instances)
+  let externalPath: URL?
+
+  /// Instance icon path (optional)
+  let iconPath: URL?
+
+  /// Whether this instance is editable (native instances only)
+  var isEditable: Bool {
+    source == .native
+  }
+
   /// Initialize instance
   init(name: String, versionId: String) {
     let uuid = UUID().uuidString
@@ -38,6 +58,9 @@ struct Instance: Codable, Identifiable {
     self.directoryName = "\(versionId)-\(shortId)"
     self.createdAt = Date()
     self.lastModified = Date()
+    self.source = .native
+    self.externalPath = nil
+    self.iconPath = nil
   }
 
   /// Initialize instance with custom directory name (for migration/import)
@@ -48,6 +71,29 @@ struct Instance: Codable, Identifiable {
     self.directoryName = directoryName
     self.createdAt = Date()
     self.lastModified = Date()
+    self.source = .native
+    self.externalPath = nil
+    self.iconPath = nil
+  }
+
+  /// Initialize external instance (e.g., from PrismLauncher)
+  init(
+    name: String,
+    versionId: String,
+    directoryName: String,
+    source: InstanceSource,
+    externalPath: URL?,
+    iconPath: URL?
+  ) {
+    self.id = UUID().uuidString
+    self.name = name
+    self.versionId = versionId
+    self.directoryName = directoryName
+    self.createdAt = Date()
+    self.lastModified = Date()
+    self.source = source
+    self.externalPath = externalPath
+    self.iconPath = iconPath
   }
 
   /// Initialize from decoder
@@ -71,6 +117,21 @@ struct Instance: Codable, Identifiable {
 
     let lastModifiedTimestamp = try container.decode(TimeInterval.self, forKey: .lastModified)
     lastModified = Date(timeIntervalSince1970: lastModifiedTimestamp)
+
+    // Handle new fields with backward compatibility
+    source = try container.decodeIfPresent(InstanceSource.self, forKey: .source) ?? .native
+
+    if let externalPathString = try container.decodeIfPresent(String.self, forKey: .externalPath) {
+      externalPath = URL(fileURLWithPath: externalPathString)
+    } else {
+      externalPath = nil
+    }
+
+    if let iconPathString = try container.decodeIfPresent(String.self, forKey: .iconPath) {
+      iconPath = URL(fileURLWithPath: iconPathString)
+    } else {
+      iconPath = nil
+    }
   }
 
   /// Encode to encoder
@@ -82,6 +143,9 @@ struct Instance: Codable, Identifiable {
     try container.encode(directoryName, forKey: .directoryName)
     try container.encode(createdAt.timeIntervalSince1970, forKey: .createdAt)
     try container.encode(lastModified.timeIntervalSince1970, forKey: .lastModified)
+    try container.encode(source, forKey: .source)
+    try container.encodeIfPresent(externalPath?.path, forKey: .externalPath)
+    try container.encodeIfPresent(iconPath?.path, forKey: .iconPath)
   }
 
   enum CodingKeys: String, CodingKey {
@@ -91,5 +155,8 @@ struct Instance: Codable, Identifiable {
     case directoryName
     case createdAt
     case lastModified
+    case source
+    case externalPath
+    case iconPath
   }
 }
