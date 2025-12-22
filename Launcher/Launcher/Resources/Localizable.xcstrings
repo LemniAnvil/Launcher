@@ -112,7 +112,15 @@
       }
     },
     "%@ (Copy)" : {
-      "comment" : "[Text] Copied instance name suffix."
+      "comment" : "[Text] Copied instance name suffix.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@（副本）"
+          }
+        }
+      }
     },
     "%lld installed versions" : {
       "comment" : "[Text] Multiple installed versions count.",
@@ -1475,7 +1483,15 @@
       }
     },
     "Change Group (C)" : {
-      "comment" : "[Button] Change instance group from sidebar."
+      "comment" : "[Button] Change instance group from sidebar.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更改分组 (C)"
+          }
+        }
+      }
     },
     "Clear Default Account" : {
       "comment" : "[Menu] Clear default account.",
@@ -1588,10 +1604,26 @@
       }
     },
     "Copy (Y)" : {
-      "comment" : "[Button] Copy instance from sidebar."
+      "comment" : "[Button] Copy instance from sidebar.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制 (Y)"
+          }
+        }
+      }
     },
     "Copy Failed" : {
-      "comment" : "[Alert] Copy instance failed title."
+      "comment" : "[Alert] Copy instance failed title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制失败"
+          }
+        }
+      }
     },
     "Create" : {
       "comment" : "[Button] Create button.",
@@ -1616,7 +1648,15 @@
       }
     },
     "Create Shortcut (S)" : {
-      "comment" : "[Button] Create shortcut for instance from sidebar."
+      "comment" : "[Button] Create shortcut for instance from sidebar.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建快捷方式 (S)"
+          }
+        }
+      }
     },
     "Created:" : {
       "comment" : "[Label] Created date label.",
@@ -1718,7 +1758,15 @@
       }
     },
     "Delete (T)" : {
-      "comment" : "[Button] Delete instance from sidebar."
+      "comment" : "[Button] Delete instance from sidebar.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除 (T)"
+          }
+        }
+      }
     },
     "Delete Account" : {
       "comment" : "[Menu] Delete account.",
@@ -2068,7 +2116,15 @@
       }
     },
     "Edit (E)" : {
-      "comment" : "[Button] Edit selected instance from sidebar."
+      "comment" : "[Button] Edit selected instance from sidebar.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑 (E)"
+          }
+        }
+      }
     },
     "Enable Proxy" : {
       "comment" : "[Checkbox] Enable proxy checkbox.",
@@ -2137,7 +2193,15 @@
       }
     },
     "Export (X)" : {
-      "comment" : "[Button] Export instance from sidebar."
+      "comment" : "[Button] Export instance from sidebar.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出 (X)"
+          }
+        }
+      }
     },
     "Extracting native libraries..." : {
       "comment" : "[Status] Extracting native libraries.",
@@ -2531,7 +2595,15 @@
       }
     },
     "Instance \"%@\" has been copied successfully." : {
-      "comment" : "[Notification] Copy instance success message."
+      "comment" : "[Notification] Copy instance success message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "实例 \"%@\" 已成功复制。"
+          }
+        }
+      }
     },
     "Instance \"%@\" has been deleted" : {
       "comment" : "[Notification] Delete success message.",
@@ -2573,7 +2645,15 @@
       }
     },
     "Instance Copied" : {
-      "comment" : "[Notification] Copy instance success title."
+      "comment" : "[Notification] Copy instance success title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "实例已复制"
+          }
+        }
+      }
     },
     "Instance created successfully: %@" : {
       "comment" : "[Log] Instance created successfully.",
@@ -2796,7 +2876,15 @@
       }
     },
     "Kill Process (K)" : {
-      "comment" : "[Button] Kill running instance from sidebar."
+      "comment" : "[Button] Kill running instance from sidebar.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "终止进程 (K)"
+          }
+        }
+      }
     },
     "Last Updated" : {
       "comment" : "[Sort] Last Updated sort option.",
@@ -2821,7 +2909,15 @@
       }
     },
     "Launch (L)" : {
-      "comment" : "[Button] Launch selected instance from sidebar."
+      "comment" : "[Button] Launch selected instance from sidebar.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动 (L)"
+          }
+        }
+      }
     },
     "Launch Failed" : {
       "comment" : "[Alert] Launch failed title.",
@@ -3396,10 +3492,26 @@
       }
     },
     "Open Instance Folder (F)" : {
-      "comment" : "[Button] Open instance folder from sidebar."
+      "comment" : "[Button] Open instance folder from sidebar.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开实例文件夹 (F)"
+          }
+        }
+      }
     },
     "Open Skin Library" : {
-      "comment" : "[Button] Open skin library window."
+      "comment" : "[Button] Open skin library window.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开皮肤库"
+          }
+        }
+      }
     },
     "Open Version List" : {
       "comment" : "[Button] Open version list window.",
@@ -3903,7 +4015,15 @@
       }
     },
     "Select an instance to view details" : {
-      "comment" : "[Text] Empty state for sidebar when no instance is selected."
+      "comment" : "[Text] Empty state for sidebar when no instance is selected.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择一个实例以查看详情"
+          }
+        }
+      }
     },
     "Set as Default Account" : {
       "comment" : "[Menu] Set as default account.",
@@ -4182,6 +4302,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Unable to copy instance \"%1$@\": %2$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法复制实例 \"%1$@\"：%2$@"
           }
         }
       }
