@@ -147,6 +147,7 @@ class JavaDetectionViewController: NSViewController {
     scrollView.hasHorizontalScroller = false
     scrollView.autohidesScrollers = true
     scrollView.borderType = .bezelBorder
+    scrollView.scrollerStyle = .overlay
     return scrollView
   }()
 
@@ -351,9 +352,7 @@ class JavaDetectionViewController: NSViewController {
       detailsLabel.stringValue = ""
 
       // Auto-select first valid installation
-      if let firstValid = installations.first(where: { $0.isValid }),
-        let index = installations.firstIndex(where: { $0.id == firstValid.id })
-      {
+      if let firstValid = installations.first(where: { $0.isValid }), let index = installations.firstIndex(where: { $0.id == firstValid.id }) {
         javaTableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
         selectedInstallation = firstValid
         updateDetailsForSelectedJava()

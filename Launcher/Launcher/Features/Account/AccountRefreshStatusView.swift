@@ -405,10 +405,8 @@ class AccountRefreshStatusView: NSView {
       .savingAccount,
     ]
 
-    for (index, loginStep) in steps.enumerated() {
-      if index < stepLabelViews.count {
-        updateLoginStepLabel(stepLabelViews[index], for: loginStep, currentStep: step)
-      }
+    for (index, loginStep) in steps.enumerated() where index < stepLabelViews.count {
+      updateLoginStepLabel(stepLabelViews[index], for: loginStep, currentStep: step)
     }
 
     // Handle completion or failure

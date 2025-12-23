@@ -9,8 +9,8 @@ import Foundation
 
 /// Instance source type
 enum InstanceSource: String, Codable {
-  case native  // Created by this launcher
-  case prism  // PrismLauncher external instance
+  case native   // Created by this launcher
+  case prism    // PrismLauncher external instance
 }
 
 /// Minecraft instance model

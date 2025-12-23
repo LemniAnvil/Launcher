@@ -147,9 +147,7 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
   /// Configure icon based on instance type
   private func configureIcon(for instance: Instance) {
     // Check for custom icon path first
-    if let iconPath = instance.iconPath,
-      let iconImage = NSImage(contentsOf: iconPath)
-    {
+    if let iconPath = instance.iconPath, let iconImage = NSImage(contentsOf: iconPath) {
       iconImageView.image = iconImage
       iconImageView.contentTintColor = nil  // Don't tint custom icons
       return

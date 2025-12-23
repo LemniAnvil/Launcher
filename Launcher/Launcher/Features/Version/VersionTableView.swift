@@ -57,6 +57,7 @@ class VersionTableView<Item: Hashable>: NSView {
     scrollView.hasHorizontalScroller = false
     scrollView.autohidesScrollers = true
     scrollView.borderType = .bezelBorder
+    scrollView.scrollerStyle = .overlay
     return scrollView
   }()
 

@@ -44,11 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     return true
   }
 
-  func application(
-    _ application: NSApplication,
-    open urls: [URL]
-  ) {
-
+  func application(_ application: NSApplication, open urls: [URL]) {
     for url in urls {
       handleIncomingURL(url)
     }

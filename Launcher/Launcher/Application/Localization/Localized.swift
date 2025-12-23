@@ -6,8 +6,11 @@
 import Foundation
 
 enum Localized {
+
   // MARK: - Errors
+
   enum Errors {
+
     // VersionManager Errors
     static func versionNotFound(_ version: String) -> String {
       String(localized: "Version not found: \(version)", comment: "[Error] Version not found.")

@@ -6,9 +6,13 @@
 import Foundation
 
 // MARK: - Account-related Localizations
+
 extension Localized {
+
   // MARK: - Account Management
+
   enum Account {
+
     // Window & Labels
     static let windowTitle = String(localized: "Account Management", comment: "[Text] Account management window title.")
     static let title = String(localized: "Account Management", comment: "[Text] Account management title.")
@@ -123,7 +127,9 @@ extension Localized {
   }
 
   // MARK: - Microsoft Authentication
+
   enum MicrosoftAuth {
+
     // Window & Labels
     static let windowTitle = String(localized: "Microsoft Account Login", comment: "[Text] Microsoft auth window title.")
     static let title = String(localized: "Microsoft Account", comment: "[Text] Microsoft auth title.")

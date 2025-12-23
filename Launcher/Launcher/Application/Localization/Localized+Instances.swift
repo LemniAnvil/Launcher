@@ -6,9 +6,13 @@
 import Foundation
 
 // MARK: - Instance-related Localizations
+
 extension Localized {
+
   // MARK: - Instances
+
   enum Instances {
+
     // Window & Labels
     static let windowTitle = String(localized: "Instances", comment: "[Text] Instances window title.")
     static let title = String(localized: "Instances", comment: "[Text] Instances title.")
@@ -131,7 +135,9 @@ extension Localized {
   }
 
   // MARK: - Instance Detail
+
   enum InstanceDetail {
+
     // Window & Labels
     static let windowTitle = String(localized: "Instance Details", comment: "[Text] Instance detail window title.")
     static let configurationTitle = String(localized: "Configuration", comment: "[Text] Configuration section title.")
@@ -164,7 +170,9 @@ extension Localized {
   }
 
   // MARK: - Installed Versions
+
   enum InstalledVersions {
+
     // Window & Labels
     static let windowTitle = String(localized: "Installed Versions", comment: "[Text] Installed versions window title.")
     static let title = String(localized: "Installed Versions", comment: "[Text] Installed versions title.")
@@ -217,7 +225,9 @@ extension Localized {
   }
 
   // MARK: - Game Launcher
+
   enum GameLauncher {
+
     // Status Messages
     static let statusPreparing = String(localized: "Preparing to launch game...", comment: "[Status] Preparing to launch game.")
     static let statusDetectingJava = String(localized: "Detecting Java installation...", comment: "[Status] Detecting Java installation.")
@@ -287,7 +297,9 @@ extension Localized {
   }
 
   // MARK: - Offline Launch
+
   enum OfflineLaunch {
+
     // Window
     static let windowTitle = String(localized: "Select Account", comment: "[Text] Account selection window title.")
     static let title = String(localized: "Launch Game", comment: "[Text] Launch game title.")
@@ -315,7 +327,9 @@ extension Localized {
   }
 
   // MARK: - Add Instance
+
   enum AddInstance {
+
     // Window & Labels
     static let windowTitle = String(localized: "New Instance", comment: "[Text] Add instance window title.")
     static let openAddInstanceButton = String(localized: "Add Instance", comment: "[Button] Open add instance window.")

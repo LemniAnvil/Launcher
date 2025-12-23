@@ -15,6 +15,7 @@ enum AppConstants {
 
   /// Authentication related constants
   enum Auth {
+
     /// Access Token expiration time (seconds) - 24 hours
     static let tokenExpirationSeconds: TimeInterval = 24 * 60 * 60
 
@@ -26,6 +27,7 @@ enum AppConstants {
 
   /// Network request related constants
   enum Network {
+
     /// Default request timeout (seconds)
     static let defaultRequestTimeout: TimeInterval = 30
 
@@ -49,6 +51,7 @@ enum AppConstants {
 
   /// Download related constants
   enum Download {
+
     /// Default max concurrent downloads
     static let defaultMaxConcurrentDownloads: Int = 8
 
@@ -93,6 +96,7 @@ enum AppConstants {
 
   /// Logging related constants
   enum Logging {
+
     /// Maximum log history count
     static let maxHistoryCount: Int = 1000
   }
@@ -101,6 +105,7 @@ enum AppConstants {
 
   /// Game related constants
   enum Game {
+
     /// Default max memory (MB)
     static let defaultMaxMemory: Int = 2048
 
@@ -124,6 +129,7 @@ enum AppConstants {
 
   /// Cache related constants
   enum Cache {
+
     /// Default cache cleanup days
     static let defaultCleanupDays: Int = 30
 
@@ -135,6 +141,7 @@ enum AppConstants {
 
   /// UI related constants
   enum UserInterface {
+
     /// Create instance window size
     static let createInstanceWindowSize = NSSize(width: 1000, height: 680)
 
@@ -149,6 +156,7 @@ enum AppConstants {
 
   /// API related constants
   enum API {
+
     /// CurseForge default page size
     static let curseForgeDefaultPageSize: Int = 10000
   }

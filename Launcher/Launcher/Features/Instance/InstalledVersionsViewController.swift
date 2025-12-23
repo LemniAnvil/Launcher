@@ -31,6 +31,7 @@ class InstalledVersionsViewController: NSViewController {
     scrollView.hasHorizontalScroller = false
     scrollView.autohidesScrollers = true
     scrollView.borderType = .noBorder
+    scrollView.scrollerStyle = .overlay
     return scrollView
   }()
 

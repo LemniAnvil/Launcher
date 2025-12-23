@@ -246,8 +246,7 @@ class JavaManager: JavaManaging {
     for pattern in patterns {
       if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
         let nsString = output as NSString
-        let results = regex.matches(
-          in: output, options: [], range: NSRange(location: 0, length: nsString.length))
+        let results = regex.matches(in: output, options: [], range: NSRange(location: 0, length: nsString.length))
 
         if let match = results.first, match.numberOfRanges > 1 {
           let versionRange = match.range(at: 1)

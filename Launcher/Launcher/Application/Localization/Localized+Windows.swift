@@ -6,9 +6,13 @@
 import Foundation
 
 // MARK: - Window-related Localizations
+
 extension Localized {
+
   // MARK: - Main Window
+
   enum MainWindow {
+
     static let windowTitle = String(localized: "Minecraft Launcher", comment: "[Text] Main window title.")
     static let titleLabel = String(localized: "Minecraft Launcher", comment: "[Text] Main window title label.")
     static let subtitle = String(localized: "Version Management & Download Testing", comment: "[Text] Main window subtitle.")
@@ -22,7 +26,9 @@ extension Localized {
   }
 
   // MARK: - Version List Window
+
   enum VersionListWindow {
+
     static let windowTitle = String(localized: "Version List", comment: "[Text] Version list window title.")
 
     // Table Column Headers
@@ -81,7 +87,9 @@ extension Localized {
   }
 
   // MARK: - Log Messages
+
   enum LogMessages {
+
     // Initialization
     static let initialized = String(localized: "✅ Version list window initialized", comment: "[Log] Version list window initialized.")
     static let pleaseClickButtons = String(localized: "📝 Please click buttons in order to test functions", comment: "[Log] Please click buttons in order.")
@@ -313,7 +321,9 @@ extension Localized {
   }
 
   // MARK: - Alert Dialogs
+
   enum Alerts {
+
     // Download Confirmation
     static let confirmDownloadTitle = String(localized: "Confirm Download", comment: "[Alert] Confirm download title.")
 

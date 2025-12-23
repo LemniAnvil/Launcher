@@ -380,8 +380,11 @@ class InstanceSidebarView: NSView {
     actionButtonsStackView.isHidden = false
     emptyStateLabel.isHidden = true
   }
+}
 
-  // MARK: - Actions
+// MARK: - Actions
+
+extension InstanceSidebarView {
 
   @objc private func launchButtonClicked() {
     guard let instance = currentInstance else { return }

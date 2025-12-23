@@ -55,6 +55,7 @@ final class SkinLibraryCollectionViewController: NSViewController {
     let scrollView = NSScrollView()
     scrollView.hasVerticalScroller = true
     scrollView.hasHorizontalScroller = true
+    scrollView.scrollerStyle = .overlay
     return scrollView
   }()
 

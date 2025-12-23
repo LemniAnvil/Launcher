@@ -6,9 +6,13 @@
 import Foundation
 
 // MARK: - Settings-related Localizations
+
 extension Localized {
+
   // MARK: - Proxy Settings
+
   enum Proxy {
+
     // Labels
     static let sectionTitle = String(localized: "Proxy Settings", comment: "[Label] Proxy settings section title.")
     static let enableProxy = String(localized: "Enable Proxy", comment: "[Checkbox] Enable proxy checkbox.")
@@ -74,6 +78,7 @@ extension Localized {
   }
 
   // MARK: - Java Detection
+
   enum JavaDetection {
     static let windowTitle = String(localized: "Java Detection", comment: "[Text] Java detection window title.")
     static let title = String(localized: "Java Installation Detection", comment: "[Text] Java detection title.")
@@ -108,7 +113,9 @@ extension Localized {
   }
 
   // MARK: - Settings
+
   enum Settings {
+
     // Window & Labels
     static let windowTitle = String(localized: "Settings", comment: "[Text] Settings window title.")
     static let title = String(localized: "Settings", comment: "[Text] Settings title.")

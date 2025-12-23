@@ -19,6 +19,7 @@ class ViewController: NSViewController {
   private var microsoftAuthWindowController: MicrosoftAuthWindowController?
   private var installedVersionsWindowController: InstalledVersionsWindowController?
   private var skinLibraryWindowController: NSWindowController?
+  private var skinLibraryWindowObserver: NSObjectProtocol?
   private var windowObserver: NSObjectProtocol?
   private var instanceDetailWindowObserver: NSObjectProtocol?
   private var microsoftAuthWindowObserver: NSObjectProtocol?
@@ -177,6 +178,7 @@ class ViewController: NSViewController {
     scrollView.hasHorizontalScroller = false
     scrollView.autohidesScrollers = true
     scrollView.borderType = .noBorder
+    scrollView.scrollerStyle = .overlay
     scrollView.drawsBackground = false
     return scrollView
   }()
@@ -617,12 +619,16 @@ extension ViewController {
     controller.showWindow(nil)
     controller.window?.center()
 
-    NotificationCenter.default.addObserver(
+    skinLibraryWindowObserver = NotificationCenter.default.addObserver(
       forName: NSWindow.willCloseNotification,
       object: controller.window,
       queue: .main
     ) { [weak self] _ in
       self?.skinLibraryWindowController = nil
+      if let observer = self?.skinLibraryWindowObserver {
+        NotificationCenter.default.removeObserver(observer)
+        self?.skinLibraryWindowObserver = nil
+      }
     }
   }
 
@@ -863,7 +869,8 @@ extension ViewController {
         // Show success notification
         showNotification(
           title: Localized.GameLauncher.statusLaunched,
-          message: "Instance: \(instance.name), Version: \(instance.versionId), User: \(accountInfo.username)"
+          message:
+            "Instance: \(instance.name), Version: \(instance.versionId), User: \(accountInfo.username)"
         )
       } catch let error as GameLauncherError {
         Logger.shared.error(
@@ -881,7 +888,8 @@ extension ViewController {
         case .javaNotFound(let path):
           showAlert(
             title: Localized.GameLauncher.alertNoJavaTitle,
-            message: "\(Localized.GameLauncher.alertJavaNotFoundMessage(path))\n\n\(Localized.GameLauncher.alertNoJavaMessage)"
+            message:
+              "\(Localized.GameLauncher.alertJavaNotFoundMessage(path))\n\n\(Localized.GameLauncher.alertNoJavaMessage)"
           )
         case .launchFailed(let reason):
           showAlert(
