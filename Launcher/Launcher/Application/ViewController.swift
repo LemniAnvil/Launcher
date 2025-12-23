@@ -33,8 +33,8 @@ class ViewController: NSViewController {
   private var instances: [Instance] = []
 
   // UI elements
-  private let titleLabel: BRLabel = {
-    let label = BRLabel(
+  private let titleLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Instances.title,
       font: .systemFont(ofSize: 20, weight: .semibold),
       textColor: .labelColor,
@@ -43,8 +43,8 @@ class ViewController: NSViewController {
     return label
   }()
 
-  private let countLabel: BRLabel = {
-    let label = BRLabel(
+  private let countLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 12),
       textColor: .secondaryLabelColor,
@@ -216,8 +216,8 @@ class ViewController: NSViewController {
     return collectionView
   }()
 
-  private let emptyLabel: BRLabel = {
-    let label = BRLabel(
+  private let emptyLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Instances.emptyMessage,
       font: .systemFont(ofSize: 14),
       textColor: .secondaryLabelColor,

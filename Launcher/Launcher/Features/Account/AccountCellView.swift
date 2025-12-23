@@ -43,7 +43,7 @@ class AccountCellView: NSView {
     return imageView
   }()
 
-  let nameLabel = BRLabel(
+  let nameLabel = DisplayLabel(
     text: "",
     font: .systemFont(ofSize: 14, weight: .medium),
     textColor: BRColorPalette.text,
@@ -191,8 +191,8 @@ class AccountCellView: NSView {
 
   // MARK: - Helper Methods
 
-  func createDetailLabel(text: String, font: NSFont, color: NSColor) -> BRLabel {
-    BRLabel(
+  func createDetailLabel(text: String, font: NSFont, color: NSColor) -> DisplayLabel {
+    DisplayLabel(
       text: text,
       font: font,
       textColor: color,

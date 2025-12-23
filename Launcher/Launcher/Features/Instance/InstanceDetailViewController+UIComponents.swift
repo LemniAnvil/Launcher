@@ -25,8 +25,8 @@ extension InstanceDetailViewController {
     return imageView
   }
 
-  func createTitleLabel() -> BRLabel {
-    return BRLabel(
+  func createTitleLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 24, weight: .bold),
       textColor: .labelColor,
@@ -34,8 +34,8 @@ extension InstanceDetailViewController {
     )
   }
 
-  func createVersionLabel() -> BRLabel {
-    return BRLabel(
+  func createVersionLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 14),
       textColor: .secondaryLabelColor,
@@ -47,8 +47,8 @@ extension InstanceDetailViewController {
     return BRSeparator.horizontal()
   }
 
-  func createConfigTitleLabel() -> BRLabel {
-    return BRLabel(
+  func createConfigTitleLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: Localized.InstanceDetail.configurationTitle,
       font: .systemFont(ofSize: 16, weight: .semibold),
       textColor: .labelColor,
@@ -56,8 +56,8 @@ extension InstanceDetailViewController {
     )
   }
 
-  func createNameFieldLabel() -> BRLabel {
-    return BRLabel(
+  func createNameFieldLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: Localized.InstanceDetail.nameLabel,
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .secondaryLabelColor,
@@ -65,8 +65,8 @@ extension InstanceDetailViewController {
     )
   }
 
-  func createNameValueLabel() -> BRLabel {
-    return BRLabel(
+  func createNameValueLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -81,8 +81,8 @@ extension InstanceDetailViewController {
     return field
   }
 
-  func createVersionFieldLabel() -> BRLabel {
-    return BRLabel(
+  func createVersionFieldLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: Localized.InstanceDetail.versionLabel,
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .secondaryLabelColor,
@@ -90,8 +90,8 @@ extension InstanceDetailViewController {
     )
   }
 
-  func createVersionValueLabel() -> BRLabel {
-    return BRLabel(
+  func createVersionValueLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -99,8 +99,8 @@ extension InstanceDetailViewController {
     )
   }
 
-  func createIdFieldLabel() -> BRLabel {
-    return BRLabel(
+  func createIdFieldLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: Localized.InstanceDetail.idLabel,
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .secondaryLabelColor,
@@ -108,8 +108,8 @@ extension InstanceDetailViewController {
     )
   }
 
-  func createIdValueLabel() -> BRLabel {
-    let label = BRLabel(
+  func createIdValueLabel() -> DisplayLabel {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 11, weight: .regular),
       textColor: .tertiaryLabelColor,
@@ -119,8 +119,8 @@ extension InstanceDetailViewController {
     return label
   }
 
-  func createCreatedFieldLabel() -> BRLabel {
-    return BRLabel(
+  func createCreatedFieldLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: Localized.InstanceDetail.createdLabel,
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .secondaryLabelColor,
@@ -128,8 +128,8 @@ extension InstanceDetailViewController {
     )
   }
 
-  func createCreatedValueLabel() -> BRLabel {
-    return BRLabel(
+  func createCreatedValueLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -137,8 +137,8 @@ extension InstanceDetailViewController {
     )
   }
 
-  func createModifiedFieldLabel() -> BRLabel {
-    return BRLabel(
+  func createModifiedFieldLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: Localized.InstanceDetail.modifiedLabel,
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .secondaryLabelColor,
@@ -146,8 +146,8 @@ extension InstanceDetailViewController {
     )
   }
 
-  func createModifiedValueLabel() -> BRLabel {
-    return BRLabel(
+  func createModifiedValueLabel() -> DisplayLabel {
+    return DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,

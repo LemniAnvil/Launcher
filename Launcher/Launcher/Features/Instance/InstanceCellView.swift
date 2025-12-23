@@ -22,8 +22,8 @@ class InstanceCellView: NSView {
     return imageView
   }()
 
-  private let nameLabel: BRLabel = {
-    let label = BRLabel(
+  private let nameLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 14, weight: .medium),
       textColor: BRColorPalette.text,
@@ -32,8 +32,8 @@ class InstanceCellView: NSView {
     return label
   }()
 
-  private let versionLabel: BRLabel = {
-    let label = BRLabel(
+  private let versionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 11),
       textColor: BRColorPalette.secondaryText,

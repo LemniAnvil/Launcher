@@ -34,15 +34,15 @@ class MicrosoftAuthViewController: NSViewController {
   var onAuthFailure: ((Error) -> Void)?
 
   // UI components
-  private let titleLabel = BRLabel(
+  private let titleLabel = DisplayLabel(
     text: Localized.MicrosoftAuth.title,
     font: .systemFont(ofSize: 20, weight: .semibold),
     textColor: .labelColor,
     alignment: .center
   )
 
-  private let subtitleLabel: BRLabel = {
-    let label = BRLabel(
+  private let subtitleLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.MicrosoftAuth.subtitle,
       font: .systemFont(ofSize: 13),
       textColor: .secondaryLabelColor,
@@ -59,8 +59,8 @@ class MicrosoftAuthViewController: NSViewController {
     return imageView
   }()
 
-  private let statusLabel: BRLabel = {
-    let label = BRLabel(
+  private let statusLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.MicrosoftAuth.statusReady,
       font: .systemFont(ofSize: 12),
       textColor: .secondaryLabelColor,

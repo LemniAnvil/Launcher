@@ -43,8 +43,8 @@ class JavaDetectionViewController: NSViewController {
 
   // MARK: - UI Elements
 
-  private let titleLabel: BRLabel = {
-    let label = BRLabel(
+  private let titleLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.JavaDetection.title,
       font: .systemFont(ofSize: 20, weight: .semibold),
       textColor: .labelColor,
@@ -53,8 +53,8 @@ class JavaDetectionViewController: NSViewController {
     return label
   }()
 
-  private let subtitleLabel: BRLabel = {
-    let label = BRLabel(
+  private let subtitleLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.JavaDetection.subtitle,
       font: .systemFont(ofSize: 12, weight: .regular),
       textColor: .secondaryLabelColor,
@@ -151,8 +151,8 @@ class JavaDetectionViewController: NSViewController {
     return scrollView
   }()
 
-  private let statusLabel: BRLabel = {
-    let label = BRLabel(
+  private let statusLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.JavaDetection.statusReady,
       font: .systemFont(ofSize: 11),
       textColor: .secondaryLabelColor,
@@ -161,8 +161,8 @@ class JavaDetectionViewController: NSViewController {
     return label
   }()
 
-  private let detailsLabel: BRLabel = {
-    let label = BRLabel(
+  private let detailsLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 11),
       textColor: .labelColor,
@@ -173,8 +173,8 @@ class JavaDetectionViewController: NSViewController {
     return label
   }()
 
-  private let javaHomeLabel: BRLabel = {
-    let label = BRLabel(
+  private let javaHomeLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .monospacedSystemFont(ofSize: 10, weight: .regular),
       textColor: .secondaryLabelColor,

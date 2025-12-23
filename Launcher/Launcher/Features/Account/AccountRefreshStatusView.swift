@@ -229,7 +229,7 @@ class AccountRefreshStatusView: NSView {
     return imageView
   }()
 
-  private let statusLabel = BRLabel(
+  private let statusLabel = DisplayLabel(
     text: "",
     font: .systemFont(ofSize: 13, weight: .medium),
     textColor: .labelColor,
@@ -272,7 +272,7 @@ class AccountRefreshStatusView: NSView {
     addSubview(containerView)
 
     containerView.snp.makeConstraints { make in
-      make.edges.equalToSuperview().inset(BRSpacing.medium)
+      make.edges.equalToSuperview()
     }
 
     containerView.addSubview(progressIndicator)
@@ -315,11 +315,9 @@ class AccountRefreshStatusView: NSView {
   func startRefresh(accountName: String) {
     isLoginMode = false
 
-    // Show and expand the view
+    // Show the view
     isHidden = false
-    snp.updateConstraints { make in
-      make.height.equalTo(200)
-    }
+    alphaValue = 1
 
     progressIndicator.isHidden = false
     progressIndicator.startAnimation(nil)
@@ -354,11 +352,9 @@ class AccountRefreshStatusView: NSView {
   func startLogin(accountName: String) {
     isLoginMode = true
 
-    // Show and expand the view
+    // Show the view
     isHidden = false
-    snp.updateConstraints { make in
-      make.height.equalTo(200)
-    }
+    alphaValue = 1
 
     progressIndicator.isHidden = false
     progressIndicator.startAnimation(nil)
@@ -469,12 +465,6 @@ class AccountRefreshStatusView: NSView {
     NSAnimationContext.runAnimationGroup { context in
       context.duration = 0.3
       animator().alphaValue = 0
-
-      // Collapse height
-      snp.updateConstraints { make in
-        make.height.equalTo(0)
-      }
-      superview?.layoutSubtreeIfNeeded()
     } completionHandler: { [weak self] in
       self?.isHidden = true
       self?.alphaValue = 1

@@ -28,7 +28,7 @@ class VersionCollectionViewItem: NSCollectionViewItem {
     return imageView
   }()
 
-  private let versionLabel = BRLabel(
+  private let versionLabel = DisplayLabel(
     text: "",
     font: .systemFont(ofSize: 15, weight: .semibold),
     textColor: BRColorPalette.text,
@@ -36,7 +36,7 @@ class VersionCollectionViewItem: NSCollectionViewItem {
     lineBreakMode: .byTruncatingTail
   )
 
-  private let typeLabel = BRLabel(
+  private let typeLabel = DisplayLabel(
     text: "",
     font: .systemFont(ofSize: 11),
     textColor: BRColorPalette.secondaryText,

@@ -27,8 +27,8 @@ class DownloadSettingsViewController: NSViewController {
     return checkbox
   }()
 
-  private let fileVerificationDescriptionLabel: BRLabel = {
-    let label = BRLabel(
+  private let fileVerificationDescriptionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Settings.fileVerificationDescription,
       font: .systemFont(ofSize: 11),
       textColor: .secondaryLabelColor,
@@ -37,8 +37,8 @@ class DownloadSettingsViewController: NSViewController {
     return label
   }()
 
-  private let maxConcurrentLabel: BRLabel = {
-    let label = BRLabel(
+  private let maxConcurrentLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Settings.maxConcurrentLabel,
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -59,8 +59,8 @@ class DownloadSettingsViewController: NSViewController {
     return slider
   }()
 
-  private lazy var maxConcurrentValueLabel: BRLabel = {
-    let label = BRLabel(
+  private lazy var maxConcurrentValueLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "\(downloadSettingsManager.maxConcurrentDownloads)",
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -69,8 +69,8 @@ class DownloadSettingsViewController: NSViewController {
     return label
   }()
 
-  private let maxConcurrentDescriptionLabel: BRLabel = {
-    let label = BRLabel(
+  private let maxConcurrentDescriptionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Settings.concurrentDescription,
       font: .systemFont(ofSize: 11),
       textColor: .secondaryLabelColor,
@@ -79,8 +79,8 @@ class DownloadSettingsViewController: NSViewController {
     return label
   }()
 
-  private let requestTimeoutLabel: BRLabel = {
-    let label = BRLabel(
+  private let requestTimeoutLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Settings.requestTimeoutLabel,
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -101,8 +101,8 @@ class DownloadSettingsViewController: NSViewController {
     return slider
   }()
 
-  private lazy var requestTimeoutValueLabel: BRLabel = {
-    let label = BRLabel(
+  private lazy var requestTimeoutValueLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "\(downloadSettingsManager.requestTimeout)s",
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -111,8 +111,8 @@ class DownloadSettingsViewController: NSViewController {
     return label
   }()
 
-  private let requestTimeoutDescriptionLabel: BRLabel = {
-    let label = BRLabel(
+  private let requestTimeoutDescriptionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Settings.requestTimeoutDescription,
       font: .systemFont(ofSize: 11),
       textColor: .secondaryLabelColor,
@@ -121,8 +121,8 @@ class DownloadSettingsViewController: NSViewController {
     return label
   }()
 
-  private let resourceTimeoutLabel: BRLabel = {
-    let label = BRLabel(
+  private let resourceTimeoutLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Settings.resourceTimeoutLabel,
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -143,8 +143,8 @@ class DownloadSettingsViewController: NSViewController {
     return slider
   }()
 
-  private lazy var resourceTimeoutValueLabel: BRLabel = {
-    let label = BRLabel(
+  private lazy var resourceTimeoutValueLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "\(downloadSettingsManager.resourceTimeout)s",
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -153,8 +153,8 @@ class DownloadSettingsViewController: NSViewController {
     return label
   }()
 
-  private let resourceTimeoutDescriptionLabel: BRLabel = {
-    let label = BRLabel(
+  private let resourceTimeoutDescriptionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Settings.resourceTimeoutDescription,
       font: .systemFont(ofSize: 11),
       textColor: .secondaryLabelColor,
@@ -173,8 +173,8 @@ class DownloadSettingsViewController: NSViewController {
     return checkbox
   }()
 
-  private let v2ManifestDescriptionLabel: BRLabel = {
-    let label = BRLabel(
+  private let v2ManifestDescriptionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Settings.v2ManifestDescription,
       font: .systemFont(ofSize: 11),
       textColor: .secondaryLabelColor,

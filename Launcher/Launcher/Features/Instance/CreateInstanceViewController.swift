@@ -49,8 +49,8 @@ class CreateInstanceViewController: NSViewController {
     return imageView
   }()
 
-  private let nameLabel: BRLabel = {
-    let label = BRLabel(
+  private let nameLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Instances.instanceNameLabel,
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .labelColor,
@@ -67,8 +67,8 @@ class CreateInstanceViewController: NSViewController {
     return field
   }()
 
-  private let versionLabel: BRLabel = {
-    let label = BRLabel(
+  private let versionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Instances.versionLabel,
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -278,8 +278,8 @@ class CreateInstanceViewController: NSViewController {
 
 // MARK: - String Extension
 
-private extension String {
-  var nonEmpty: String? {
+extension String {
+  fileprivate var nonEmpty: String? {
     let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
     return trimmed.isEmpty ? nil : trimmed
   }

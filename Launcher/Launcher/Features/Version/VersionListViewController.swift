@@ -52,8 +52,8 @@ class VersionListViewController: NSViewController {
     return imageView
   }()
 
-  private let nameLabel: BRLabel = {
-    let label = BRLabel(
+  private let nameLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Instances.instanceNameLabel,
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .labelColor,
@@ -72,8 +72,8 @@ class VersionListViewController: NSViewController {
 
   // MARK: - Version Selection UI
 
-  private let versionSectionLabel: BRLabel = {
-    let label = BRLabel(
+  private let versionSectionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Instances.versionLabel,
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .labelColor,
@@ -211,8 +211,8 @@ class VersionListViewController: NSViewController {
     return bar
   }()
 
-  private let statusLabel: BRLabel = {
-    let label = BRLabel(
+  private let statusLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.VersionListWindow.statusReady,
       font: .systemFont(ofSize: 11),
       textColor: .secondaryLabelColor,

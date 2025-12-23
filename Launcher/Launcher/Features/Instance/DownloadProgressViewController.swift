@@ -20,8 +20,8 @@ class DownloadProgressViewController: NSViewController {
 
   // MARK: - UI Components
 
-  private let titleLabel: BRLabel = {
-    let label = BRLabel(
+  private let titleLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "Downloading Minecraft",
       font: .systemFont(ofSize: 18, weight: .semibold),
       textColor: .labelColor,
@@ -30,8 +30,8 @@ class DownloadProgressViewController: NSViewController {
     return label
   }()
 
-  private let versionLabel: BRLabel = {
-    let label = BRLabel(
+  private let versionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 14),
       textColor: .secondaryLabelColor,
@@ -50,8 +50,8 @@ class DownloadProgressViewController: NSViewController {
     return indicator
   }()
 
-  private let progressLabel: BRLabel = {
-    let label = BRLabel(
+  private let progressLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "0%",
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .labelColor,
@@ -60,8 +60,8 @@ class DownloadProgressViewController: NSViewController {
     return label
   }()
 
-  private let taskProgressLabel: BRLabel = {
-    let label = BRLabel(
+  private let taskProgressLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "0 / 0 files",
       font: .systemFont(ofSize: 12),
       textColor: .secondaryLabelColor,
@@ -70,8 +70,8 @@ class DownloadProgressViewController: NSViewController {
     return label
   }()
 
-  private let bytesProgressLabel: BRLabel = {
-    let label = BRLabel(
+  private let bytesProgressLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "0 MB / 0 MB",
       font: .systemFont(ofSize: 12),
       textColor: .secondaryLabelColor,
@@ -80,8 +80,8 @@ class DownloadProgressViewController: NSViewController {
     return label
   }()
 
-  private let speedLabel: BRLabel = {
-    let label = BRLabel(
+  private let speedLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "Speed: 0 MB/s",
       font: .systemFont(ofSize: 12),
       textColor: .tertiaryLabelColor,
@@ -90,8 +90,8 @@ class DownloadProgressViewController: NSViewController {
     return label
   }()
 
-  private let statusLabel: BRLabel = {
-    let label = BRLabel(
+  private let statusLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "Preparing download...",
       font: .systemFont(ofSize: 11),
       textColor: .tertiaryLabelColor,

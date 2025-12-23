@@ -48,8 +48,8 @@ class OfflineLaunchViewController: NSViewController {
   private var selectedAccountInfo: AccountInfo?
 
   // UI components
-  private let titleLabel: BRLabel = {
-    let label = BRLabel(
+  private let titleLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.OfflineLaunch.title,
       font: .systemFont(ofSize: 18, weight: .semibold),
       textColor: .labelColor,
@@ -58,8 +58,8 @@ class OfflineLaunchViewController: NSViewController {
     return label
   }()
 
-  private let descriptionLabel: BRLabel = {
-    let label = BRLabel(
+  private let descriptionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.OfflineLaunch.description,
       font: .systemFont(ofSize: 13),
       textColor: .secondaryLabelColor,
@@ -69,8 +69,8 @@ class OfflineLaunchViewController: NSViewController {
     return label
   }()
 
-  private let accountLabel: BRLabel = {
-    let label = BRLabel(
+  private let accountLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.OfflineLaunch.selectAccountLabel,
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -107,8 +107,8 @@ class OfflineLaunchViewController: NSViewController {
     return tableView
   }()
 
-  private let emptyLabel: BRLabel = {
-    let label = BRLabel(
+  private let emptyLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.OfflineLaunch.noAccountsMessage,
       font: .systemFont(ofSize: 13),
       textColor: .secondaryLabelColor,
@@ -380,7 +380,7 @@ extension OfflineLaunchViewController: NSTableViewDelegate {
     }
 
     // Create name label
-    let nameLabel = BRLabel(
+    let nameLabel = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .labelColor,

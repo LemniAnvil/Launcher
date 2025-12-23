@@ -22,8 +22,8 @@ class InstanceSidebarView: NSView {
     return imageView
   }()
 
-  private let instanceNameLabel: BRLabel = {
-    let label = BRLabel(
+  private let instanceNameLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 16, weight: .semibold),
       textColor: .labelColor,
@@ -33,8 +33,8 @@ class InstanceSidebarView: NSView {
     return label
   }()
 
-  private let versionLabel: BRLabel = {
-    let label = BRLabel(
+  private let versionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 12),
       textColor: .secondaryLabelColor,
@@ -44,8 +44,8 @@ class InstanceSidebarView: NSView {
   }()
 
   /// Badge for external instance source
-  private let sourceBadge: BRLabel = {
-    let label = BRLabel(
+  private let sourceBadge: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 10, weight: .medium),
       textColor: .white,
@@ -151,8 +151,8 @@ class InstanceSidebarView: NSView {
     return button
   }()
 
-  private let emptyStateLabel: BRLabel = {
-    let label = BRLabel(
+  private let emptyStateLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Instances.sidebarEmptyState,
       font: .systemFont(ofSize: 13),
       textColor: .secondaryLabelColor,

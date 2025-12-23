@@ -34,8 +34,8 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
     return imageView
   }()
 
-  private let nameLabel: BRLabel = {
-    let label = BRLabel(
+  private let nameLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 15, weight: .semibold),
       textColor: BRColorPalette.text,
@@ -45,8 +45,8 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
     return label
   }()
 
-  private let versionLabel: BRLabel = {
-    let label = BRLabel(
+  private let versionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: "",
       font: .systemFont(ofSize: 11),
       textColor: BRColorPalette.secondaryText,
@@ -56,8 +56,8 @@ class InstanceCollectionViewItem: NSCollectionViewItem {
   }()
 
   /// Badge view for external instance indicator
-  private let externalBadge: BRLabel = {
-    let label = BRLabel(
+  private let externalBadge: DisplayLabel = {
+    let label = DisplayLabel(
       text: "Prism",
       font: .systemFont(ofSize: 9, weight: .medium),
       textColor: .white,

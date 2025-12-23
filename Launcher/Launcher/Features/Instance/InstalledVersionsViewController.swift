@@ -18,7 +18,7 @@ class InstalledVersionsViewController: NSViewController {
   private var installedVersions: [String] = []
 
   // UI components
-  private let titleLabel = BRLabel(
+  private let titleLabel = DisplayLabel(
     text: Localized.InstalledVersions.title,
     font: .systemFont(ofSize: 20, weight: .semibold),
     textColor: .labelColor,
@@ -63,7 +63,7 @@ class InstalledVersionsViewController: NSViewController {
     return tableView
   }()
 
-  private let emptyLabel = BRLabel(
+  private let emptyLabel = DisplayLabel(
     text: Localized.InstalledVersions.emptyMessage,
     font: .systemFont(ofSize: 14),
     textColor: .secondaryLabelColor,
@@ -87,7 +87,7 @@ class InstalledVersionsViewController: NSViewController {
     return button
   }()
 
-  private let countLabel = BRLabel(
+  private let countLabel = DisplayLabel(
     text: "",
     font: .systemFont(ofSize: 12),
     textColor: .secondaryLabelColor,

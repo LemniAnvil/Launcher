@@ -27,8 +27,8 @@ class ProxySettingsViewController: NSViewController {
     return checkbox
   }()
 
-  private let typeLabel: BRLabel = {
-    let label = BRLabel(
+  private let typeLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Settings.proxyTypeLabel,
       font: .systemFont(ofSize: 13),
       textColor: .labelColor,
@@ -40,7 +40,8 @@ class ProxySettingsViewController: NSViewController {
   private lazy var proxyTypePopup: NSPopUpButton = {
     let popup = NSPopUpButton()
     popup.addItems(withTitles: ProxyManager.ProxyType.allCases.map { $0.displayName })
-    popup.selectItem(at: ProxyManager.ProxyType.allCases.firstIndex(of: proxyManager.proxyType) ?? 0)
+    popup.selectItem(
+      at: ProxyManager.ProxyType.allCases.firstIndex(of: proxyManager.proxyType) ?? 0)
     popup.isEnabled = proxyManager.proxyEnabled
     return popup
   }()
@@ -54,8 +55,8 @@ class ProxySettingsViewController: NSViewController {
     return field
   }()
 
-  private lazy var colonLabel: BRLabel = {
-    let label = BRLabel(
+  private lazy var colonLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: ":",
       font: .systemFont(ofSize: 13),
       textColor: proxyManager.proxyEnabled ? .labelColor : .disabledControlTextColor,
@@ -83,8 +84,8 @@ class ProxySettingsViewController: NSViewController {
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemGreen,
       accessibilityLabel: Localized.Settings.applyButton
@@ -100,8 +101,8 @@ class ProxySettingsViewController: NSViewController {
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemOrange,
       accessibilityLabel: Localized.Settings.detectSystemProxyButton
@@ -117,8 +118,8 @@ class ProxySettingsViewController: NSViewController {
       cornerRadius: 6,
       highlightColorProvider: { [weak self] in
         self?.view.effectiveAppearance.name == .darkAqua
-        ? NSColor.white.withAlphaComponent(0.1)
-        : NSColor.black.withAlphaComponent(0.06)
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
       accessibilityLabel: Localized.Settings.testButton
@@ -128,8 +129,8 @@ class ProxySettingsViewController: NSViewController {
     return button
   }()
 
-  private let statusLabel: BRLabel = {
-    let label = BRLabel(
+  private let statusLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Settings.statusReady,
       font: .systemFont(ofSize: 12),
       textColor: .secondaryLabelColor,
@@ -180,33 +181,33 @@ class ProxySettingsViewController: NSViewController {
     proxyTypePopup.snp.makeConstraints { make in
       make.centerY.equalTo(typeLabel)
       make.left.equalTo(typeLabel.snp.right).offset(8)
-      make.width.equalTo(100)
+      make.width.equalTo(100).priority(.high)
       make.height.equalTo(28)
     }
 
     proxyHostField.snp.makeConstraints { make in
       make.centerY.equalTo(typeLabel)
       make.left.equalTo(proxyTypePopup.snp.right).offset(16)
-      make.width.equalTo(160)
+      make.width.equalTo(160).priority(.high)
       make.height.equalTo(28)
     }
 
     colonLabel.snp.makeConstraints { make in
       make.centerY.equalTo(typeLabel)
       make.left.equalTo(proxyHostField.snp.right).offset(4)
-      make.width.equalTo(10)
+      make.width.equalTo(10).priority(.high)
     }
 
     proxyPortField.snp.makeConstraints { make in
       make.centerY.equalTo(typeLabel)
       make.left.equalTo(colonLabel.snp.right).offset(4)
-      make.right.equalToSuperview().offset(-20)
+      make.right.equalToSuperview().offset(-20).priority(.high)
       make.height.equalTo(28)
     }
 
     proxySeparator.snp.makeConstraints { make in
       make.top.equalTo(typeLabel.snp.bottom).offset(20)
-      make.left.right.equalToSuperview().inset(20)
+      make.left.right.equalToSuperview().inset(20).priority(.high)
       make.height.equalTo(1)
     }
 
@@ -231,7 +232,7 @@ class ProxySettingsViewController: NSViewController {
 
     statusLabel.snp.makeConstraints { make in
       make.top.equalTo(testProxyButton.snp.bottom).offset(16)
-      make.left.right.equalToSuperview().inset(20)
+      make.left.right.equalToSuperview().inset(20).priority(.high)
     }
   }
 
@@ -303,7 +304,8 @@ class ProxySettingsViewController: NSViewController {
           self.proxyPortField.stringValue = "\(self.proxyManager.proxyPort)"
 
           // Update proxy type popup
-          if let index = ProxyManager.ProxyType.allCases.firstIndex(of: self.proxyManager.proxyType) {
+          if let index = ProxyManager.ProxyType.allCases.firstIndex(of: self.proxyManager.proxyType)
+          {
             self.proxyTypePopup.selectItem(at: index)
           }
 
@@ -350,7 +352,8 @@ class ProxySettingsViewController: NSViewController {
       } catch {
         await MainActor.run {
           statusLabel.stringValue = Localized.Settings.statusTestFailed
-          Logger.shared.error("Proxy test failed: \(error.localizedDescription)", category: "Settings")
+          Logger.shared.error(
+            "Proxy test failed: \(error.localizedDescription)", category: "Settings")
 
           showAlert(
             title: Localized.Settings.alertTestFailedTitle,

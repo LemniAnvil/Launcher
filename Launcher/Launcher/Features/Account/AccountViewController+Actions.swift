@@ -508,7 +508,8 @@ extension AccountViewController {
 
     // Clear default account if this was the default
     let defaultManager = DefaultAccountManager.shared
-    if let defaultId = defaultManager.getDefaultAccountId(), defaultId == accountId {
+    let type: DefaultAccountManager.AccountType = isOffline ? .offline : .microsoft
+    if defaultManager.isDefaultAccount(id: accountId, type: type) {
       defaultManager.clearDefaultAccount()
       Logger.shared.info("Cleared default account as it was deleted", category: "Account")
     }

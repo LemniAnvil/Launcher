@@ -22,14 +22,14 @@ class VersionCellView: NSView {
     return imageView
   }()
 
-  private let versionLabel = BRLabel(
+  private let versionLabel = DisplayLabel(
     text: "",
     font: .systemFont(ofSize: 14, weight: .medium),
     textColor: BRColorPalette.text,
     alignment: .left
   )
 
-  private let typeLabel = BRLabel(
+  private let typeLabel = DisplayLabel(
     text: "",
     font: .systemFont(ofSize: 11),
     textColor: BRColorPalette.secondaryText,

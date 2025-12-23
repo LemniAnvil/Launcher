@@ -45,14 +45,14 @@ class AccountViewController: NSViewController {
   }
 
   // UI components
-  private let titleLabel = BRLabel(
+  private let titleLabel = DisplayLabel(
     text: Localized.Account.title,
     font: BRFonts.largeTitle,
     textColor: .labelColor,
     alignment: .left
   )
 
-  private let subtitleLabel = BRLabel(
+  private let subtitleLabel = DisplayLabel(
     text: Localized.Account.subtitle,
     font: BRFonts.caption,
     textColor: .secondaryLabelColor,
@@ -112,8 +112,8 @@ class AccountViewController: NSViewController {
     return tableView
   }()
 
-  private let emptyLabel: BRLabel = {
-    let label = BRLabel(
+  private let emptyLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.Account.emptyMicrosoftMessage,
       font: BRFonts.body,
       textColor: .secondaryLabelColor,
@@ -133,7 +133,7 @@ class AccountViewController: NSViewController {
     return toggle
   }()
 
-  private let developerModeLabel = BRLabel(
+  private let developerModeLabel = DisplayLabel(
     text: Localized.Account.developerModeLabel,
     font: BRFonts.caption,
     textColor: .secondaryLabelColor,
@@ -222,11 +222,10 @@ class AccountViewController: NSViewController {
       make.left.right.equalToSuperview().inset(40)
     }
 
-    // Position refresh status view to overlay on top of scroll view
+    // Position refresh status view above scroll view
     refreshStatusView.snp.makeConstraints { make in
       make.top.equalTo(loginMicrosoftButton.snp.bottom).offset(16)
       make.left.right.equalToSuperview().inset(20)
-      make.height.equalTo(0)  // Initially collapsed
     }
   }
 

@@ -202,8 +202,8 @@ class AddInstanceViewController: NSViewController {
     return imageView
   }()
 
-  private let nameLabel: BRLabel = {
-    let label = BRLabel(
+  private let nameLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.AddInstance.nameLabel,
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .labelColor,
@@ -220,8 +220,8 @@ class AddInstanceViewController: NSViewController {
     return field
   }()
 
-  private let groupLabel: BRLabel = {
-    let label = BRLabel(
+  private let groupLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.AddInstance.groupLabel,
       font: .systemFont(ofSize: 13, weight: .medium),
       textColor: .labelColor,
@@ -377,7 +377,7 @@ class AddInstanceViewController: NSViewController {
     return field
   }()
 
-  private lazy var curseForgeSortLabel = BRLabel(
+  private lazy var curseForgeSortLabel = DisplayLabel(
     text: Localized.AddInstance.sortByLabel,
     font: .systemFont(ofSize: 12, weight: .medium),
     textColor: .labelColor,
@@ -450,8 +450,8 @@ class AddInstanceViewController: NSViewController {
     return indicator
   }()
 
-  private let curseForgeEmptyLabel: BRLabel = {
-    let label = BRLabel(
+  private let curseForgeEmptyLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.AddInstance.noModpacksFound,
       font: .systemFont(ofSize: 13),
       textColor: .secondaryLabelColor,
@@ -461,7 +461,7 @@ class AddInstanceViewController: NSViewController {
     return label
   }()
 
-  private let curseForgeVersionLabel = BRLabel(
+  private let curseForgeVersionLabel = DisplayLabel(
     text: Localized.AddInstance.versionSelectedLabel,
     font: .systemFont(ofSize: 12, weight: .medium),
     textColor: .labelColor,
@@ -518,9 +518,9 @@ class AddInstanceViewController: NSViewController {
     return stackView
   }()
 
-  private let curseForgeFilterTitleLabel: BRLabel = {
+  private let curseForgeFilterTitleLabel: DisplayLabel = {
 
-    let label = BRLabel(
+    let label = DisplayLabel(
       text: Localized.AddInstance.categoriesFilterTitle,
       font: .systemFont(ofSize: 13, weight: .semibold),
       textColor: .labelColor,
@@ -529,9 +529,9 @@ class AddInstanceViewController: NSViewController {
     return label
   }()
 
-  private let versionTitleLabel: BRLabel = {
+  private let versionTitleLabel: DisplayLabel = {
 
-    let label = BRLabel(
+    let label = DisplayLabel(
       text: Localized.AddInstance.customTitle,
       font: .systemFont(ofSize: 16, weight: .semibold),
       textColor: .labelColor,
@@ -540,8 +540,8 @@ class AddInstanceViewController: NSViewController {
     return label
   }()
 
-  private let filterLabel: BRLabel = {
-    let label = BRLabel(
+  private let filterLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.AddInstance.filterLabel,
       font: .systemFont(ofSize: 12),
       textColor: .secondaryLabelColor,
@@ -655,8 +655,8 @@ class AddInstanceViewController: NSViewController {
     return tableView
   }()
 
-  private let modLoaderLabel: BRLabel = {
-    let label = BRLabel(
+  private let modLoaderLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.AddInstance.modLoaderTitle,
       font: .systemFont(ofSize: 14, weight: .semibold),
       textColor: .labelColor,
@@ -667,8 +667,8 @@ class AddInstanceViewController: NSViewController {
 
   private let versionModLoaderSeparator: BRSeparator = BRSeparator(type: .horizontal)
 
-  private let modLoaderPlaceholder: BRLabel = {
-    let label = BRLabel(
+  private let modLoaderPlaceholder: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.AddInstance.modLoaderPlaceholder,
       font: .systemFont(ofSize: 13),
       textColor: .secondaryLabelColor,
@@ -679,8 +679,8 @@ class AddInstanceViewController: NSViewController {
     return label
   }()
 
-  private let modLoaderVersionPlaceholder: BRLabel = {
-    let label = BRLabel(
+  private let modLoaderVersionPlaceholder: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.AddInstance.modLoaderVersionPlaceholder,
       font: .systemFont(ofSize: 13),
       textColor: .tertiaryLabelColor,
@@ -691,8 +691,8 @@ class AddInstanceViewController: NSViewController {
     return label
   }()
 
-  private lazy var modLoaderDescriptionLabel: BRLabel = {
-    let label = BRLabel(
+  private lazy var modLoaderDescriptionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.AddInstance.modLoaderDescription,
       font: .systemFont(ofSize: 11),
       textColor: .tertiaryLabelColor,
@@ -703,8 +703,8 @@ class AddInstanceViewController: NSViewController {
     return label
   }()
 
-  private lazy var modLoaderVersionLabel: BRLabel = {
-    let label = BRLabel(
+  private lazy var modLoaderVersionLabel: DisplayLabel = {
+    let label = DisplayLabel(
       text: Localized.AddInstance.modLoaderVersionLabel,
       font: .systemFont(ofSize: 12, weight: .medium),
       textColor: .labelColor,
@@ -1372,14 +1372,14 @@ class AddInstanceViewController: NSViewController {
   }
 
   private func setupPlaceholderContent(for contentView: NSView, title: String) {
-    let titleLabel = BRLabel(
+    let titleLabel = DisplayLabel(
       text: title,
       font: .systemFont(ofSize: 16, weight: .semibold),
       textColor: .labelColor,
       alignment: .center
     )
 
-    let comingSoonLabel = BRLabel(
+    let comingSoonLabel = DisplayLabel(
       text: "Coming Soon",
       font: .systemFont(ofSize: 14),
       textColor: .secondaryLabelColor,
@@ -1724,7 +1724,7 @@ class AddInstanceViewController: NSViewController {
 
   /// Show error message when categories fail to load
   private func showCategoryLoadError() {
-    let errorLabel = BRLabel(
+    let errorLabel = DisplayLabel(
       text: Localized.AddInstance.errorLoadCategoriesFailed,
       font: .systemFont(ofSize: 11),
       textColor: .systemRed,
