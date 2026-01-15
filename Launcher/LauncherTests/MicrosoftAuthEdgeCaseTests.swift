@@ -5,7 +5,7 @@
 //  Edge case, mock reset, and response validation tests for Microsoft Authentication
 //
 
-import MojangAPI
+import CraftKit
 import XCTest
 
 @testable import Launcher

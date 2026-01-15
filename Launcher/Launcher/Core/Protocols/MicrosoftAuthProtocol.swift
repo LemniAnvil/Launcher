@@ -5,8 +5,8 @@
 //  Protocol for Microsoft Authentication Manager to enable dependency injection and testing
 //
 
+import CraftKit
 import Foundation
-import MojangAPI
 
 /// Protocol defining Microsoft authentication operations
 protocol MicrosoftAuthProtocol {
@@ -20,10 +20,10 @@ protocol MicrosoftAuthProtocol {
   func getAuthorizationToken(authCode: String, codeVerifier: String) async throws -> AuthorizationTokenResponse
 
   /// Authenticates with Xbox Live using Microsoft access token
-  func authenticateWithXBL(accessToken: String) async throws -> XBLResponse
+  func authenticateWithXBL(accessToken: String) async throws -> XBLAuthResponse
 
   /// Authenticates with XSTS using XBL token
-  func authenticateWithXSTS(xblToken: String) async throws -> XBLResponse
+  func authenticateWithXSTS(xblToken: String) async throws -> XBLAuthResponse
 
   /// Authenticates with Minecraft using XSTS token
   func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws -> MinecraftAuthResponse

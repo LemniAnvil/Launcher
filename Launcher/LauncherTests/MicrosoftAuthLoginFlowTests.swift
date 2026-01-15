@@ -5,7 +5,7 @@
 //  Complete login flow tests for Microsoft Authentication
 //
 
-import MojangAPI
+import CraftKit
 import XCTest
 
 @testable import Launcher

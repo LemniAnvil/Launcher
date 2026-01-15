@@ -5,7 +5,7 @@
 //  Unit tests for Microsoft Authentication Manager
 //
 
-import MojangAPI
+import CraftKit
 import XCTest
 
 @testable import Launcher
