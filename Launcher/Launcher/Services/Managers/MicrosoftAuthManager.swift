@@ -6,8 +6,8 @@
 //  Implements OAuth 2.0 + Xbox Live + Minecraft Services authentication flow
 //
 
+import CraftKit
 import Foundation
-import MojangAPI
 
 // MARK: - Secure Login Data
 
@@ -15,6 +15,54 @@ struct SecureLoginData {
   let url: String
   let state: String
   let codeVerifier: String
+}
+
+// MARK: - Auth Configuration
+
+struct AuthConfiguration {
+  let clientID: String
+  let redirectURI: String
+  let scope: String
+
+  init(
+    clientID: String,
+    redirectURI: String = "LemniAnvil-launcher://auth",
+    scope: String = "XboxLive.signin offline_access"
+  ) {
+    self.clientID = clientID
+    self.redirectURI = redirectURI
+    self.scope = scope
+  }
+
+  static func fromBundle(_ bundle: Bundle = .main) -> Self? {
+    guard let clientID = bundle.infoDictionary?["MicrosoftClientID"] as? String,
+      !clientID.isEmpty,
+      !clientID.contains("YOUR_"),
+      !clientID.contains("00000000-0000-0000-0000-000000000000")
+    else {
+      return nil
+    }
+    return Self(clientID: clientID)
+  }
+
+  static func fromBundleOrFatal(_ bundle: Bundle = .main) -> Self {
+    guard let config = fromBundle(bundle) else {
+      fatalError(
+        """
+        ❌ Microsoft Client ID not configured!
+
+        Please follow these steps:
+        1. Ensure Config.xcconfig exists and contains MICROSOFT_CLIENT_ID
+        2. Replace YOUR_MICROSOFT_CLIENT_ID_HERE with your actual client ID
+        3. Configure the xcconfig file in Xcode project settings
+        4. Clean build folder (⌘⇧K) and rebuild
+
+        Get your client ID from: https://portal.azure.com/
+        """
+      )
+    }
+    return config
+  }
 }
 
 // MARK: - Microsoft Authentication Manager
@@ -42,9 +90,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     let state = PKCEHelper.generateState()
     let codePair = PKCEHelper.generateCodePair()
 
-    let endpoint = MojangEndpoint.microsoftOAuthAuthorize
-    let url = try endpoint.buildURL()
-    guard var components = URLComponents(string: url.absoluteString) else {
+    let url = APIService.MicrosoftAuth.authorize
+    guard var components = URLComponents(string: url) else {
       throw MicrosoftAuthError.invalidURL
     }
     components.queryItems = [
@@ -80,7 +127,9 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     }
 
     // Check state to prevent CSRF attacks
-    if let stateItem = components.queryItems?.first(where: { $0.name == "state" }), let state = stateItem.value {
+    if let stateItem = components.queryItems?.first(where: { $0.name == "state" }),
+      let state = stateItem.value
+    {
       guard state == expectedState else {
         throw MicrosoftAuthError.stateMismatch
       }
@@ -103,8 +152,10 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     authCode: String,
     codeVerifier: String
   ) async throws -> AuthorizationTokenResponse {
-    let endpoint = MojangEndpoint.microsoftOAuthToken
-    let url = try endpoint.buildURL()
+    let urlString = APIService.MicrosoftAuth.token
+    guard let url = URL(string: urlString) else {
+      throw MicrosoftAuthError.invalidURL
+    }
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
@@ -131,7 +182,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     guard let httpResponse = response as? HTTPURLResponse,
       (200...299).contains(httpResponse.statusCode)
     else {
-      throw MicrosoftAuthError.httpError
+      let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+      throw MicrosoftAuthError.httpError(statusCode: statusCode, message: nil)
     }
 
     return try JSONDecoder().decode(AuthorizationTokenResponse.self, from: data)
@@ -140,7 +192,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // MARK: - Step 4: Authenticate with Xbox Live
 
   /// Authenticates with Xbox Live using Microsoft access token
-  func authenticateWithXBL(accessToken: String) async throws -> XBLResponse {
+  func authenticateWithXBL(accessToken: String) async throws -> XBLAuthResponse {
     guard let url = URL(string: APIService.XboxLive.authenticate) else {
       throw MicrosoftAuthError.invalidURL
     }
@@ -166,16 +218,16 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     guard let httpResponse = response as? HTTPURLResponse,
       (200...299).contains(httpResponse.statusCode)
     else {
-      throw MicrosoftAuthError.xblAuthFailed
+      throw MicrosoftAuthError.xblAuthFailed(NSError(domain: "XBLAuth", code: -1))
     }
 
-    return try JSONDecoder().decode(XBLResponse.self, from: data)
+    return try JSONDecoder().decode(XBLAuthResponse.self, from: data)
   }
 
   // MARK: - Step 5: Authenticate with XSTS
 
   /// Authenticates with XSTS using XBL token
-  func authenticateWithXSTS(xblToken: String) async throws -> XBLResponse {
+  func authenticateWithXSTS(xblToken: String) async throws -> XBLAuthResponse {
     guard let url = URL(string: APIService.XboxLive.authorize) else {
       throw MicrosoftAuthError.invalidURL
     }
@@ -200,16 +252,18 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     guard let httpResponse = response as? HTTPURLResponse,
       (200...299).contains(httpResponse.statusCode)
     else {
-      throw MicrosoftAuthError.xstsAuthFailed
+      throw MicrosoftAuthError.xstsAuthFailed(NSError(domain: "XSTSAuth", code: -1))
     }
 
-    return try JSONDecoder().decode(XBLResponse.self, from: data)
+    return try JSONDecoder().decode(XBLAuthResponse.self, from: data)
   }
 
   // MARK: - Step 6: Authenticate with Minecraft
 
   /// Authenticates with Minecraft using XSTS token
-  func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws -> MinecraftAuthResponse {
+  func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws
+    -> MinecraftAuthResponse
+  {
     guard let url = URL(string: APIService.MinecraftServices.loginWithXbox) else {
       throw MicrosoftAuthError.invalidURL
     }
@@ -229,7 +283,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     guard let httpResponse = response as? HTTPURLResponse,
       (200...299).contains(httpResponse.statusCode)
     else {
-      throw MicrosoftAuthError.minecraftAuthFailed
+      throw MicrosoftAuthError.minecraftAuthFailed(NSError(domain: "MinecraftAuth", code: -1))
     }
 
     return try JSONDecoder().decode(MinecraftAuthResponse.self, from: data)
@@ -251,7 +305,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     guard let httpResponse = response as? HTTPURLResponse,
       (200...299).contains(httpResponse.statusCode)
     else {
-      throw MicrosoftAuthError.profileFetchFailed
+      throw MicrosoftAuthError.profileFetchFailed(NSError(domain: "ProfileFetch", code: -1))
     }
 
     return try JSONDecoder().decode(MinecraftProfileResponse.self, from: data)
@@ -293,7 +347,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     return buildCompleteLoginResponse(
       profile: profile,
       accessToken: minecraftAuth.accessToken,
-      refreshToken: tokenResponse.refreshToken
+      refreshToken: tokenResponse.refreshToken ?? ""
     )
   }
 
@@ -301,8 +355,10 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
 
   /// Refreshes authentication using refresh token
   func refreshAuthorizationToken(refreshToken: String) async throws -> AuthorizationTokenResponse {
-    let endpoint = MojangEndpoint.microsoftOAuthToken
-    let url = try endpoint.buildURL()
+    let urlString = APIService.MicrosoftAuth.token
+    guard let url = URL(string: urlString) else {
+      throw MicrosoftAuthError.invalidURL
+    }
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
@@ -355,7 +411,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     return buildCompleteLoginResponse(
       profile: profile,
       accessToken: minecraftAuth.accessToken,
-      refreshToken: tokenResponse.refreshToken
+      refreshToken: tokenResponse.refreshToken ?? ""
     )
   }
 
@@ -396,5 +452,3 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     )
   }
 }
-
-// MARK: - Error Types

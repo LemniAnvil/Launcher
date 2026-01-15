@@ -5,8 +5,8 @@
 //  Mock implementation of MicrosoftAuthManager for testing
 //
 
+import CraftKit
 import Foundation
-import MojangAPI
 
 @testable import Launcher
 

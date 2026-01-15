@@ -5,7 +5,7 @@
 //  Refresh token flow and individual step tests for Microsoft Authentication
 //
 
-import MojangAPI
+import CraftKit
 import XCTest
 
 @testable import Launcher

@@ -4,7 +4,7 @@
 //
 
 import AppKit
-import MojangAPI
+import CraftKit
 import SnapKit
 import Yatagarasu
 

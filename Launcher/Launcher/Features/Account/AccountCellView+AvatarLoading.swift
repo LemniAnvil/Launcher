@@ -6,7 +6,7 @@
 //
 
 import AppKit
-import MojangAPI
+import CraftKit
 
 extension AccountCellView {
   // MARK: - Avatar Loading
@@ -44,10 +44,10 @@ extension AccountCellView {
           return
         }
 
-        let mojangAPI = MojangAPI()
-        let profile = try await mojangAPI.playerService.getPlayerProfile(uuid: playerUUID)
+        let apiClient = MinecraftAPIClient()
+        let profile = try await apiClient.fetchPlayerProfile(byUUID: formattedUUID)
 
-        guard let skinURL = profile.skins.first?.url else {
+        guard let skinURL = profile.getSkinURL() else {
           await MainActor.run {
             self.loadAvatarFromFallbackService(uuid: uuid, completion: completion)
           }

@@ -5,8 +5,8 @@
 //  Refresh with progress callback support
 //
 
+import CraftKit
 import Foundation
-import MojangAPI
 
 extension MicrosoftAuthManager {
   /// Refresh progress callback type
@@ -72,7 +72,7 @@ extension MicrosoftAuthManager {
     return buildCompleteLoginResponse(
       profile: profile,
       accessToken: minecraftAuth.accessToken,
-      refreshToken: tokenResponse.refreshToken
+      refreshToken: tokenResponse.refreshToken ?? ""
     )
   }
 
@@ -121,7 +121,7 @@ extension MicrosoftAuthManager {
     return buildCompleteLoginResponse(
       profile: profile,
       accessToken: minecraftAuth.accessToken,
-      refreshToken: tokenResponse.refreshToken
+      refreshToken: tokenResponse.refreshToken ?? ""
     )
   }
 }

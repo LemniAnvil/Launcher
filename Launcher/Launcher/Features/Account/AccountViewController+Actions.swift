@@ -6,7 +6,7 @@
 //
 
 import AppKit
-import MojangAPI
+import CraftKit
 import Yatagarasu
 
 // MARK: - Mojang Username API Response Models
@@ -113,7 +113,7 @@ extension AccountViewController {
       let skins = loginResponse.skins?.compactMap { responseSkin -> SkinResponse in
         SkinResponse(
           id: responseSkin.id,
-          state: responseSkin.state,
+          state: responseSkin.state.rawValue,
           url: responseSkin.url,
           variant: responseSkin.variant ?? "CLASSIC",
           alias: responseSkin.alias
@@ -123,7 +123,7 @@ extension AccountViewController {
       let capes = loginResponse.capes?.compactMap { responseCape -> Cape in
         Cape(
           id: responseCape.id,
-          state: responseCape.state,
+          state: responseCape.state.rawValue,
           url: responseCape.url,
           alias: responseCape.alias
         )
@@ -417,7 +417,7 @@ extension AccountViewController {
         let skins = response.skins?.compactMap { responseSkin -> SkinResponse in
           SkinResponse(
             id: responseSkin.id,
-            state: responseSkin.state,
+            state: responseSkin.state.rawValue,
             url: responseSkin.url,
             variant: responseSkin.variant ?? "CLASSIC",
             alias: responseSkin.alias
@@ -427,7 +427,7 @@ extension AccountViewController {
         let capes = response.capes?.compactMap { responseCape -> Cape in
           Cape(
             id: responseCape.id,
-            state: responseCape.state,
+            state: responseCape.state.rawValue,
             url: responseCape.url,
             alias: responseCape.alias
           )
