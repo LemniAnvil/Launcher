@@ -13,8 +13,6 @@ class DefaultAccountManager {
   static let shared = DefaultAccountManager()
 
   private let defaultAccountSelectionKey = "DefaultAccountSelection"
-  private let defaultAccountIdKey = "DefaultAccountId"
-  private let defaultAccountTypeKey = "DefaultAccountType"
 
   private let userDefaults: UserDefaults
   private let encoder = JSONEncoder()
@@ -42,10 +40,6 @@ class DefaultAccountManager {
     let selection = DefaultAccountSelection(id: id, type: type)
     saveSelection(selection)
 
-    // Backwards compatible storage (can be removed after one or two releases).
-    userDefaults.set(id, forKey: defaultAccountIdKey)
-    userDefaults.set(type.rawValue, forKey: defaultAccountTypeKey)
-
     Logger.shared.info("Default account set: \(id) (\(type.rawValue))", category: "DefaultAccount")
   }
 
@@ -62,8 +56,6 @@ class DefaultAccountManager {
   /// Clear default account
   func clearDefaultAccount() {
     userDefaults.removeObject(forKey: defaultAccountSelectionKey)
-    userDefaults.removeObject(forKey: defaultAccountIdKey)
-    userDefaults.removeObject(forKey: defaultAccountTypeKey)
     Logger.shared.info("Default account cleared", category: "DefaultAccount")
   }
 
@@ -179,19 +171,20 @@ class DefaultAccountManager {
   }
 
   private func loadSelection() -> DefaultAccountSelection? {
-    if let data = userDefaults.data(forKey: defaultAccountSelectionKey) {
-      do {
-        let selection = try decoder.decode(DefaultAccountSelection.self, from: data)
-        return validateSelection(selection)
-      } catch {
-        Logger.shared.warning(
-          "Invalid default account selection data, attempting migration", category: "DefaultAccount"
-        )
-        userDefaults.removeObject(forKey: defaultAccountSelectionKey)
-      }
+    guard let data = userDefaults.data(forKey: defaultAccountSelectionKey) else {
+      return nil
     }
 
-    return migrateLegacySelectionIfNeeded()
+    do {
+      let selection = try decoder.decode(DefaultAccountSelection.self, from: data)
+      return validateSelection(selection)
+    } catch {
+      Logger.shared.warning(
+        "Invalid default account selection data, clearing", category: "DefaultAccount"
+      )
+      userDefaults.removeObject(forKey: defaultAccountSelectionKey)
+      return nil
+    }
   }
 
   private func validateSelection(_ selection: DefaultAccountSelection) -> DefaultAccountSelection? {
@@ -201,31 +194,6 @@ class DefaultAccountManager {
       clearDefaultAccount()
       return nil
     }
-    return selection
-  }
-
-  private func migrateLegacySelectionIfNeeded() -> DefaultAccountSelection? {
-    let legacyId = userDefaults.string(forKey: defaultAccountIdKey)
-    let legacyTypeString = userDefaults.string(forKey: defaultAccountTypeKey)
-
-    guard legacyId != nil || legacyTypeString != nil else {
-      return nil
-    }
-
-    guard let legacyId,
-      let legacyTypeString,
-      let legacyType = AccountType(rawValue: legacyTypeString),
-      !legacyId.isEmpty
-    else {
-      Logger.shared.warning(
-        "Found partial/invalid legacy default account values, clearing", category: "DefaultAccount")
-      userDefaults.removeObject(forKey: defaultAccountIdKey)
-      userDefaults.removeObject(forKey: defaultAccountTypeKey)
-      return nil
-    }
-
-    let selection = DefaultAccountSelection(id: legacyId, type: legacyType)
-    saveSelection(selection)
     return selection
   }
 }
