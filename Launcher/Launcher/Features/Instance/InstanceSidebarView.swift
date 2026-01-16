@@ -303,9 +303,7 @@ class InstanceSidebarView: NSView {
   /// Configure icon based on instance
   private func configureIcon(for instance: Instance) {
     // Check for custom icon path first (external instances)
-    if let iconPath = instance.iconPath,
-      let iconImage = NSImage(contentsOf: iconPath)
-    {
+    if let iconPath = instance.iconPath, let iconImage = NSImage(contentsOf: iconPath) {
       iconImageView.image = iconImage
       return
     }

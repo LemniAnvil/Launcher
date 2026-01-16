@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		030D1F982ECB9F100065E234 /* Yatagarasu in Frameworks */ = {isa = PBXBuildFile; productRef = 030D1F972ECB9F100065E234 /* Yatagarasu */; };
-		0314F4872EB5029300591FBC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0314F4862EB5029300591FBC /* SnapKit */; };
-		03AB8A822EF4623800C8D6EA /* SkinRenderKit in Frameworks */ = {isa = PBXBuildFile; productRef = 03AB8A812EF4623800C8D6EA /* SkinRenderKit */; };
+		03C303512F18F2CC004F31E4 /* CraftKit in Frameworks */ = {isa = PBXBuildFile; productRef = 03C303502F18F2CC004F31E4 /* CraftKit */; };
+		03C303542F18F2DB004F31E4 /* SkinRenderKit in Frameworks */ = {isa = PBXBuildFile; productRef = 03C303532F18F2DB004F31E4 /* SkinRenderKit */; };
+		03C303572F18F2F6004F31E4 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 03C303562F18F2F6004F31E4 /* SnapKit */; };
+		03C3035A2F18F318004F31E4 /* Yatagarasu in Frameworks */ = {isa = PBXBuildFile; productRef = 03C303592F18F318004F31E4 /* Yatagarasu */; };
 		03D7FB142ED3226B006D5694 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 03D7FB132ED3226B006D5694 /* Config.xcconfig */; };
-		03E0D2F82ED26AE200E6D375 /* CraftKit in Frameworks */ = {isa = PBXBuildFile; productRef = 03E0D2F72ED26AE200E6D375 /* CraftKit */; };
-		03EEB01E2ED0992B00498292 /* Yatagarasu in Frameworks */ = {isa = PBXBuildFile; productRef = 03EEB01D2ED0992B00498292 /* Yatagarasu */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,11 +74,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03EEB01E2ED0992B00498292 /* Yatagarasu in Frameworks */,
-				03AB8A822EF4623800C8D6EA /* SkinRenderKit in Frameworks */,
-				030D1F982ECB9F100065E234 /* Yatagarasu in Frameworks */,
-				0314F4872EB5029300591FBC /* SnapKit in Frameworks */,
-				03E0D2F82ED26AE200E6D375 /* CraftKit in Frameworks */,
+				03C3035A2F18F318004F31E4 /* Yatagarasu in Frameworks */,
+				03C303572F18F2F6004F31E4 /* SnapKit in Frameworks */,
+				03C303542F18F2DB004F31E4 /* SkinRenderKit in Frameworks */,
+				03C303512F18F2CC004F31E4 /* CraftKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,11 +140,10 @@
 			);
 			name = Launcher;
 			packageProductDependencies = (
-				0314F4862EB5029300591FBC /* SnapKit */,
-				030D1F972ECB9F100065E234 /* Yatagarasu */,
-				03EEB01D2ED0992B00498292 /* Yatagarasu */,
-				03E0D2F72ED26AE200E6D375 /* CraftKit */,
-				03AB8A812EF4623800C8D6EA /* SkinRenderKit */,
+				03C303502F18F2CC004F31E4 /* CraftKit */,
+				03C303532F18F2DB004F31E4 /* SkinRenderKit */,
+				03C303562F18F2F6004F31E4 /* SnapKit */,
+				03C303592F18F318004F31E4 /* Yatagarasu */,
 			);
 			productName = Launcher;
 			productReference = 03FBFF4F2EB1235E00FD7CE4 /* Launcher.app */;
@@ -232,10 +229,10 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				034304DE2EB25D030051F20A /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
-				0314F4852EB5029300591FBC /* XCRemoteSwiftPackageReference "SnapKit" */,
-				03EEB01C2ED0992B00498292 /* XCLocalSwiftPackageReference "../../../Open Bilibili/Yatagarasu" */,
-				03E0D2F62ED26AE200E6D375 /* XCLocalSwiftPackageReference "../../CraftKit" */,
-				03AB8A802EF4623800C8D6EA /* XCRemoteSwiftPackageReference "NSSkinRender" */,
+				03C3034F2F18F2CC004F31E4 /* XCLocalSwiftPackageReference "../../CraftKit" */,
+				03C303522F18F2DB004F31E4 /* XCLocalSwiftPackageReference "../../SkinRenderKit" */,
+				03C303552F18F2F6004F31E4 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				03C303582F18F318004F31E4 /* XCLocalSwiftPackageReference "../../../Open Bilibili/Yatagarasu" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 03FBFF502EB1235E00FD7CE4 /* Products */;
@@ -650,25 +647,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		03E0D2F62ED26AE200E6D375 /* XCLocalSwiftPackageReference "../../CraftKit" */ = {
+		03C3034F2F18F2CC004F31E4 /* XCLocalSwiftPackageReference "../../CraftKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../CraftKit;
 		};
-		03EEB01C2ED0992B00498292 /* XCLocalSwiftPackageReference "../../../Open Bilibili/Yatagarasu" */ = {
+		03C303522F18F2DB004F31E4 /* XCLocalSwiftPackageReference "../../SkinRenderKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../SkinRenderKit;
+		};
+		03C303582F18F318004F31E4 /* XCLocalSwiftPackageReference "../../../Open Bilibili/Yatagarasu" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../../Open Bilibili/Yatagarasu";
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0314F4852EB5029300591FBC /* XCRemoteSwiftPackageReference "SnapKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.7.1;
-			};
-		};
 		034304DE2EB25D030051F20A /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
@@ -677,43 +670,38 @@
 				minimumVersion = 0.62.2;
 			};
 		};
-		03AB8A802EF4623800C8D6EA /* XCRemoteSwiftPackageReference "NSSkinRender" */ = {
+		03C303552F18F2F6004F31E4 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/irisWirisW/NSSkinRender";
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.4.0;
+				minimumVersion = 5.7.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		030D1F972ECB9F100065E234 /* Yatagarasu */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Yatagarasu;
-		};
-		0314F4862EB5029300591FBC /* SnapKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0314F4852EB5029300591FBC /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = SnapKit;
-		};
-		03AB8A812EF4623800C8D6EA /* SkinRenderKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 03AB8A802EF4623800C8D6EA /* XCRemoteSwiftPackageReference "NSSkinRender" */;
-			productName = SkinRenderKit;
-		};
-		03E0D2F72ED26AE200E6D375 /* CraftKit */ = {
+		03C303502F18F2CC004F31E4 /* CraftKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CraftKit;
+		};
+		03C303532F18F2DB004F31E4 /* SkinRenderKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SkinRenderKit;
+		};
+		03C303562F18F2F6004F31E4 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 03C303552F18F2F6004F31E4 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		03C303592F18F318004F31E4 /* Yatagarasu */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Yatagarasu;
 		};
 		03E45F612EBB8721003E4D1C /* SwiftLintBuildToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 034304DE2EB25D030051F20A /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
 			productName = "plugin:SwiftLintBuildToolPlugin";
-		};
-		03EEB01D2ED0992B00498292 /* Yatagarasu */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Yatagarasu;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

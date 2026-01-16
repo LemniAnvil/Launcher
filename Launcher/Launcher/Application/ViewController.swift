@@ -803,25 +803,27 @@ extension ViewController {
       return
     }
 
-    // Check if there's a default account
-    if let defaultAccountInfo = DefaultAccountManager.shared.getDefaultAccountInfo() {
-      // Use default account to launch directly
-      Logger.shared.info("Using default account: \(defaultAccountInfo.username)", category: "MainWindow")
-      let accountInfo = OfflineLaunchViewController.AccountInfo(
-        username: defaultAccountInfo.username,
-        uuid: defaultAccountInfo.uuid,
-        accessToken: defaultAccountInfo.accessToken
-      )
-      performLaunch(instance: instance, accountInfo: accountInfo)
-    } else {
-      // No default account, show account selection window
-      let windowController = OfflineLaunchWindowController()
-      if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
-        viewController.onLaunch = { [weak self] accountInfo in
-          self?.performLaunch(instance: instance, accountInfo: accountInfo)
+    // Check if there's a default account (async operation)
+    Task { @MainActor in
+      if let defaultAccountInfo = await DefaultAccountManager.shared.getDefaultAccountInfo() {
+        // Use default account to launch directly
+        Logger.shared.info("Using default account: \(defaultAccountInfo.username)", category: "MainWindow")
+        let accountInfo = OfflineLaunchViewController.AccountInfo(
+          username: defaultAccountInfo.username,
+          uuid: defaultAccountInfo.uuid,
+          accessToken: defaultAccountInfo.accessToken
+        )
+        performLaunch(instance: instance, accountInfo: accountInfo)
+      } else {
+        // No default account or refresh failed, show account selection window
+        let windowController = OfflineLaunchWindowController()
+        if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
+          viewController.onLaunch = { [weak self] accountInfo in
+            self?.performLaunch(instance: instance, accountInfo: accountInfo)
+          }
         }
+        windowController.showWindow(nil)
       }
-      windowController.showWindow(nil)
     }
   }
 
@@ -1147,24 +1149,26 @@ extension ViewController {
       return
     }
 
-    // Check if there's a default account
-    if let defaultAccountInfo = DefaultAccountManager.shared.getDefaultAccountInfo() {
-      Logger.shared.info("Using default account: \(defaultAccountInfo.username)", category: "MainWindow")
-      let accountInfo = OfflineLaunchViewController.AccountInfo(
-        username: defaultAccountInfo.username,
-        uuid: defaultAccountInfo.uuid,
-        accessToken: defaultAccountInfo.accessToken
-      )
-      performLaunch(instance: instance, accountInfo: accountInfo)
-    } else {
-      // No default account, show account selection window
-      let windowController = OfflineLaunchWindowController()
-      if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
-        viewController.onLaunch = { [weak self] accountInfo in
-          self?.performLaunch(instance: instance, accountInfo: accountInfo)
+    // Check if there's a default account (async operation)
+    Task { @MainActor in
+      if let defaultAccountInfo = await DefaultAccountManager.shared.getDefaultAccountInfo() {
+        Logger.shared.info("Using default account: \(defaultAccountInfo.username)", category: "MainWindow")
+        let accountInfo = OfflineLaunchViewController.AccountInfo(
+          username: defaultAccountInfo.username,
+          uuid: defaultAccountInfo.uuid,
+          accessToken: defaultAccountInfo.accessToken
+        )
+        performLaunch(instance: instance, accountInfo: accountInfo)
+      } else {
+        // No default account or refresh failed, show account selection window
+        let windowController = OfflineLaunchWindowController()
+        if let viewController = windowController.window?.contentViewController as? OfflineLaunchViewController {
+          viewController.onLaunch = { [weak self] accountInfo in
+            self?.performLaunch(instance: instance, accountInfo: accountInfo)
+          }
         }
+        windowController.showWindow(nil)
       }
-      windowController.showWindow(nil)
     }
   }
 

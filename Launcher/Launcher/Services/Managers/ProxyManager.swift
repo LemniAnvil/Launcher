@@ -5,6 +5,7 @@
 //  Proxy Manager - responsible for managing proxy settings
 //
 
+import CraftKit
 import Foundation
 
 /// Proxy Manager
@@ -139,26 +140,26 @@ class ProxyManager {
       throw ProxyError.invalidConfiguration
     }
 
-    // Use factory with custom timeout for proxy testing
-    let session = URLSessionFactory.createSession(
-      requestTimeout: AppConstants.Network.proxyTestTimeout
+    let apiClient = MinecraftAPIClient(
+      configuration: MinecraftAPIConfiguration(
+        timeout: AppConstants.Network.proxyTestTimeout,
+        cachePolicy: .reloadIgnoringLocalCacheData
+      )
     )
 
-    guard let testURL = URL(string: APIService.MinecraftVersion.manifestOfficial) else {
-      throw ProxyError.invalidConfiguration
-    }
-
     do {
-      let (_, response) = try await session.data(from: testURL)
-
-      if let httpResponse = response as? HTTPURLResponse,
-         httpResponse.statusCode == 200 {
-        logger.info("Proxy connection test successful", category: "ProxyManager")
-        return true
-      }
-
-      logger.warning("Proxy connection test failed: Invalid response", category: "ProxyManager")
-      return false
+      _ = try await apiClient.fetchVersionManifest()
+      logger.info(
+        "Proxy connection test successful via CraftKit",
+        category: "ProxyManager"
+      )
+      return true
+    } catch let apiError as MinecraftAPIError {
+      logger.error(
+        "Proxy connection test failed: \(apiError.localizedDescription)",
+        category: "ProxyManager"
+      )
+      throw ProxyError.connectionFailed(apiError.localizedDescription)
     } catch {
       logger.error(
         "Proxy connection test failed: \(error.localizedDescription)",

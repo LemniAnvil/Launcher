@@ -5,6 +5,7 @@
 //  Manages default account selection for automatic game launch
 //
 
+import CraftKit
 import Foundation
 
 /// Manager for handling default account settings
@@ -72,7 +73,8 @@ class DefaultAccountManager {
   }
 
   /// Get default account info for launching game
-  func getDefaultAccountInfo() -> (username: String, uuid: String, accessToken: String)? {
+  /// - Returns: Account info tuple, or nil if account not found or refresh failed
+  func getDefaultAccountInfo() async -> (username: String, uuid: String, accessToken: String)? {
     guard let selection = loadSelection() else {
       return nil
     }
@@ -87,11 +89,65 @@ class DefaultAccountManager {
         return nil
       }
 
-      // Check if account is expired
+      // Check if account is expired and attempt to refresh
       if account.isExpired {
         Logger.shared.warning(
-          "Default Microsoft account is expired: \(account.name)", category: "DefaultAccount")
-        // Still return the account, but log warning - user may need to refresh
+          "Default Microsoft account is expired: \(account.name), attempting to refresh",
+          category: "DefaultAccount")
+
+        do {
+          // Attempt to refresh the account
+          let refreshedResponse = try await MicrosoftAuthManager.shared.completeRefresh(
+            refreshToken: account.refreshToken
+          )
+
+          // Convert skin and cape data from response
+          let skins = refreshedResponse.skins?.compactMap { responseSkin -> SkinResponse in
+            SkinResponse(
+              id: responseSkin.id,
+              state: responseSkin.state.rawValue,
+              url: responseSkin.url,
+              variant: responseSkin.variant ?? "CLASSIC",
+              alias: responseSkin.alias
+            )
+          }
+
+          let capes = refreshedResponse.capes?.compactMap { responseCape -> Cape in
+            Cape(
+              id: responseCape.id,
+              state: responseCape.state.rawValue,
+              url: responseCape.url,
+              alias: responseCape.alias
+            )
+          }
+
+          // Update the account with refreshed data
+          MicrosoftAccountManager.shared.updateAccountFromRefresh(
+            id: refreshedResponse.id,
+            name: refreshedResponse.name,
+            accessToken: refreshedResponse.accessToken,
+            refreshToken: refreshedResponse.refreshToken,
+            skins: skins,
+            capes: capes
+          )
+
+          Logger.shared.info(
+            "Successfully refreshed expired default account: \(refreshedResponse.name)",
+            category: "DefaultAccount")
+
+          // Return the refreshed account info
+          return (
+            username: refreshedResponse.name, uuid: refreshedResponse.id,
+            accessToken: refreshedResponse.accessToken
+          )
+        } catch {
+          Logger.shared.error(
+            "Failed to refresh expired default account: \(error.localizedDescription)",
+            category: "DefaultAccount")
+          // Clear the default account since refresh failed
+          clearDefaultAccount()
+          return nil
+        }
       }
 
       return (username: account.name, uuid: account.id, accessToken: account.accessToken)

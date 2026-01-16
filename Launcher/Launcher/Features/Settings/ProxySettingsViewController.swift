@@ -40,8 +40,7 @@ class ProxySettingsViewController: NSViewController {
   private lazy var proxyTypePopup: NSPopUpButton = {
     let popup = NSPopUpButton()
     popup.addItems(withTitles: ProxyManager.ProxyType.allCases.map { $0.displayName })
-    popup.selectItem(
-      at: ProxyManager.ProxyType.allCases.firstIndex(of: proxyManager.proxyType) ?? 0)
+    popup.selectItem(at: ProxyManager.ProxyType.allCases.firstIndex(of: proxyManager.proxyType) ?? 0)
     popup.isEnabled = proxyManager.proxyEnabled
     return popup
   }()
@@ -304,8 +303,7 @@ class ProxySettingsViewController: NSViewController {
           self.proxyPortField.stringValue = "\(self.proxyManager.proxyPort)"
 
           // Update proxy type popup
-          if let index = ProxyManager.ProxyType.allCases.firstIndex(of: self.proxyManager.proxyType)
-          {
+          if let index = ProxyManager.ProxyType.allCases.firstIndex(of: self.proxyManager.proxyType) {
             self.proxyTypePopup.selectItem(at: index)
           }
 
@@ -352,8 +350,7 @@ class ProxySettingsViewController: NSViewController {
       } catch {
         await MainActor.run {
           statusLabel.stringValue = Localized.Settings.statusTestFailed
-          Logger.shared.error(
-            "Proxy test failed: \(error.localizedDescription)", category: "Settings")
+          Logger.shared.error("Proxy test failed: \(error.localizedDescription)", category: "Settings")
 
           showAlert(
             title: Localized.Settings.alertTestFailedTitle,

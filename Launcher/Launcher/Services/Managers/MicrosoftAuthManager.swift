@@ -127,9 +127,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     }
 
     // Check state to prevent CSRF attacks
-    if let stateItem = components.queryItems?.first(where: { $0.name == "state" }),
-      let state = stateItem.value
-    {
+    if let stateItem = components.queryItems?.first(where: { $0.name == "state" }), let state = stateItem.value {
       guard state == expectedState else {
         throw MicrosoftAuthError.stateMismatch
       }
@@ -261,9 +259,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // MARK: - Step 6: Authenticate with Minecraft
 
   /// Authenticates with Minecraft using XSTS token
-  func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws
-    -> MinecraftAuthResponse
-  {
+  func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws -> MinecraftAuthResponse {
     guard let url = URL(string: APIService.MinecraftServices.loginWithXbox) else {
       throw MicrosoftAuthError.invalidURL
     }
