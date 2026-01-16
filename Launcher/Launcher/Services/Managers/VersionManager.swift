@@ -5,6 +5,7 @@
 //  Version Manager - responsible for fetching and managing Minecraft versions
 //
 
+import CraftKit
 import Foundation
 
 /// Version Manager
@@ -16,7 +17,7 @@ class VersionManager: VersionManaging {
 
   // MARK: - Properties
 
-  var versions: [MinecraftVersion] = []
+  var versions: [VersionInfo] = []
   var latestRelease: String?
   var latestSnapshot: String?
   var isLoading = false
@@ -174,7 +175,7 @@ class VersionManager: VersionManaging {
   func getFilteredVersions(
     type: VersionType? = nil,
     searchText: String = ""
-  ) -> [MinecraftVersion] {
+  ) -> [VersionInfo] {
     var filtered = versions
 
     // Filter by type
@@ -232,7 +233,7 @@ class VersionManager: VersionManaging {
 
   /// Get version by ID
   /// Implements VersionManaging protocol required method
-  func getVersion(byId id: String) -> MinecraftVersion? {
+  func getVersion(byId id: String) -> VersionInfo? {
     return versions.first { $0.id == id }
   }
 

@@ -7,6 +7,7 @@
 //
 
 import AppKit
+import CraftKit
 import SnapKit
 import Yatagarasu
 
@@ -87,10 +88,10 @@ class AddInstanceViewController: NSViewController {
 
   // Version data model
   struct VersionItem: Hashable {
-    let version: MinecraftVersion
+    let version: VersionInfo
 
     var id: String { version.id }
-    var releaseDate: String { Self.formatDateTime(version.releaseTime) }
+    var releaseDate: String { Self.formatDate(version.releaseTime) }
     var type: String { version.type.displayName }
     var versionType: VersionType { version.type }
 
@@ -102,22 +103,7 @@ class AddInstanceViewController: NSViewController {
       return lhs.version.id == rhs.version.id
     }
 
-    private static func formatDateTime(_ dateString: String) -> String {
-      let formatter = ISO8601DateFormatter()
-      formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-      guard let date = formatter.date(from: dateString) else {
-        formatter.formatOptions = [.withInternetDateTime]
-        guard let date = formatter.date(from: dateString) else {
-          return dateString
-        }
-        return Self.formatDateDisplay(date)
-      }
-
-      return Self.formatDateDisplay(date)
-    }
-
-    private static func formatDateDisplay(_ date: Date) -> String {
+    private static func formatDate(_ date: Date) -> String {
       let displayFormatter = DateFormatter()
       displayFormatter.dateFormat = "yyyy-MM-dd"
       displayFormatter.locale = Locale.current
@@ -946,7 +932,7 @@ class AddInstanceViewController: NSViewController {
     }
 
     // Filter versions by type
-    let versions: [MinecraftVersion]
+    let versions: [VersionInfo]
     if selectedTypes.isEmpty {
       versions = versionManager.versions
     } else {

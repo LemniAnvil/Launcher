@@ -6,6 +6,7 @@
 //  API: https://launchermeta.mojang.com/mc/game/version_manifest.json
 //
 
+import CraftKit
 import Foundation
 
 /// Version manifest parser
@@ -123,7 +124,7 @@ class VersionManifestParser {
   func extractVersion(
     id: String,
     from manifest: VersionManifest
-  ) -> MinecraftVersion? {
+  ) -> VersionInfo? {
     return manifest.versions.first { $0.id == id }
   }
 
@@ -131,7 +132,7 @@ class VersionManifestParser {
   func extractVersions(
     type: VersionType,
     from manifest: VersionManifest
-  ) -> [MinecraftVersion] {
+  ) -> [VersionInfo] {
     return manifest.versions.filter { $0.type == type }
   }
 
@@ -139,24 +140,19 @@ class VersionManifestParser {
   func getLatestVersion(
     type: VersionType,
     from manifest: VersionManifest
-  ) -> MinecraftVersion? {
+  ) -> VersionInfo? {
     let filtered = extractVersions(type: type, from: manifest)
     return filtered.first  // Already sorted by release time in manifest
   }
 
   /// Format version info for display
-  func formatVersionInfo(_ version: MinecraftVersion) -> String {
+  func formatVersionInfo(_ version: VersionInfo) -> String {
     let date = formatDate(version.releaseTime)
     return "\(version.id) (\(version.type.displayName)) - Released: \(date)"
   }
 
-  /// Format date string
-  private func formatDate(_ isoDate: String) -> String {
-    let formatter = ISO8601DateFormatter()
-    guard let date = formatter.date(from: isoDate) else {
-      return isoDate
-    }
-
+  /// Format date
+  private func formatDate(_ date: Date) -> String {
     let displayFormatter = DateFormatter()
     displayFormatter.dateStyle = .medium
     displayFormatter.timeStyle = .none

@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import CraftKit
 import SnapKit
 import Yatagarasu
 
@@ -157,8 +158,8 @@ class VersionListViewController: NSViewController {
   }()
 
   // Filtered versions for display
-  private var displayedVersions: [MinecraftVersion] = []
-  private var selectedVersion: MinecraftVersion?
+  private var displayedVersions: [VersionInfo] = []
+  private var selectedVersion: VersionInfo?
 
   // Version type filter checkboxes
   private lazy var releaseCheckbox: NSButton = {
@@ -280,7 +281,7 @@ class VersionListViewController: NSViewController {
   }
 
   private func updateVersionTable(filterTypes: [VersionType]? = nil) {
-    let versions: [MinecraftVersion]
+    let versions: [VersionInfo]
 
     if let filterTypes = filterTypes, !filterTypes.isEmpty {
       // Filter versions by selected types
@@ -310,7 +311,9 @@ class VersionListViewController: NSViewController {
     logMessage(Localized.LogMessages.displayedVersionsCount(displayedVersions.count))
 
     // Select latest release by default if it's in the filtered list
-    if let latestRelease = versionManager.latestRelease, let index = displayedVersions.firstIndex(where: { $0.id == latestRelease }) {
+    if let latestRelease = versionManager.latestRelease,
+      let index = displayedVersions.firstIndex(where: { $0.id == latestRelease })
+    {
       versionTableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
       versionTableView.scrollRowToVisible(index)
       selectedVersion = displayedVersions[index]
@@ -924,12 +927,12 @@ extension VersionListViewController: NSTableViewDelegate {
       textField.font = .systemFont(ofSize: 13, weight: .semibold)
 
     case "releaseTime":
-      textField.stringValue = formatDateTime(version.releaseTime)
+      textField.stringValue = formatDate(version.releaseTime)
       textField.textColor = .secondaryLabelColor
       textField.font = .systemFont(ofSize: 13)
 
     case "time":
-      textField.stringValue = formatDateTime(version.time)
+      textField.stringValue = formatDate(version.time)
       textField.textColor = NSColor.secondaryLabelColor.withAlphaComponent(0.8)
       textField.font = .systemFont(ofSize: 13)
 
@@ -957,36 +960,12 @@ extension VersionListViewController: NSTableViewDelegate {
     return 24.0
   }
 
-  private func formatDate(_ dateString: String) -> String {
-    let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-    guard let date = formatter.date(from: dateString) else {
-      return dateString
-    }
-
+  private func formatDate(_ date: Date) -> String {
     let displayFormatter = DateFormatter()
     displayFormatter.dateStyle = .medium
     displayFormatter.timeStyle = .none
     displayFormatter.locale = Locale(identifier: "zh_CN")
-
     return displayFormatter.string(from: date)
-  }
-
-  private func formatDateTime(_ dateString: String) -> String {
-    let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-    guard let date = formatter.date(from: dateString) else {
-      // Try format without milliseconds
-      formatter.formatOptions = [.withInternetDateTime]
-      guard let date = formatter.date(from: dateString) else {
-        return dateString
-      }
-      return formatDateDisplay(date)
-    }
-
-    return formatDateDisplay(date)
   }
 
   private func formatDateDisplay(_ date: Date) -> String {
@@ -1013,8 +992,8 @@ extension VersionListViewController: NSTableViewDelegate {
 
 // MARK: - String Extension
 
-private extension String {
-  var nonEmpty: String? {
+extension String {
+  fileprivate var nonEmpty: String? {
     let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
     return trimmed.isEmpty ? nil : trimmed
   }

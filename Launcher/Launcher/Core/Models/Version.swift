@@ -5,6 +5,7 @@
 //  Minecraft version related data models
 //
 
+import CraftKit
 import Foundation
 
 // MARK: - Minecraft Namespace
@@ -12,66 +13,6 @@ import Foundation
 /// Minecraft version-related namespace
 /// Using enum as namespace to avoid polluting global namespace
 enum Minecraft {
-
-  // MARK: - Version Manifest Types
-
-  /// Version manifest root object
-  struct VersionManifest: Codable {
-    let latest: Latest
-    let versions: [Version]
-
-    /// Latest version information
-    struct Latest: Codable {
-      let release: String
-      let snapshot: String
-    }
-  }
-
-  /// Minecraft version basic information
-  struct Version: Codable, Identifiable {
-    let id: String
-    let type: VersionType
-    let url: String
-    let time: String
-    let releaseTime: String
-    let sha1: String?
-    let complianceLevel: Int?
-
-    var displayName: String {
-      return id
-    }
-
-    var releaseDate: Date? {
-      let formatter = ISO8601DateFormatter()
-      return formatter.date(from: releaseTime)
-    }
-  }
-
-  /// Version type
-  enum VersionType: String, Codable, CaseIterable {
-    case release  = "release"
-    case snapshot = "snapshot"
-    case oldBeta  = "old_beta"
-    case oldAlpha = "old_alpha"
-
-    var displayName: String {
-      switch self {
-      case .release:  return "Release"
-      case .snapshot: return "Snapshot"
-      case .oldBeta:  return "Beta"
-      case .oldAlpha: return "Alpha"
-      }
-    }
-
-    var color: String {
-      switch self {
-      case .release:  return "green"
-      case .snapshot: return "orange"
-      case .oldBeta:  return "blue"
-      case .oldAlpha: return "purple"
-      }
-    }
-  }
 
   // MARK: - Version Details Types
 
@@ -269,14 +210,9 @@ enum Minecraft {
   }
 }
 
-// MARK: - Type Aliases for Backward Compatibility
+// MARK: - Type Aliases
 
-/// Type aliases for backward compatibility
-/// Allows existing code to continue using old type names while gradually migrating to new namespace
-typealias VersionManifest = Minecraft.VersionManifest
-typealias Latest = Minecraft.VersionManifest.Latest
-typealias MinecraftVersion = Minecraft.Version
-typealias VersionType = Minecraft.VersionType
+/// Type aliases - now using CraftKit types for version manifest
 typealias VersionDetails = Minecraft.VersionDetails
 typealias Arguments = Minecraft.Arguments
 typealias ArgumentValue = Minecraft.ArgumentValue

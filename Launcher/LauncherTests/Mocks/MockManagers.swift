@@ -6,7 +6,9 @@
 //  Demonstrates the advantages of dependency injection - easy to create test doubles
 //
 
+import CraftKit
 import Foundation
+
 @testable import Launcher
 
 // MARK: - Mock Instance Manager
@@ -92,7 +94,7 @@ class MockInstanceManager: InstanceManaging {
 /// Mock version manager
 @MainActor
 class MockVersionManager: VersionManaging {
-  var versions: [MinecraftVersion] = []
+  var versions: [VersionInfo] = []
   var latestRelease: String?
   var latestSnapshot: String?
   var isLoading = false
@@ -121,33 +123,33 @@ class MockVersionManager: VersionManaging {
 
     // Mock data: add some test versions
     versions = [
-      MinecraftVersion(
+      VersionInfo(
         id: "1.20.1",
         type: .release,
         url: "https://test.com/1.20.1.json",
         time: Date(),
         releaseTime: Date()
       ),
-      MinecraftVersion(
+      VersionInfo(
         id: "1.19.4",
         type: .release,
         url: "https://test.com/1.19.4.json",
         time: Date(),
         releaseTime: Date()
       ),
-      MinecraftVersion(
+      VersionInfo(
         id: "23w51b",
         type: .snapshot,
         url: "https://test.com/23w51b.json",
         time: Date(),
         releaseTime: Date()
-      )
+      ),
     ]
     latestRelease = "1.20.1"
     latestSnapshot = "23w51b"
   }
 
-  func getVersion(byId id: String) -> MinecraftVersion? {
+  func getVersion(byId id: String) -> VersionInfo? {
     getVersionCalled = true
     return versions.first { $0.id == id }
   }

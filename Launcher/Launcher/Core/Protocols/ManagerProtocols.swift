@@ -10,6 +10,7 @@
 //
 
 import Combine
+import CraftKit
 import Foundation
 
 // MARK: - Instance Management Protocol
@@ -56,7 +57,7 @@ protocol InstanceManaging: AnyObject {
 @MainActor
 protocol VersionManaging: AnyObject {
   /// List of all available versions
-  var versions: [MinecraftVersion] { get }
+  var versions: [VersionInfo] { get }
 
   /// Latest release version ID
   var latestRelease: String? { get }
@@ -74,7 +75,7 @@ protocol VersionManaging: AnyObject {
   /// Get version info by ID
   /// - Parameter id: Version ID
   /// - Returns: Version info, returns nil if not found
-  func getVersion(byId id: String) -> MinecraftVersion?
+  func getVersion(byId id: String) -> VersionInfo?
 
   /// Get version details (including libraries, assets, etc.)
   /// - Parameter versionId: Version ID

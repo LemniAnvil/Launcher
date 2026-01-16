@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CraftKit
 import Foundation
 
 /// Instance Manager
