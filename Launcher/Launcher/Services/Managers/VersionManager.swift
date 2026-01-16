@@ -54,6 +54,16 @@ class VersionManager: VersionManaging {
     loadCachedManifest()
 
     logger.info("VersionManager initialized with \(versions.count) versions", category: "VersionManager")
+
+    // Automatically refresh in background (non-blocking)
+    Task {
+      do {
+        try await refreshVersionList()
+        logger.info("Background version list refresh completed", category: "VersionManager")
+      } catch {
+        logger.warning("Background version list refresh failed: \(error.localizedDescription)", category: "VersionManager")
+      }
+    }
   }
 
   // MARK: - Public Methods
@@ -305,10 +315,7 @@ class VersionManager: VersionManaging {
     logger.info("Searching for versions.json in bundle resources...", category: "VersionManager")
 
     // Try to load from bundle resources
-    guard let backupURL = Bundle.main.url(
-      forResource: "versions",
-      withExtension: "json"
-    ) else {
+    guard let backupURL = Bundle.main.url(forResource: "versions", withExtension: "json") else {
       logger.error("❌ versions.json not found in bundle resources", category: "VersionManager")
       logger.error("Please ensure versions.json is added to Xcode project", category: "VersionManager")
       throw VersionManagerError.parseFailed("Local versions.json not found")
@@ -336,10 +343,7 @@ class VersionManager: VersionManaging {
 
       return manifest
     } catch {
-      logger.error(
-        "❌ Failed to load local versions.json: \(error.localizedDescription)",
-        category: "VersionManager"
-      )
+      logger.error("❌ Failed to load local versions.json: \(error.localizedDescription)", category: "VersionManager")
       throw VersionManagerError.parseFailed("Failed to load local backup: \(error.localizedDescription)")
     }
   }
@@ -401,8 +405,9 @@ class VersionManager: VersionManaging {
 
     // Try to load from cache first
     if FileManager.default.fileExists(atPath: cacheURL.path),
-      let data = try? Data(contentsOf: cacheURL),
-      let manifest = try? JSONDecoder().decode(VersionManifest.self, from: data) {
+        let data = try? Data(contentsOf: cacheURL),
+        let manifest = try? JSONDecoder().decode(VersionManifest.self, from: data)
+    {
       self.cachedManifest = manifest
       self.versions = manifest.versions
       self.latestRelease = manifest.latest.release
@@ -449,10 +454,7 @@ class VersionManager: VersionManaging {
   private func loadLocalBackupManifestSync() throws -> VersionManifest {
     logger.info("Looking for versions.json in bundle resources...", category: "VersionManager")
 
-    guard let backupURL = Bundle.main.url(
-      forResource: "versions",
-      withExtension: "json"
-    ) else {
+    guard let backupURL = Bundle.main.url(forResource: "versions", withExtension: "json") else {
       logger.error("versions.json not found in bundle", category: "VersionManager")
       throw VersionManagerError.parseFailed("Local versions.json not found in bundle")
     }
