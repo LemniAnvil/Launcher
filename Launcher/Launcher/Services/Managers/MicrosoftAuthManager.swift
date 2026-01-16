@@ -75,44 +75,33 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // Authentication Configuration
   private let configuration: AuthConfiguration
 
+  // CraftKit Microsoft Auth Client
+  private let authClient: MicrosoftAuthClient
+
   private var clientID: String { configuration.clientID }
   private var redirectURI: String { configuration.redirectURI }
   private var scope: String { configuration.scope }
 
   init(configuration: AuthConfiguration) {
     self.configuration = configuration
+    self.authClient = MicrosoftAuthClient(
+      clientID: configuration.clientID,
+      redirectURI: configuration.redirectURI,
+      scope: configuration.scope
+    )
   }
 
   // MARK: - Step 1: Generate Secure Login Data
 
   /// Generates secure login data with PKCE and state for authentication
   func getSecureLoginData() throws -> SecureLoginData {
-    let state = PKCEHelper.generateState()
-    let codePair = PKCEHelper.generateCodePair()
-
-    let url = APIService.MicrosoftAuth.authorize
-    guard var components = URLComponents(string: url) else {
-      throw MicrosoftAuthError.invalidURL
-    }
-    components.queryItems = [
-      URLQueryItem(name: "client_id", value: clientID),
-      URLQueryItem(name: "response_type", value: "code"),
-      URLQueryItem(name: "redirect_uri", value: redirectURI),
-      URLQueryItem(name: "response_mode", value: "query"),
-      URLQueryItem(name: "scope", value: scope),
-      URLQueryItem(name: "state", value: state),
-      URLQueryItem(name: "code_challenge", value: codePair.challenge),
-      URLQueryItem(name: "code_challenge_method", value: "S256"),
-    ]
-
-    guard let url = components.url else {
-      throw MicrosoftAuthError.invalidURL
-    }
+    // Use CraftKit's MicrosoftAuthClient to generate login URL
+    let loginData = try authClient.generateLoginURL()
 
     return SecureLoginData(
-      url: url.absoluteString,
-      state: state,
-      codeVerifier: codePair.verifier
+      url: loginData.url.absoluteString,
+      state: loginData.state,
+      codeVerifier: loginData.codeVerifier
     )
   }
 
@@ -127,7 +116,9 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     }
 
     // Check state to prevent CSRF attacks
-    if let stateItem = components.queryItems?.first(where: { $0.name == "state" }), let state = stateItem.value {
+    if let stateItem = components.queryItems?.first(where: { $0.name == "state" }),
+      let state = stateItem.value
+    {
       guard state == expectedState else {
         throw MicrosoftAuthError.stateMismatch
       }
@@ -259,7 +250,9 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   // MARK: - Step 6: Authenticate with Minecraft
 
   /// Authenticates with Minecraft using XSTS token
-  func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws -> MinecraftAuthResponse {
+  func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws
+    -> MinecraftAuthResponse
+  {
     guard let url = URL(string: APIService.MinecraftServices.loginWithXbox) else {
       throw MicrosoftAuthError.invalidURL
     }
@@ -311,39 +304,10 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
 
   /// Completes the entire login flow from authorization code to profile
   func completeLogin(authCode: String, codeVerifier: String) async throws -> CompleteLoginResponse {
-    // Step 3: Get authorization token
-    let tokenResponse = try await getAuthorizationToken(
+    // Use CraftKit's MicrosoftAuthClient to complete the login flow
+    return try await authClient.completeLogin(
       authCode: authCode,
       codeVerifier: codeVerifier
-    )
-
-    // Step 4: Authenticate with XBL
-    let xblResponse = try await authenticateWithXBL(accessToken: tokenResponse.accessToken)
-    let xblToken = xblResponse.token
-    let userHash = xblResponse.displayClaims.xui[0].uhs
-
-    // Step 5: Authenticate with XSTS
-    let xstsResponse = try await authenticateWithXSTS(xblToken: xblToken)
-    let xstsToken = xstsResponse.token
-
-    // Step 6: Authenticate with Minecraft
-    let minecraftAuth = try await authenticateWithMinecraft(
-      userHash: userHash,
-      xstsToken: xstsToken
-    )
-
-    // Check if access token is present (indicates success)
-    guard !minecraftAuth.accessToken.isEmpty else {
-      throw MicrosoftAuthError.azureAppNotPermitted
-    }
-
-    // Step 7: Get Minecraft profile
-    let profile = try await getProfile(accessToken: minecraftAuth.accessToken)
-
-    return buildCompleteLoginResponse(
-      profile: profile,
-      accessToken: minecraftAuth.accessToken,
-      refreshToken: tokenResponse.refreshToken ?? ""
     )
   }
 
@@ -387,28 +351,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
 
   /// Completes refresh flow to get new access token and profile
   func completeRefresh(refreshToken: String) async throws -> CompleteLoginResponse {
-    // Refresh authorization token
-    let tokenResponse = try await refreshAuthorizationToken(refreshToken: refreshToken)
-
-    // Follow steps 4-7
-    let xblResponse = try await authenticateWithXBL(accessToken: tokenResponse.accessToken)
-    let xblToken = xblResponse.token
-    let userHash = xblResponse.displayClaims.xui[0].uhs
-
-    let xstsResponse = try await authenticateWithXSTS(xblToken: xblToken)
-    let xstsToken = xstsResponse.token
-
-    let minecraftAuth = try await authenticateWithMinecraft(
-      userHash: userHash,
-      xstsToken: xstsToken
-    )
-    let profile = try await getProfile(accessToken: minecraftAuth.accessToken)
-
-    return buildCompleteLoginResponse(
-      profile: profile,
-      accessToken: minecraftAuth.accessToken,
-      refreshToken: tokenResponse.refreshToken ?? ""
-    )
+    // Use CraftKit's MicrosoftAuthClient to refresh the login
+    return try await authClient.refreshLogin(refreshToken: refreshToken)
   }
 
   // MARK: - Helper Functions

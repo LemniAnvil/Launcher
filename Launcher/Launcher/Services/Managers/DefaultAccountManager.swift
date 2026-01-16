@@ -75,17 +75,14 @@ class DefaultAccountManager {
     case .microsoft:
       guard let account = MicrosoftAccountManager.shared.getAccount(id: selection.id) else {
         // Account was deleted, clear default setting
-        Logger.shared.warning(
-          "Default Microsoft account not found, clearing default", category: "DefaultAccount")
+        Logger.shared.warning("Default Microsoft account not found, clearing default", category: "DefaultAccount")
         clearDefaultAccount()
         return nil
       }
 
       // Check if account is expired and attempt to refresh
       if account.isExpired {
-        Logger.shared.warning(
-          "Default Microsoft account is expired: \(account.name), attempting to refresh",
-          category: "DefaultAccount")
+        Logger.shared.warning("Default Microsoft account is expired: \(account.name), attempting to refresh", category: "DefaultAccount")
 
         do {
           // Attempt to refresh the account
@@ -123,9 +120,7 @@ class DefaultAccountManager {
             capes: capes
           )
 
-          Logger.shared.info(
-            "Successfully refreshed expired default account: \(refreshedResponse.name)",
-            category: "DefaultAccount")
+          Logger.shared.info("Successfully refreshed expired default account: \(refreshedResponse.name)", category: "DefaultAccount")
 
           // Return the refreshed account info
           return (
@@ -133,9 +128,7 @@ class DefaultAccountManager {
             accessToken: refreshedResponse.accessToken
           )
         } catch {
-          Logger.shared.error(
-            "Failed to refresh expired default account: \(error.localizedDescription)",
-            category: "DefaultAccount")
+          Logger.shared.error("Failed to refresh expired default account: \(error.localizedDescription)", category: "DefaultAccount")
           // Clear the default account since refresh failed
           clearDefaultAccount()
           return nil
@@ -147,8 +140,7 @@ class DefaultAccountManager {
     case .offline:
       guard let account = OfflineAccountManager.shared.getAccount(id: selection.id) else {
         // Account was deleted, clear default setting
-        Logger.shared.warning(
-          "Default offline account not found, clearing default", category: "DefaultAccount")
+        Logger.shared.warning("Default offline account not found, clearing default", category: "DefaultAccount")
         clearDefaultAccount()
         return nil
       }
@@ -163,9 +155,7 @@ class DefaultAccountManager {
       let data = try encoder.encode(selection)
       userDefaults.set(data, forKey: defaultAccountSelectionKey)
     } catch {
-      Logger.shared.error(
-        "Failed to encode default account selection: \(error.localizedDescription)",
-        category: "DefaultAccount")
+      Logger.shared.error("Failed to encode default account selection: \(error.localizedDescription)", category: "DefaultAccount")
       userDefaults.removeObject(forKey: defaultAccountSelectionKey)
     }
   }
@@ -179,9 +169,7 @@ class DefaultAccountManager {
       let selection = try decoder.decode(DefaultAccountSelection.self, from: data)
       return validateSelection(selection)
     } catch {
-      Logger.shared.warning(
-        "Invalid default account selection data, clearing", category: "DefaultAccount"
-      )
+      Logger.shared.warning("Invalid default account selection data, clearing", category: "DefaultAccount")
       userDefaults.removeObject(forKey: defaultAccountSelectionKey)
       return nil
     }
@@ -189,8 +177,7 @@ class DefaultAccountManager {
 
   private func validateSelection(_ selection: DefaultAccountSelection) -> DefaultAccountSelection? {
     guard !selection.id.isEmpty else {
-      Logger.shared.warning(
-        "Default account selection has empty id, clearing", category: "DefaultAccount")
+      Logger.shared.warning("Default account selection has empty id, clearing", category: "DefaultAccount")
       clearDefaultAccount()
       return nil
     }

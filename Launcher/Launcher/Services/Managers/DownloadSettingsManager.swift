@@ -47,9 +47,7 @@ class DownloadSettingsManager {
     self.fileVerificationEnabled = enabled
     saveSettings()
 
-    logger.info(
-      "File verification \(enabled ? "enabled" : "disabled")",
-      category: "DownloadSettingsManager"
+    logger.info("File verification \(enabled ? "enabled" : "disabled")", category: "DownloadSettingsManager"
     )
   }
 
@@ -60,10 +58,7 @@ class DownloadSettingsManager {
     self.maxConcurrentDownloads = clampedCount
     saveSettings()
 
-    logger.info(
-      "Max concurrent downloads set to \(clampedCount)",
-      category: "DownloadSettingsManager"
-    )
+    logger.info("Max concurrent downloads set to \(clampedCount)", category: "DownloadSettingsManager")
   }
 
   /// Configure request timeout
@@ -73,10 +68,7 @@ class DownloadSettingsManager {
     self.requestTimeout = clampedTimeout
     saveSettings()
 
-    logger.info(
-      "Request timeout set to \(clampedTimeout)s",
-      category: "DownloadSettingsManager"
-    )
+    logger.info("Request timeout set to \(clampedTimeout)s", category: "DownloadSettingsManager")
   }
 
   /// Configure resource timeout
@@ -86,10 +78,7 @@ class DownloadSettingsManager {
     self.resourceTimeout = clampedTimeout
     saveSettings()
 
-    logger.info(
-      "Resource timeout set to \(clampedTimeout)s",
-      category: "DownloadSettingsManager"
-    )
+    logger.info("Resource timeout set to \(clampedTimeout)s", category: "DownloadSettingsManager")
   }
 
   /// Configure progress update interval
@@ -99,10 +88,7 @@ class DownloadSettingsManager {
     self.progressUpdateInterval = clampedInterval
     saveSettings()
 
-    logger.info(
-      "Progress update interval set to \(String(format: "%.1f", clampedInterval))s",
-      category: "DownloadSettingsManager"
-    )
+    logger.info("Progress update interval set to \(String(format: "%.1f", clampedInterval))s", category: "DownloadSettingsManager")
   }
 
   /// Configure API manifest version
@@ -110,10 +96,7 @@ class DownloadSettingsManager {
     self.useV2Manifest = enabled
     saveSettings()
 
-    logger.info(
-      "API manifest version set to \(enabled ? "V2" : "Official")",
-      category: "DownloadSettingsManager"
-    )
+    logger.info("API manifest version set to \(enabled ? "V2" : "Official")", category: "DownloadSettingsManager")
   }
 
   // MARK: - Private Methods

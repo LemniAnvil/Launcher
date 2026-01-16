@@ -34,10 +34,7 @@ class DownloadManager: NSObject, ObservableObject {
     downloadSettingsManager.maxConcurrentDownloads
   }
 
-  private let downloadQueue = DispatchQueue(
-    label: "com.launcher.download",
-    attributes: .concurrent
-  )
+  private let downloadQueue = DispatchQueue(label: "com.launcher.download", attributes: .concurrent)
   private let progressUpdateInterval: TimeInterval = 0.5
   private var lastProgressUpdate = Date()
   private var lastDownloadedBytes: Int64 = 0
@@ -102,10 +99,7 @@ class DownloadManager: NSObject, ObservableObject {
     expectedSHA1: String? = nil,
     maxRetries: Int = AppConstants.Download.defaultRetryAttempts
   ) async throws {
-    logger.info(
-      "Starting file download: \(urlString)",
-      category: "DownloadManager"
-    )
+    logger.info("Starting file download: \(urlString)", category: "DownloadManager")
 
     guard let url = URL(string: urlString) else {
       throw DownloadError.invalidURL(urlString)
@@ -115,17 +109,11 @@ class DownloadManager: NSObject, ObservableObject {
     if FileManager.default.fileExists(atPath: destination.path) {
       // For existing files, only check file size to avoid expensive SHA1 computation
       if let size = FileUtils.getFileSize(at: destination), size == expectedSize {
-        logger.debug(
-          "File exists with matching size, skipping: \(destination.lastPathComponent)",
-          category: "DownloadManager"
-        )
+        logger.debug("File exists with matching size, skipping: \(destination.lastPathComponent)", category: "DownloadManager")
         return
       } else {
         // File size mismatch, remove and re-download
-        logger.debug(
-          "File exists but size mismatch, re-downloading: \(destination.lastPathComponent)",
-          category: "DownloadManager"
-        )
+        logger.debug("File exists but size mismatch, re-downloading: \(destination.lastPathComponent)", category: "DownloadManager")
         try? FileManager.default.removeItem(at: destination)
       }
     }
@@ -142,10 +130,7 @@ class DownloadManager: NSObject, ObservableObject {
           expectedSHA1: expectedSHA1
         )
         // Success - return immediately
-        logger.info(
-          "File download completed: \(destination.lastPathComponent)",
-          category: "DownloadManager"
-        )
+        logger.info("File download completed: \(destination.lastPathComponent)", category: "DownloadManager")
         return
       } catch {
         lastError = error
@@ -187,9 +172,7 @@ class DownloadManager: NSObject, ObservableObject {
     }
     let (tempURL, response) = try await session.download(from: url)
 
-    guard let httpResponse = response as? HTTPURLResponse,
-      httpResponse.statusCode == 200
-    else {
+    guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
       throw DownloadError.httpError(
         (response as? HTTPURLResponse)?.statusCode ?? -1
       )
