@@ -13,6 +13,7 @@ class ViewController: NSViewController {
   private var versionListWindowController: VersionListWindowController?
   private var javaDetectionWindowController: JavaDetectionWindowController?
   private var accountWindowController: AccountWindowController?
+  private var accountInfoWindowController: AccountInfoWindowController?
   private var settingsWindowController: SettingsWindowController?
   private var addInstanceWindowController: AddInstanceWindowController?
   private var instanceDetailWindowController: InstanceDetailWindowController?
@@ -84,6 +85,23 @@ class ViewController: NSViewController {
     )
     button.target = self
     button.action = #selector(openAccountWindow)
+    return button
+  }()
+
+  private lazy var accountInfoButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "info.circle.fill",
+      cornerRadius: 6,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .systemIndigo,
+      accessibilityLabel: Localized.Account.openAccountInfoButton
+    )
+    button.target = self
+    button.action = #selector(openAccountInfoWindow)
     return button
   }()
 
@@ -291,6 +309,7 @@ class ViewController: NSViewController {
     view.addSubview(refreshButton)
     view.addSubview(skinLibraryButton)
     view.addSubview(javaDetectionButton)
+    view.addSubview(accountInfoButton)
     view.addSubview(accountButton)
     view.addSubview(settingsButton)
     view.addSubview(installedVersionsButton)
@@ -347,9 +366,15 @@ class ViewController: NSViewController {
       make.width.height.equalTo(36)
     }
 
-    javaDetectionButton.snp.makeConstraints { make in
+    accountInfoButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.right.equalTo(accountButton.snp.left).offset(-8)
+      make.width.height.equalTo(36)
+    }
+
+    javaDetectionButton.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(16)
+      make.right.equalTo(accountInfoButton.snp.left).offset(-8)
       make.width.height.equalTo(36)
     }
 
@@ -547,6 +572,26 @@ extension ViewController {
 
     // Clean up after modal closes
     accountWindowController = nil
+  }
+
+  @objc private func openAccountInfoWindow() {
+    // If window already exists, show it
+    if let existingController = accountInfoWindowController {
+      existingController.showWindow(nil)
+      existingController.window?.makeKeyAndOrderFront(nil)
+      return
+    }
+
+    // Create new account info window
+    accountInfoWindowController = AccountInfoWindowController()
+
+    if let window = accountInfoWindowController?.window {
+      // Run as modal window
+      NSApplication.shared.runModal(for: window)
+    }
+
+    // Clean up after modal closes
+    accountInfoWindowController = nil
   }
 
   @objc private func openSettingsWindow() {

@@ -122,6 +122,28 @@
         }
       }
     },
+    "%d capes available" : {
+      "comment" : "[Text] Count of capes",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d 个可用披风"
+          }
+        }
+      }
+    },
+    "%d local skins" : {
+      "comment" : "[Text] Count of local skins",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d 个本地皮肤"
+          }
+        }
+      }
+    },
     "%lld installed versions" : {
       "comment" : "[Text] Multiple installed versions count.",
       "localizations" : {
@@ -173,7 +195,7 @@
       }
     },
     "⚠️ Expired" : {
-      "comment" : "[Status] Token expired status.",
+      "comment" : "[Status] Token expired status.\n[Status] Token expired.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -354,6 +376,17 @@
         }
       }
     },
+    "✓ Active" : {
+      "comment" : "[Status] Active state.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 激活"
+          }
+        }
+      }
+    },
     "✓ Logged In" : {
       "comment" : "[Status] Logged in status.",
       "localizations" : {
@@ -361,6 +394,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "✓ 已登录"
+          }
+        }
+      }
+    },
+    "✓ Valid" : {
+      "comment" : "[Status] Token valid.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 有效"
           }
         }
       }
@@ -1240,6 +1284,28 @@
         }
       }
     },
+    "Access token expired" : {
+      "comment" : "[Error] Token expired",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "访问令牌已过期"
+          }
+        }
+      }
+    },
+    "Access Token Status" : {
+      "comment" : "[Label] Access token status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "访问令牌状态"
+          }
+        }
+      }
+    },
     "Account \"%@\" will be permanently deleted. This action cannot be undone." : {
       "comment" : "[Alert] Delete account confirmation message.",
       "localizations" : {
@@ -1262,6 +1328,28 @@
         }
       }
     },
+    "Account Details" : {
+      "comment" : "[Text] Account details label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "账号详情"
+          }
+        }
+      }
+    },
+    "Account Info" : {
+      "comment" : "[Tab] Account info tab\n[Text] Account info window title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "账号信息"
+          }
+        }
+      }
+    },
     "Account Management" : {
       "comment" : "[Button] Open account management window.\n[Text] Account management title.\n[Text] Account management window title.",
       "localizations" : {
@@ -1269,6 +1357,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "账号管理"
+          }
+        }
+      }
+    },
+    "Activate" : {
+      "comment" : "[Button] Activate skin",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "激活"
+          }
+        }
+      }
+    },
+    "Activating skin..." : {
+      "comment" : "[Progress] Activating skin",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在激活皮肤..."
+          }
+        }
+      }
+    },
+    "Active Cape" : {
+      "comment" : "[Label] Active cape.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前披风"
+          }
+        }
+      }
+    },
+    "Active Skin" : {
+      "comment" : "[Label] Active skin.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前皮肤"
           }
         }
       }
@@ -1302,6 +1434,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加离线账户"
+          }
+        }
+      }
+    },
+    "Alias" : {
+      "comment" : "[Label] Skin alias.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "别名"
+          }
+        }
+      }
+    },
+    "All Capes" : {
+      "comment" : "[Label] All capes title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有披风"
+          }
+        }
+      }
+    },
+    "All Skins" : {
+      "comment" : "[Label] All skins title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有皮肤"
           }
         }
       }
@@ -1461,12 +1626,67 @@
       }
     },
     "Cancel" : {
-      "comment" : "[Button] Cancel button.\n[Button] Cancel edit button.\n[Button] Cancel login.",
+      "comment" : "[Button] Cancel\n[Button] Cancel button.\n[Button] Cancel edit button.\n[Button] Cancel login.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消"
+          }
+        }
+      }
+    },
+    "Cape equipped successfully!" : {
+      "comment" : "[Success] Cape equipped",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "披风装备成功！"
+          }
+        }
+      }
+    },
+    "Cape hidden successfully!" : {
+      "comment" : "[Success] Cape hidden",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "披风隐藏成功！"
+          }
+        }
+      }
+    },
+    "Cape Name" : {
+      "comment" : "[Label] Cape alias.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "披风名称"
+          }
+        }
+      }
+    },
+    "Capes are obtained through Minecraft events, Minecon, or account migration rewards." : {
+      "comment" : "[Text] Info about how to get capes",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "披风可通过 Minecraft 活动、Minecon 或账号迁移奖励获得。"
+          }
+        }
+      }
+    },
+    "Capes Count" : {
+      "comment" : "[Label] Capes count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "披风数量"
           }
         }
       }
@@ -1489,6 +1709,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "更改分组 (C)"
+          }
+        }
+      }
+    },
+    "Classic (Steve)" : {
+      "comment" : "[Variant] Classic Steve model",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "经典 (Steve)"
           }
         }
       }
@@ -1571,7 +1802,7 @@
       }
     },
     "Confirm" : {
-      "comment" : "[Button] Confirm button.",
+      "comment" : "[Button] Confirm\n[Button] Confirm button.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1746,6 +1977,17 @@
         }
       }
     },
+    "Default Skin" : {
+      "comment" : "[Text] No active skin.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "默认皮肤"
+          }
+        }
+      }
+    },
     "Delete" : {
       "comment" : "[Button] Delete button.",
       "localizations" : {
@@ -1901,7 +2143,7 @@
       }
     },
     "Download" : {
-      "comment" : "[Button] Download button.\n[Tab] Download settings tab title.",
+      "comment" : "[Button] Download button.\n[Button] Download skin to local\n[Tab] Download settings tab title.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2017,6 +2259,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在下载 Minecraft %@..."
+          }
+        }
+      }
+    },
+    "Downloading skin..." : {
+      "comment" : "[Progress] Downloading skin",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载皮肤..."
           }
         }
       }
@@ -2170,8 +2423,19 @@
         }
       }
     },
+    "Equip" : {
+      "comment" : "[Button] Equip cape",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "装备"
+          }
+        }
+      }
+    },
     "Error" : {
-      "comment" : "[Alert] Error title.",
+      "comment" : "[Alert] Error title\n[Alert] Error title.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2385,6 +2649,17 @@
         }
       }
     },
+    "File size is %d KB, maximum is 24 KB" : {
+      "comment" : "[Error] File too large",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件大小为 %d KB，最大为 24 KB"
+          }
+        }
+      }
+    },
     "Filter:" : {
       "comment" : "[Label] Filter label.",
       "localizations" : {
@@ -2495,6 +2770,28 @@
         }
       }
     },
+    "Hide Cape" : {
+      "comment" : "[Button] Hide cape",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隐藏披风"
+          }
+        }
+      }
+    },
+    "Hide Cape?" : {
+      "comment" : "[Alert] Confirm hide cape title",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隐藏披风？"
+          }
+        }
+      }
+    },
     "Host:" : {
       "comment" : "[Label] Proxy host label.",
       "localizations" : {
@@ -2550,6 +2847,17 @@
         }
       }
     },
+    "ID" : {
+      "comment" : "[Label] Cape ID.\n[Label] Skin ID.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID"
+          }
+        }
+      }
+    },
     "ID:" : {
       "comment" : "[Label] Instance ID label.",
       "localizations" : {
@@ -2568,6 +2876,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "导入"
+          }
+        }
+      }
+    },
+    "Import from File" : {
+      "comment" : "[Button] Import skin from file",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从文件导入"
+          }
+        }
+      }
+    },
+    "Inactive" : {
+      "comment" : "[Status] Inactive state.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未激活"
           }
         }
       }
@@ -2754,6 +3084,28 @@
         }
       }
     },
+    "Invalid dimensions %dx%d. Must be 64x32 or 64x64." : {
+      "comment" : "[Error] Invalid dimensions",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效的尺寸 %dx%d。必须是 64x32 或 64x64。"
+          }
+        }
+      }
+    },
+    "Invalid file format. Must be PNG." : {
+      "comment" : "[Error] Invalid format",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效的文件格式。必须是 PNG 格式。"
+          }
+        }
+      }
+    },
     "Invalid instance name: %@" : {
       "comment" : "[Error] Invalid name error.",
       "localizations" : {
@@ -2772,6 +3124,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无效的代理配置"
+          }
+        }
+      }
+    },
+    "Invalid skin URL" : {
+      "comment" : "[Error] Invalid URL",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效的皮肤URL"
           }
         }
       }
@@ -3018,6 +3381,17 @@
         }
       }
     },
+    "Login Time" : {
+      "comment" : "[Label] Login timestamp.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录时间"
+          }
+        }
+      }
+    },
     "Login Time: %@" : {
       "comment" : "[Label] Login timestamp label.",
       "localizations" : {
@@ -3069,6 +3443,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "微软账户"
+          }
+        }
+      }
+    },
+    "Microsoft Account Details" : {
+      "comment" : "[Text] Account info subtitle.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Microsoft 账号详情"
           }
         }
       }
@@ -3216,6 +3601,28 @@
         }
       }
     },
+    "No" : {
+      "comment" : "[Button] No",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "否"
+          }
+        }
+      }
+    },
+    "No account selected" : {
+      "comment" : "[Error] No account selected",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未选择账号"
+          }
+        }
+      }
+    },
     "No accounts saved yet" : {
       "comment" : "[Text] No accounts message.",
       "localizations" : {
@@ -3223,6 +3630,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "还没有保存任何账号"
+          }
+        }
+      }
+    },
+    "No Cape" : {
+      "comment" : "[Text] No active cape.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未装备"
+          }
+        }
+      }
+    },
+    "No Capes" : {
+      "comment" : "[Text] No capes.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无披风"
           }
         }
       }
@@ -3293,6 +3722,28 @@
         }
       }
     },
+    "No local skins found" : {
+      "comment" : "[Text] No local skins",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到本地皮肤"
+          }
+        }
+      }
+    },
+    "No Microsoft Accounts" : {
+      "comment" : "[Text] No Microsoft accounts message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无 Microsoft 账号"
+          }
+        }
+      }
+    },
     "No Microsoft accounts\nClick the button above to sign in" : {
       "comment" : "[Text] Empty state message for Microsoft accounts.",
       "localizations" : {
@@ -3344,6 +3795,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未找到已保存的账号。请先添加一个账号。"
+          }
+        }
+      }
+    },
+    "No Skins" : {
+      "comment" : "[Text] No skins.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无皮肤"
           }
         }
       }
@@ -3470,7 +3932,7 @@
       }
     },
     "OK" : {
-      "comment" : "[Button] Confirm button.\n[Button] OK button.",
+      "comment" : "[Button] Confirm button.\n[Button] OK\n[Button] OK button.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -3481,7 +3943,7 @@
       }
     },
     "Open Folder" : {
-      "comment" : "[Button] Open instance folder button.",
+      "comment" : "[Button] Open instance folder button.\n[Button] Open skins folder",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -3542,6 +4004,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "解析失败：%@"
+          }
+        }
+      }
+    },
+    "Player Name" : {
+      "comment" : "[Label] Player name.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "玩家名称"
           }
         }
       }
@@ -3784,7 +4257,7 @@
       }
     },
     "Refresh" : {
-      "comment" : "[Button] Refresh Java detection.\n[Button] Refresh button.\n[Button] Refresh instances list.\n[Button] Refresh versions list.",
+      "comment" : "[Button] Refresh Java detection.\n[Button] Refresh button.\n[Button] Refresh cape list\n[Button] Refresh instances list.\n[Button] Refresh skin list\n[Button] Refresh versions list.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -3834,6 +4307,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "刷新成功"
+          }
+        }
+      }
+    },
+    "Refresh Token Status" : {
+      "comment" : "[Label] Refresh token status.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刷新令牌状态"
           }
         }
       }
@@ -3926,6 +4410,50 @@
         }
       }
     },
+    "Reset Skin?" : {
+      "comment" : "[Alert] Confirm reset skin title",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置皮肤？"
+          }
+        }
+      }
+    },
+    "Reset to Default" : {
+      "comment" : "[Button] Reset skin",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置为默认"
+          }
+        }
+      }
+    },
+    "Resetting skin..." : {
+      "comment" : "[Progress] Resetting skin",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在重置皮肤..."
+          }
+        }
+      }
+    },
+    "Resize the image to 64x32 or 64x64 pixels." : {
+      "comment" : "[Suggestion] Resize skin",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将图片调整为 64x32 或 64x64 像素。"
+          }
+        }
+      }
+    },
     "Resource Timeout:" : {
       "comment" : "[Label] Resource timeout label.",
       "localizations" : {
@@ -3981,6 +4509,17 @@
         }
       }
     },
+    "Select a skin file" : {
+      "comment" : "[Dialog] Select skin file",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择皮肤文件"
+          }
+        }
+      }
+    },
     "Select Account" : {
       "comment" : "[Text] Account selection window title.",
       "localizations" : {
@@ -4003,6 +4542,17 @@
         }
       }
     },
+    "Select an account from the left to view details" : {
+      "comment" : "[Text] Select account prompt.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请在左侧选择一个账号查看详情"
+          }
+        }
+      }
+    },
     "Select an account to launch the game." : {
       "comment" : "[Text] Account selection description.",
       "localizations" : {
@@ -4021,6 +4571,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择一个实例以查看详情"
+          }
+        }
+      }
+    },
+    "Select Skin Model" : {
+      "comment" : "[Dialog] Select skin variant",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择皮肤模型"
           }
         }
       }
@@ -4054,6 +4615,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SHA1 校验失败"
+          }
+        }
+      }
+    },
+    "Short UUID" : {
+      "comment" : "[Label] Short UUID.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UUID 缩写"
           }
         }
       }
@@ -4098,6 +4670,83 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用您的微软账户登录以访问 Minecraft。为增强安全性，认证将在默认浏览器中进行。"
+          }
+        }
+      }
+    },
+    "Skin activated successfully!" : {
+      "comment" : "[Success] Skin activated",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "皮肤激活成功！"
+          }
+        }
+      }
+    },
+    "Skin downloaded to library!" : {
+      "comment" : "[Success] Skin download success",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "皮肤已下载到皮肤库！"
+          }
+        }
+      }
+    },
+    "Skin Management" : {
+      "comment" : "[Tab] Skin management tab",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "皮肤管理"
+          }
+        }
+      }
+    },
+    "Skin reset to default!" : {
+      "comment" : "[Success] Skin reset",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已重置为默认皮肤！"
+          }
+        }
+      }
+    },
+    "Skin uploaded successfully!" : {
+      "comment" : "[Success] Skin upload success",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "皮肤上传成功！"
+          }
+        }
+      }
+    },
+    "Skins Count" : {
+      "comment" : "[Label] Skins count.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "皮肤数量"
+          }
+        }
+      }
+    },
+    "Slim (Alex)" : {
+      "comment" : "[Variant] Slim Alex model",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "纤细 (Alex)"
           }
         }
       }
@@ -4157,6 +4806,17 @@
         }
       }
     },
+    "State" : {
+      "comment" : "[Label] Cape state.\n[Label] Skin state.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状态"
+          }
+        }
+      }
+    },
     "Status" : {
       "comment" : "[Table] Java status column.",
       "localizations" : {
@@ -4164,6 +4824,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "状态"
+          }
+        }
+      }
+    },
+    "Success" : {
+      "comment" : "[Alert] Success title",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "成功"
           }
         }
       }
@@ -4262,6 +4933,28 @@
         }
       }
     },
+    "This will hide your cape. You can equip it again anytime." : {
+      "comment" : "[Alert] Confirm hide cape message",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将隐藏你的披风。你可以随时重新装备它。"
+          }
+        }
+      }
+    },
+    "This will remove your custom skin and restore the default skin." : {
+      "comment" : "[Alert] Confirm reset skin message",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将移除你的自定义皮肤并恢复为默认皮肤。"
+          }
+        }
+      }
+    },
     "Timeout for download requests (5-120 seconds)" : {
       "comment" : "[Text] Request timeout description.",
       "localizations" : {
@@ -4269,6 +4962,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "下载请求超时时间（5-120 秒）"
+          }
+        }
+      }
+    },
+    "Token Expiration" : {
+      "comment" : "[Label] Token expiration.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token 过期时间"
+          }
+        }
+      }
+    },
+    "Try compressing the PNG file or use a smaller image." : {
+      "comment" : "[Suggestion] Compress skin",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尝试压缩 PNG 文件或使用更小的图片。"
+          }
+        }
+      }
+    },
+    "Try refreshing the account or logging in again." : {
+      "comment" : "[Suggestion] Refresh account",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尝试刷新账号或重新登录。"
           }
         }
       }
@@ -4362,6 +5088,28 @@
         }
       }
     },
+    "Unnamed Cape" : {
+      "comment" : "[Text] Unnamed cape fallback.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未命名披风"
+          }
+        }
+      }
+    },
+    "Unnamed Skin" : {
+      "comment" : "[Text] Unnamed skin fallback.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未命名皮肤"
+          }
+        }
+      }
+    },
     "Update Time" : {
       "comment" : "[Table] Update time column header.",
       "localizations" : {
@@ -4369,6 +5117,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "更新时间"
+          }
+        }
+      }
+    },
+    "Upload to Account" : {
+      "comment" : "[Button] Upload skin to account",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上传到账号"
+          }
+        }
+      }
+    },
+    "Uploading skin..." : {
+      "comment" : "[Progress] Uploading skin",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在上传皮肤..."
+          }
+        }
+      }
+    },
+    "URL" : {
+      "comment" : "[Label] Cape URL.\n[Label] Skin URL.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
           }
         }
       }
@@ -4457,6 +5238,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "用户名："
+          }
+        }
+      }
+    },
+    "UUID" : {
+      "comment" : "[Label] Player UUID.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UUID"
+          }
+        }
+      }
+    },
+    "Variant" : {
+      "comment" : "[Label] Skin variant.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "变体"
           }
         }
       }
@@ -4670,6 +5473,17 @@
         }
       }
     },
+    "View Account Info" : {
+      "comment" : "[Button] Open account info window.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看账号信息"
+          }
+        }
+      }
+    },
     "Waiting for authentication in browser...\nPlease complete the sign-in process in your browser." : {
       "comment" : "[Status] Waiting for authentication.",
       "localizations" : {
@@ -4688,6 +5502,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "是否立即启动 \"%@\"？"
+          }
+        }
+      }
+    },
+    "Yes" : {
+      "comment" : "[Button] Yes",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是"
           }
         }
       }

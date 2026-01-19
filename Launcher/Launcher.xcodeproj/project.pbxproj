@@ -133,7 +133,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				03E45F622EBB8721003E4D1C /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				03FBFF512EB1235E00FD7CE4 /* Launcher */,
@@ -296,10 +295,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		03E45F622EBB8721003E4D1C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = 03E45F612EBB8721003E4D1C /* SwiftLintBuildToolPlugin */;
-		};
 		03FBFF612EB1235F00FD7CE4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 03FBFF4E2EB1235E00FD7CE4 /* Launcher */;
@@ -697,11 +692,6 @@
 		03C303592F18F318004F31E4 /* Yatagarasu */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Yatagarasu;
-		};
-		03E45F612EBB8721003E4D1C /* SwiftLintBuildToolPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 034304DE2EB25D030051F20A /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
-			productName = "plugin:SwiftLintBuildToolPlugin";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

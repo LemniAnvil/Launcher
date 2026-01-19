@@ -7,6 +7,16 @@ import Foundation
 
 enum Localized {
 
+  // MARK: - Common
+
+  enum Common {
+    static let ok = String(localized: "OK", comment: "[Button] OK")
+    static let cancel = String(localized: "Cancel", comment: "[Button] Cancel")
+    static let confirm = String(localized: "Confirm", comment: "[Button] Confirm")
+    static let yes = String(localized: "Yes", comment: "[Button] Yes")
+    static let no = String(localized: "No", comment: "[Button] No")
+  }
+
   // MARK: - Errors
 
   enum Errors {

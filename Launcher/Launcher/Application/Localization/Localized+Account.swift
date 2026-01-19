@@ -124,6 +124,115 @@ extension Localized {
     static let defaultAccountSetMessage = String(localized: "This account will be automatically used when launching games.", comment: "[Alert] Default account set message.")
     static let defaultAccountClearedTitle = String(localized: "Default Account Cleared", comment: "[Alert] Default account cleared title.")
     static let defaultAccountClearedMessage = String(localized: "You will be prompted to select an account when launching games.", comment: "[Alert] Default account cleared message.")
+
+    // Account Info Window
+    static let accountInfoWindowTitle = String(localized: "Account Info", comment: "[Text] Account info window title.")
+    static let accountInfoSubtitle = String(localized: "Microsoft Account Details", comment: "[Text] Account info subtitle.")
+    static let openAccountInfoButton = String(localized: "View Account Info", comment: "[Button] Open account info window.")
+    static let noMicrosoftAccounts = String(localized: "No Microsoft Accounts", comment: "[Text] No Microsoft accounts message.")
+    static let accountDetails = String(localized: "Account Details", comment: "[Text] Account details label.")
+    static let selectAccountPrompt = String(localized: "Select an account from the left to view details", comment: "[Text] Select account prompt.")
+    static let playerName = String(localized: "Player Name", comment: "[Label] Player name.")
+    static let playerUUID = String(localized: "UUID", comment: "[Label] Player UUID.")
+    static let shortUUID = String(localized: "Short UUID", comment: "[Label] Short UUID.")
+    static let loginTimestamp = String(localized: "Login Time", comment: "[Label] Login timestamp.")
+    static let tokenExpiration = String(localized: "Token Expiration", comment: "[Label] Token expiration.")
+    static let accessTokenStatus = String(localized: "Access Token Status", comment: "[Label] Access token status.")
+    static let refreshTokenStatus = String(localized: "Refresh Token Status", comment: "[Label] Refresh token status.")
+    static let skinsCount = String(localized: "Skins Count", comment: "[Label] Skins count.")
+    static let capesCount = String(localized: "Capes Count", comment: "[Label] Capes count.")
+    static let activeSkin = String(localized: "Active Skin", comment: "[Label] Active skin.")
+    static let activeCape = String(localized: "Active Cape", comment: "[Label] Active cape.")
+    static let tokenValid = String(localized: "✓ Valid", comment: "[Status] Token valid.")
+    static let tokenExpired = String(localized: "⚠️ Expired", comment: "[Status] Token expired.")
+    static let noActiveSkin = String(localized: "Default Skin", comment: "[Text] No active skin.")
+    static let noActiveCape = String(localized: "No Cape", comment: "[Text] No active cape.")
+
+    // Skin and Cape Details
+    static let allSkinsTitle = String(localized: "All Skins", comment: "[Label] All skins title.")
+    static let allCapesTitle = String(localized: "All Capes", comment: "[Label] All capes title.")
+    static let skinVariant = String(localized: "Variant", comment: "[Label] Skin variant.")
+    static let skinState = String(localized: "State", comment: "[Label] Skin state.")
+    static let skinAlias = String(localized: "Alias", comment: "[Label] Skin alias.")
+    static let skinID = String(localized: "ID", comment: "[Label] Skin ID.")
+    static let skinURL = String(localized: "URL", comment: "[Label] Skin URL.")
+    static let capeAlias = String(localized: "Cape Name", comment: "[Label] Cape alias.")
+    static let capeID = String(localized: "ID", comment: "[Label] Cape ID.")
+    static let capeURL = String(localized: "URL", comment: "[Label] Cape URL.")
+    static let capeState = String(localized: "State", comment: "[Label] Cape state.")
+    static let stateActive = String(localized: "✓ Active", comment: "[Status] Active state.")
+    static let stateInactive = String(localized: "Inactive", comment: "[Status] Inactive state.")
+    static let noSkins = String(localized: "No Skins", comment: "[Text] No skins.")
+    static let noCapes = String(localized: "No Capes", comment: "[Text] No capes.")
+    static let unnamedSkin = String(localized: "Unnamed Skin", comment: "[Text] Unnamed skin fallback.")
+    static let unnamedCape = String(localized: "Unnamed Cape", comment: "[Text] Unnamed cape fallback.")
+
+    // Tab Labels
+    static let accountInfoTab = String(localized: "Account Info", comment: "[Tab] Account info tab")
+    static let skinManagementTab = String(localized: "Skin Management", comment: "[Tab] Skin management tab")
+
+    // Skin Management Buttons
+    static let uploadToAccount = String(localized: "Upload to Account", comment: "[Button] Upload skin to account")
+    static let activateSkin = String(localized: "Activate", comment: "[Button] Activate skin")
+    static let downloadSkin = String(localized: "Download", comment: "[Button] Download skin to local")
+    static let resetSkin = String(localized: "Reset to Default", comment: "[Button] Reset skin")
+    static let importFromFile = String(localized: "Import from File", comment: "[Button] Import skin from file")
+    static let refreshSkins = String(localized: "Refresh", comment: "[Button] Refresh skin list")
+    static let openSkinsFolder = String(localized: "Open Folder", comment: "[Button] Open skins folder")
+
+    // Skin Library
+    static let noLocalSkins = String(localized: "No local skins found", comment: "[Text] No local skins")
+    static let skinCount = String(localized: "%d local skins", comment: "[Text] Count of local skins")
+
+    // Progress Messages
+    static let uploadingSkin = String(localized: "Uploading skin...", comment: "[Progress] Uploading skin")
+    static let activatingSkin = String(localized: "Activating skin...", comment: "[Progress] Activating skin")
+    static let downloadingSkin = String(localized: "Downloading skin...", comment: "[Progress] Downloading skin")
+    static let resettingSkin = String(localized: "Resetting skin...", comment: "[Progress] Resetting skin")
+
+    // Success Messages
+    static let skinUploadSuccess = String(localized: "Skin uploaded successfully!", comment: "[Success] Skin upload success")
+    static let skinActivated = String(localized: "Skin activated successfully!", comment: "[Success] Skin activated")
+    static let skinDownloadSuccess = String(localized: "Skin downloaded to library!", comment: "[Success] Skin download success")
+    static let skinReset = String(localized: "Skin reset to default!", comment: "[Success] Skin reset")
+
+    // Confirmation Dialogs
+    static let confirmResetSkin = String(localized: "Reset Skin?", comment: "[Alert] Confirm reset skin title")
+    static let confirmResetSkinMessage = String(localized: "This will remove your custom skin and restore the default skin.", comment: "[Alert] Confirm reset skin message")
+
+    // Error Messages
+    static let errorNoAccountSelected = String(localized: "No account selected", comment: "[Error] No account selected")
+    static let errorInvalidURL = String(localized: "Invalid skin URL", comment: "[Error] Invalid URL")
+    static let errorFileTooLarge = String(localized: "File size is %d KB, maximum is 24 KB", comment: "[Error] File too large")
+    static let errorInvalidFormat = String(localized: "Invalid file format. Must be PNG.", comment: "[Error] Invalid format")
+    static let errorInvalidDimensions = String(localized: "Invalid dimensions %dx%d. Must be 64x32 or 64x64.", comment: "[Error] Invalid dimensions")
+    static let errorTokenExpired = String(localized: "Access token expired", comment: "[Error] Token expired")
+
+    // Suggestions
+    static let suggestionCompressSkin = String(localized: "Try compressing the PNG file or use a smaller image.", comment: "[Suggestion] Compress skin")
+    static let suggestionResizeSkin = String(localized: "Resize the image to 64x32 or 64x64 pixels.", comment: "[Suggestion] Resize skin")
+    static let suggestionRefreshAccount = String(localized: "Try refreshing the account or logging in again.", comment: "[Suggestion] Refresh account")
+
+    // Variant Selection
+    static let selectSkinVariant = String(localized: "Select Skin Model", comment: "[Dialog] Select skin variant")
+    static let classicVariant = String(localized: "Classic (Steve)", comment: "[Variant] Classic Steve model")
+    static let slimVariant = String(localized: "Slim (Alex)", comment: "[Variant] Slim Alex model")
+    static let selectSkinFile = String(localized: "Select a skin file", comment: "[Dialog] Select skin file")
+
+    // Common
+    static let success = String(localized: "Success", comment: "[Alert] Success title")
+    static let error = String(localized: "Error", comment: "[Alert] Error title")
+
+    // Cape Management
+    static let equipCape = String(localized: "Equip", comment: "[Button] Equip cape")
+    static let hideCape = String(localized: "Hide Cape", comment: "[Button] Hide cape")
+    static let refreshCapes = String(localized: "Refresh", comment: "[Button] Refresh cape list")
+    static let capeEquipped = String(localized: "Cape equipped successfully!", comment: "[Success] Cape equipped")
+    static let capeHidden = String(localized: "Cape hidden successfully!", comment: "[Success] Cape hidden")
+    static let confirmHideCape = String(localized: "Hide Cape?", comment: "[Alert] Confirm hide cape title")
+    static let confirmHideCapeMessage = String(localized: "This will hide your cape. You can equip it again anytime.", comment: "[Alert] Confirm hide cape message")
+    static let capeCount = String(localized: "%d capes available", comment: "[Text] Count of capes")
+    static let noCapeInfo = String(localized: "Capes are obtained through Minecraft events, Minecon, or account migration rewards.", comment: "[Text] Info about how to get capes")
   }
 
   // MARK: - Microsoft Authentication
