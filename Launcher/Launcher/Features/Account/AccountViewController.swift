@@ -11,6 +11,12 @@ import Yatagarasu
 
 class AccountViewController: NSViewController {
 
+  // MARK: - Design System Aliases
+
+  private typealias Spacing = DesignSystem.Spacing
+  private typealias Size = DesignSystem.Size
+  private typealias Fonts = DesignSystem.Fonts
+
   // MARK: - Properties
 
   var microsoftAccounts: [MicrosoftAccount] = []
@@ -47,14 +53,14 @@ class AccountViewController: NSViewController {
   // UI components
   private let titleLabel = DisplayLabel(
     text: Localized.Account.title,
-    font: BRFonts.largeTitle,
+    font: Fonts.windowTitle,
     textColor: .labelColor,
     alignment: .left
   )
 
   private let subtitleLabel = DisplayLabel(
     text: Localized.Account.subtitle,
-    font: BRFonts.caption,
+    font: Fonts.caption,
     textColor: .secondaryLabelColor,
     alignment: .left
   )
@@ -115,7 +121,7 @@ class AccountViewController: NSViewController {
   private let emptyLabel: DisplayLabel = {
     let label = DisplayLabel(
       text: Localized.Account.emptyMicrosoftMessage,
-      font: BRFonts.body,
+      font: Fonts.body,
       textColor: .secondaryLabelColor,
       alignment: .center
     )
@@ -135,7 +141,7 @@ class AccountViewController: NSViewController {
 
   private let developerModeLabel = DisplayLabel(
     text: Localized.Account.developerModeLabel,
-    font: BRFonts.caption,
+    font: Fonts.caption,
     textColor: .secondaryLabelColor,
     alignment: .left
   )
@@ -171,61 +177,61 @@ class AccountViewController: NSViewController {
     scrollView.documentView = tableView
 
     titleLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(20)
-      make.left.equalToSuperview().offset(20)
-      make.right.equalToSuperview().offset(-20)
+      make.top.equalToSuperview().offset(Spacing.standard)
+      make.left.equalToSuperview().offset(Spacing.standard)
+      make.right.equalToSuperview().offset(-Spacing.standard)
     }
 
     subtitleLabel.snp.makeConstraints { make in
-      make.top.equalTo(titleLabel.snp.bottom).offset(4)
-      make.left.equalToSuperview().offset(20)
-      make.right.equalToSuperview().offset(-20)
+      make.top.equalTo(titleLabel.snp.bottom).offset(Spacing.micro)
+      make.left.equalToSuperview().offset(Spacing.standard)
+      make.right.equalToSuperview().offset(-Spacing.standard)
     }
 
     headerSeparator.snp.makeConstraints { make in
-      make.top.equalTo(subtitleLabel.snp.bottom).offset(12)
-      make.left.right.equalToSuperview().inset(20)
-      make.height.equalTo(1)
+      make.top.equalTo(subtitleLabel.snp.bottom).offset(Spacing.section)
+      make.left.right.equalToSuperview().inset(Spacing.standard)
+      make.height.equalTo(Size.separatorHeight)
     }
 
     developerModeSwitch.snp.makeConstraints { make in
-      make.top.equalTo(headerSeparator.snp.bottom).offset(12)
-      make.right.equalToSuperview().offset(-20)
+      make.top.equalTo(headerSeparator.snp.bottom).offset(Spacing.section)
+      make.right.equalToSuperview().offset(-Spacing.standard)
     }
 
     developerModeLabel.snp.makeConstraints { make in
       make.centerY.equalTo(developerModeSwitch)
-      make.right.equalTo(developerModeSwitch.snp.left).offset(-8)
+      make.right.equalTo(developerModeSwitch.snp.left).offset(-Spacing.tiny)
     }
 
     loginMicrosoftButton.snp.makeConstraints { make in
-      make.top.equalTo(developerModeSwitch.snp.bottom).offset(12)
-      make.left.equalToSuperview().offset(20)
-      make.right.equalTo(view.snp.centerX).offset(-4)
-      make.height.equalTo(32)
+      make.top.equalTo(developerModeSwitch.snp.bottom).offset(Spacing.section)
+      make.left.equalToSuperview().offset(Spacing.standard)
+      make.right.equalTo(view.snp.centerX).offset(-Spacing.micro)
+      make.height.equalTo(Size.button)
     }
 
     addOfflineAccountButton.snp.makeConstraints { make in
       make.top.equalTo(loginMicrosoftButton)
-      make.left.equalTo(view.snp.centerX).offset(4)
-      make.right.equalToSuperview().offset(-20)
-      make.height.equalTo(32)
+      make.left.equalTo(view.snp.centerX).offset(Spacing.micro)
+      make.right.equalToSuperview().offset(-Spacing.standard)
+      make.height.equalTo(Size.button)
     }
 
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(loginMicrosoftButton.snp.bottom).offset(16)
-      make.left.right.bottom.equalToSuperview().inset(20)
+      make.top.equalTo(loginMicrosoftButton.snp.bottom).offset(Spacing.medium)
+      make.left.right.bottom.equalToSuperview().inset(Spacing.standard)
     }
 
     emptyLabel.snp.makeConstraints { make in
       make.center.equalTo(scrollView)
-      make.left.right.equalToSuperview().inset(40)
+      make.left.right.equalToSuperview().inset(Spacing.large)
     }
 
     // Position refresh status view above scroll view
     refreshStatusView.snp.makeConstraints { make in
-      make.top.equalTo(loginMicrosoftButton.snp.bottom).offset(16)
-      make.left.right.equalToSuperview().inset(20)
+      make.top.equalTo(loginMicrosoftButton.snp.bottom).offset(Spacing.medium)
+      make.left.right.equalToSuperview().inset(Spacing.standard)
     }
   }
 

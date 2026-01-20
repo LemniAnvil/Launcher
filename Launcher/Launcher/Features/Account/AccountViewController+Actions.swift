@@ -9,6 +9,8 @@ import AppKit
 import CraftKit
 import Yatagarasu
 
+private typealias Size = DesignSystem.Size
+
 // MARK: - Mojang Username API Response Models
 
 private struct MojangUsernameResponse: Codable {
@@ -177,7 +179,7 @@ extension AccountViewController {
     alert.addButton(withTitle: Localized.Account.addButton)
     alert.addButton(withTitle: Localized.Account.cancelButton)
 
-    let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 260, height: 24))
+    let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 260, height: Size.popupHeight))
     textField.placeholderString = Localized.Account.offlineAccountPlaceholder
     alert.accessoryView = textField
 

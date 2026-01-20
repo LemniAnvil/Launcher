@@ -11,6 +11,13 @@ import SnapKit
 
 final class SkinVariantPickerViewController: NSViewController {
 
+  // MARK: - Design System Aliases
+
+  private typealias Spacing = DesignSystem.Spacing
+  private typealias Radius = DesignSystem.CornerRadius
+  private typealias Size = DesignSystem.Size
+  private typealias Fonts = DesignSystem.Fonts
+
   // MARK: - Properties
 
   private var skinImage: NSImage?
@@ -21,7 +28,7 @@ final class SkinVariantPickerViewController: NSViewController {
 
   private let titleLabel: NSTextField = {
     let label = NSTextField(labelWithString: Localized.Account.selectSkinVariant)
-    label.font = .systemFont(ofSize: 16, weight: .semibold)
+    label.font = Fonts.title
     label.alignment = .center
     return label
   }()
@@ -30,8 +37,8 @@ final class SkinVariantPickerViewController: NSViewController {
     let imageView = NSImageView()
     imageView.imageScaling = .scaleProportionallyUpOrDown
     imageView.wantsLayer = true
-    imageView.layer?.cornerRadius = 8
-    imageView.layer?.borderWidth = 1
+    imageView.layer?.cornerRadius = Radius.standard
+    imageView.layer?.borderWidth = Size.separatorHeight
     imageView.layer?.borderColor = NSColor.separatorColor.cgColor
     return imageView
   }()
@@ -80,11 +87,11 @@ final class SkinVariantPickerViewController: NSViewController {
     let variantStack = NSStackView(views: [classicButton, slimButton])
     variantStack.orientation = .vertical
     variantStack.alignment = .left
-    variantStack.spacing = 8
+    variantStack.spacing = Spacing.tiny
 
     let buttonStack = NSStackView(views: [cancelButton, confirmButton])
     buttonStack.orientation = .horizontal
-    buttonStack.spacing = 12
+    buttonStack.spacing = Spacing.section
     buttonStack.distribution = .fillEqually
 
     view.addSubview(titleLabel)
@@ -93,25 +100,25 @@ final class SkinVariantPickerViewController: NSViewController {
     view.addSubview(buttonStack)
 
     titleLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(20)
-      make.left.right.equalToSuperview().inset(20)
+      make.top.equalToSuperview().offset(Spacing.standard)
+      make.left.right.equalToSuperview().inset(Spacing.standard)
     }
 
     previewImageView.snp.makeConstraints { make in
-      make.top.equalTo(titleLabel.snp.bottom).offset(16)
+      make.top.equalTo(titleLabel.snp.bottom).offset(Spacing.medium)
       make.centerX.equalToSuperview()
       make.width.height.equalTo(150)
     }
 
     variantStack.snp.makeConstraints { make in
-      make.top.equalTo(previewImageView.snp.bottom).offset(20)
-      make.left.right.equalToSuperview().inset(40)
+      make.top.equalTo(previewImageView.snp.bottom).offset(Spacing.standard)
+      make.left.right.equalToSuperview().inset(Spacing.large)
     }
 
     buttonStack.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-20)
-      make.left.right.equalToSuperview().inset(40)
-      make.height.equalTo(32)
+      make.bottom.equalToSuperview().offset(-Spacing.standard)
+      make.left.right.equalToSuperview().inset(Spacing.large)
+      make.height.equalTo(Size.button)
     }
   }
 

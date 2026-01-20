@@ -10,6 +10,12 @@ import CraftKit
 import SnapKit
 import Yatagarasu
 
+private typealias Spacing = DesignSystem.Spacing
+private typealias Radius = DesignSystem.CornerRadius
+private typealias Size = DesignSystem.Size
+private typealias Height = DesignSystem.Height
+private typealias Fonts = DesignSystem.Fonts
+
 extension AccountInfoViewController {
 
   // MARK: - Helper Methods
@@ -99,13 +105,13 @@ extension AccountInfoViewController {
     let card = NSView()
     card.wantsLayer = true
     card.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    card.layer?.cornerRadius = 8
+    card.layer?.cornerRadius = Radius.standard
 
     // Skin preview image
     let imageView = NSImageView()
     imageView.wantsLayer = true
     imageView.imageScaling = .scaleProportionallyUpOrDown
-    imageView.layer?.cornerRadius = 4
+    imageView.layer?.cornerRadius = Radius.small
     imageView.layer?.masksToBounds = true
     imageView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
     card.addSubview(imageView)
@@ -134,7 +140,7 @@ extension AccountInfoViewController {
     // Skin alias/name
     let nameLabel = DisplayLabel(
       text: skin.alias ?? Localized.Account.unnamedSkin,
-      font: .systemFont(ofSize: 13, weight: .semibold),
+      font: Fonts.tableHeader,
       textColor: .labelColor,
       alignment: .left
     )
@@ -158,14 +164,14 @@ extension AccountInfoViewController {
       card.addSubview(activeBadge)
 
       activeBadge.snp.makeConstraints { make in
-        make.top.equalToSuperview().offset(10)
-        make.right.equalToSuperview().offset(-10)
+        make.top.equalToSuperview().offset(Spacing.small)
+        make.right.equalToSuperview().offset(-Spacing.small)
         make.height.equalTo(18)
         make.width.greaterThanOrEqualTo(50)
       }
 
       activeLabel.snp.makeConstraints { make in
-        make.edges.equalToSuperview().inset(NSEdgeInsets(top: 2, left: 8, bottom: 2, right: 8))
+        make.edges.equalToSuperview().inset(NSEdgeInsets(top: 2, left: Spacing.tiny, bottom: 2, right: Spacing.tiny))
       }
     }
 
@@ -180,27 +186,27 @@ extension AccountInfoViewController {
 
     // Layout - image on the left
     imageView.snp.makeConstraints { make in
-      make.left.equalToSuperview().offset(12)
-      make.top.equalToSuperview().offset(10)
+      make.left.equalToSuperview().offset(Spacing.section)
+      make.top.equalToSuperview().offset(Spacing.small)
       make.width.height.equalTo(80)
     }
 
     nameLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(10)
-      make.left.equalTo(imageView.snp.right).offset(12)
+      make.top.equalToSuperview().offset(Spacing.small)
+      make.left.equalTo(imageView.snp.right).offset(Spacing.section)
       make.right.equalToSuperview().offset(-80)
     }
 
     variantStateLabel.snp.makeConstraints { make in
-      make.top.equalTo(nameLabel.snp.bottom).offset(6)
-      make.left.equalTo(imageView.snp.right).offset(12)
-      make.right.equalToSuperview().offset(-12)
+      make.top.equalTo(nameLabel.snp.bottom).offset(Spacing.minimal)
+      make.left.equalTo(imageView.snp.right).offset(Spacing.section)
+      make.right.equalToSuperview().offset(-Spacing.section)
     }
 
     // Action buttons
     let buttonStack = NSStackView()
     buttonStack.orientation = .horizontal
-    buttonStack.spacing = 8
+    buttonStack.spacing = Spacing.tiny
     buttonStack.distribution = .fillEqually
     card.addSubview(buttonStack)
 
@@ -240,14 +246,14 @@ extension AccountInfoViewController {
     }
 
     buttonStack.snp.makeConstraints { make in
-      make.top.equalTo(imageView.snp.bottom).offset(12)
-      make.left.right.equalToSuperview().inset(12)
-      make.bottom.equalToSuperview().offset(-10)
-      make.height.equalTo(28)
+      make.top.equalTo(imageView.snp.bottom).offset(Spacing.section)
+      make.left.right.equalToSuperview().inset(Spacing.section)
+      make.bottom.equalToSuperview().offset(-Spacing.small)
+      make.height.equalTo(Size.textFieldHeight)
     }
 
     card.snp.makeConstraints { make in
-      make.height.equalTo(140)
+      make.height.equalTo(Height.instanceInfo)
     }
 
     return card
@@ -259,7 +265,7 @@ extension AccountInfoViewController {
     let card = NSView()
     card.wantsLayer = true
     card.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    card.layer?.cornerRadius = 8
+    card.layer?.cornerRadius = Radius.standard
 
     // Set tooltip for the card
     card.toolTip = cape.alias ?? Localized.Account.unnamedCape
@@ -274,7 +280,7 @@ extension AccountInfoViewController {
     // Image container - takes the full card space
     let imageContainer = NSView()
     imageContainer.wantsLayer = true
-    imageContainer.layer?.cornerRadius = 6
+    imageContainer.layer?.cornerRadius = Radius.medium
     imageContainer.layer?.masksToBounds = true
     imageContainer.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
     card.addSubview(imageContainer)
@@ -319,7 +325,7 @@ extension AccountInfoViewController {
       let activeBadge = NSView()
       activeBadge.wantsLayer = true
       activeBadge.layer?.backgroundColor = NSColor.systemGreen.cgColor
-      activeBadge.layer?.cornerRadius = 8
+      activeBadge.layer?.cornerRadius = Radius.standard
 
       let checkIcon = NSImageView()
       checkIcon.image = NSImage(systemSymbolName: "checkmark", accessibilityDescription: nil)
@@ -330,9 +336,9 @@ extension AccountInfoViewController {
       imageContainer.addSubview(activeBadge)
 
       activeBadge.snp.makeConstraints { make in
-        make.top.equalToSuperview().offset(4)
-        make.right.equalToSuperview().offset(-4)
-        make.width.height.equalTo(16)
+        make.top.equalToSuperview().offset(Spacing.micro)
+        make.right.equalToSuperview().offset(-Spacing.micro)
+        make.width.height.equalTo(Size.smallIndicator)
       }
 
       checkIcon.snp.makeConstraints { make in
@@ -344,10 +350,10 @@ extension AccountInfoViewController {
     // Layout - image container takes full card space with padding
     imageContainer.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
-      make.top.equalToSuperview().offset(12)
-      make.bottom.equalToSuperview().offset(-12)
-      make.left.greaterThanOrEqualToSuperview().offset(6)
-      make.right.lessThanOrEqualToSuperview().offset(-6)
+      make.top.equalToSuperview().offset(Spacing.section)
+      make.bottom.equalToSuperview().offset(-Spacing.section)
+      make.left.greaterThanOrEqualToSuperview().offset(Spacing.minimal)
+      make.right.lessThanOrEqualToSuperview().offset(-Spacing.minimal)
       // Set aspect ratio 10:16 for cape front with lower priority
       make.width.equalTo(imageContainer.snp.height).multipliedBy(10.0 / 16.0).priority(.high)
     }

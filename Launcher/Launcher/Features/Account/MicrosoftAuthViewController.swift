@@ -15,6 +15,13 @@ class MicrosoftAuthViewController: NSViewController {
   // swiftlint:disable:previous type_body_length
   // MARK: - Properties
 
+  // MARK: - Design System Aliases
+
+  private typealias Spacing = DesignSystem.Spacing
+  private typealias Size = DesignSystem.Size
+  private typealias Width = DesignSystem.Width
+  private typealias Fonts = DesignSystem.Fonts
+
   private let authManager: MicrosoftAuthProtocol
   private var loginData: SecureLoginData?
 
@@ -36,7 +43,7 @@ class MicrosoftAuthViewController: NSViewController {
   // UI components
   private let titleLabel = DisplayLabel(
     text: Localized.MicrosoftAuth.title,
-    font: .systemFont(ofSize: 20, weight: .semibold),
+    font: Fonts.windowTitle,
     textColor: .labelColor,
     alignment: .center
   )
@@ -44,7 +51,7 @@ class MicrosoftAuthViewController: NSViewController {
   private let subtitleLabel: DisplayLabel = {
     let label = DisplayLabel(
       text: Localized.MicrosoftAuth.subtitle,
-      font: .systemFont(ofSize: 13),
+      font: Fonts.body,
       textColor: .secondaryLabelColor,
       alignment: .center
     )
@@ -62,7 +69,7 @@ class MicrosoftAuthViewController: NSViewController {
   private let statusLabel: DisplayLabel = {
     let label = DisplayLabel(
       text: Localized.MicrosoftAuth.statusReady,
-      font: .systemFont(ofSize: 12),
+      font: Fonts.small,
       textColor: .secondaryLabelColor,
       alignment: .center
     )
@@ -131,7 +138,7 @@ class MicrosoftAuthViewController: NSViewController {
     iconImageView.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
       make.top.equalToSuperview().offset(80)
-      make.width.height.equalTo(100)
+      make.width.height.equalTo(Size.instanceIcon)
     }
 
     titleLabel.snp.makeConstraints { make in
@@ -140,38 +147,38 @@ class MicrosoftAuthViewController: NSViewController {
     }
 
     subtitleLabel.snp.makeConstraints { make in
-      make.top.equalTo(titleLabel.snp.bottom).offset(12)
-      make.left.right.equalToSuperview().inset(40)
+      make.top.equalTo(titleLabel.snp.bottom).offset(Spacing.section)
+      make.left.right.equalToSuperview().inset(Spacing.large)
     }
 
     separator.snp.makeConstraints { make in
       make.top.equalTo(subtitleLabel.snp.bottom).offset(32)
-      make.left.right.equalToSuperview().inset(40)
-      make.height.equalTo(1)
+      make.left.right.equalToSuperview().inset(Spacing.large)
+      make.height.equalTo(Size.separatorHeight)
     }
 
     statusLabel.snp.makeConstraints { make in
       make.top.equalTo(separator.snp.bottom).offset(32)
-      make.left.right.equalToSuperview().inset(40)
+      make.left.right.equalToSuperview().inset(Spacing.large)
     }
 
     progressIndicator.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
-      make.top.equalTo(statusLabel.snp.bottom).offset(20)
+      make.top.equalTo(statusLabel.snp.bottom).offset(Spacing.standard)
     }
 
     loginButton.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
-      make.top.equalTo(progressIndicator.snp.bottom).offset(40)
-      make.width.equalTo(200)
-      make.height.equalTo(32)
+      make.top.equalTo(progressIndicator.snp.bottom).offset(Spacing.large)
+      make.width.equalTo(Width.panel)
+      make.height.equalTo(Size.button)
     }
 
     cancelButton.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
-      make.top.equalTo(loginButton.snp.bottom).offset(12)
-      make.width.equalTo(200)
-      make.height.equalTo(32)
+      make.top.equalTo(loginButton.snp.bottom).offset(Spacing.section)
+      make.width.equalTo(Width.panel)
+      make.height.equalTo(Size.button)
     }
   }
 
