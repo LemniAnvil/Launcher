@@ -13,6 +13,13 @@ import Yatagarasu
 
 class AccountInfoViewController: NSViewController {
 
+  // MARK: - Design System Aliases
+
+  private typealias Spacing = DesignSystem.Spacing
+  private typealias Radius = DesignSystem.CornerRadius
+  private typealias Size = DesignSystem.Size
+  private typealias Fonts = DesignSystem.Fonts
+
   // MARK: - Properties
 
   var accounts: [MicrosoftAccount] = []
@@ -23,7 +30,7 @@ class AccountInfoViewController: NSViewController {
   private let titleLabel: DisplayLabel = {
     let label = DisplayLabel(
       text: Localized.Account.accountInfoWindowTitle,
-      font: .systemFont(ofSize: 20, weight: .semibold),
+      font: Fonts.windowTitle,
       textColor: .labelColor,
       alignment: .left
     )
@@ -33,7 +40,7 @@ class AccountInfoViewController: NSViewController {
   private let subtitleLabel: DisplayLabel = {
     let label = DisplayLabel(
       text: Localized.Account.accountInfoSubtitle,
-      font: .systemFont(ofSize: 12),
+      font: Fonts.small,
       textColor: .secondaryLabelColor,
       alignment: .left
     )
@@ -135,7 +142,7 @@ class AccountInfoViewController: NSViewController {
   private let emptyLabel: DisplayLabel = {
     let label = DisplayLabel(
       text: Localized.Account.noMicrosoftAccounts,
-      font: .systemFont(ofSize: 14),
+      font: Fonts.label,
       textColor: .secondaryLabelColor,
       alignment: .center
     )
@@ -146,7 +153,7 @@ class AccountInfoViewController: NSViewController {
   private let selectPromptLabel: DisplayLabel = {
     let label = DisplayLabel(
       text: Localized.Account.selectAccountPrompt,
-      font: .systemFont(ofSize: 14),
+      font: Fonts.label,
       textColor: .secondaryLabelColor,
       alignment: .center
     )
@@ -211,23 +218,23 @@ class AccountInfoViewController: NSViewController {
     // Layout - no header, start from top
     // Account list on the left
     accountScrollView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(20)
-      make.left.equalToSuperview().offset(20)
+      make.top.equalToSuperview().offset(Spacing.standard)
+      make.left.equalToSuperview().offset(Spacing.standard)
       make.bottom.equalToSuperview().offset(-20)
       make.width.equalTo(210)
     }
 
     verticalSeparator.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(20)
-      make.left.equalTo(accountScrollView.snp.right).offset(12)
+      make.top.equalToSuperview().offset(Spacing.standard)
+      make.left.equalTo(accountScrollView.snp.right).offset(Spacing.section)
       make.bottom.equalToSuperview().offset(-20)
       make.width.equalTo(1)
     }
 
     // Detail view on the right (tab view)
     tabView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(20)
-      make.left.equalTo(verticalSeparator.snp.right).offset(12)
+      make.top.equalToSuperview().offset(Spacing.standard)
+      make.left.equalTo(verticalSeparator.snp.right).offset(Spacing.section)
       make.right.equalToSuperview().offset(-20)
       make.bottom.equalToSuperview().offset(-20)
     }
@@ -305,7 +312,7 @@ class AccountInfoViewController: NSViewController {
     // Player name - large and prominent
     let nameLabel = DisplayLabel(
       text: account.name,
-      font: .systemFont(ofSize: 24, weight: .bold),
+      font: Fonts.largeTitle,
       textColor: .labelColor,
       alignment: .left
     )
@@ -314,7 +321,7 @@ class AccountInfoViewController: NSViewController {
     // UUID info in a compact layout
     let uuidLabel = DisplayLabel(
       text: "UUID",
-      font: .systemFont(ofSize: 10, weight: .medium),
+      font: Fonts.badge,
       textColor: .secondaryLabelColor,
       alignment: .left
     )
@@ -339,22 +346,22 @@ class AccountInfoViewController: NSViewController {
     playerCard.addSubview(fullUUIDLabel)
 
     nameLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(16)
+      make.top.equalToSuperview().offset(Spacing.medium)
       make.left.right.equalToSuperview().inset(16)
     }
 
     uuidLabel.snp.makeConstraints { make in
-      make.top.equalTo(nameLabel.snp.bottom).offset(12)
-      make.left.equalToSuperview().offset(16)
+      make.top.equalTo(nameLabel.snp.bottom).offset(Spacing.section)
+      make.left.equalToSuperview().offset(Spacing.medium)
     }
 
     shortUUIDLabel.snp.makeConstraints { make in
-      make.top.equalTo(uuidLabel.snp.bottom).offset(4)
+      make.top.equalTo(uuidLabel.snp.bottom).offset(Spacing.micro)
       make.left.right.equalToSuperview().inset(16)
     }
 
     fullUUIDLabel.snp.makeConstraints { make in
-      make.top.equalTo(shortUUIDLabel.snp.bottom).offset(4)
+      make.top.equalTo(shortUUIDLabel.snp.bottom).offset(Spacing.micro)
       make.left.right.equalToSuperview().inset(16)
       make.bottom.equalToSuperview().offset(-16)
     }
@@ -377,7 +384,7 @@ class AccountInfoViewController: NSViewController {
 
     let loginTitleLabel = DisplayLabel(
       text: Localized.Account.loginTimestamp,
-      font: .systemFont(ofSize: 11, weight: .medium),
+      font: Fonts.captionMedium,
       textColor: .secondaryLabelColor,
       alignment: .left
     )
@@ -385,7 +392,7 @@ class AccountInfoViewController: NSViewController {
 
     let loginValueLabel = DisplayLabel(
       text: dateFormatter.string(from: loginDate),
-      font: .systemFont(ofSize: 13, weight: .regular),
+      font: Fonts.body,
       textColor: .labelColor,
       alignment: .left
     )
@@ -395,7 +402,7 @@ class AccountInfoViewController: NSViewController {
     let expirationDate = account.expirationDate
     let expirationTitleLabel = DisplayLabel(
       text: Localized.Account.tokenExpiration,
-      font: .systemFont(ofSize: 11, weight: .medium),
+      font: Fonts.captionMedium,
       textColor: .secondaryLabelColor,
       alignment: .left
     )
@@ -403,7 +410,7 @@ class AccountInfoViewController: NSViewController {
 
     let expirationValueLabel = DisplayLabel(
       text: dateFormatter.string(from: expirationDate),
-      font: .systemFont(ofSize: 13, weight: .regular),
+      font: Fonts.body,
       textColor: .labelColor,
       alignment: .left
     )
@@ -412,7 +419,7 @@ class AccountInfoViewController: NSViewController {
     // Access token status with badge
     let tokenStatusLabel = DisplayLabel(
       text: Localized.Account.accessTokenStatus,
-      font: .systemFont(ofSize: 11, weight: .medium),
+      font: Fonts.captionMedium,
       textColor: .secondaryLabelColor,
       alignment: .left
     )
@@ -424,7 +431,7 @@ class AccountInfoViewController: NSViewController {
     let statusBadge = NSView()
     statusBadge.wantsLayer = true
     statusBadge.layer?.backgroundColor = tokenColor.cgColor
-    statusBadge.layer?.cornerRadius = 10
+    statusBadge.layer?.cornerRadius = Radius.large
     statusCard.addSubview(statusBadge)
 
     let statusIcon = NSImageView()
@@ -435,52 +442,52 @@ class AccountInfoViewController: NSViewController {
 
     let statusTextLabel = DisplayLabel(
       text: tokenStatus,
-      font: .systemFont(ofSize: 12, weight: .semibold),
+      font: Fonts.smallMedium,
       textColor: .white,
       alignment: .left
     )
     statusBadge.addSubview(statusTextLabel)
 
     loginTitleLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(16)
-      make.left.equalToSuperview().offset(16)
+      make.top.equalToSuperview().offset(Spacing.medium)
+      make.left.equalToSuperview().offset(Spacing.medium)
     }
 
     loginValueLabel.snp.makeConstraints { make in
-      make.top.equalTo(loginTitleLabel.snp.bottom).offset(4)
+      make.top.equalTo(loginTitleLabel.snp.bottom).offset(Spacing.micro)
       make.left.right.equalToSuperview().inset(16)
     }
 
     expirationTitleLabel.snp.makeConstraints { make in
-      make.top.equalTo(loginValueLabel.snp.bottom).offset(12)
-      make.left.equalToSuperview().offset(16)
+      make.top.equalTo(loginValueLabel.snp.bottom).offset(Spacing.section)
+      make.left.equalToSuperview().offset(Spacing.medium)
     }
 
     expirationValueLabel.snp.makeConstraints { make in
-      make.top.equalTo(expirationTitleLabel.snp.bottom).offset(4)
+      make.top.equalTo(expirationTitleLabel.snp.bottom).offset(Spacing.micro)
       make.left.right.equalToSuperview().inset(16)
     }
 
     tokenStatusLabel.snp.makeConstraints { make in
-      make.top.equalTo(expirationValueLabel.snp.bottom).offset(12)
-      make.left.equalToSuperview().offset(16)
+      make.top.equalTo(expirationValueLabel.snp.bottom).offset(Spacing.section)
+      make.left.equalToSuperview().offset(Spacing.medium)
     }
 
     statusBadge.snp.makeConstraints { make in
-      make.top.equalTo(tokenStatusLabel.snp.bottom).offset(6)
-      make.left.equalToSuperview().offset(16)
+      make.top.equalTo(tokenStatusLabel.snp.bottom).offset(Spacing.minimal)
+      make.left.equalToSuperview().offset(Spacing.medium)
       make.bottom.equalToSuperview().offset(-16)
       make.height.equalTo(32)
     }
 
     statusIcon.snp.makeConstraints { make in
-      make.left.equalToSuperview().offset(10)
+      make.left.equalToSuperview().offset(Spacing.small)
       make.centerY.equalToSuperview()
       make.width.height.equalTo(16)
     }
 
     statusTextLabel.snp.makeConstraints { make in
-      make.left.equalTo(statusIcon.snp.right).offset(6)
+      make.left.equalTo(statusIcon.snp.right).offset(Spacing.minimal)
       make.right.equalToSuperview().offset(-12)
       make.centerY.equalToSuperview()
     }
@@ -491,14 +498,14 @@ class AccountInfoViewController: NSViewController {
     func addDetailRow(label: String, value: String, valueFont: NSFont = .systemFont(ofSize: 12), valueColor: NSColor = .labelColor, selectable: Bool = false) -> NSView {
       let labelView = DisplayLabel(
         text: label,
-        font: .systemFont(ofSize: 11, weight: .medium),
+        font: Fonts.captionMedium,
         textColor: .secondaryLabelColor,
         alignment: .left
       )
       detailContainerView.addSubview(labelView)
       labelView.snp.makeConstraints { make in
         make.top.equalToSuperview().offset(yOffset)
-        make.left.equalToSuperview().offset(20)
+        make.left.equalToSuperview().offset(Spacing.standard)
         make.right.lessThanOrEqualToSuperview().offset(-20)
       }
 
@@ -515,8 +522,8 @@ class AccountInfoViewController: NSViewController {
       }
       detailContainerView.addSubview(valueView)
       valueView.snp.makeConstraints { make in
-        make.top.equalTo(labelView.snp.bottom).offset(4)
-        make.left.equalToSuperview().offset(20)
+        make.top.equalTo(labelView.snp.bottom).offset(Spacing.micro)
+        make.left.equalToSuperview().offset(Spacing.standard)
         make.right.lessThanOrEqualToSuperview().offset(-20)
       }
 
@@ -529,7 +536,7 @@ class AccountInfoViewController: NSViewController {
       let card = NSView()
       card.wantsLayer = true
       card.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-      card.layer?.cornerRadius = 10
+      card.layer?.cornerRadius = Radius.large
       return card
     }
 
@@ -537,14 +544,14 @@ class AccountInfoViewController: NSViewController {
     func addSectionTitle(_ title: String) -> NSView {
       let titleView = DisplayLabel(
         text: title,
-        font: .systemFont(ofSize: 16, weight: .semibold),
+        font: Fonts.title,
         textColor: .labelColor,
         alignment: .left
       )
       detailContainerView.addSubview(titleView)
       titleView.snp.makeConstraints { make in
         make.top.equalToSuperview().offset(yOffset)
-        make.left.equalToSuperview().offset(20)
+        make.left.equalToSuperview().offset(Spacing.standard)
         make.right.lessThanOrEqualToSuperview().offset(-20)
       }
 
@@ -588,7 +595,7 @@ class AccountInfoViewController: NSViewController {
     } else {
       let noSkinsLabel = DisplayLabel(
         text: Localized.Account.noSkins,
-        font: .systemFont(ofSize: 12),
+        font: Fonts.small,
         textColor: .secondaryLabelColor,
         alignment: .center
       )
@@ -610,7 +617,7 @@ class AccountInfoViewController: NSViewController {
 
     let capesTitleLabel = DisplayLabel(
       text: "\(Localized.Account.allCapesTitle) (\(account.capes?.count ?? 0))",
-      font: .systemFont(ofSize: 16, weight: .semibold),
+      font: Fonts.title,
       textColor: .labelColor,
       alignment: .left
     )
@@ -638,7 +645,7 @@ class AccountInfoViewController: NSViewController {
 
     capesHeaderContainer.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(yOffset)
-      make.left.equalToSuperview().offset(20)
+      make.left.equalToSuperview().offset(Spacing.standard)
       make.right.equalToSuperview().offset(-20)
       make.height.equalTo(30)
     }
@@ -689,7 +696,7 @@ class AccountInfoViewController: NSViewController {
     } else {
       let noCapesLabel = DisplayLabel(
         text: Localized.Account.noCapes,
-        font: .systemFont(ofSize: 12),
+        font: Fonts.small,
         textColor: .secondaryLabelColor,
         alignment: .center
       )
@@ -729,7 +736,7 @@ extension AccountInfoViewController: NSTableViewDelegate {
 
     let nameLabel = DisplayLabel(
       text: account.name,
-      font: .systemFont(ofSize: 14, weight: .semibold),
+      font: Fonts.subtitle,
       textColor: .labelColor,
       alignment: .left
     )
@@ -753,17 +760,17 @@ extension AccountInfoViewController: NSTableViewDelegate {
     cellView.addSubview(statusLabel)
 
     nameLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(8)
+      make.top.equalToSuperview().offset(Spacing.tiny)
       make.left.right.equalToSuperview().inset(12)
     }
 
     uuidLabel.snp.makeConstraints { make in
-      make.top.equalTo(nameLabel.snp.bottom).offset(4)
+      make.top.equalTo(nameLabel.snp.bottom).offset(Spacing.micro)
       make.left.right.equalToSuperview().inset(12)
     }
 
     statusLabel.snp.makeConstraints { make in
-      make.top.equalTo(uuidLabel.snp.bottom).offset(4)
+      make.top.equalTo(uuidLabel.snp.bottom).offset(Spacing.micro)
       make.left.right.equalToSuperview().inset(12)
     }
 

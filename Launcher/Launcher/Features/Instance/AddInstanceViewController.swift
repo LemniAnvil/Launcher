@@ -14,75 +14,22 @@ import Yatagarasu
 class AddInstanceViewController: NSViewController {
   // swiftlint:disable:previous type_body_length
 
-  // MARK: - Layout Constants
+  // MARK: - Design System Aliases
 
-  private enum Layout {
-    // Corner radius
-    static let cornerRadius: CGFloat = 8
+  private typealias Spacing = DesignSystem.Spacing
+  private typealias Radius = DesignSystem.CornerRadius
+  private typealias Size = DesignSystem.Size
+  private typealias Width = DesignSystem.Width
+  private typealias Height = DesignSystem.Height
+  private typealias Fonts = DesignSystem.Fonts
+  private typealias SymbolSize = DesignSystem.SymbolSize
 
-    // Spacing
-    static let standardPadding: CGFloat = 20
-    static let contentPadding: CGFloat = 15
-    static let smallPadding: CGFloat = 10
-    static let tinyPadding: CGFloat = 8
-    static let minimalPadding: CGFloat = 6
-    static let microPadding: CGFloat = 4
-    static let sectionSpacing: CGFloat = 12
-    static let buttonSpacing: CGFloat = 12
-    static let labelSpacing: CGFloat = 16
+  // MARK: - View-Specific Layout Constants
 
-    // Sizes
-    static let categorySidebarWidth: CGFloat = 180
-    static let instanceInfoHeight: CGFloat = 140
-    static let iconSize: CGFloat = 100
-    static let categoryIconSize: CGFloat = 20
-    static let buttonSize: CGFloat = 32
-    static let smallIndicatorSize: CGFloat = 16
-    static let actionButtonWidth: CGFloat = 100
-    static let textFieldHeight: CGFloat = 28
-    static let popupHeight: CGFloat = 24
-    static let separatorHeight: CGFloat = 1
-    static let versionTableHeight: CGFloat = 250
-
-    // Filter panel
-    static let filterPanelWidth: CGFloat = 220
-    static let filterCheckboxWidth: CGFloat = 120
-    static let filterMinWidth: CGFloat = 180
-    static let sortLabelWidth: CGFloat = 60
-    static let sortPopupWidth: CGFloat = 150
-    static let versionLabelWidth: CGFloat = 120
-    static let groupLabelWidth: CGFloat = 60
-
-    // Mod loader
-    static let modLoaderPanelWidth: CGFloat = 200
+  private enum LocalLayout {
     static let modLoaderVersionTableLeft: CGFloat = 150
-    static let placeholderWidth: CGFloat = 240
-    static let largePlaceholderWidth: CGFloat = 280
-    static let refreshButtonWidth: CGFloat = 100
-
-    // CurseForge
     static let curseForgeBottomSpace: CGFloat = 50
-    static let emptyLabelWidth: CGFloat = 200
-  }
-
-  // MARK: - Font Constants
-
-  private enum Fonts {
-    static let title = NSFont.systemFont(ofSize: 16, weight: .semibold)
-    static let sectionTitle = NSFont.systemFont(ofSize: 14, weight: .semibold)
-    static let label = NSFont.systemFont(ofSize: 13, weight: .medium)
-    static let body = NSFont.systemFont(ofSize: 13)
-    static let small = NSFont.systemFont(ofSize: 12)
-    static let smallMedium = NSFont.systemFont(ofSize: 12, weight: .medium)
-    static let caption = NSFont.systemFont(ofSize: 11)
-    static let tableHeader = NSFont.systemFont(ofSize: 13, weight: .semibold)
-  }
-
-  // MARK: - Symbol Constants
-
-  private enum Symbols {
-    static let largeIconSize: CGFloat = 60
-    static let mediumIconSize: CGFloat = 16
+    static let filterMinWidth: CGFloat = 180
   }
 
   // MARK: - Properties
@@ -248,9 +195,9 @@ class AddInstanceViewController: NSViewController {
   private lazy var iconImageView: NSImageView = {
     let imageView = NSImageView()
     imageView.wantsLayer = true
-    imageView.layer?.cornerRadius = Layout.cornerRadius
+    imageView.layer?.cornerRadius = Radius.standard
     imageView.imageScaling = .scaleProportionallyUpOrDown
-    let config = NSImage.SymbolConfiguration(pointSize: Symbols.largeIconSize, weight: .regular)
+    let config = NSImage.SymbolConfiguration(pointSize: SymbolSize.large, weight: .regular)
     let image = NSImage(
       systemSymbolName: "cube.fill",
       accessibilityDescription: nil
@@ -263,7 +210,7 @@ class AddInstanceViewController: NSViewController {
   private let nameLabel: DisplayLabel = {
     let label = DisplayLabel(
       text: Localized.AddInstance.nameLabel,
-      font: Fonts.label,
+      font: Fonts.bodyMedium,
       textColor: .labelColor,
       alignment: .left
     )
@@ -281,7 +228,7 @@ class AddInstanceViewController: NSViewController {
   private let groupLabel: DisplayLabel = {
     let label = DisplayLabel(
       text: Localized.AddInstance.groupLabel,
-      font: Fonts.label,
+      font: Fonts.bodyMedium,
       textColor: .labelColor,
       alignment: .left
     )
@@ -323,7 +270,7 @@ class AddInstanceViewController: NSViewController {
     scrollView.backgroundColor = NSColor.controlBackgroundColor
     scrollView.wantsLayer = true
     scrollView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    scrollView.layer?.cornerRadius = Layout.cornerRadius
+    scrollView.layer?.cornerRadius = Radius.standard
     scrollView.layer?.borderWidth = 1
     scrollView.layer?.borderColor = NSColor.separatorColor.cgColor
     return scrollView
@@ -333,7 +280,7 @@ class AddInstanceViewController: NSViewController {
     let view = NSView()
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Layout.cornerRadius
+    view.layer?.cornerRadius = Radius.standard
     view.layer?.borderWidth = 1
     view.layer?.borderColor = NSColor.separatorColor.cgColor
     return view
@@ -343,7 +290,7 @@ class AddInstanceViewController: NSViewController {
     let view = NSView()
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Layout.cornerRadius
+    view.layer?.cornerRadius = Radius.standard
     view.layer?.borderWidth = 1
     view.layer?.borderColor = NSColor.separatorColor.cgColor
     return view
@@ -353,7 +300,7 @@ class AddInstanceViewController: NSViewController {
     let view = NSView()
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Layout.cornerRadius
+    view.layer?.cornerRadius = Radius.standard
     view.layer?.borderWidth = 1
     view.layer?.borderColor = NSColor.separatorColor.cgColor
     view.isHidden = true
@@ -364,7 +311,7 @@ class AddInstanceViewController: NSViewController {
     let view = NSView()
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Layout.cornerRadius
+    view.layer?.cornerRadius = Radius.standard
     view.layer?.borderWidth = 1
     view.layer?.borderColor = NSColor.separatorColor.cgColor
     view.isHidden = true
@@ -375,7 +322,7 @@ class AddInstanceViewController: NSViewController {
     let view = NSView()
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Layout.cornerRadius
+    view.layer?.cornerRadius = Radius.standard
     view.layer?.borderWidth = 1
     view.layer?.borderColor = NSColor.separatorColor.cgColor
     view.isHidden = true
@@ -386,7 +333,7 @@ class AddInstanceViewController: NSViewController {
     let view = NSView()
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Layout.cornerRadius
+    view.layer?.cornerRadius = Radius.standard
     view.layer?.borderWidth = 1
     view.layer?.borderColor = NSColor.separatorColor.cgColor
     view.isHidden = true
@@ -397,7 +344,7 @@ class AddInstanceViewController: NSViewController {
     let view = NSView()
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Layout.cornerRadius
+    view.layer?.cornerRadius = Radius.standard
     view.layer?.borderWidth = 1
     view.layer?.borderColor = NSColor.separatorColor.cgColor
     view.isHidden = true
@@ -408,7 +355,7 @@ class AddInstanceViewController: NSViewController {
     let view = NSView()
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Layout.cornerRadius
+    view.layer?.cornerRadius = Radius.standard
     view.layer?.borderWidth = 1
     view.layer?.borderColor = NSColor.separatorColor.cgColor
     view.isHidden = true
@@ -419,7 +366,7 @@ class AddInstanceViewController: NSViewController {
     let view = NSView()
     view.wantsLayer = true
     view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Layout.cornerRadius
+    view.layer?.cornerRadius = Radius.standard
     view.layer?.borderWidth = 1
     view.layer?.borderColor = NSColor.separatorColor.cgColor
     view.isHidden = true
@@ -461,7 +408,7 @@ class AddInstanceViewController: NSViewController {
         title: Localized.AddInstance.columnModpackName,
         width: 250,
         valueProvider: { $0.name },
-        fontProvider: { _ in Fonts.label },
+        fontProvider: { _ in Fonts.bodyMedium },
         colorProvider: { _ in .labelColor }
       ),
       .init(
@@ -555,7 +502,7 @@ class AddInstanceViewController: NSViewController {
     scrollView.backgroundColor = NSColor.controlBackgroundColor
     scrollView.wantsLayer = true
     scrollView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    scrollView.layer?.cornerRadius = Layout.cornerRadius
+    scrollView.layer?.cornerRadius = Radius.standard
     scrollView.layer?.borderWidth = 1
     scrollView.layer?.borderColor = NSColor.separatorColor.cgColor
     return scrollView
@@ -674,7 +621,7 @@ class AddInstanceViewController: NSViewController {
         title: Localized.AddInstance.columnVersion,
         width: 120,
         valueProvider: { $0.id },
-        fontProvider: { _ in Fonts.label },
+        fontProvider: { _ in Fonts.bodyMedium },
         colorProvider: { _ in .labelColor }
       ),
       .init(
@@ -714,7 +661,7 @@ class AddInstanceViewController: NSViewController {
   private lazy var modLoaderLabel: DisplayLabel = {
     let label = DisplayLabel(
       text: Localized.AddInstance.modLoaderTitle,
-      font: Fonts.sectionTitle,
+      font: Fonts.subtitle,
       textColor: .labelColor,
       alignment: .left
     )
@@ -899,7 +846,7 @@ class AddInstanceViewController: NSViewController {
     let cellView = NSTableCellView()
 
     let imageView = NSImageView()
-    let config = NSImage.SymbolConfiguration(pointSize: Symbols.mediumIconSize, weight: .regular)
+    let config = NSImage.SymbolConfiguration(pointSize: SymbolSize.medium, weight: .regular)
     let image = NSImage(
       systemSymbolName: category.iconName,
       accessibilityDescription: nil
@@ -915,15 +862,15 @@ class AddInstanceViewController: NSViewController {
     cellView.addSubview(textField)
 
     imageView.snp.makeConstraints { make in
-      make.left.equalToSuperview().offset(Layout.tinyPadding)
+      make.left.equalToSuperview().offset(Spacing.tiny)
       make.centerY.equalToSuperview()
-      make.width.height.equalTo(Layout.categoryIconSize)
+      make.width.height.equalTo(Size.categoryIcon)
     }
 
     textField.snp.makeConstraints { make in
-      make.left.equalTo(imageView.snp.right).offset(Layout.tinyPadding)
+      make.left.equalTo(imageView.snp.right).offset(Spacing.tiny)
       make.centerY.equalToSuperview()
-      make.right.equalToSuperview().offset(-Layout.tinyPadding)
+      make.right.equalToSuperview().offset(-Spacing.tiny)
     }
 
     return cellView
@@ -1047,17 +994,17 @@ class AddInstanceViewController: NSViewController {
     setupOtherContentViews()
 
     categoryScrollView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Layout.standardPadding)
-      make.left.equalToSuperview().offset(Layout.standardPadding)
-      make.width.equalTo(Layout.categorySidebarWidth)
-      make.bottom.equalTo(helpButton.snp.top).offset(-Layout.standardPadding)
+      make.top.equalToSuperview().offset(Spacing.standard)
+      make.left.equalToSuperview().offset(Spacing.standard)
+      make.width.equalTo(Width.sidebar)
+      make.bottom.equalTo(helpButton.snp.top).offset(-Spacing.standard)
     }
 
     instanceInfoView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Layout.standardPadding)
-      make.left.equalTo(categoryScrollView.snp.right).offset(Layout.standardPadding)
-      make.right.equalToSuperview().offset(-Layout.standardPadding)
-      make.height.equalTo(Layout.instanceInfoHeight)
+      make.top.equalToSuperview().offset(Spacing.standard)
+      make.left.equalTo(categoryScrollView.snp.right).offset(Spacing.standard)
+      make.right.equalToSuperview().offset(-Spacing.standard)
+      make.height.equalTo(Height.instanceInfo)
     }
 
     // Setup constraints for all content views to occupy the same space
@@ -1074,29 +1021,29 @@ class AddInstanceViewController: NSViewController {
 
     for contentView in contentViews {
       contentView.snp.makeConstraints { make in
-        make.top.equalTo(instanceInfoView.snp.bottom).offset(Layout.standardPadding)
-        make.left.equalTo(categoryScrollView.snp.right).offset(Layout.standardPadding)
-        make.right.equalToSuperview().offset(-Layout.standardPadding)
-        make.bottom.equalTo(cancelButton.snp.top).offset(-Layout.standardPadding)
+        make.top.equalTo(instanceInfoView.snp.bottom).offset(Spacing.standard)
+        make.left.equalTo(categoryScrollView.snp.right).offset(Spacing.standard)
+        make.right.equalToSuperview().offset(-Spacing.standard)
+        make.bottom.equalTo(cancelButton.snp.top).offset(-Spacing.standard)
       }
     }
 
     helpButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-Layout.standardPadding)
-      make.left.equalToSuperview().offset(Layout.standardPadding)
-      make.width.height.equalTo(Layout.buttonSize)
+      make.bottom.equalToSuperview().offset(-Spacing.standard)
+      make.left.equalToSuperview().offset(Spacing.standard)
+      make.width.height.equalTo(Size.button)
     }
 
     cancelButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-Layout.standardPadding)
-      make.right.equalTo(confirmButton.snp.left).offset(-Layout.sectionSpacing)
-      make.width.equalTo(Layout.actionButtonWidth)
+      make.bottom.equalToSuperview().offset(-Spacing.standard)
+      make.right.equalTo(confirmButton.snp.left).offset(-Spacing.section)
+      make.width.equalTo(Width.actionButton)
     }
 
     confirmButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-Layout.standardPadding)
-      make.right.equalToSuperview().offset(-Layout.standardPadding)
-      make.width.equalTo(Layout.actionButtonWidth)
+      make.bottom.equalToSuperview().offset(-Spacing.standard)
+      make.right.equalToSuperview().offset(-Spacing.standard)
+      make.width.equalTo(Width.actionButton)
     }
   }
 
@@ -1108,35 +1055,35 @@ class AddInstanceViewController: NSViewController {
     instanceInfoView.addSubview(groupPopUpButton)
 
     iconImageView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Layout.standardPadding)
-      make.left.equalToSuperview().offset(Layout.standardPadding)
-      make.width.height.equalTo(Layout.iconSize)
+      make.top.equalToSuperview().offset(Spacing.standard)
+      make.left.equalToSuperview().offset(Spacing.standard)
+      make.width.height.equalTo(Size.instanceIcon)
     }
 
     nameLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(30)
-      make.left.equalTo(iconImageView.snp.right).offset(Layout.standardPadding)
-      make.right.equalToSuperview().offset(-Layout.standardPadding)
+      make.left.equalTo(iconImageView.snp.right).offset(Spacing.standard)
+      make.right.equalToSuperview().offset(-Spacing.standard)
     }
 
     nameTextField.snp.makeConstraints { make in
-      make.top.equalTo(nameLabel.snp.bottom).offset(Layout.tinyPadding)
-      make.left.equalTo(iconImageView.snp.right).offset(Layout.standardPadding)
-      make.right.equalToSuperview().offset(-Layout.standardPadding)
-      make.height.equalTo(Layout.textFieldHeight)
+      make.top.equalTo(nameLabel.snp.bottom).offset(Spacing.tiny)
+      make.left.equalTo(iconImageView.snp.right).offset(Spacing.standard)
+      make.right.equalToSuperview().offset(-Spacing.standard)
+      make.height.equalTo(Size.textFieldHeight)
     }
 
     groupLabel.snp.makeConstraints { make in
-      make.top.equalTo(nameTextField.snp.bottom).offset(Layout.labelSpacing)
-      make.left.equalTo(iconImageView.snp.right).offset(Layout.standardPadding)
-      make.width.equalTo(Layout.groupLabelWidth)
+      make.top.equalTo(nameTextField.snp.bottom).offset(Spacing.medium)
+      make.left.equalTo(iconImageView.snp.right).offset(Spacing.standard)
+      make.width.equalTo(Width.shortLabel)
     }
 
     groupPopUpButton.snp.makeConstraints { make in
       make.centerY.equalTo(groupLabel)
-      make.left.equalTo(groupLabel.snp.right).offset(Layout.tinyPadding)
-      make.right.equalToSuperview().offset(-Layout.standardPadding)
-      make.height.equalTo(Layout.popupHeight)
+      make.left.equalTo(groupLabel.snp.right).offset(Spacing.tiny)
+      make.right.equalToSuperview().offset(-Spacing.standard)
+      make.height.equalTo(Size.popupHeight)
     }
   }
 
@@ -1166,125 +1113,125 @@ class AddInstanceViewController: NSViewController {
 
     // Version section (top half) - Filters on left, Table on right
     versionTitleLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Layout.smallPadding)
-      make.left.equalToSuperview().offset(Layout.smallPadding)
+      make.top.equalToSuperview().offset(Spacing.small)
+      make.left.equalToSuperview().offset(Spacing.small)
     }
 
     refreshButton.snp.makeConstraints { make in
-      make.top.equalTo(alphaCheckbox.snp.bottom).offset(Layout.sectionSpacing)
-      make.left.equalToSuperview().offset(Layout.smallPadding)
-      make.width.height.equalTo(Layout.buttonSize)
+      make.top.equalTo(alphaCheckbox.snp.bottom).offset(Spacing.section)
+      make.left.equalToSuperview().offset(Spacing.small)
+      make.width.height.equalTo(Size.button)
     }
 
     filterLabel.snp.makeConstraints { make in
-      make.top.equalTo(versionTitleLabel.snp.bottom).offset(Layout.sectionSpacing)
-      make.left.equalToSuperview().offset(Layout.smallPadding)
-      make.width.equalTo(Layout.filterCheckboxWidth)
+      make.top.equalTo(versionTitleLabel.snp.bottom).offset(Spacing.section)
+      make.left.equalToSuperview().offset(Spacing.small)
+      make.width.equalTo(Width.filterCheckbox)
     }
 
     releaseCheckbox.snp.makeConstraints { make in
-      make.top.equalTo(filterLabel.snp.bottom).offset(Layout.tinyPadding)
-      make.left.equalToSuperview().offset(Layout.smallPadding)
-      make.width.equalTo(Layout.filterCheckboxWidth)
+      make.top.equalTo(filterLabel.snp.bottom).offset(Spacing.tiny)
+      make.left.equalToSuperview().offset(Spacing.small)
+      make.width.equalTo(Width.filterCheckbox)
     }
 
     snapshotCheckbox.snp.makeConstraints { make in
-      make.top.equalTo(releaseCheckbox.snp.bottom).offset(Layout.minimalPadding)
-      make.left.equalToSuperview().offset(Layout.smallPadding)
-      make.width.equalTo(Layout.filterCheckboxWidth)
+      make.top.equalTo(releaseCheckbox.snp.bottom).offset(Spacing.minimal)
+      make.left.equalToSuperview().offset(Spacing.small)
+      make.width.equalTo(Width.filterCheckbox)
     }
 
     betaCheckbox.snp.makeConstraints { make in
-      make.top.equalTo(snapshotCheckbox.snp.bottom).offset(Layout.minimalPadding)
-      make.left.equalToSuperview().offset(Layout.smallPadding)
-      make.width.equalTo(Layout.filterCheckboxWidth)
+      make.top.equalTo(snapshotCheckbox.snp.bottom).offset(Spacing.minimal)
+      make.left.equalToSuperview().offset(Spacing.small)
+      make.width.equalTo(Width.filterCheckbox)
     }
 
     alphaCheckbox.snp.makeConstraints { make in
-      make.top.equalTo(betaCheckbox.snp.bottom).offset(Layout.minimalPadding)
-      make.left.equalToSuperview().offset(Layout.smallPadding)
-      make.width.equalTo(Layout.filterCheckboxWidth)
+      make.top.equalTo(betaCheckbox.snp.bottom).offset(Spacing.minimal)
+      make.left.equalToSuperview().offset(Spacing.small)
+      make.width.equalTo(Width.filterCheckbox)
     }
 
     versionTableView.snp.makeConstraints { make in
-      make.top.equalTo(versionTitleLabel.snp.bottom).offset(Layout.sectionSpacing)
-      make.left.equalToSuperview().offset(Layout.modLoaderVersionTableLeft)
-      make.right.equalToSuperview().offset(-Layout.smallPadding)
-      make.height.equalTo(Layout.versionTableHeight)
+      make.top.equalTo(versionTitleLabel.snp.bottom).offset(Spacing.section)
+      make.left.equalToSuperview().offset(LocalLayout.modLoaderVersionTableLeft)
+      make.right.equalToSuperview().offset(-Spacing.small)
+      make.height.equalTo(Height.table)
     }
 
     // Horizontal separator between version and mod loader sections
     versionModLoaderSeparator.snp.makeConstraints { make in
-      make.top.equalTo(versionTableView.snp.bottom).offset(Layout.smallPadding)
-      make.left.equalToSuperview().offset(Layout.smallPadding)
-      make.right.equalToSuperview().offset(-Layout.smallPadding)
-      make.height.equalTo(Layout.separatorHeight)
+      make.top.equalTo(versionTableView.snp.bottom).offset(Spacing.small)
+      make.left.equalToSuperview().offset(Spacing.small)
+      make.right.equalToSuperview().offset(-Spacing.small)
+      make.height.equalTo(Size.separatorHeight)
     }
 
     // Mod Loader section (bottom half) - Options on left, Table on right
     modLoaderLabel.snp.makeConstraints { make in
-      make.top.equalTo(versionModLoaderSeparator.snp.bottom).offset(Layout.smallPadding)
-      make.left.equalToSuperview().offset(Layout.smallPadding)
-      make.width.equalTo(Layout.modLoaderPanelWidth)
+      make.top.equalTo(versionModLoaderSeparator.snp.bottom).offset(Spacing.small)
+      make.left.equalToSuperview().offset(Spacing.small)
+      make.width.equalTo(Width.panel)
     }
 
     modLoaderDescriptionLabel.snp.makeConstraints { make in
-      make.top.equalTo(modLoaderLabel.snp.bottom).offset(Layout.microPadding)
-      make.left.equalToSuperview().offset(Layout.smallPadding)
-      make.width.equalTo(Layout.modLoaderPanelWidth)
+      make.top.equalTo(modLoaderLabel.snp.bottom).offset(Spacing.micro)
+      make.left.equalToSuperview().offset(Spacing.small)
+      make.width.equalTo(Width.panel)
     }
 
     var previousButton: NSButton?
     for button in modLoaderRadioButtons {
       button.snp.makeConstraints { make in
         if let previous = previousButton {
-          make.top.equalTo(previous.snp.bottom).offset(Layout.tinyPadding)
+          make.top.equalTo(previous.snp.bottom).offset(Spacing.tiny)
         } else {
-          make.top.equalTo(modLoaderDescriptionLabel.snp.bottom).offset(Layout.labelSpacing)
+          make.top.equalTo(modLoaderDescriptionLabel.snp.bottom).offset(Spacing.medium)
         }
-        make.left.equalToSuperview().offset(Layout.smallPadding)
-        make.width.equalTo(Layout.modLoaderPanelWidth)
+        make.left.equalToSuperview().offset(Spacing.small)
+        make.width.equalTo(Width.panel)
       }
       previousButton = button
     }
 
     modLoaderVersionLabel.snp.makeConstraints { make in
-      make.top.equalTo(versionModLoaderSeparator.snp.bottom).offset(Layout.smallPadding)
-      make.left.equalToSuperview().offset(Layout.modLoaderVersionTableLeft)
-      make.right.equalToSuperview().offset(-Layout.smallPadding)
+      make.top.equalTo(versionModLoaderSeparator.snp.bottom).offset(Spacing.small)
+      make.left.equalToSuperview().offset(LocalLayout.modLoaderVersionTableLeft)
+      make.right.equalToSuperview().offset(-Spacing.small)
     }
 
     modLoaderVersionTableView.snp.makeConstraints { make in
-      make.top.equalTo(modLoaderVersionLabel.snp.bottom).offset(Layout.tinyPadding)
-      make.left.equalToSuperview().offset(Layout.modLoaderVersionTableLeft)
-      make.right.equalToSuperview().offset(-Layout.smallPadding)
-      make.bottom.equalToSuperview().offset(-Layout.smallPadding)
+      make.top.equalTo(modLoaderVersionLabel.snp.bottom).offset(Spacing.tiny)
+      make.left.equalToSuperview().offset(LocalLayout.modLoaderVersionTableLeft)
+      make.right.equalToSuperview().offset(-Spacing.small)
+      make.bottom.equalToSuperview().offset(-Spacing.small)
     }
 
     modLoaderPlaceholder.snp.makeConstraints { make in
       make.centerX.equalTo(modLoaderVersionTableView)
       make.centerY.equalTo(modLoaderVersionTableView)
-      make.width.equalTo(Layout.placeholderWidth)
+      make.width.equalTo(Width.placeholder)
     }
 
     modLoaderVersionPlaceholder.snp.makeConstraints { make in
       make.centerX.equalTo(modLoaderVersionTableView)
       make.centerY.equalTo(modLoaderVersionTableView)
-      make.width.equalTo(Layout.largePlaceholderWidth)
+      make.width.equalTo(Width.largePlaceholder)
     }
 
     modLoaderVersionLoadingIndicator.snp.makeConstraints { make in
       make.centerX.equalTo(modLoaderVersionTableView)
       make.centerY.equalTo(modLoaderVersionTableView)
-      make.width.height.equalTo(Layout.smallIndicatorSize)
+      make.width.height.equalTo(Size.smallIndicator)
     }
 
     modLoaderRefreshButton.snp.makeConstraints { make in
       if let lastButton = modLoaderRadioButtons.last {
-        make.top.equalTo(lastButton.snp.bottom).offset(Layout.sectionSpacing)
+        make.top.equalTo(lastButton.snp.bottom).offset(Spacing.section)
       }
-      make.left.equalToSuperview().offset(Layout.smallPadding)
-      make.width.equalTo(Layout.refreshButtonWidth)
+      make.left.equalToSuperview().offset(Spacing.small)
+      make.width.equalTo(Width.actionButton)
     }
   }
 
@@ -1318,70 +1265,70 @@ class AddInstanceViewController: NSViewController {
 
     // Left filter panel constraints (fixed width ~220pt)
     curseForgeFilterScrollView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Layout.contentPadding)
-      make.left.equalToSuperview().offset(Layout.contentPadding)
-      make.width.equalTo(Layout.filterPanelWidth).priority(.required)  // Force this width constraint
-      make.bottom.equalToSuperview().offset(-Layout.curseForgeBottomSpace) // Leave space for version selector at bottom
+      make.top.equalToSuperview().offset(Spacing.content)
+      make.left.equalToSuperview().offset(Spacing.content)
+      make.width.equalTo(Width.filterPanel).priority(.required)  // Force this width constraint
+      make.bottom.equalToSuperview().offset(-LocalLayout.curseForgeBottomSpace) // Leave space for version selector at bottom
     }
 
     // Right content area - search field
     curseForgeSearchField.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Layout.contentPadding)
-      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(Layout.contentPadding)
-      make.right.equalToSuperview().offset(-Layout.contentPadding)
-      make.height.equalTo(Layout.textFieldHeight)
+      make.top.equalToSuperview().offset(Spacing.content)
+      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(Spacing.content)
+      make.right.equalToSuperview().offset(-Spacing.content)
+      make.height.equalTo(Size.textFieldHeight)
     }
 
     // Sort controls (on the right side)
     curseForgeSortLabel.snp.makeConstraints { make in
-      make.top.equalTo(curseForgeSearchField.snp.bottom).offset(Layout.sectionSpacing)
-      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(Layout.contentPadding)
-      make.width.equalTo(Layout.sortLabelWidth)
+      make.top.equalTo(curseForgeSearchField.snp.bottom).offset(Spacing.section)
+      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(Spacing.content)
+      make.width.equalTo(Width.shortLabel)
     }
 
     curseForgeSortPopup.snp.makeConstraints { make in
       make.centerY.equalTo(curseForgeSortLabel)
-      make.left.equalTo(curseForgeSortLabel.snp.right).offset(Layout.tinyPadding)
-      make.width.equalTo(Layout.sortPopupWidth)
-      make.height.equalTo(Layout.popupHeight)
+      make.left.equalTo(curseForgeSortLabel.snp.right).offset(Spacing.tiny)
+      make.width.equalTo(Width.popup)
+      make.height.equalTo(Size.popupHeight)
     }
 
     // Modpack table view
     curseForgeModpackTableView.snp.makeConstraints { make in
-      make.top.equalTo(curseForgeSortLabel.snp.bottom).offset(Layout.sectionSpacing)
-      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(Layout.contentPadding)
-      make.right.equalToSuperview().offset(-Layout.contentPadding)
-      make.bottom.equalTo(curseForgeVersionLabel.snp.top).offset(-Layout.sectionSpacing)
+      make.top.equalTo(curseForgeSortLabel.snp.bottom).offset(Spacing.section)
+      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(Spacing.content)
+      make.right.equalToSuperview().offset(-Spacing.content)
+      make.bottom.equalTo(curseForgeVersionLabel.snp.top).offset(-Spacing.section)
     }
 
     curseForgeLoadingIndicator.snp.makeConstraints { make in
       make.center.equalTo(curseForgeModpackTableView)
-      make.width.height.equalTo(Layout.buttonSize)
+      make.width.height.equalTo(Size.button)
     }
 
     curseForgeEmptyLabel.snp.makeConstraints { make in
       make.center.equalTo(curseForgeModpackTableView)
-      make.width.equalTo(Layout.emptyLabelWidth)
+      make.width.equalTo(Width.panel)
     }
 
     // Version selection UI at bottom (spans entire width)
     curseForgeVersionLabel.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-Layout.contentPadding)
-      make.left.equalTo(curseForgeSortPopup.snp.right).offset(Layout.standardPadding)
-      make.width.equalTo(Layout.versionLabelWidth)
+      make.bottom.equalToSuperview().offset(-Spacing.content)
+      make.left.equalTo(curseForgeSortPopup.snp.right).offset(Spacing.standard)
+      make.width.equalTo(Width.filterCheckbox)
     }
 
     curseForgeVersionPopup.snp.makeConstraints { make in
       make.centerY.equalTo(curseForgeVersionLabel)
-      make.left.equalTo(curseForgeVersionLabel.snp.right).offset(Layout.tinyPadding)
-      make.right.equalToSuperview().offset(-Layout.contentPadding)
-      make.height.equalTo(Layout.popupHeight)
+      make.left.equalTo(curseForgeVersionLabel.snp.right).offset(Spacing.tiny)
+      make.right.equalToSuperview().offset(-Spacing.content)
+      make.height.equalTo(Size.popupHeight)
     }
 
     curseForgeVersionLoadingIndicator.snp.makeConstraints { make in
       make.centerY.equalTo(curseForgeVersionPopup)
       make.left.equalTo(curseForgeVersionLabel.snp.left).offset(-24)
-      make.width.height.equalTo(Layout.smallIndicatorSize)
+      make.width.height.equalTo(Size.smallIndicator)
     }
 
     // Setup search field delegate
@@ -1437,7 +1384,7 @@ class AddInstanceViewController: NSViewController {
 
     let comingSoonLabel = DisplayLabel(
       text: "Coming Soon",
-      font: Fonts.sectionTitle,
+      font: Fonts.subtitle,
       textColor: .secondaryLabelColor,
       alignment: .center
     )
@@ -1447,12 +1394,12 @@ class AddInstanceViewController: NSViewController {
 
     titleLabel.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
-      make.centerY.equalToSuperview().offset(-Layout.standardPadding)
+      make.centerY.equalToSuperview().offset(-Spacing.standard)
     }
 
     comingSoonLabel.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
-      make.top.equalTo(titleLabel.snp.bottom).offset(Layout.sectionSpacing)
+      make.top.equalTo(titleLabel.snp.bottom).offset(Spacing.section)
     }
   }
 
@@ -1802,8 +1749,8 @@ class AddInstanceViewController: NSViewController {
     curseForgeFilterStackView.snp.remakeConstraints { make in
       make.top.bottom.equalToSuperview()
       make.left.equalToSuperview()
-      make.width.lessThanOrEqualTo(curseForgeFilterScrollView.snp.width).offset(-Layout.standardPadding)
-      make.width.greaterThanOrEqualTo(Layout.filterMinWidth)
+      make.width.lessThanOrEqualTo(curseForgeFilterScrollView.snp.width).offset(-Spacing.standard)
+      make.width.greaterThanOrEqualTo(LocalLayout.filterMinWidth)
     }
 
     // Add title label
@@ -1947,7 +1894,7 @@ extension AddInstanceViewController: NSTableViewDelegate {
     technicContentView.isHidden = true
 
     // Update icon based on selected category
-    let config = NSImage.SymbolConfiguration(pointSize: Symbols.largeIconSize, weight: .regular)
+    let config = NSImage.SymbolConfiguration(pointSize: SymbolSize.large, weight: .regular)
     let image = NSImage(
       systemSymbolName: selectedCategory.iconName,
       accessibilityDescription: nil
