@@ -12,7 +12,6 @@ import SnapKit
 import Yatagarasu
 
 class AddInstanceViewController: NSViewController {
-  // swiftlint:disable:previous type_body_length
 
   // MARK: - Design System Aliases
 
@@ -24,14 +23,6 @@ class AddInstanceViewController: NSViewController {
   private typealias Fonts = DesignSystem.Fonts
   private typealias SymbolSize = DesignSystem.SymbolSize
 
-  // MARK: - View-Specific Layout Constants
-
-  private enum LocalLayout {
-    static let modLoaderVersionTableLeft: CGFloat = 150
-    static let curseForgeBottomSpace: CGFloat = 50
-    static let filterMinWidth: CGFloat = 180
-  }
-
   // MARK: - Properties
 
   var onInstanceCreated: ((Instance) -> Void)?
@@ -39,28 +30,8 @@ class AddInstanceViewController: NSViewController {
 
   private let instanceManager = InstanceManager.shared
   private let versionManager = VersionManager.shared
-  private let modLoaderManager = ModLoaderManager.shared
-  private let curseForgeAPI = CurseForgeAPIClient.shared
-  private var selectedVersionId: String?
-  private var selectedModLoader: ModLoader = .NONE
-  private var selectedModLoaderVersion: String?
-  private var availableModLoaderVersions: [String] = []
 
-  // CurseForge properties
-  private var curseForgeModpacks: [CurseForgeModpack] = []
-  private var selectedModpack: CurseForgeModpack?
-  private var modpackFiles: [CurseForgeModpackFile] = []
-  private var selectedModpackFile: CurseForgeModpackFile?
-  private var currentSearchTerm: String = ""
-  private var currentSortMethod: CurseForgeSortMethod = .featured
-  private var currentPaginationIndex: Int = 0
-  private var isLoadingMore: Bool = false
-  private var hasMoreResults: Bool = true
-  private var searchDebounceTimer: Timer?
-  // Category filter properties
-  private var categories: [CurseForgeCategory] = []
-  private var selectedCategoryIds: Set<Int> = []
-  private var categoryCheckboxes: [Int: NSButton] = [:]
+  private var selectedCategory: InstanceCategory = .custom
 
   // MARK: - Enums & Models
 
@@ -105,142 +76,11 @@ class AddInstanceViewController: NSViewController {
     }
   }
 
-  // Version data model
-  struct VersionItem: Hashable {
-    let version: VersionInfo
-
-    var id: String { version.id }
-    var releaseDate: String { Self.formatDate(version.releaseTime) }
-    var type: String { version.type.displayName }
-    var versionType: VersionType { version.type }
-
-    func hash(into hasher: inout Hasher) {
-      hasher.combine(version.id)
-    }
-
-    static func == (lhs: Self, rhs: Self) -> Bool {
-      return lhs.version.id == rhs.version.id
-    }
-
-    private static func formatDate(_ date: Date) -> String {
-      let displayFormatter = DateFormatter()
-      displayFormatter.dateFormat = "yyyy-MM-dd"
-      displayFormatter.locale = Locale.current
-      displayFormatter.timeZone = TimeZone.current
-      return displayFormatter.string(from: date)
-    }
-  }
-
-  // Loader version data model
-  struct LoaderVersionItem: Hashable {
-    let versionId: String
-
-    var id: String { versionId }
-
-    func hash(into hasher: inout Hasher) {
-      hasher.combine(versionId)
-    }
-
-    static func == (lhs: Self, rhs: Self) -> Bool {
-      return lhs.versionId == rhs.versionId
-    }
-  }
-
-  // Modpack data model for CurseForge table
-  struct ModpackItem: Hashable {
-    let modpack: CurseForgeModpack
-
-    var id: Int { modpack.id }
-    var name: String { modpack.name }
-    var author: String { modpack.primaryAuthor }
-    var downloads: String { modpack.formattedDownloadCount }
-
-    func hash(into hasher: inout Hasher) {
-      hasher.combine(modpack.id)
-    }
-
-    static func == (lhs: Self, rhs: Self) -> Bool {
-      return lhs.modpack.id == rhs.modpack.id
-    }
-  }
-
-  enum ModLoader: String, CaseIterable {
-    case NONE
-    case neoForge
-    case forge
-    case fabric
-    case quilt
-    case liteLoader
-
-    var displayName: String {
-      switch self {
-      case .NONE: return Localized.AddInstance.modLoaderNone
-      case .neoForge: return "NeoForge"
-      case .forge: return "Forge"
-      case .fabric: return "Fabric"
-      case .quilt: return "Quilt"
-      case .liteLoader: return "LiteLoader"
-      }
-    }
-  }
-
-  private var selectedCategory: InstanceCategory = .custom
-
   // MARK: - DiffableDataSource
 
   private var categoryDataSource: NSTableViewDiffableDataSource<Section, InstanceCategory>?
 
   // MARK: - UI Components
-
-  private lazy var iconImageView: NSImageView = {
-    let imageView = NSImageView()
-    imageView.wantsLayer = true
-    imageView.layer?.cornerRadius = Radius.standard
-    imageView.imageScaling = .scaleProportionallyUpOrDown
-    let config = NSImage.SymbolConfiguration(pointSize: SymbolSize.large, weight: .regular)
-    let image = NSImage(
-      systemSymbolName: "cube.fill",
-      accessibilityDescription: nil
-    )
-    imageView.image = image?.withSymbolConfiguration(config)
-    imageView.contentTintColor = .systemGreen
-    return imageView
-  }()
-
-  private let nameLabel: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.nameLabel,
-      font: Fonts.bodyMedium,
-      textColor: .labelColor,
-      alignment: .left
-    )
-    return label
-  }()
-
-  private lazy var nameTextField: NSTextField = {
-    let field = NSTextField()
-    field.placeholderString = Localized.AddInstance.namePlaceholder
-    field.font = Fonts.body
-    field.lineBreakMode = .byTruncatingTail
-    return field
-  }()
-
-  private let groupLabel: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.groupLabel,
-      font: Fonts.bodyMedium,
-      textColor: .labelColor,
-      alignment: .left
-    )
-    return label
-  }()
-
-  private lazy var groupPopUpButton: NSPopUpButton = {
-    let button = NSPopUpButton()
-    button.font = Fonts.body
-    button.addItem(withTitle: Localized.AddInstance.groupUncategorized)
-    return button
-  }()
 
   private lazy var categoryTableView: NSTableView = {
     let tableView = NSTableView()
@@ -276,501 +116,56 @@ class AddInstanceViewController: NSViewController {
     return scrollView
   }()
 
-  private lazy var instanceInfoView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Radius.standard
-    view.layer?.borderWidth = 1
-    view.layer?.borderColor = NSColor.separatorColor.cgColor
+  private lazy var instanceInfoView = InstanceInfoView()
+
+  private lazy var customInstanceView: CustomInstanceView = {
+    let view = CustomInstanceView(
+      versionManager: versionManager,
+      modLoaderManager: ModLoaderManager.shared
+    )
     return view
   }()
 
-  private lazy var customContentView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Radius.standard
-    view.layer?.borderWidth = 1
-    view.layer?.borderColor = NSColor.separatorColor.cgColor
-    return view
-  }()
-
-  private lazy var importContentView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Radius.standard
-    view.layer?.borderWidth = 1
-    view.layer?.borderColor = NSColor.separatorColor.cgColor
+  private lazy var importContentView: PlaceholderContentView = {
+    let view = PlaceholderContentView(title: Localized.AddInstance.categoryImport)
     view.isHidden = true
     return view
   }()
 
-  private lazy var atLauncherContentView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Radius.standard
-    view.layer?.borderWidth = 1
-    view.layer?.borderColor = NSColor.separatorColor.cgColor
+  private lazy var atLauncherContentView: PlaceholderContentView = {
+    let view = PlaceholderContentView(title: "ATLauncher")
     view.isHidden = true
     return view
   }()
 
-  private lazy var curseForgeContentView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Radius.standard
-    view.layer?.borderWidth = 1
-    view.layer?.borderColor = NSColor.separatorColor.cgColor
+  private lazy var curseForgeView: CurseForgeView = {
+    let view = CurseForgeView(curseForgeAPI: CurseForgeAPIClient.shared)
     view.isHidden = true
     return view
   }()
 
-  private lazy var ftbLegacyContentView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Radius.standard
-    view.layer?.borderWidth = 1
-    view.layer?.borderColor = NSColor.separatorColor.cgColor
+  private lazy var ftbLegacyContentView: PlaceholderContentView = {
+    let view = PlaceholderContentView(title: "FTB Legacy")
     view.isHidden = true
     return view
   }()
 
-  private lazy var ftbImportContentView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Radius.standard
-    view.layer?.borderWidth = 1
-    view.layer?.borderColor = NSColor.separatorColor.cgColor
+  private lazy var ftbImportContentView: PlaceholderContentView = {
+    let view = PlaceholderContentView(title: Localized.AddInstance.categoryFTBImport)
     view.isHidden = true
     return view
   }()
 
-  private lazy var modrinthContentView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Radius.standard
-    view.layer?.borderWidth = 1
-    view.layer?.borderColor = NSColor.separatorColor.cgColor
+  private lazy var modrinthContentView: PlaceholderContentView = {
+    let view = PlaceholderContentView(title: "Modrinth")
     view.isHidden = true
     return view
   }()
 
-  private lazy var technicContentView: NSView = {
-    let view = NSView()
-    view.wantsLayer = true
-    view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    view.layer?.cornerRadius = Radius.standard
-    view.layer?.borderWidth = 1
-    view.layer?.borderColor = NSColor.separatorColor.cgColor
+  private lazy var technicContentView: PlaceholderContentView = {
+    let view = PlaceholderContentView(title: "Technic")
     view.isHidden = true
     return view
-  }()
-
-  // MARK: - CurseForge UI Components
-
-  private lazy var curseForgeSearchField: NSSearchField = {
-    let field = NSSearchField()
-    field.placeholderString = Localized.AddInstance.searchPlaceholder
-    field.font = Fonts.body
-    return field
-  }()
-
-  private lazy var curseForgeSortLabel = DisplayLabel(
-    text: Localized.AddInstance.sortByLabel,
-    font: Fonts.smallMedium,
-    textColor: .labelColor,
-    alignment: .left
-  )
-
-  private lazy var curseForgeSortPopup: NSPopUpButton = {
-    let button = NSPopUpButton()
-    button.font = Fonts.small
-    // Add sort options
-    for sortMethod in CurseForgeSortMethod.allCases {
-      button.addItem(withTitle: sortMethod.displayName)
-    }
-    button.target = self
-    button.action = #selector(curseForgeSortChanged)
-    return button
-  }()
-
-  private lazy var curseForgeModpackTableView: VersionTableView<ModpackItem> = {
-    let columns: [VersionTableView<ModpackItem>.ColumnConfig] = [
-      .init(
-        identifier: "ModpackColumn",
-        title: Localized.AddInstance.columnModpackName,
-        width: 250,
-        valueProvider: { $0.name },
-        fontProvider: { _ in Fonts.bodyMedium },
-        colorProvider: { _ in .labelColor }
-      ),
-      .init(
-        identifier: "AuthorColumn",
-        title: Localized.AddInstance.columnModpackAuthor,
-        width: 120,
-        valueProvider: { $0.author },
-        fontProvider: { _ in Fonts.body },
-        colorProvider: { _ in .secondaryLabelColor }
-      ),
-      .init(
-        identifier: "DownloadsColumn",
-        title: Localized.AddInstance.columnModpackDownloads,
-        width: 80,
-        valueProvider: { $0.downloads },
-        fontProvider: { _ in Fonts.body },
-        colorProvider: { _ in .tertiaryLabelColor }
-      ),
-    ]
-
-    let tableView = VersionTableView<ModpackItem>(
-      columns: columns
-    ) { [weak self] item in
-      // Handle modpack selection
-      guard let self = self, let item = item else {
-        self?.selectedModpack = nil
-        self?.selectedModpackFile = nil
-        self?.modpackFiles = []
-        self?.curseForgeVersionPopup.removeAllItems()
-        self?.curseForgeVersionPopup.isEnabled = false
-        return
-      }
-      self.selectedModpack = item.modpack
-      self.loadModpackVersions(for: item.modpack)
-    }
-    return tableView
-  }()
-
-  private lazy var curseForgeLoadingIndicator: NSProgressIndicator = {
-    let indicator = NSProgressIndicator()
-    indicator.style = .spinning
-    indicator.controlSize = .regular
-    indicator.isHidden = true
-    return indicator
-  }()
-
-  private lazy var curseForgeEmptyLabel: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.noModpacksFound,
-      font: Fonts.body,
-      textColor: .secondaryLabelColor,
-      alignment: .center
-    )
-    label.isHidden = true
-    return label
-  }()
-
-  private lazy var curseForgeVersionLabel = DisplayLabel(
-    text: Localized.AddInstance.versionSelectedLabel,
-    font: Fonts.smallMedium,
-    textColor: .labelColor,
-    alignment: .right
-  )
-
-  private lazy var curseForgeVersionPopup: NSPopUpButton = {
-    let button = NSPopUpButton()
-    button.font = Fonts.small
-    button.target = self
-    button.action = #selector(curseForgeVersionChanged)
-    button.isEnabled = false
-    return button
-  }()
-
-  private lazy var curseForgeVersionLoadingIndicator: NSProgressIndicator = {
-    let indicator = NSProgressIndicator()
-    indicator.style = .spinning
-    indicator.controlSize = .small
-    indicator.isHidden = true
-    return indicator
-  }()
-
-  // MARK: - CurseForge Filter UI Components
-
-  private lazy var curseForgeFilterScrollView: NSScrollView = {
-    let scrollView = NSScrollView()
-    scrollView.hasVerticalScroller = true
-    scrollView.hasHorizontalScroller = false
-    scrollView.autohidesScrollers = true
-    scrollView.borderType = .noBorder
-    scrollView.drawsBackground = true
-    scrollView.backgroundColor = NSColor.controlBackgroundColor
-    scrollView.wantsLayer = true
-    scrollView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    scrollView.layer?.cornerRadius = Radius.standard
-    scrollView.layer?.borderWidth = 1
-    scrollView.layer?.borderColor = NSColor.separatorColor.cgColor
-    return scrollView
-  }()
-
-  private let curseForgeFilterStackView: NSStackView = {
-    let stackView = NSStackView()
-    stackView.orientation = .vertical
-    stackView.alignment = .leading  // Keep leading for checkbox alignment
-    stackView.distribution = .fill  // Use fill instead of gravityAreas
-    stackView.spacing = 6
-    stackView.edgeInsets = NSEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-    stackView.wantsLayer = true
-    // Lower hugging priority to allow stackView to be flexible
-    // But keep default compression resistance so content isn't clipped
-    stackView.setHuggingPriority(.defaultLow, for: .horizontal)
-    stackView.setHuggingPriority(.defaultLow, for: .vertical)
-    return stackView
-  }()
-
-  private lazy var curseForgeFilterTitleLabel: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.categoriesFilterTitle,
-      font: Fonts.tableHeader,
-      textColor: .labelColor,
-      alignment: .left
-    )
-    return label
-  }()
-
-  private lazy var versionTitleLabel: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.customTitle,
-      font: Fonts.title,
-      textColor: .labelColor,
-      alignment: .left
-    )
-    return label
-  }()
-
-  private lazy var filterLabel: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.filterLabel,
-      font: Fonts.small,
-      textColor: .secondaryLabelColor,
-      alignment: .left
-    )
-    return label
-  }()
-
-  private lazy var releaseCheckbox: NSButton = {
-    let button = NSButton(
-      checkboxWithTitle: Localized.AddInstance.filterRelease,
-      target: self,
-      action: #selector(filterChanged)
-    )
-    button.state = .on
-    button.font = Fonts.small
-    return button
-  }()
-
-  private lazy var snapshotCheckbox: NSButton = {
-    let button = NSButton(
-      checkboxWithTitle: Localized.AddInstance.filterSnapshot,
-      target: self,
-      action: #selector(filterChanged)
-    )
-    button.state = .off
-    button.font = Fonts.small
-    return button
-  }()
-
-  private lazy var betaCheckbox: NSButton = {
-    let button = NSButton(
-      checkboxWithTitle: Localized.AddInstance.filterBeta,
-      target: self,
-      action: #selector(filterChanged)
-    )
-    button.state = .off
-    button.font = Fonts.small
-    return button
-  }()
-
-  private lazy var alphaCheckbox: NSButton = {
-    let button = NSButton(
-      checkboxWithTitle: Localized.AddInstance.filterAlpha,
-      target: self,
-      action: #selector(filterChanged)
-    )
-    button.state = .off
-    button.font = Fonts.small
-    return button
-  }()
-
-  private lazy var refreshButton: BRImageButton = {
-    let button = BRImageButton(
-      symbolName: "arrow.clockwise",
-      cornerRadius: 6,
-      highlightColorProvider: { [weak self] in
-        self?.view.effectiveAppearance.name == .darkAqua
-          ? NSColor.white.withAlphaComponent(0.1)
-          : NSColor.black.withAlphaComponent(0.06)
-      },
-      tintColor: .systemBlue,
-      accessibilityLabel: Localized.AddInstance.refreshButton
-    )
-    button.target = self
-    button.action = #selector(refreshVersions)
-    return button
-  }()
-
-  private lazy var versionTableView: VersionTableView<VersionItem> = {
-    let columns: [VersionTableView<VersionItem>.ColumnConfig] = [
-      .init(
-        identifier: "VersionColumn",
-        title: Localized.AddInstance.columnVersion,
-        width: 120,
-        valueProvider: { $0.id },
-        fontProvider: { _ in Fonts.bodyMedium },
-        colorProvider: { _ in .labelColor }
-      ),
-      .init(
-        identifier: "ReleaseColumn",
-        title: Localized.AddInstance.columnRelease,
-        width: 120,
-        valueProvider: { $0.releaseDate },
-        fontProvider: { _ in Fonts.body },
-        colorProvider: { _ in .secondaryLabelColor }
-      ),
-      .init(
-        identifier: "TypeColumn",
-        title: Localized.AddInstance.columnType,
-        width: 100,
-        valueProvider: { $0.type },
-        fontProvider: { _ in Fonts.tableHeader },
-        colorProvider: { [weak self] item in
-          self?.getTypeColor(for: item.versionType) ?? .labelColor
-        }
-      ),
-    ]
-
-    let tableView = VersionTableView<VersionItem>(
-      columns: columns
-    ) { [weak self] item in
-      self?.selectedVersionId = item?.id
-      if let versionId = item?.id {
-        self?.updateNameFromVersion(versionId)
-        if self?.selectedModLoader != .NONE {
-          self?.loadModLoaderVersions()
-        }
-      }
-    }
-    return tableView
-  }()
-
-  private lazy var modLoaderLabel: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.modLoaderTitle,
-      font: Fonts.subtitle,
-      textColor: .labelColor,
-      alignment: .left
-    )
-    return label
-  }()
-
-  private let versionModLoaderSeparator: BRSeparator = BRSeparator(type: .horizontal)
-
-  private lazy var modLoaderPlaceholder: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.modLoaderPlaceholder,
-      font: Fonts.body,
-      textColor: .secondaryLabelColor,
-      alignment: .center
-    )
-    label.maximumNumberOfLines = 0
-    label.isHidden = false  // Show initially when no mod loader selected (NONE is default)
-    return label
-  }()
-
-  private lazy var modLoaderVersionPlaceholder: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.modLoaderVersionPlaceholder,
-      font: Fonts.body,
-      textColor: .tertiaryLabelColor,
-      alignment: .center
-    )
-    label.maximumNumberOfLines = 0
-    label.isHidden = true  // Hide initially (only show when mod loader is selected but no versions available)
-    return label
-  }()
-
-  private lazy var modLoaderDescriptionLabel: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.modLoaderDescription,
-      font: Fonts.caption,
-      textColor: .tertiaryLabelColor,
-      alignment: .left
-    )
-    label.maximumNumberOfLines = 0
-    label.isHidden = true
-    return label
-  }()
-
-  private lazy var modLoaderVersionLabel: DisplayLabel = {
-    let label = DisplayLabel(
-      text: Localized.AddInstance.modLoaderVersionLabel,
-      font: Fonts.smallMedium,
-      textColor: .labelColor,
-      alignment: .left
-    )
-    // Always show label
-    label.isHidden = false
-    return label
-  }()
-
-  private lazy var modLoaderVersionTableView: VersionTableView<LoaderVersionItem> = {
-    let columns: [VersionTableView<LoaderVersionItem>.ColumnConfig] = [
-      .init(
-        identifier: "LoaderVersionColumn",
-        title: Localized.AddInstance.loaderVersionColumn,
-        width: 220,
-        valueProvider: { $0.id },
-        fontProvider: { _ in Fonts.body },
-        colorProvider: { _ in .labelColor }
-      ),
-    ]
-
-    let tableView = VersionTableView<LoaderVersionItem>(
-      columns: columns
-    ) { [weak self] item in
-      self?.selectedModLoaderVersion = item?.id
-    }
-    // Always show table (placeholder will overlay when needed)
-    tableView.isHidden = false
-    return tableView
-  }()
-
-  private lazy var modLoaderVersionLoadingIndicator: NSProgressIndicator = {
-    let indicator = NSProgressIndicator()
-    indicator.style = .spinning
-    indicator.controlSize = .small
-    indicator.isHidden = true
-    return indicator
-  }()
-
-  private lazy var modLoaderRadioButtons: [NSButton] = {
-    return ModLoader.allCases.map { loader in
-      let button = NSButton(
-        radioButtonWithTitle: loader.displayName,
-        target: self,
-        action: #selector(modLoaderChanged)
-      )
-      button.font = Fonts.small
-      if loader == .NONE {
-        button.state = .on
-      }
-      return button
-    }
-  }()
-
-  private let modLoaderRefreshButton: NSButton = {
-    let button = NSButton(
-      title: Localized.AddInstance.refreshButton,
-      target: nil,
-      action: nil
-    )
-    button.bezelStyle = .rounded
-    return button
   }()
 
   private lazy var helpButton: BRImageButton = {
@@ -823,13 +218,15 @@ class AddInstanceViewController: NSViewController {
     super.viewDidLoad()
     setupDataSources()
     setupUI()
+    customInstanceView.onVersionSelected = { [weak self] versionId in
+      self?.updateNameFromVersion(versionId)
+    }
     loadInitialData()
   }
 
   // MARK: - Setup DataSources
 
   private func setupDataSources() {
-    // Setup category list DataSource
     categoryDataSource = NSTableViewDiffableDataSource<
       Section, InstanceCategory
     >(
@@ -876,29 +273,12 @@ class AddInstanceViewController: NSViewController {
     return cellView
   }
 
-  private func getTypeColor(for type: VersionType) -> NSColor {
-    switch type {
-    case .release:
-      return .systemGreen
-    case .snapshot:
-      return .systemOrange
-    case .oldBeta:
-      return .systemBlue
-    case .oldAlpha:
-      return .systemPurple
-    }
-  }
-
   // MARK: - Data Loading
 
   private func loadInitialData() {
-    // Load category data
     updateCategoryData()
+    customInstanceView.loadInitialData()
 
-    // Load version data
-    loadInstalledVersions()
-
-    // Select first category
     categoryTableView.selectRowIndexes(
       IndexSet(integer: 0),
       byExtendingSelection: false
@@ -912,74 +292,15 @@ class AddInstanceViewController: NSViewController {
     categoryDataSource?.apply(snapshot, animatingDifferences: false)
   }
 
-  private func loadInstalledVersions() {
-    // Load versions from version manager
-    Task {
-      // If version manager has no versions, try to refresh
-      if versionManager.versions.isEmpty {
-        do {
-          try await versionManager.refreshVersionList()
-        } catch {
-          // Failed to refresh, just continue
-          Logger.shared.error("Failed to refresh version list: \(error)", category: "AddInstance")
-        }
-      }
-
-      await MainActor.run {
-        applyVersionFilter()
-      }
-    }
-  }
-
-  private func applyVersionFilter() {
-    // Collect selected version types
-    var selectedTypes: [VersionType] = []
-
-    if releaseCheckbox.state == .on {
-      selectedTypes.append(.release)
-    }
-    if snapshotCheckbox.state == .on {
-      selectedTypes.append(.snapshot)
-    }
-    if betaCheckbox.state == .on {
-      selectedTypes.append(.oldBeta)
-    }
-    if alphaCheckbox.state == .on {
-      selectedTypes.append(.oldAlpha)
-    }
-
-    // Filter versions by type
-    let versions: [VersionInfo]
-    if selectedTypes.isEmpty {
-      versions = versionManager.versions
-    } else {
-      versions = versionManager.versions.filter { version in
-        selectedTypes.contains(version.type)
-      }
-    }
-
-    // Convert to VersionItem and update table
-    let versionItems = versions.map { VersionItem(version: $0) }
-    versionTableView.updateItems(versionItems)
-
-    // Select first item if available
-    if !versionItems.isEmpty, versionTableView.selectedItem == nil {
-      versionTableView.selectItem(at: 0)
-      selectedVersionId = versionItems[0].id
-      // Auto-update name from first version
-      updateNameFromVersion(versionItems[0].id)
-    }
-  }
-
   // MARK: - Setup UI
 
   private func setupUI() {
     view.addSubview(categoryScrollView)
     view.addSubview(instanceInfoView)
-    view.addSubview(customContentView)
+    view.addSubview(customInstanceView)
     view.addSubview(importContentView)
     view.addSubview(atLauncherContentView)
-    view.addSubview(curseForgeContentView)
+    view.addSubview(curseForgeView)
     view.addSubview(ftbLegacyContentView)
     view.addSubview(ftbImportContentView)
     view.addSubview(modrinthContentView)
@@ -989,9 +310,6 @@ class AddInstanceViewController: NSViewController {
     view.addSubview(confirmButton)
 
     categoryScrollView.documentView = categoryTableView
-    setupInstanceInfoView()
-    setupCustomContentView()
-    setupOtherContentViews()
 
     categoryScrollView.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(Spacing.standard)
@@ -1007,12 +325,11 @@ class AddInstanceViewController: NSViewController {
       make.height.equalTo(Height.instanceInfo)
     }
 
-    // Setup constraints for all content views to occupy the same space
-    let contentViews = [
-      customContentView,
+    let contentViews: [NSView] = [
+      customInstanceView,
       importContentView,
       atLauncherContentView,
-      curseForgeContentView,
+      curseForgeView,
       ftbLegacyContentView,
       ftbImportContentView,
       modrinthContentView,
@@ -1047,751 +364,9 @@ class AddInstanceViewController: NSViewController {
     }
   }
 
-  private func setupInstanceInfoView() {
-    instanceInfoView.addSubview(iconImageView)
-    instanceInfoView.addSubview(nameLabel)
-    instanceInfoView.addSubview(nameTextField)
-    instanceInfoView.addSubview(groupLabel)
-    instanceInfoView.addSubview(groupPopUpButton)
-
-    iconImageView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Spacing.standard)
-      make.left.equalToSuperview().offset(Spacing.standard)
-      make.width.height.equalTo(Size.instanceIcon)
-    }
-
-    nameLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(30)
-      make.left.equalTo(iconImageView.snp.right).offset(Spacing.standard)
-      make.right.equalToSuperview().offset(-Spacing.standard)
-    }
-
-    nameTextField.snp.makeConstraints { make in
-      make.top.equalTo(nameLabel.snp.bottom).offset(Spacing.tiny)
-      make.left.equalTo(iconImageView.snp.right).offset(Spacing.standard)
-      make.right.equalToSuperview().offset(-Spacing.standard)
-      make.height.equalTo(Size.textFieldHeight)
-    }
-
-    groupLabel.snp.makeConstraints { make in
-      make.top.equalTo(nameTextField.snp.bottom).offset(Spacing.medium)
-      make.left.equalTo(iconImageView.snp.right).offset(Spacing.standard)
-      make.width.equalTo(Width.shortLabel)
-    }
-
-    groupPopUpButton.snp.makeConstraints { make in
-      make.centerY.equalTo(groupLabel)
-      make.left.equalTo(groupLabel.snp.right).offset(Spacing.tiny)
-      make.right.equalToSuperview().offset(-Spacing.standard)
-      make.height.equalTo(Size.popupHeight)
-    }
-  }
-
-  private func setupCustomContentView() {
-    customContentView.addSubview(versionTitleLabel)
-    customContentView.addSubview(filterLabel)
-    customContentView.addSubview(releaseCheckbox)
-    customContentView.addSubview(snapshotCheckbox)
-    customContentView.addSubview(betaCheckbox)
-    customContentView.addSubview(alphaCheckbox)
-    customContentView.addSubview(refreshButton)
-    customContentView.addSubview(versionTableView)
-    customContentView.addSubview(versionModLoaderSeparator)
-    customContentView.addSubview(modLoaderLabel)
-    customContentView.addSubview(modLoaderDescriptionLabel)
-    customContentView.addSubview(modLoaderVersionLabel)
-    customContentView.addSubview(modLoaderVersionTableView)
-    // Add placeholders after table so they overlay on top
-    customContentView.addSubview(modLoaderPlaceholder)
-    customContentView.addSubview(modLoaderVersionPlaceholder)
-    customContentView.addSubview(modLoaderVersionLoadingIndicator)
-    customContentView.addSubview(modLoaderRefreshButton)
-
-    for button in modLoaderRadioButtons {
-      customContentView.addSubview(button)
-    }
-
-    // Version section (top half) - Filters on left, Table on right
-    versionTitleLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Spacing.small)
-      make.left.equalToSuperview().offset(Spacing.small)
-    }
-
-    refreshButton.snp.makeConstraints { make in
-      make.top.equalTo(alphaCheckbox.snp.bottom).offset(Spacing.section)
-      make.left.equalToSuperview().offset(Spacing.small)
-      make.width.height.equalTo(Size.button)
-    }
-
-    filterLabel.snp.makeConstraints { make in
-      make.top.equalTo(versionTitleLabel.snp.bottom).offset(Spacing.section)
-      make.left.equalToSuperview().offset(Spacing.small)
-      make.width.equalTo(Width.filterCheckbox)
-    }
-
-    releaseCheckbox.snp.makeConstraints { make in
-      make.top.equalTo(filterLabel.snp.bottom).offset(Spacing.tiny)
-      make.left.equalToSuperview().offset(Spacing.small)
-      make.width.equalTo(Width.filterCheckbox)
-    }
-
-    snapshotCheckbox.snp.makeConstraints { make in
-      make.top.equalTo(releaseCheckbox.snp.bottom).offset(Spacing.minimal)
-      make.left.equalToSuperview().offset(Spacing.small)
-      make.width.equalTo(Width.filterCheckbox)
-    }
-
-    betaCheckbox.snp.makeConstraints { make in
-      make.top.equalTo(snapshotCheckbox.snp.bottom).offset(Spacing.minimal)
-      make.left.equalToSuperview().offset(Spacing.small)
-      make.width.equalTo(Width.filterCheckbox)
-    }
-
-    alphaCheckbox.snp.makeConstraints { make in
-      make.top.equalTo(betaCheckbox.snp.bottom).offset(Spacing.minimal)
-      make.left.equalToSuperview().offset(Spacing.small)
-      make.width.equalTo(Width.filterCheckbox)
-    }
-
-    versionTableView.snp.makeConstraints { make in
-      make.top.equalTo(versionTitleLabel.snp.bottom).offset(Spacing.section)
-      make.left.equalToSuperview().offset(LocalLayout.modLoaderVersionTableLeft)
-      make.right.equalToSuperview().offset(-Spacing.small)
-      make.height.equalTo(Height.table)
-    }
-
-    // Horizontal separator between version and mod loader sections
-    versionModLoaderSeparator.snp.makeConstraints { make in
-      make.top.equalTo(versionTableView.snp.bottom).offset(Spacing.small)
-      make.left.equalToSuperview().offset(Spacing.small)
-      make.right.equalToSuperview().offset(-Spacing.small)
-      make.height.equalTo(Size.separatorHeight)
-    }
-
-    // Mod Loader section (bottom half) - Options on left, Table on right
-    modLoaderLabel.snp.makeConstraints { make in
-      make.top.equalTo(versionModLoaderSeparator.snp.bottom).offset(Spacing.small)
-      make.left.equalToSuperview().offset(Spacing.small)
-      make.width.equalTo(Width.panel)
-    }
-
-    modLoaderDescriptionLabel.snp.makeConstraints { make in
-      make.top.equalTo(modLoaderLabel.snp.bottom).offset(Spacing.micro)
-      make.left.equalToSuperview().offset(Spacing.small)
-      make.width.equalTo(Width.panel)
-    }
-
-    var previousButton: NSButton?
-    for button in modLoaderRadioButtons {
-      button.snp.makeConstraints { make in
-        if let previous = previousButton {
-          make.top.equalTo(previous.snp.bottom).offset(Spacing.tiny)
-        } else {
-          make.top.equalTo(modLoaderDescriptionLabel.snp.bottom).offset(Spacing.medium)
-        }
-        make.left.equalToSuperview().offset(Spacing.small)
-        make.width.equalTo(Width.panel)
-      }
-      previousButton = button
-    }
-
-    modLoaderVersionLabel.snp.makeConstraints { make in
-      make.top.equalTo(versionModLoaderSeparator.snp.bottom).offset(Spacing.small)
-      make.left.equalToSuperview().offset(LocalLayout.modLoaderVersionTableLeft)
-      make.right.equalToSuperview().offset(-Spacing.small)
-    }
-
-    modLoaderVersionTableView.snp.makeConstraints { make in
-      make.top.equalTo(modLoaderVersionLabel.snp.bottom).offset(Spacing.tiny)
-      make.left.equalToSuperview().offset(LocalLayout.modLoaderVersionTableLeft)
-      make.right.equalToSuperview().offset(-Spacing.small)
-      make.bottom.equalToSuperview().offset(-Spacing.small)
-    }
-
-    modLoaderPlaceholder.snp.makeConstraints { make in
-      make.centerX.equalTo(modLoaderVersionTableView)
-      make.centerY.equalTo(modLoaderVersionTableView)
-      make.width.equalTo(Width.placeholder)
-    }
-
-    modLoaderVersionPlaceholder.snp.makeConstraints { make in
-      make.centerX.equalTo(modLoaderVersionTableView)
-      make.centerY.equalTo(modLoaderVersionTableView)
-      make.width.equalTo(Width.largePlaceholder)
-    }
-
-    modLoaderVersionLoadingIndicator.snp.makeConstraints { make in
-      make.centerX.equalTo(modLoaderVersionTableView)
-      make.centerY.equalTo(modLoaderVersionTableView)
-      make.width.height.equalTo(Size.smallIndicator)
-    }
-
-    modLoaderRefreshButton.snp.makeConstraints { make in
-      if let lastButton = modLoaderRadioButtons.last {
-        make.top.equalTo(lastButton.snp.bottom).offset(Spacing.section)
-      }
-      make.left.equalToSuperview().offset(Spacing.small)
-      make.width.equalTo(Width.actionButton)
-    }
-  }
-
-  private func setupOtherContentViews() {
-    // Setup placeholder content for other views
-    setupPlaceholderContent(for: importContentView, title: Localized.AddInstance.categoryImport)
-    setupPlaceholderContent(for: atLauncherContentView, title: "ATLauncher")
-    setupCurseForgeContentView()  // Functional CurseForge implementation
-    setupPlaceholderContent(for: ftbLegacyContentView, title: "FTB Legacy")
-    setupPlaceholderContent(for: ftbImportContentView, title: Localized.AddInstance.categoryFTBImport)
-    setupPlaceholderContent(for: modrinthContentView, title: "Modrinth")
-    setupPlaceholderContent(for: technicContentView, title: "Technic")
-  }
-
-  private func setupCurseForgeContentView() {
-    // Add filter panel (left) and main content area (right)
-    curseForgeContentView.addSubview(curseForgeFilterScrollView)
-    curseForgeFilterStackView.translatesAutoresizingMaskIntoConstraints = false
-    curseForgeFilterScrollView.documentView = curseForgeFilterStackView
-
-    // Add search and sort controls
-    curseForgeContentView.addSubview(curseForgeSearchField)
-    curseForgeContentView.addSubview(curseForgeSortLabel)
-    curseForgeContentView.addSubview(curseForgeSortPopup)
-    curseForgeContentView.addSubview(curseForgeModpackTableView)
-    curseForgeContentView.addSubview(curseForgeLoadingIndicator)
-    curseForgeContentView.addSubview(curseForgeEmptyLabel)
-    curseForgeContentView.addSubview(curseForgeVersionLabel)
-    curseForgeContentView.addSubview(curseForgeVersionPopup)
-    curseForgeContentView.addSubview(curseForgeVersionLoadingIndicator)
-
-    // Left filter panel constraints (fixed width ~220pt)
-    curseForgeFilterScrollView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Spacing.content)
-      make.left.equalToSuperview().offset(Spacing.content)
-      make.width.equalTo(Width.filterPanel).priority(.required)  // Force this width constraint
-      make.bottom.equalToSuperview().offset(-LocalLayout.curseForgeBottomSpace) // Leave space for version selector at bottom
-    }
-
-    // Right content area - search field
-    curseForgeSearchField.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Spacing.content)
-      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(Spacing.content)
-      make.right.equalToSuperview().offset(-Spacing.content)
-      make.height.equalTo(Size.textFieldHeight)
-    }
-
-    // Sort controls (on the right side)
-    curseForgeSortLabel.snp.makeConstraints { make in
-      make.top.equalTo(curseForgeSearchField.snp.bottom).offset(Spacing.section)
-      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(Spacing.content)
-      make.width.equalTo(Width.shortLabel)
-    }
-
-    curseForgeSortPopup.snp.makeConstraints { make in
-      make.centerY.equalTo(curseForgeSortLabel)
-      make.left.equalTo(curseForgeSortLabel.snp.right).offset(Spacing.tiny)
-      make.width.equalTo(Width.popup)
-      make.height.equalTo(Size.popupHeight)
-    }
-
-    // Modpack table view
-    curseForgeModpackTableView.snp.makeConstraints { make in
-      make.top.equalTo(curseForgeSortLabel.snp.bottom).offset(Spacing.section)
-      make.left.equalTo(curseForgeFilterScrollView.snp.right).offset(Spacing.content)
-      make.right.equalToSuperview().offset(-Spacing.content)
-      make.bottom.equalTo(curseForgeVersionLabel.snp.top).offset(-Spacing.section)
-    }
-
-    curseForgeLoadingIndicator.snp.makeConstraints { make in
-      make.center.equalTo(curseForgeModpackTableView)
-      make.width.height.equalTo(Size.button)
-    }
-
-    curseForgeEmptyLabel.snp.makeConstraints { make in
-      make.center.equalTo(curseForgeModpackTableView)
-      make.width.equalTo(Width.panel)
-    }
-
-    // Version selection UI at bottom (spans entire width)
-    curseForgeVersionLabel.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-Spacing.content)
-      make.left.equalTo(curseForgeSortPopup.snp.right).offset(Spacing.standard)
-      make.width.equalTo(Width.filterCheckbox)
-    }
-
-    curseForgeVersionPopup.snp.makeConstraints { make in
-      make.centerY.equalTo(curseForgeVersionLabel)
-      make.left.equalTo(curseForgeVersionLabel.snp.right).offset(Spacing.tiny)
-      make.right.equalToSuperview().offset(-Spacing.content)
-      make.height.equalTo(Size.popupHeight)
-    }
-
-    curseForgeVersionLoadingIndicator.snp.makeConstraints { make in
-      make.centerY.equalTo(curseForgeVersionPopup)
-      make.left.equalTo(curseForgeVersionLabel.snp.left).offset(-24)
-      make.width.height.equalTo(Size.smallIndicator)
-    }
-
-    // Setup search field delegate
-    curseForgeSearchField.target = self
-    curseForgeSearchField.action = #selector(curseForgeSearchChanged)
-
-    // Setup infinite scroll
-    setupInfiniteScroll()
-
-    // Don't load data here - wait until CurseForge is actually selected
-    // Data will be loaded in updateContentView() when category is selected
-  }
-
-  /// Setup infinite scroll for modpack list
-  private func setupInfiniteScroll() {
-    // Monitor scroll events
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(modpackScrollViewDidScroll(_:)),
-      name: NSScrollView.didLiveScrollNotification,
-      object: curseForgeModpackTableView.scrollView
-    )
-  }
-
-  @objc private func modpackScrollViewDidScroll(_ notification: Notification) {
-    guard let scrollView = notification.object as? NSScrollView else { return }
-
-    // Don't load if already loading or no more results
-    guard !isLoadingMore, hasMoreResults else { return }
-
-    // Calculate scroll position
-    let contentView = scrollView.contentView
-    let documentRect = contentView.documentRect
-    let visibleRect = contentView.documentVisibleRect
-
-    // Trigger load when scrolled to 80% of content
-    let scrollPosition = (visibleRect.origin.y + visibleRect.height) / documentRect.height
-    let threshold: CGFloat = 0.8
-
-    if scrollPosition > threshold {
-      Logger.shared.info("Loading more modpacks (scroll position: \(Int(scrollPosition * 100))%)", category: "AddInstance")
-      loadCurseForgeModpacks(reset: false)
-    }
-  }
-
-  private func setupPlaceholderContent(for contentView: NSView, title: String) {
-    let titleLabel = DisplayLabel(
-      text: title,
-      font: Fonts.title,
-      textColor: .labelColor,
-      alignment: .center
-    )
-
-    let comingSoonLabel = DisplayLabel(
-      text: "Coming Soon",
-      font: Fonts.subtitle,
-      textColor: .secondaryLabelColor,
-      alignment: .center
-    )
-
-    contentView.addSubview(titleLabel)
-    contentView.addSubview(comingSoonLabel)
-
-    titleLabel.snp.makeConstraints { make in
-      make.centerX.equalToSuperview()
-      make.centerY.equalToSuperview().offset(-Spacing.standard)
-    }
-
-    comingSoonLabel.snp.makeConstraints { make in
-      make.centerX.equalToSuperview()
-      make.top.equalTo(titleLabel.snp.bottom).offset(Spacing.section)
-    }
-  }
-
   // MARK: - Actions
 
-  @objc private func filterChanged() {
-    applyVersionFilter()
-  }
-
-  @objc private func refreshVersions() {
-    refreshButton.isEnabled = false
-
-    Task {
-      do {
-        try await versionManager.refreshVersionList()
-
-        await MainActor.run {
-          applyVersionFilter()
-          refreshButton.isEnabled = true
-        }
-      } catch {
-        await MainActor.run {
-          Logger.shared.error("Failed to refresh versions: \(error)", category: "AddInstance")
-          refreshButton.isEnabled = true
-
-          // Show error alert
-          let alert = NSAlert()
-          alert.messageText = Localized.AddInstance.alertFailedToRefresh
-          alert.informativeText = error.localizedDescription
-          alert.alertStyle = .warning
-          alert.addButton(withTitle: Localized.AddInstance.okButton)
-
-          if let window = view.window {
-            alert.beginSheetModal(for: window)
-          } else {
-            alert.runModal()
-          }
-        }
-      }
-    }
-  }
-
-  @objc private func modLoaderChanged() {
-    for (index, button) in modLoaderRadioButtons.enumerated() where button.state == .on {
-      selectedModLoader = ModLoader.allCases[index]
-      break
-    }
-
-    // Show/hide description label
-    modLoaderDescriptionLabel.isHidden = (selectedModLoader == .NONE)
-
-    // Load mod loader versions when a mod loader is selected
-    if selectedModLoader != .NONE {
-      // Hide the "select mod loader" placeholder (overlay)
-      modLoaderPlaceholder.isHidden = true
-      // Hide version placeholder initially (will show if loading fails)
-      modLoaderVersionPlaceholder.isHidden = true
-      // Load versions
-      loadModLoaderVersions()
-    } else {
-      // Show the "select mod loader" placeholder (overlay on table)
-      modLoaderPlaceholder.isHidden = false
-      // Hide the "select version" placeholder (not applicable when NONE is selected)
-      modLoaderVersionPlaceholder.isHidden = true
-      // Clear data
-      modLoaderVersionTableView.updateItems([])
-      availableModLoaderVersions = []
-      selectedModLoaderVersion = nil
-    }
-  }
-
-  private func loadModLoaderVersions() {
-    guard let minecraftVersion = selectedVersionId,
-          selectedModLoader != .NONE else {
-      return
-    }
-
-    // Show loading indicator and hide placeholder
-    modLoaderVersionLoadingIndicator.isHidden = false
-    modLoaderVersionLoadingIndicator.startAnimation(nil)
-    modLoaderVersionPlaceholder.isHidden = true
-    modLoaderVersionTableView.tableView.isEnabled = false
-
-    Task {
-      do {
-        let loader = try modLoaderManager.getModLoader(id: selectedModLoader.rawValue)
-        let versions = try await loader.getLoaderVersions(
-          minecraftVersion: minecraftVersion,
-          stableOnly: true
-        )
-
-        await MainActor.run {
-          self.availableModLoaderVersions = versions
-          let loaderItems = versions.map { LoaderVersionItem(versionId: $0) }
-
-          if !loaderItems.isEmpty {
-            self.modLoaderVersionTableView.updateItems(loaderItems)
-            self.modLoaderVersionTableView.selectItem(at: 0)
-            self.selectedModLoaderVersion = versions[0]
-            self.modLoaderVersionLabel.isHidden = false
-            self.modLoaderVersionTableView.isHidden = false
-          } else {
-            self.modLoaderVersionTableView.updateItems([])
-            self.selectedModLoaderVersion = nil
-            self.modLoaderVersionLabel.isHidden = false
-            self.modLoaderVersionTableView.isHidden = false
-          }
-
-          self.modLoaderVersionLoadingIndicator.stopAnimation(nil)
-          self.modLoaderVersionLoadingIndicator.isHidden = true
-          self.modLoaderVersionTableView.tableView.isEnabled = true
-        }
-      } catch {
-        await MainActor.run {
-          Logger.shared.error("Failed to load mod loader versions: \(error)", category: "AddInstance")
-          self.modLoaderVersionTableView.updateItems([])
-          self.modLoaderVersionLoadingIndicator.stopAnimation(nil)
-          self.modLoaderVersionLoadingIndicator.isHidden = true
-          self.modLoaderVersionPlaceholder.isHidden = false
-          self.modLoaderVersionTableView.tableView.isEnabled = false
-
-          // Error alert removed - silently fail and show placeholder instead
-        }
-      }
-    }
-  }
-
-  // MARK: - CurseForge Methods
-
-  @objc private func curseForgeSearchChanged() {
-    // Debounce search input
-    searchDebounceTimer?.invalidate()
-    searchDebounceTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
-      self?.performCurseForgeSearch()
-    }
-  }
-
-  private func performCurseForgeSearch() {
-    currentSearchTerm = curseForgeSearchField.stringValue
-    loadCurseForgeModpacks(reset: true)
-  }
-
-  @objc private func curseForgeSortChanged() {
-    let selectedIndex = curseForgeSortPopup.indexOfSelectedItem
-    guard selectedIndex >= 0, selectedIndex < CurseForgeSortMethod.allCases.count else { return }
-    currentSortMethod = CurseForgeSortMethod.allCases[selectedIndex]
-    loadCurseForgeModpacks(reset: true)
-  }
-
-  private func loadCurseForgeModpacks(reset: Bool) {
-    if reset {
-      currentPaginationIndex = 0
-      curseForgeModpacks.removeAll()
-      hasMoreResults = true
-    }
-
-    guard !isLoadingMore else { return }
-    guard hasMoreResults else { return }
-
-    isLoadingMore = true
-
-    // Show loading indicator
-    curseForgeLoadingIndicator.isHidden = false
-    curseForgeLoadingIndicator.startAnimation(nil)
-    curseForgeEmptyLabel.isHidden = true
-
-    Task {
-      do {
-        let searchTerm = currentSearchTerm.isEmpty ? nil : currentSearchTerm
-        let categoryIds = selectedCategoryIds.isEmpty ? nil : Array(selectedCategoryIds)
-        let response = try await curseForgeAPI.searchModpacks(
-          searchTerm: searchTerm,
-          sortMethod: currentSortMethod,
-          offset: currentPaginationIndex,
-          categoryIds: categoryIds
-        )
-
-        await MainActor.run {
-          // Update modpacks list
-          if reset {
-            self.curseForgeModpacks = response.data
-          } else {
-            self.curseForgeModpacks.append(contentsOf: response.data)
-          }
-
-          // Update pagination state
-          self.currentPaginationIndex = response.pagination.nextIndex
-          self.hasMoreResults = response.pagination.hasMoreResults
-
-          // Update table view
-          let modpackItems = self.curseForgeModpacks.map { ModpackItem(modpack: $0) }
-          self.curseForgeModpackTableView.updateItems(modpackItems)
-
-          // Hide loading indicator
-          self.curseForgeLoadingIndicator.stopAnimation(nil)
-          self.curseForgeLoadingIndicator.isHidden = true
-          self.isLoadingMore = false
-
-          // Show empty message if no results
-          if self.curseForgeModpacks.isEmpty {
-            self.curseForgeEmptyLabel.isHidden = false
-          } else {
-            self.curseForgeEmptyLabel.isHidden = true
-          }
-        }
-      } catch {
-        await MainActor.run {
-          Logger.shared.error("Failed to load CurseForge modpacks: \(error)", category: "AddInstance")
-          self.curseForgeLoadingIndicator.stopAnimation(nil)
-          self.curseForgeLoadingIndicator.isHidden = true
-          self.isLoadingMore = false
-
-          // Show error alert
-          let alert = NSAlert()
-          alert.messageText = Localized.AddInstance.errorLoadModpacksFailed
-          alert.informativeText = error.localizedDescription
-          alert.alertStyle = .warning
-          alert.addButton(withTitle: Localized.AddInstance.okButton)
-
-          if let window = self.view.window {
-            alert.beginSheetModal(for: window)
-          } else {
-            alert.runModal()
-          }
-        }
-      }
-    }
-  }
-
-  /// Load available versions for selected modpack
-  private func loadModpackVersions(for modpack: CurseForgeModpack) {
-    // Clear previous selections
-    curseForgeVersionPopup.removeAllItems()
-    selectedModpackFile = nil
-    curseForgeVersionPopup.isEnabled = false
-
-    // Show loading indicator
-    curseForgeVersionLoadingIndicator.isHidden = false
-    curseForgeVersionLoadingIndicator.startAnimation(nil)
-
-    Task {
-      do {
-        let files = try await curseForgeAPI.getModpackFiles(modpackId: modpack.id)
-
-        await MainActor.run {
-          self.modpackFiles = files
-
-          // Add versions to popup
-          for file in files {
-            self.curseForgeVersionPopup.addItem(withTitle: file.versionDisplayString)
-          }
-
-          // Select first version by default
-          if !files.isEmpty {
-            self.curseForgeVersionPopup.selectItem(at: 0)
-            self.selectedModpackFile = files[0]
-            self.curseForgeVersionPopup.isEnabled = true
-          }
-
-          // Hide loading indicator
-          self.curseForgeVersionLoadingIndicator.stopAnimation(nil)
-          self.curseForgeVersionLoadingIndicator.isHidden = true
-        }
-      } catch {
-        await MainActor.run {
-          Logger.shared.error("Failed to load modpack versions: \(error)", category: "AddInstance")
-          self.curseForgeVersionLoadingIndicator.stopAnimation(nil)
-          self.curseForgeVersionLoadingIndicator.isHidden = true
-
-          // Show error in popup
-          self.curseForgeVersionPopup.addItem(withTitle: "Failed to load versions")
-          self.curseForgeVersionPopup.isEnabled = false
-        }
-      }
-    }
-  }
-
-  // Track whether CurseForge content has been loaded
-  private var curseForgeContentLoaded = false
-
-  /// Lazy load CurseForge content only when needed
-  private func loadCurseForgeContentIfNeeded() {
-    guard !curseForgeContentLoaded else { return }
-    curseForgeContentLoaded = true
-
-    Logger.shared.info("Loading CurseForge content for the first time", category: "AddInstance")
-    loadCategories()
-    loadCurseForgeModpacks(reset: true)
-  }
-
-  @objc private func curseForgeVersionChanged() {
-    let selectedIndex = curseForgeVersionPopup.indexOfSelectedItem
-    guard selectedIndex >= 0, selectedIndex < modpackFiles.count else {
-      selectedModpackFile = nil
-      return
-    }
-    selectedModpackFile = modpackFiles[selectedIndex]
-  }
-
-  // MARK: - Category Loading
-
-  /// Load available categories for modpacks
-  private func loadCategories() {
-    Task {
-      do {
-        let loadedCategories = try await curseForgeAPI.getCategories()
-        Logger.shared.info("Loaded \(loadedCategories.count) categories from API", category: "AddInstance")
-
-        await MainActor.run {
-          // Show all categories (not just root categories)
-          // CurseForge API may not always set parentCategoryId correctly
-          self.categories = loadedCategories
-          Logger.shared.info("Displaying \(self.categories.count) categories in filter panel", category: "AddInstance")
-          self.createCategoryCheckboxes()
-        }
-      } catch {
-        await MainActor.run {
-          Logger.shared.error("Failed to load categories: \(error)", category: "AddInstance")
-          // Show error in UI by adding an error label to filter panel
-          self.showCategoryLoadError()
-        }
-      }
-    }
-  }
-
-  /// Show error message when categories fail to load
-  private func showCategoryLoadError() {
-    let errorLabel = DisplayLabel(
-      text: Localized.AddInstance.errorLoadCategoriesFailed,
-      font: Fonts.caption,
-      textColor: .systemRed,
-      alignment: .left
-    )
-    curseForgeFilterStackView.addArrangedSubview(curseForgeFilterTitleLabel)
-    curseForgeFilterStackView.addArrangedSubview(errorLabel)
-  }
-
-  /// Create checkboxes for each category
-  private func createCategoryCheckboxes() {
-    Logger.shared.debug("Creating category checkboxes for \(categories.count) categories", category: "AddInstance")
-
-    // Clear existing checkboxes
-    curseForgeFilterStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-    categoryCheckboxes.removeAll()
-
-    // Set stackView constraints - use lessThanOrEqualTo to prevent window expansion
-    curseForgeFilterStackView.snp.remakeConstraints { make in
-      make.top.bottom.equalToSuperview()
-      make.left.equalToSuperview()
-      make.width.lessThanOrEqualTo(curseForgeFilterScrollView.snp.width).offset(-Spacing.standard)
-      make.width.greaterThanOrEqualTo(LocalLayout.filterMinWidth)
-    }
-
-    // Add title label
-    curseForgeFilterStackView.addArrangedSubview(curseForgeFilterTitleLabel)
-
-    // Create checkbox for each category
-    for category in categories {
-      Logger.shared.debug("Adding checkbox for category: \(category.name) (ID: \(category.id))", category: "AddInstance")
-      let checkbox = NSButton(
-        checkboxWithTitle: category.name,
-        target: self,
-        action: #selector(categoryCheckboxChanged(_:))
-      )
-      checkbox.font = Fonts.small
-      checkbox.tag = category.id
-      checkbox.lineBreakMode = .byTruncatingTail
-      // Ensure checkbox doesn't get compressed
-      checkbox.setContentCompressionResistancePriority(.required, for: .horizontal)
-
-      categoryCheckboxes[category.id] = checkbox
-      curseForgeFilterStackView.addArrangedSubview(checkbox)
-    }
-
-    Logger.shared.debug("Created \(categoryCheckboxes.count) category checkboxes", category: "AddInstance")
-  }
-
-  @objc private func categoryCheckboxChanged(_ sender: NSButton) {
-    let categoryId = sender.tag
-
-    if sender.state == .on {
-      selectedCategoryIds.insert(categoryId)
-    } else {
-      selectedCategoryIds.remove(categoryId)
-    }
-
-    // Reload modpacks with new filter
-    loadCurseForgeModpacks(reset: true)
-  }
-
   @objc private func showHelp() {
-
     guard let url = URL(string: "https://github.com/LemniAnvil/Launcher/wiki") else { return }
     NSWorkspace.shared.open(url)
   }
@@ -1803,7 +378,7 @@ class AddInstanceViewController: NSViewController {
 
   @objc private func createInstance() {
     guard
-      let name = nameTextField.stringValue.trimmingCharacters(
+      let name = instanceInfoView.name.trimmingCharacters(
         in: .whitespacesAndNewlines
       ).nonEmpty
     else {
@@ -1811,14 +386,14 @@ class AddInstanceViewController: NSViewController {
       return
     }
 
-    guard let selectedVersion = selectedVersionId else {
+    guard let selectedVersion = customInstanceView.selectedVersionId else {
       showError(Localized.AddInstance.errorNoVersionSelected)
       return
     }
 
     do {
-      // Get selected mod loader
-      let modLoaderString = selectedModLoader == .NONE ? nil : selectedModLoader.rawValue
+      let selectedLoader = customInstanceView.selectedModLoader
+      let modLoaderString = selectedLoader == .NONE ? nil : selectedLoader.rawValue
 
       let instance = try instanceManager.createInstance(
         name: name,
@@ -1865,69 +440,52 @@ extension AddInstanceViewController: NSTableViewDelegate {
     }
   }
 
-  /// Update name field from selected version if appropriate
   private func updateNameFromVersion(_ versionId: String) {
-    let currentName = nameTextField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+    let currentName = instanceInfoView.name.trimmingCharacters(in: .whitespacesAndNewlines)
 
-    // Update name if:
-    // 1. Name field is empty, OR
-    // 2. Current name matches a version ID pattern (likely auto-filled before)
-    //    Check if current name matches any version in the version manager
     let isCurrentNameAVersionId = versionManager.versions.contains { $0.id == currentName }
-
     let shouldUpdate = currentName.isEmpty || isCurrentNameAVersionId
 
     if shouldUpdate {
-      nameTextField.stringValue = versionId
+      instanceInfoView.name = versionId
     }
   }
 
   private func updateContentView() {
-    // Hide all content views first
-    customContentView.isHidden = true
+    customInstanceView.isHidden = true
     importContentView.isHidden = true
     atLauncherContentView.isHidden = true
-    curseForgeContentView.isHidden = true
+    curseForgeView.isHidden = true
     ftbLegacyContentView.isHidden = true
     ftbImportContentView.isHidden = true
     modrinthContentView.isHidden = true
     technicContentView.isHidden = true
 
-    // Update icon based on selected category
-    let config = NSImage.SymbolConfiguration(pointSize: SymbolSize.large, weight: .regular)
-    let image = NSImage(
-      systemSymbolName: selectedCategory.iconName,
-      accessibilityDescription: nil
-    )
-    iconImageView.image = image?.withSymbolConfiguration(config)
-
-    // Update icon color and show appropriate content view
     switch selectedCategory {
     case .custom:
-      iconImageView.contentTintColor = .systemGreen
-      customContentView.isHidden = false
+      instanceInfoView.setIcon(symbolName: selectedCategory.iconName, tint: .systemGreen)
+      customInstanceView.isHidden = false
     case .import1:
-      iconImageView.contentTintColor = .systemBlue
+      instanceInfoView.setIcon(symbolName: selectedCategory.iconName, tint: .systemBlue)
       importContentView.isHidden = false
     case .atLauncher:
-      iconImageView.contentTintColor = .systemOrange
+      instanceInfoView.setIcon(symbolName: selectedCategory.iconName, tint: .systemOrange)
       atLauncherContentView.isHidden = false
     case .curseForge:
-      iconImageView.contentTintColor = .systemRed
-      curseForgeContentView.isHidden = false
-      // Lazy load CurseForge content when first selected
-      loadCurseForgeContentIfNeeded()
+      instanceInfoView.setIcon(symbolName: selectedCategory.iconName, tint: .systemRed)
+      curseForgeView.isHidden = false
+      curseForgeView.loadIfNeeded()
     case .ftbLegacy:
-      iconImageView.contentTintColor = .systemPurple
+      instanceInfoView.setIcon(symbolName: selectedCategory.iconName, tint: .systemPurple)
       ftbLegacyContentView.isHidden = false
     case .ftbImport:
-      iconImageView.contentTintColor = .systemPurple
+      instanceInfoView.setIcon(symbolName: selectedCategory.iconName, tint: .systemPurple)
       ftbImportContentView.isHidden = false
     case .modrinth:
-      iconImageView.contentTintColor = .systemGreen
+      instanceInfoView.setIcon(symbolName: selectedCategory.iconName, tint: .systemGreen)
       modrinthContentView.isHidden = false
     case .technic:
-      iconImageView.contentTintColor = .systemIndigo
+      instanceInfoView.setIcon(symbolName: selectedCategory.iconName, tint: .systemIndigo)
       technicContentView.isHidden = false
     }
   }
@@ -1940,5 +498,4 @@ extension String {
     let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
     return trimmed.isEmpty ? nil : trimmed
   }
-  // swiftlint:disable:next file_length
 }
