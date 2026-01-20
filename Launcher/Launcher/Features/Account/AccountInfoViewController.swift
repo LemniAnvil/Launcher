@@ -214,7 +214,7 @@ class AccountInfoViewController: NSViewController {
       make.top.equalToSuperview().offset(20)
       make.left.equalToSuperview().offset(20)
       make.bottom.equalToSuperview().offset(-20)
-      make.width.equalTo(250)
+      make.width.equalTo(210)
     }
 
     verticalSeparator.snp.makeConstraints { make in

@@ -24,7 +24,7 @@ final class SkinCollectionViewItem: NSCollectionViewItem {
 
   private let thumbnailView: NSImageView = {
     let imageView = NSImageView()
-    imageView.imageScaling = .scaleProportionallyUpOrDown
+    imageView.imageScaling = .scaleAxesIndependently
     imageView.wantsLayer = true
     imageView.layer?.cornerRadius = 6
     imageView.layer?.masksToBounds = true
@@ -71,7 +71,7 @@ final class SkinCollectionViewItem: NSCollectionViewItem {
   }
 
   func configure(with skin: LauncherSkinAsset) {
-    nameLabel.stringValue = skin.name
+    nameLabel.stringValue = skin.displayName
     let sizeText = ByteCountFormatter.string(fromByteCount: skin.fileSize, countStyle: .file)
     let formatter = DateFormatter()
     formatter.dateStyle = .short
@@ -79,10 +79,20 @@ final class SkinCollectionViewItem: NSCollectionViewItem {
     let dateText = formatter.string(from: skin.lastModified)
     detailLabel.stringValue = "\(skin.kind.displayName) • \(sizeText) • \(dateText)"
 
-    if let image = NSImage(contentsOf: skin.fileURL) {
-      thumbnailView.image = image
+    // Extract and display head portion for skins, full image for capes
+    if skin.kind == .skin {
+      if let headImage = SkinHeadRenderer.extractHeadScaled(from: skin.fileURL, targetSize: NSSize(width: 72, height: 72)) {
+        thumbnailView.image = headImage
+      } else {
+        thumbnailView.image = NSImage(size: NSSize(width: 64, height: 64))
+      }
     } else {
-      thumbnailView.image = NSImage(size: NSSize(width: 64, height: 64))
+      // For capes, show the full image
+      if let image = NSImage(contentsOf: skin.fileURL) {
+        thumbnailView.image = image
+      } else {
+        thumbnailView.image = NSImage(size: NSSize(width: 64, height: 64))
+      }
     }
   }
 }
