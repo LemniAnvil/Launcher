@@ -40,9 +40,13 @@ class SettingsTabViewController: NSViewController {
     let downloadTab = NSTabViewItem(viewController: DownloadSettingsViewController())
     downloadTab.label = Localized.Settings.downloadTabTitle
 
+    let storageTab = NSTabViewItem(viewController: StorageMaintenanceSettingsViewController())
+    storageTab.label = Localized.Settings.storageTabTitle
+
     // Add tabs
     tabView.addTabViewItem(proxyTab)
     tabView.addTabViewItem(downloadTab)
+    tabView.addTabViewItem(storageTab)
 
     // Layout
     tabView.translatesAutoresizingMaskIntoConstraints = false

@@ -163,6 +163,49 @@ class DownloadSettingsViewController: NSViewController {
     return label
   }()
 
+  private let progressUpdateLabel: DisplayLabel = {
+    let label = DisplayLabel(
+      text: Localized.Settings.progressUpdateLabel,
+      font: .systemFont(ofSize: 13),
+      textColor: .labelColor,
+      alignment: .right
+    )
+    return label
+  }()
+
+  private lazy var progressUpdateSlider: NSSlider = {
+    let slider = NSSlider()
+    slider.minValue = 0.1
+    slider.maxValue = 5.0
+    slider.doubleValue = downloadSettingsManager.progressUpdateInterval
+    slider.numberOfTickMarks = 0
+    slider.isContinuous = true
+    slider.target = self
+    slider.action = #selector(progressUpdateSliderChanged)
+    return slider
+  }()
+
+  private lazy var progressUpdateValueLabel: DisplayLabel = {
+    let value = String(format: "%.1f", downloadSettingsManager.progressUpdateInterval)
+    let label = DisplayLabel(
+      text: "\(value)s",
+      font: .systemFont(ofSize: 13),
+      textColor: .labelColor,
+      alignment: .center
+    )
+    return label
+  }()
+
+  private let progressUpdateDescriptionLabel: DisplayLabel = {
+    let label = DisplayLabel(
+      text: Localized.Settings.progressUpdateDescription,
+      font: .systemFont(ofSize: 11),
+      textColor: .secondaryLabelColor,
+      alignment: .left
+    )
+    return label
+  }()
+
   private lazy var useV2ManifestCheckbox: NSButton = {
     let checkbox = NSButton(
       checkboxWithTitle: Localized.Settings.useV2Manifest,
@@ -212,6 +255,10 @@ class DownloadSettingsViewController: NSViewController {
     view.addSubview(resourceTimeoutSlider)
     view.addSubview(resourceTimeoutValueLabel)
     view.addSubview(resourceTimeoutDescriptionLabel)
+    view.addSubview(progressUpdateLabel)
+    view.addSubview(progressUpdateSlider)
+    view.addSubview(progressUpdateValueLabel)
+    view.addSubview(progressUpdateDescriptionLabel)
     view.addSubview(useV2ManifestCheckbox)
     view.addSubview(v2ManifestDescriptionLabel)
 
@@ -305,9 +352,35 @@ class DownloadSettingsViewController: NSViewController {
       make.right.equalToSuperview().offset(-20)
     }
 
+    // Progress update interval row
+    progressUpdateLabel.snp.makeConstraints { make in
+      make.top.equalTo(resourceTimeoutDescriptionLabel.snp.bottom).offset(16)
+      make.left.equalToSuperview().offset(20)
+      make.width.equalTo(160)
+    }
+
+    progressUpdateSlider.snp.makeConstraints { make in
+      make.centerY.equalTo(progressUpdateLabel)
+      make.left.equalTo(progressUpdateLabel.snp.right).offset(12)
+      make.right.equalTo(progressUpdateValueLabel.snp.left).offset(-12)
+      make.height.equalTo(24)
+    }
+
+    progressUpdateValueLabel.snp.makeConstraints { make in
+      make.centerY.equalTo(progressUpdateLabel)
+      make.right.equalToSuperview().offset(-20)
+      make.width.equalTo(40)
+    }
+
+    progressUpdateDescriptionLabel.snp.makeConstraints { make in
+      make.top.equalTo(progressUpdateLabel.snp.bottom).offset(4)
+      make.left.equalToSuperview().offset(40)
+      make.right.equalToSuperview().offset(-20)
+    }
+
     // V2 Manifest checkbox
     useV2ManifestCheckbox.snp.makeConstraints { make in
-      make.top.equalTo(resourceTimeoutDescriptionLabel.snp.bottom).offset(16)
+      make.top.equalTo(progressUpdateDescriptionLabel.snp.bottom).offset(16)
       make.left.equalToSuperview().offset(20)
     }
 
@@ -372,6 +445,18 @@ class DownloadSettingsViewController: NSViewController {
 
     Logger.shared.info(
       "Resource timeout set to \(timeout)s",
+      category: "Settings"
+    )
+  }
+
+  @objc private func progressUpdateSliderChanged() {
+    let rounded = (progressUpdateSlider.doubleValue * 10).rounded() / 10
+    progressUpdateSlider.doubleValue = rounded
+    progressUpdateValueLabel.stringValue = String(format: "%.1fs", rounded)
+    downloadSettingsManager.setProgressUpdateInterval(rounded)
+
+    Logger.shared.info(
+      "Progress update interval set to \(String(format: "%.1f", rounded))s",
       category: "Settings"
     )
   }

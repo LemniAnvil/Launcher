@@ -35,7 +35,9 @@ class DownloadManager: NSObject, ObservableObject {
   }
 
   private let downloadQueue = DispatchQueue(label: "com.launcher.download", attributes: .concurrent)
-  private let progressUpdateInterval: TimeInterval = 0.5
+  private var progressUpdateInterval: TimeInterval {
+    downloadSettingsManager.progressUpdateInterval
+  }
   private var lastProgressUpdate = Date()
   private var lastDownloadedBytes: Int64 = 0
 

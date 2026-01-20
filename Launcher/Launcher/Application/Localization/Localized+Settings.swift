@@ -125,6 +125,7 @@ extension Localized {
     // Tab Titles
     static let proxyTabTitle = String(localized: "Network Proxy", comment: "[Tab] Network proxy settings tab title.")
     static let downloadTabTitle = String(localized: "Download", comment: "[Tab] Download settings tab title.")
+    static let storageTabTitle = String(localized: "Storage & Maintenance", comment: "[Tab] Storage and maintenance settings tab title.")
 
     // Proxy Section
     static let proxySectionTitle = String(localized: "Network Proxy", comment: "[Text] Proxy section title.")
@@ -145,8 +146,43 @@ extension Localized {
     static let requestTimeoutDescription = String(localized: "Timeout for download requests (5-120 seconds)", comment: "[Text] Request timeout description.")
     static let resourceTimeoutLabel = String(localized: "Resource Timeout:", comment: "[Label] Resource timeout label.")
     static let resourceTimeoutDescription = String(localized: "Maximum time for downloads (60-600 seconds)", comment: "[Text] Resource timeout description.")
+    static let progressUpdateLabel = String(localized: "Progress Update Interval:", comment: "[Label] Progress update interval label.")
+    static let progressUpdateDescription = String(localized: "UI update frequency during downloads (0.1-5.0 seconds)", comment: "[Text] Progress update interval description.")
     static let useV2Manifest = String(localized: "Use V2 Manifest API", comment: "[Checkbox] Use V2 manifest API checkbox.")
     static let v2ManifestDescription = String(localized: "Use Piston Meta API instead of launcher meta", comment: "[Text] V2 manifest description.")
+
+    // Storage & Maintenance Section
+    static let storageSectionTitle = String(localized: "Storage Locations", comment: "[Text] Storage locations section title.")
+    static let maintenanceSectionTitle = String(localized: "Maintenance", comment: "[Text] Maintenance section title.")
+    static let pathMinecraftLabel = String(localized: "Minecraft Directory:", comment: "[Label] Minecraft directory label.")
+    static let pathLauncherLabel = String(localized: "Launcher Data:", comment: "[Label] Launcher data directory label.")
+    static let pathInstancesLabel = String(localized: "Instances Directory:", comment: "[Label] Instances directory label.")
+    static let pathCacheLabel = String(localized: "Cache Directory:", comment: "[Label] Cache directory label.")
+    static let pathLogsLabel = String(localized: "Logs Directory:", comment: "[Label] Logs directory label.")
+    static let pathTempLabel = String(localized: "Temporary Files:", comment: "[Label] Temporary files directory label.")
+    static let openInFinder = String(localized: "Open in Finder", comment: "[Button] Open directory in Finder.")
+    static let refreshSizesButton = String(localized: "Refresh Sizes", comment: "[Button] Refresh storage sizes.")
+    static let clearCacheButton = String(localized: "Clear Cache", comment: "[Button] Clear cache button.")
+    static let clearTempButton = String(localized: "Clear Temporary Files", comment: "[Button] Clear temporary files button.")
+    static let cacheSizeLabel = String(localized: "Cache Size:", comment: "[Label] Cache size label.")
+    static let tempSizeLabel = String(localized: "Temp Size:", comment: "[Label] Temporary files size label.")
+    static let sizeCalculating = String(localized: "Calculating...", comment: "[Text] Size calculating state.")
+    static let sizeUnknown = String(localized: "Size Unknown", comment: "[Text] Size unknown state.")
+    static let maintenanceStatusReady = String(localized: "Maintenance ready", comment: "[Status] Maintenance ready.")
+    static let maintenanceStatusRefreshing = String(localized: "Refreshing sizes...", comment: "[Status] Refreshing storage sizes.")
+    static let maintenanceStatusCleaning = String(localized: "Cleaning...", comment: "[Status] Cleaning files.")
+    static let maintenanceStatusCacheCleared = String(localized: "Cache cleared", comment: "[Status] Cache cleared.")
+    static let maintenanceStatusTempCleared = String(localized: "Temporary files cleared", comment: "[Status] Temporary files cleared.")
+
+    static func maintenanceStatusFailed(_ error: String) -> String {
+      String(localized: "Operation failed: \(error)", comment: "[Status] Maintenance failed.")
+    }
+
+    static let clearCacheConfirmTitle = String(localized: "Clear Cache", comment: "[Alert] Clear cache confirmation title.")
+    static let clearCacheConfirmMessage = String(localized: "This will remove cached files used for version lists and downloads.", comment: "[Alert] Clear cache confirmation message.")
+    static let clearTempConfirmTitle = String(localized: "Clear Temporary Files", comment: "[Alert] Clear temp confirmation title.")
+    static let clearTempConfirmMessage = String(localized: "This will remove temporary files created during downloads.", comment: "[Alert] Clear temp confirmation message.")
+    static let cancelButton = String(localized: "Cancel", comment: "[Button] Cancel button.")
 
     // Buttons
     static let applyButton = String(localized: "Apply Settings", comment: "[Button] Apply settings button.")

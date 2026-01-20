@@ -1625,6 +1625,50 @@
         }
       }
     },
+    "Cache cleared" : {
+      "comment" : "[Status] Cache cleared.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "缓存已清理"
+          }
+        }
+      }
+    },
+    "Cache Directory:" : {
+      "comment" : "[Label] Cache directory label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "缓存目录："
+          }
+        }
+      }
+    },
+    "Cache Size:" : {
+      "comment" : "[Label] Cache size label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "缓存大小："
+          }
+        }
+      }
+    },
+    "Calculating..." : {
+      "comment" : "[Text] Size calculating state.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计算中..."
+          }
+        }
+      }
+    },
     "Cancel" : {
       "comment" : "[Button] Cancel\n[Button] Cancel button.\n[Button] Cancel edit button.\n[Button] Cancel login.",
       "localizations" : {
@@ -1724,6 +1768,28 @@
         }
       }
     },
+    "Cleaning..." : {
+      "comment" : "[Status] Cleaning files.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在清理..."
+          }
+        }
+      }
+    },
+    "Clear Cache" : {
+      "comment" : "[Alert] Clear cache confirmation title.\n[Button] Clear cache button.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清理缓存"
+          }
+        }
+      }
+    },
     "Clear Default Account" : {
       "comment" : "[Menu] Clear default account.",
       "localizations" : {
@@ -1742,6 +1808,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "清除日志"
+          }
+        }
+      }
+    },
+    "Clear Temporary Files" : {
+      "comment" : "[Alert] Clear temp confirmation title.\n[Button] Clear temporary files button.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清理临时文件"
           }
         }
       }
@@ -3073,6 +3150,17 @@
         }
       }
     },
+    "Instances Directory:" : {
+      "comment" : "[Label] Instances directory label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "实例目录："
+          }
+        }
+      }
+    },
     "Invalid Configuration" : {
       "comment" : "[Alert] Invalid proxy configuration title.",
       "localizations" : {
@@ -3157,6 +3245,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "用户名无效"
+          }
+        }
+      }
+    },
+    "Java" : {
+      "comment" : "[Tab] Java settings tab title.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Java"
           }
         }
       }
@@ -3304,6 +3404,17 @@
         }
       }
     },
+    "Launcher Data:" : {
+      "comment" : "[Label] Launcher data directory label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动器数据："
+          }
+        }
+      }
+    },
     "Launching game..." : {
       "comment" : "[Status] Launching game.",
       "localizations" : {
@@ -3399,6 +3510,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "登录时间: %@"
+          }
+        }
+      }
+    },
+    "Logs Directory:" : {
+      "comment" : "[Label] Logs directory label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日志目录："
+          }
+        }
+      }
+    },
+    "Maintenance" : {
+      "comment" : "[Text] Maintenance section title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "维护"
+          }
+        }
+      }
+    },
+    "Maintenance ready" : {
+      "comment" : "[Status] Maintenance ready.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "就绪"
           }
         }
       }
@@ -3509,6 +3653,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Minecraft %@ 已成功下载！"
+          }
+        }
+      }
+    },
+    "Minecraft Directory:" : {
+      "comment" : "[Label] Minecraft directory label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minecraft 目录："
           }
         }
       }
@@ -3953,6 +4108,17 @@
         }
       }
     },
+    "Open in Finder" : {
+      "comment" : "[Button] Open directory in Finder.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在访达中打开"
+          }
+        }
+      }
+    },
     "Open Instance Folder (F)" : {
       "comment" : "[Button] Open instance folder from sidebar.",
       "localizations" : {
@@ -3993,6 +4159,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在打开浏览器进行认证..."
+          }
+        }
+      }
+    },
+    "Operation failed: %@" : {
+      "comment" : "[Status] Maintenance failed.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "操作失败：%@"
           }
         }
       }
@@ -4103,6 +4280,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在处理认证响应..."
+          }
+        }
+      }
+    },
+    "Progress Update Interval:" : {
+      "comment" : "[Label] Progress update interval label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "进度更新间隔："
           }
         }
       }
@@ -4300,6 +4488,17 @@
         }
       }
     },
+    "Refresh Sizes" : {
+      "comment" : "[Button] Refresh storage sizes.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刷新大小"
+          }
+        }
+      }
+    },
     "Refresh Successful" : {
       "comment" : "[Alert] Refresh successful title.",
       "localizations" : {
@@ -4340,6 +4539,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在刷新授权令牌..."
+          }
+        }
+      }
+    },
+    "Refreshing sizes..." : {
+      "comment" : "[Status] Refreshing storage sizes.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在刷新大小..."
           }
         }
       }
@@ -4674,6 +4884,17 @@
         }
       }
     },
+    "Size Unknown" : {
+      "comment" : "[Text] Size unknown state.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知"
+          }
+        }
+      }
+    },
     "Skin activated successfully!" : {
       "comment" : "[Success] Skin activated",
       "localizations" : {
@@ -4828,6 +5049,28 @@
         }
       }
     },
+    "Storage & Maintenance" : {
+      "comment" : "[Tab] Storage and maintenance settings tab title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "存储与维护"
+          }
+        }
+      }
+    },
+    "Storage Locations" : {
+      "comment" : "[Text] Storage locations section title.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "存储位置"
+          }
+        }
+      }
+    },
     "Success" : {
       "comment" : "[Alert] Success title",
       "localizations" : {
@@ -4874,6 +5117,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "系统代理检测并已应用"
+          }
+        }
+      }
+    },
+    "Temp Size:" : {
+      "comment" : "[Label] Temporary files size label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "临时大小："
+          }
+        }
+      }
+    },
+    "Temporary files cleared" : {
+      "comment" : "[Status] Temporary files cleared.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "临时文件已清理"
+          }
+        }
+      }
+    },
+    "Temporary Files:" : {
+      "comment" : "[Label] Temporary files directory label.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "临时文件："
           }
         }
       }
@@ -4940,6 +5216,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "这将隐藏你的披风。你可以随时重新装备它。"
+          }
+        }
+      }
+    },
+    "This will remove cached files used for version lists and downloads." : {
+      "comment" : "[Alert] Clear cache confirmation message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将删除版本列表和下载用的缓存文件。"
+          }
+        }
+      }
+    },
+    "This will remove temporary files created during downloads." : {
+      "comment" : "[Alert] Clear temp confirmation message.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将删除下载过程中产生的临时文件。"
           }
         }
       }
@@ -5017,6 +5315,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "类型："
+          }
+        }
+      }
+    },
+    "UI update frequency during downloads (0.1-5.0 seconds)" : {
+      "comment" : "[Text] Progress update interval description.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载时界面更新频率（0.1-5.0 秒）"
           }
         }
       }
