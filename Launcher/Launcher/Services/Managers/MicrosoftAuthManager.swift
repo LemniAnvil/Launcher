@@ -87,7 +87,8 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     self.authClient = MicrosoftAuthClient(
       clientID: configuration.clientID,
       redirectURI: configuration.redirectURI,
-      scope: configuration.scope
+      scope: configuration.scope,
+      session: URLSessionFactory.createSession()
     )
   }
 
