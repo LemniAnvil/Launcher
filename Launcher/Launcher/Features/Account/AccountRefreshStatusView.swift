@@ -207,6 +207,8 @@ class AccountRefreshStatusView: NSView {
 
   private var currentStep: RefreshStep = .refreshingToken
   private var currentLoginStep: LoginStep = .gettingToken
+  private var lastRefreshStep: RefreshStep = .refreshingToken
+  private var lastLoginStep: LoginStep = .gettingToken
   private var isLoginMode: Bool = false
 
   private var stepLabelViews: [NSTextField] = []
@@ -314,6 +316,7 @@ class AccountRefreshStatusView: NSView {
 
   func startRefresh(accountName: String) {
     isLoginMode = false
+    lastRefreshStep = .refreshingToken
 
     // Show the view
     isHidden = false
@@ -351,6 +354,7 @@ class AccountRefreshStatusView: NSView {
 
   func startLogin(accountName: String) {
     isLoginMode = true
+    lastLoginStep = .gettingToken
 
     // Show the view
     isHidden = false
@@ -391,6 +395,15 @@ class AccountRefreshStatusView: NSView {
     statusLabel.stringValue = step.displayText
     statusLabel.textColor = step.color
 
+    let isFailed: Bool
+    if case .failed = step {
+      isFailed = true
+    } else {
+      isFailed = false
+      lastLoginStep = step
+    }
+    let displayStep = isFailed ? lastLoginStep : step
+
     // Update step labels
     let steps: [LoginStep] = [
       .gettingToken,
@@ -402,7 +415,7 @@ class AccountRefreshStatusView: NSView {
     ]
 
     for (index, loginStep) in steps.enumerated() where index < stepLabelViews.count {
-      updateLoginStepLabel(stepLabelViews[index], for: loginStep, currentStep: step)
+      updateLoginStepLabel(stepLabelViews[index], for: loginStep, currentStep: displayStep, isFailed: isFailed)
     }
 
     // Handle completion or failure
@@ -433,9 +446,18 @@ class AccountRefreshStatusView: NSView {
     statusLabel.stringValue = step.displayText
     statusLabel.textColor = step.color
 
+    let isFailed: Bool
+    if case .failed = step {
+      isFailed = true
+    } else {
+      isFailed = false
+      lastRefreshStep = step
+    }
+    let displayStep = isFailed ? lastRefreshStep : step
+
     // Update step labels
     for (stepKey, label) in stepLabels {
-      updateStepLabel(label, for: stepKey, currentStep: step)
+      updateStepLabel(label, for: stepKey, currentStep: displayStep, isFailed: isFailed)
     }
 
     // Handle completion or failure
@@ -478,21 +500,15 @@ class AccountRefreshStatusView: NSView {
     label.font = .systemFont(ofSize: 11)
     label.textColor = .secondaryLabelColor
     label.lineBreakMode = .byTruncatingTail
-    updateStepLabel(label, for: step, currentStep: currentStep)
+    updateStepLabel(label, for: step, currentStep: currentStep, isFailed: false)
     return label
   }
 
   private func updateStepLabel(
-    _ label: NSTextField, for step: RefreshStep, currentStep: RefreshStep
+    _ label: NSTextField, for step: RefreshStep, currentStep: RefreshStep, isFailed: Bool
   ) {
     let isCompleted = stepOrder(of: step) < stepOrder(of: currentStep)
     let isActive = step == currentStep
-    let isFailed: Bool
-    if case .failed = currentStep {
-      isFailed = true
-    } else {
-      isFailed = false
-    }
 
     if isFailed && isActive {
       label.stringValue = "❌ \(step.displayText)"
@@ -531,21 +547,15 @@ class AccountRefreshStatusView: NSView {
     label.font = .systemFont(ofSize: 11)
     label.textColor = .secondaryLabelColor
     label.lineBreakMode = .byTruncatingTail
-    updateLoginStepLabel(label, for: step, currentStep: currentLoginStep)
+    updateLoginStepLabel(label, for: step, currentStep: currentLoginStep, isFailed: false)
     return label
   }
 
   private func updateLoginStepLabel(
-    _ label: NSTextField, for step: LoginStep, currentStep: LoginStep
+    _ label: NSTextField, for step: LoginStep, currentStep: LoginStep, isFailed: Bool
   ) {
     let isCompleted = loginStepOrder(of: step) < loginStepOrder(of: currentStep)
     let isActive = step == currentStep
-    let isFailed: Bool
-    if case .failed = currentStep {
-      isFailed = true
-    } else {
-      isFailed = false
-    }
 
     if isFailed && isActive {
       label.stringValue = "❌ \(step.displayText)"
