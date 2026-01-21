@@ -72,7 +72,7 @@ extension MicrosoftAuthManager {
     return buildCompleteLoginResponse(
       profile: profile,
       accessToken: minecraftAuth.accessToken,
-      refreshToken: tokenResponse.refreshToken ?? ""
+      refreshToken: tokenResponse.refreshToken ?? refreshToken
     )
   }
 
