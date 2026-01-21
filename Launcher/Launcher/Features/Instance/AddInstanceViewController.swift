@@ -139,7 +139,7 @@ class AddInstanceViewController: NSViewController {
   }()
 
   private lazy var curseForgeView: CurseForgeView = {
-    let view = CurseForgeView(curseForgeAPI: CurseForgeAPIClient.shared)
+    let view = CurseForgeView(curseForgeAPI: CurseForgeClientProvider.makeClient())
     view.isHidden = true
     return view
   }()

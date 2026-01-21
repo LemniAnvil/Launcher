@@ -12,11 +12,11 @@ import Yatagarasu
 
 // Modpack data model for CurseForge table
 struct ModpackItem: Hashable {
-  let modpack: CurseForgeModpack
+  let modpack: CFMod
 
   var id: Int { modpack.id }
   var name: String { modpack.name }
-  var author: String { modpack.primaryAuthor }
+  var author: String { modpack.primaryAuthor?.name ?? "Unknown" }
   var downloads: String { modpack.formattedDownloadCount }
 
   func hash(into hasher: inout Hasher) {
@@ -25,6 +25,15 @@ struct ModpackItem: Hashable {
 
   static func == (lhs: Self, rhs: Self) -> Bool {
     return lhs.modpack.id == rhs.modpack.id
+  }
+}
+
+private extension CFFile {
+  var versionDisplayString: String {
+    if let mcVersion = gameVersions.first(where: { $0.first?.isNumber == true }) {
+      return "\(displayName) (MC \(mcVersion))"
+    }
+    return displayName
   }
 }
 
@@ -48,10 +57,10 @@ final class CurseForgeView: NSView {
 
   private let curseForgeAPI: CurseForgeAPIClient
 
-  private var curseForgeModpacks: [CurseForgeModpack] = []
-  private var selectedModpack: CurseForgeModpack?
-  private var modpackFiles: [CurseForgeModpackFile] = []
-  private(set) var selectedModpackFile: CurseForgeModpackFile?
+  private var curseForgeModpacks: [CFMod] = []
+  private var selectedModpack: CFMod?
+  private var modpackFiles: [CFFile] = []
+  private(set) var selectedModpackFile: CFFile?
   private var currentSearchTerm: String = ""
   private var currentSortMethod: CurseForgeSortMethod = .featured
   private var currentPaginationIndex: Int = 0
@@ -59,7 +68,7 @@ final class CurseForgeView: NSView {
   private var hasMoreResults: Bool = true
   private var searchDebounceTimer: Timer?
 
-  private var categories: [CurseForgeCategory] = []
+  private var categories: [CFCategory] = []
   private var selectedCategoryIds: Set<Int> = []
   private var categoryCheckboxes: [Int: NSButton] = [:]
 
@@ -228,7 +237,7 @@ final class CurseForgeView: NSView {
   }
 
   required init?(coder: NSCoder) {
-    self.curseForgeAPI = CurseForgeAPIClient.shared
+    self.curseForgeAPI = CurseForgeClientProvider.makeClient()
     super.init(coder: coder)
     setupUI()
   }
@@ -434,9 +443,11 @@ final class CurseForgeView: NSView {
         let searchTerm = currentSearchTerm.isEmpty ? nil : currentSearchTerm
         let categoryIds = selectedCategoryIds.isEmpty ? nil : Array(selectedCategoryIds)
         let response = try await curseForgeAPI.searchModpacks(
-          searchTerm: searchTerm,
-          sortMethod: currentSortMethod,
-          offset: currentPaginationIndex,
+          searchFilter: searchTerm,
+          sortField: mapSortField(currentSortMethod),
+          sortOrder: .desc,
+          index: currentPaginationIndex,
+          pageSize: 25,
           categoryIds: categoryIds
         )
 
@@ -447,8 +458,8 @@ final class CurseForgeView: NSView {
             self.curseForgeModpacks.append(contentsOf: response.data)
           }
 
-          self.currentPaginationIndex = response.pagination.nextIndex
-          self.hasMoreResults = response.pagination.hasMoreResults
+          self.currentPaginationIndex = response.pagination.nextIndex ?? self.currentPaginationIndex
+          self.hasMoreResults = response.pagination.hasNextPage
 
           let modpackItems = self.curseForgeModpacks.map { ModpackItem(modpack: $0) }
           self.curseForgeModpackTableView.updateItems(modpackItems)
@@ -486,7 +497,11 @@ final class CurseForgeView: NSView {
     }
   }
 
-  private func loadModpackVersions(for modpack: CurseForgeModpack) {
+  private func mapSortField(_ method: CurseForgeSortMethod) -> CFSortField {
+    return CFSortField(rawValue: method.rawValue) ?? .featured
+  }
+
+  private func loadModpackVersions(for modpack: CFMod) {
     curseForgeVersionPopup.removeAllItems()
     selectedModpackFile = nil
     curseForgeVersionPopup.isEnabled = false
@@ -496,18 +511,18 @@ final class CurseForgeView: NSView {
 
     Task {
       do {
-        let files = try await curseForgeAPI.getModpackFiles(modpackId: modpack.id)
+        let response = try await curseForgeAPI.fetchModFiles(modId: modpack.id)
 
         await MainActor.run {
-          self.modpackFiles = files
+          self.modpackFiles = response.data
 
-          for file in files {
+          for file in response.data {
             self.curseForgeVersionPopup.addItem(withTitle: file.versionDisplayString)
           }
 
-          if !files.isEmpty {
+          if !response.data.isEmpty {
             self.curseForgeVersionPopup.selectItem(at: 0)
-            self.selectedModpackFile = files[0]
+            self.selectedModpackFile = response.data[0]
             self.curseForgeVersionPopup.isEnabled = true
           }
 
@@ -532,11 +547,11 @@ final class CurseForgeView: NSView {
   private func loadCategories() {
     Task {
       do {
-        let loadedCategories = try await curseForgeAPI.getCategories()
-        Logger.shared.info("Loaded \(loadedCategories.count) categories from API", category: "AddInstance")
+        let response = try await curseForgeAPI.fetchCategories()
+        Logger.shared.info("Loaded \(response.data.count) categories from API", category: "AddInstance")
 
         await MainActor.run {
-          self.categories = loadedCategories
+          self.categories = response.data
           Logger.shared.info("Displaying \(self.categories.count) categories in filter panel", category: "AddInstance")
           self.createCategoryCheckboxes()
         }
