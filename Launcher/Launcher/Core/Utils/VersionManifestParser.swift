@@ -17,10 +17,10 @@ class VersionManifestParser {
   // MARK: - API Endpoints
 
   /// Official Mojang launcher meta API
-  static let officialManifestURL = APIService.MinecraftVersion.manifestOfficial
+  static let officialManifestURL = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 
   /// Alternative API (v2)
-  static let alternativeManifestURL = APIService.MinecraftVersion.manifestV2
+  static let alternativeManifestURL = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
 
   // MARK: - Public Methods
 

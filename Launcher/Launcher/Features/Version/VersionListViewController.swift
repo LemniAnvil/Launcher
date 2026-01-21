@@ -631,8 +631,13 @@ class VersionListViewController: NSViewController {
         logMessage(Localized.LogMessages.startingDownloadManifest)
         logMessage(Localized.LogMessages.saveLocation(destination.path))
 
+        let configuration = MinecraftAPIConfiguration(
+          versionBaseURL: "https://launchermeta.mojang.com"
+        )
+        let manifestURL = "\(configuration.versionBaseURL)/mc/game/version_manifest.json"
+
         try await downloadManager.downloadFile(
-          from: APIService.MinecraftVersion.manifestOfficial,
+          from: manifestURL,
           to: destination,
           expectedSize: 500000
         )
