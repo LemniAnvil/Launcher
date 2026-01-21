@@ -3249,18 +3249,6 @@
         }
       }
     },
-    "Java" : {
-      "comment" : "[Tab] Java settings tab title.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Java"
-          }
-        }
-      }
-    },
     "Java Detection" : {
       "comment" : "[Button] Open Java detection window.\n[Text] Java detection window title.",
       "localizations" : {

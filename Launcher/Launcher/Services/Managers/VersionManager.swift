@@ -34,10 +34,6 @@ class VersionManager: VersionManaging {
     pathManager.getPath(for: .cache).appendingPathComponent("version_cache.json")
   }
 
-  private var versionManifestURL: String {
-    APIService.MinecraftVersion.getManifestURL(useV2: downloadSettingsManager.useV2Manifest)
-  }
-
   // URLSession with proxy support (uses factory for consistent configuration)
   private var urlSession: URLSession {
     URLSessionFactory.createSession()
@@ -271,27 +267,18 @@ class VersionManager: VersionManaging {
 
     // Try to download from network
     do {
-      guard let url = URL(string: versionManifestURL) else {
-        throw VersionManagerError.invalidURL(versionManifestURL)
-      }
+      let useV2Manifest = downloadSettingsManager.useV2Manifest
+      logger.info(
+        "Requesting version manifest via CraftKit (useV2: \(useV2Manifest))",
+        category: "VersionManager"
+      )
 
-      logger.info("Requesting: \(versionManifestURL)", category: "VersionManager")
-      let (data, response) = try await urlSession.data(from: url)
+      let apiClient = MinecraftAPIClient(
+        configuration: MinecraftAPIConfiguration(),
+        session: urlSession
+      )
+      let manifest = try await apiClient.fetchVersionManifest(useV2: useV2Manifest)
 
-      guard let httpResponse = response as? HTTPURLResponse,
-        httpResponse.statusCode == 200
-      else {
-        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
-        logger.error("HTTP error, status code: \(statusCode)", category: "VersionManager")
-        throw VersionManagerError.downloadFailed("HTTP status code: \(statusCode)")
-      }
-
-      logger.info("Downloaded \(data.count) bytes from network", category: "VersionManager")
-
-      // Use parser to decode manifest
-      let manifest = try parser.parseManifest(from: data)
-
-      // Validate manifest
       guard parser.validateManifest(manifest) else {
         throw VersionManagerError.parseFailed("Manifest validation failed")
       }
