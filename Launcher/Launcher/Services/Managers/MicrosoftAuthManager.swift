@@ -141,110 +141,24 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
     authCode: String,
     codeVerifier: String
   ) async throws -> AuthorizationTokenResponse {
-    let urlString = APIService.MicrosoftAuth.token
-    guard let url = URL(string: urlString) else {
-      throw MicrosoftAuthError.invalidURL
-    }
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-
-    let parameters = [
-      "client_id": clientID,
-      "scope": scope,
-      "code": authCode,
-      "redirect_uri": redirectURI,
-      "grant_type": "authorization_code",
-      "code_verifier": codeVerifier,
-    ]
-
-    request.httpBody =
-      parameters
-      .map {
-        "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
-      }
-      .joined(separator: "&")
-      .data(using: .utf8)
-
-    let (data, response) = try await URLSession.shared.data(for: request)
-
-    guard let httpResponse = response as? HTTPURLResponse,
-      (200...299).contains(httpResponse.statusCode)
-    else {
-      let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
-      throw MicrosoftAuthError.httpError(statusCode: statusCode, message: nil)
-    }
-
-    return try JSONDecoder().decode(AuthorizationTokenResponse.self, from: data)
+    return try await authClient.exchangeAuthorizationCode(
+      authCode: authCode,
+      codeVerifier: codeVerifier
+    )
   }
 
   // MARK: - Step 4: Authenticate with Xbox Live
 
   /// Authenticates with Xbox Live using Microsoft access token
   func authenticateWithXBL(accessToken: String) async throws -> XBLAuthResponse {
-    guard let url = URL(string: APIService.XboxLive.authenticate) else {
-      throw MicrosoftAuthError.invalidURL
-    }
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue("application/json", forHTTPHeaderField: "Accept")
-
-    let body: [String: Any] = [
-      "Properties": [
-        "AuthMethod": "RPS",
-        "SiteName": "user.auth.xboxlive.com",
-        "RpsTicket": "d=\(accessToken)",
-      ],
-      "RelyingParty": APIService.XboxLive.relyingParty,
-      "TokenType": "JWT",
-    ]
-
-    request.httpBody = try JSONSerialization.data(withJSONObject: body)
-
-    let (data, response) = try await URLSession.shared.data(for: request)
-
-    guard let httpResponse = response as? HTTPURLResponse,
-      (200...299).contains(httpResponse.statusCode)
-    else {
-      throw MicrosoftAuthError.xblAuthFailed(NSError(domain: "XBLAuth", code: -1))
-    }
-
-    return try JSONDecoder().decode(XBLAuthResponse.self, from: data)
+    return try await authClient.authenticateWithXboxLive(accessToken: accessToken)
   }
 
   // MARK: - Step 5: Authenticate with XSTS
 
   /// Authenticates with XSTS using XBL token
   func authenticateWithXSTS(xblToken: String) async throws -> XBLAuthResponse {
-    guard let url = URL(string: APIService.XboxLive.authorize) else {
-      throw MicrosoftAuthError.invalidURL
-    }
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue("application/json", forHTTPHeaderField: "Accept")
-
-    let body: [String: Any] = [
-      "Properties": [
-        "SandboxId": "RETAIL",
-        "UserTokens": [xblToken],
-      ],
-      "RelyingParty": APIService.MinecraftServices.relyingParty,
-      "TokenType": "JWT",
-    ]
-
-    request.httpBody = try JSONSerialization.data(withJSONObject: body)
-
-    let (data, response) = try await URLSession.shared.data(for: request)
-
-    guard let httpResponse = response as? HTTPURLResponse,
-      (200...299).contains(httpResponse.statusCode)
-    else {
-      throw MicrosoftAuthError.xstsAuthFailed(NSError(domain: "XSTSAuth", code: -1))
-    }
-
-    return try JSONDecoder().decode(XBLAuthResponse.self, from: data)
+    return try await authClient.authenticateWithXSTS(xblToken: xblToken)
   }
 
   // MARK: - Step 6: Authenticate with Minecraft
@@ -253,51 +167,17 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
   func authenticateWithMinecraft(userHash: String, xstsToken: String) async throws
     -> MinecraftAuthResponse
   {
-    guard let url = URL(string: APIService.MinecraftServices.loginWithXbox) else {
-      throw MicrosoftAuthError.invalidURL
-    }
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue("application/json", forHTTPHeaderField: "Accept")
-
-    let body: [String: String] = [
-      "identityToken": "XBL3.0 x=\(userHash);\(xstsToken)"
-    ]
-
-    request.httpBody = try JSONSerialization.data(withJSONObject: body)
-
-    let (data, response) = try await URLSession.shared.data(for: request)
-
-    guard let httpResponse = response as? HTTPURLResponse,
-      (200...299).contains(httpResponse.statusCode)
-    else {
-      throw MicrosoftAuthError.minecraftAuthFailed(NSError(domain: "MinecraftAuth", code: -1))
-    }
-
-    return try JSONDecoder().decode(MinecraftAuthResponse.self, from: data)
+    return try await authClient.authenticateWithMinecraft(
+      userHash: userHash,
+      xstsToken: xstsToken
+    )
   }
 
   // MARK: - Step 7: Get Minecraft Profile
 
   /// Gets Minecraft profile using Minecraft access token
   func getProfile(accessToken: String) async throws -> MinecraftProfileResponse {
-    guard let url = URL(string: APIService.MinecraftServices.profile) else {
-      throw MicrosoftAuthError.invalidURL
-    }
-    var request = URLRequest(url: url)
-    request.httpMethod = "GET"
-    request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-
-    let (data, response) = try await URLSession.shared.data(for: request)
-
-    guard let httpResponse = response as? HTTPURLResponse,
-      (200...299).contains(httpResponse.statusCode)
-    else {
-      throw MicrosoftAuthError.profileFetchFailed(NSError(domain: "ProfileFetch", code: -1))
-    }
-
-    return try JSONDecoder().decode(MinecraftProfileResponse.self, from: data)
+    return try await authClient.fetchMinecraftProfile(accessToken: accessToken)
   }
 
   // MARK: - Complete Login Flow
@@ -315,38 +195,7 @@ class MicrosoftAuthManager: MicrosoftAuthProtocol {
 
   /// Refreshes authentication using refresh token
   func refreshAuthorizationToken(refreshToken: String) async throws -> AuthorizationTokenResponse {
-    let urlString = APIService.MicrosoftAuth.token
-    guard let url = URL(string: urlString) else {
-      throw MicrosoftAuthError.invalidURL
-    }
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-
-    let parameters = [
-      "client_id": clientID,
-      "scope": scope,
-      "refresh_token": refreshToken,
-      "grant_type": "refresh_token",
-    ]
-
-    request.httpBody =
-      parameters
-      .map {
-        "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
-      }
-      .joined(separator: "&")
-      .data(using: .utf8)
-
-    let (data, response) = try await URLSession.shared.data(for: request)
-
-    guard let httpResponse = response as? HTTPURLResponse,
-      (200...299).contains(httpResponse.statusCode)
-    else {
-      throw MicrosoftAuthError.invalidRefreshToken
-    }
-
-    return try JSONDecoder().decode(AuthorizationTokenResponse.self, from: data)
+    return try await authClient.refreshMicrosoftToken(refreshToken: refreshToken)
   }
 
   /// Completes refresh flow to get new access token and profile
