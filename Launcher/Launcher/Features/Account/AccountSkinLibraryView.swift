@@ -87,6 +87,7 @@ final class AccountSkinLibraryView: NSView {
     return label
   }()
 
+
   // MARK: - Initialization
 
   override init(frame frameRect: NSRect) {
@@ -138,7 +139,7 @@ final class AccountSkinLibraryView: NSView {
 
     emptyLabel.snp.makeConstraints { make in
       make.center.equalTo(scrollView)
-      make.left.right.equalToSuperview().inset(40)
+      make.left.right.equalTo(scrollView).inset(40)
     }
   }
 

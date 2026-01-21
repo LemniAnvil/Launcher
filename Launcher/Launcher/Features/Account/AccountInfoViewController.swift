@@ -10,6 +10,9 @@ import CraftKit
 import SnapKit
 import UniformTypeIdentifiers
 import Yatagarasu
+#if canImport(SkinRenderKit)
+import SkinRenderKit
+#endif
 
 class AccountInfoViewController: NSViewController {
 
@@ -19,11 +22,20 @@ class AccountInfoViewController: NSViewController {
   private typealias Radius = DesignSystem.CornerRadius
   private typealias Size = DesignSystem.Size
   private typealias Fonts = DesignSystem.Fonts
+  private typealias Height = DesignSystem.Height
 
   // MARK: - Properties
 
   var accounts: [MicrosoftAccount] = []
   var selectedAccount: MicrosoftAccount?
+  private var currentSkins: [SkinResponse] = []
+  private var currentActiveCape: Cape?
+  private var skinPreviewContainer: NSView?
+  private var skinPreviewController: NSViewController?
+  private var skinPreviewTask: Task<Void, Never>?
+  private var currentPreviewSkinID: String?
+  private var currentCapeID: String?
+  private var currentCapePath: String?
 
   // MARK: - UI Components
 
@@ -581,16 +593,72 @@ class AccountInfoViewController: NSViewController {
     // Skins section
     _ = addSectionTitle("\(Localized.Account.allSkinsTitle) (\(account.skins?.count ?? 0))")
 
-    if let skins = account.skins, !skins.isEmpty {
-      for skin in skins {
-        let skinCard = createSkinCard(skin: skin)
-        detailContainerView.addSubview(skinCard)
-        skinCard.snp.makeConstraints { make in
-          make.top.equalToSuperview().offset(yOffset)
-          make.left.right.equalToSuperview().inset(20)
-        }
+    currentSkins = account.skins ?? []
+    currentActiveCape = account.activeCape
+    skinPreviewTask?.cancel()
+    skinPreviewController = nil
+    currentPreviewSkinID = nil
+    currentCapeID = currentActiveCape?.id
+    currentCapePath = nil
 
-        yOffset += 125 // Height of skin card (110) + spacing (15)
+    let previewHeight: CGFloat = 200
+    let previewWidth: CGFloat = 280
+    let skinCardHeight = Height.instanceInfo
+    let skinCardSpacing = Spacing.section
+    let skinListHeight: CGFloat
+    if currentSkins.isEmpty {
+      skinListHeight = 60
+    } else {
+      skinListHeight = (CGFloat(currentSkins.count) * skinCardHeight)
+        + (CGFloat(max(currentSkins.count - 1, 0)) * skinCardSpacing)
+    }
+    let skinRowHeight = max(previewHeight, skinListHeight)
+
+    let skinsRow = NSView()
+    detailContainerView.addSubview(skinsRow)
+    skinsRow.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(yOffset)
+      make.left.right.equalToSuperview().inset(20)
+      make.height.equalTo(skinRowHeight)
+    }
+
+    let skinPreviewCard = createInfoCard()
+    skinsRow.addSubview(skinPreviewCard)
+    skinPreviewCard.snp.makeConstraints { make in
+      make.top.left.equalToSuperview()
+      make.width.equalTo(previewWidth)
+      make.height.equalTo(previewHeight)
+    }
+    skinPreviewContainer = skinPreviewCard
+    setSkinPreviewPlaceholder(Localized.Account.noSkins)
+
+    let skinListContainer = NSView()
+    skinsRow.addSubview(skinListContainer)
+    skinListContainer.snp.makeConstraints { make in
+      make.top.equalToSuperview()
+      make.left.equalTo(skinPreviewCard.snp.right).offset(Spacing.section)
+      make.right.equalToSuperview()
+      make.height.equalTo(skinListHeight)
+    }
+
+    if let previewSkin = account.activeSkin ?? currentSkins.first {
+      updateSkinPreview(with: previewSkin)
+    }
+
+    if !currentSkins.isEmpty {
+      var listYOffset: CGFloat = 0
+      for (index, skin) in currentSkins.enumerated() {
+        let skinCard = createSkinCard(skin: skin)
+        registerSkinPreviewTarget(for: skinCard, skin: skin)
+        skinListContainer.addSubview(skinCard)
+        skinCard.snp.makeConstraints { make in
+          make.top.equalToSuperview().offset(listYOffset)
+          make.left.right.equalToSuperview()
+          if index == currentSkins.count - 1 {
+            make.bottom.equalToSuperview()
+          }
+        }
+        listYOffset += skinCardHeight + skinCardSpacing
       }
     } else {
       let noSkinsLabel = DisplayLabel(
@@ -599,14 +667,14 @@ class AccountInfoViewController: NSViewController {
         textColor: .secondaryLabelColor,
         alignment: .center
       )
-      detailContainerView.addSubview(noSkinsLabel)
+      skinListContainer.addSubview(noSkinsLabel)
       noSkinsLabel.snp.makeConstraints { make in
-        make.top.equalToSuperview().offset(yOffset)
-        make.left.right.equalToSuperview().inset(20)
-        make.height.equalTo(60)
+        make.center.equalToSuperview()
+        make.left.right.equalToSuperview().inset(12)
       }
-      yOffset += 80
     }
+
+    yOffset += skinRowHeight + Spacing.section
 
     // Add separator before capes section
     _ = addSeparator()
@@ -715,6 +783,153 @@ class AccountInfoViewController: NSViewController {
       make.bottom.equalTo(detailContainerView.snp.top).offset(yOffset + 20)
     }
   }
+
+  private func registerSkinPreviewTarget(for card: NSView, skin: SkinResponse) {
+    card.identifier = NSUserInterfaceItemIdentifier(skin.id)
+    let recognizer = NSClickGestureRecognizer(target: self, action: #selector(handleSkinCardSelection(_:)))
+    recognizer.buttonMask = 0x1
+    recognizer.delaysPrimaryMouseButtonEvents = false
+    recognizer.delegate = self
+    card.addGestureRecognizer(recognizer)
+  }
+
+  @objc private func handleSkinCardSelection(_ recognizer: NSClickGestureRecognizer) {
+    guard let skinID = recognizer.view?.identifier?.rawValue,
+          let skin = currentSkins.first(where: { $0.id == skinID }) else {
+      return
+    }
+    updateSkinPreview(with: skin)
+  }
+
+  private func setSkinPreviewPlaceholder(_ message: String) {
+    guard let container = skinPreviewContainer else { return }
+    skinPreviewController?.view.removeFromSuperview()
+    skinPreviewController?.removeFromParent()
+    skinPreviewController = nil
+
+    container.subviews.forEach { $0.removeFromSuperview() }
+    let label = DisplayLabel(
+      text: message,
+      font: Fonts.small,
+      textColor: .secondaryLabelColor,
+      alignment: .center
+    )
+    container.addSubview(label)
+    label.snp.makeConstraints { make in
+      make.center.equalToSuperview()
+      make.left.right.equalToSuperview().inset(12)
+    }
+  }
+
+  private func updateSkinPreview(with skin: SkinResponse) {
+    guard let url = URL(string: skin.url) else {
+      setSkinPreviewPlaceholder("Preview unavailable")
+      return
+    }
+
+    let activeCape = currentActiveCape
+    let cachedCapeID = currentCapeID
+    let cachedCapePath = currentCapePath
+    currentPreviewSkinID = skin.id
+    skinPreviewTask?.cancel()
+    skinPreviewTask = Task { [weak self] in
+      do {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        guard let self = self, !Task.isCancelled else { return }
+
+        let skinPath = try self.writePreviewTexture(
+          data: data,
+          kind: "skin",
+          identifier: skin.id
+        )
+
+        var resolvedCapeID: String?
+        var resolvedCapePath: String?
+        if let cape = activeCape, let capeURL = URL(string: cape.url) {
+          if cachedCapeID == cape.id,
+             let cachedPath = cachedCapePath,
+             FileManager.default.fileExists(atPath: cachedPath) {
+            resolvedCapeID = cape.id
+            resolvedCapePath = cachedPath
+          } else {
+            let (capeData, _) = try await URLSession.shared.data(from: capeURL)
+            resolvedCapeID = cape.id
+            resolvedCapePath = try self.writePreviewTexture(
+              data: capeData,
+              kind: "cape",
+              identifier: cape.id
+            )
+          }
+        } else {
+          resolvedCapeID = nil
+          resolvedCapePath = nil
+        }
+
+        await MainActor.run {
+          self.currentCapeID = resolvedCapeID
+          self.currentCapePath = resolvedCapePath
+          guard self.currentPreviewSkinID == skin.id else { return }
+          self.applySkinPreview(path: skinPath, capePath: resolvedCapePath, imageData: data)
+        }
+      } catch {
+        await MainActor.run {
+          guard self?.currentPreviewSkinID == skin.id else { return }
+          self?.setSkinPreviewPlaceholder("Preview unavailable")
+        }
+      }
+    }
+  }
+
+  private func writePreviewTexture(data: Data, kind: String, identifier: String) throws -> String {
+    let tempURL = FileManager.default.temporaryDirectory
+      .appendingPathComponent("launcher_\(kind)_preview_\(identifier).png")
+    try data.write(to: tempURL, options: .atomic)
+    return tempURL.path
+  }
+
+  private func applySkinPreview(path: String, capePath: String?, imageData: Data) {
+    guard let container = skinPreviewContainer else { return }
+#if canImport(SkinRenderKit)
+    let renderer: SceneKitCharacterViewController
+    if let existing = skinPreviewController as? SceneKitCharacterViewController {
+      renderer = existing
+    } else {
+      renderer = SceneKitCharacterViewController(
+        texturePath: path,
+        capeTexturePath: "",
+        playerModel: .steve,
+        rotationDuration: 15,
+        backgroundColor: .windowBackgroundColor
+      )
+      addChild(renderer)
+      skinPreviewController = renderer
+    }
+
+    if renderer.view.superview == nil {
+      container.subviews.forEach { $0.removeFromSuperview() }
+      container.addSubview(renderer.view)
+      renderer.view.snp.makeConstraints { make in
+        make.edges.equalToSuperview().inset(8)
+      }
+    }
+
+    renderer.updateTexture(path: path)
+    if let capePath = capePath {
+      renderer.updateCapeTexture(path: capePath)
+    } else if currentCapeID == nil {
+      renderer.updateCapeTexture(path: "")
+    }
+#else
+    container.subviews.forEach { $0.removeFromSuperview() }
+    let imageView = NSImageView()
+    imageView.imageScaling = .scaleProportionallyUpOrDown
+    imageView.image = NSImage(data: imageData)
+    container.addSubview(imageView)
+    imageView.snp.makeConstraints { make in
+      make.edges.equalToSuperview().inset(8)
+    }
+#endif
+  }
 }
 
 // MARK: - NSTableViewDataSource
@@ -782,6 +997,19 @@ extension AccountInfoViewController: NSTableViewDelegate {
     if selectedRow >= 0 && selectedRow < accounts.count {
       showAccountDetails(accounts[selectedRow])
     }
+  }
+}
+
+// MARK: - NSGestureRecognizerDelegate
+
+extension AccountInfoViewController: NSGestureRecognizerDelegate {
+  func gestureRecognizer(_ gestureRecognizer: NSGestureRecognizer, shouldReceive event: NSEvent) -> Bool {
+    guard let view = gestureRecognizer.view else { return true }
+    let location = view.convert(event.locationInWindow, from: nil)
+    if let hitView = view.hitTest(location), hitView is NSButton {
+      return false
+    }
+    return true
   }
 }
 
