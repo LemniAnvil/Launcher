@@ -47,8 +47,10 @@ extension AccountInfoViewController {
       return nil
     }
 
+    let trimmedCGImage = trimTransparentBorder(from: croppedCGImage)
+
     // Scale up the image using nearest-neighbor interpolation
-    return createScaledBitmap(from: croppedCGImage, scale: 10)
+    return createScaledBitmap(from: trimmedCGImage, scale: 10)
   }
 
   /// Create a scaled bitmap using nearest-neighbor interpolation (pixel-perfect)
@@ -99,6 +101,120 @@ extension AccountInfoViewController {
     return scaledImage
   }
 
+  private func createScaledBitmap(
+    from cgImage: CGImage,
+    targetPixelSize: CGSize,
+    pointSize: CGSize
+  ) -> NSImage? {
+    let width = max(Int(targetPixelSize.width.rounded()), 1)
+    let height = max(Int(targetPixelSize.height.rounded()), 1)
+
+    guard let colorSpace = cgImage.colorSpace,
+          let context = CGContext(
+            data: nil,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bytesPerRow: width * 4,
+            space: colorSpace,
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+          ) else {
+      return nil
+    }
+
+    context.interpolationQuality = .none
+    context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+
+    guard let scaledCGImage = context.makeImage() else {
+      return nil
+    }
+
+    return NSImage(cgImage: scaledCGImage, size: pointSize)
+  }
+
+  /// Composite the cape image onto a rounded background to avoid transparent bars.
+  private func composeRoundedCapeImage(
+    _ image: NSImage,
+    backgroundColor: NSColor,
+    cornerRadius: CGFloat
+  ) -> NSImage {
+    let size = image.size
+    let output = NSImage(size: size)
+    output.lockFocus()
+
+    let rect = NSRect(origin: .zero, size: size)
+    let path = NSBezierPath(roundedRect: rect, xRadius: cornerRadius, yRadius: cornerRadius)
+    backgroundColor.setFill()
+    path.fill()
+
+    path.addClip()
+    image.draw(
+      in: rect,
+      from: .zero,
+      operation: .sourceOver,
+      fraction: 1,
+      respectFlipped: true,
+      hints: [.interpolation: NSImageInterpolation.none]
+    )
+
+    output.unlockFocus()
+    return output
+  }
+
+  /// Trim fully transparent pixels around the edges to avoid visible padding bars.
+  private func trimTransparentBorder(from cgImage: CGImage) -> CGImage {
+    let width = cgImage.width
+    let height = cgImage.height
+    let bytesPerPixel = 4
+    let bytesPerRow = bytesPerPixel * width
+
+    guard let context = CGContext(
+      data: nil,
+      width: width,
+      height: height,
+      bitsPerComponent: 8,
+      bytesPerRow: bytesPerRow,
+      space: CGColorSpaceCreateDeviceRGB(),
+      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+    ) else {
+      return cgImage
+    }
+
+    context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+    guard let data = context.data else { return cgImage }
+    let buffer = data.bindMemory(to: UInt8.self, capacity: width * height * bytesPerPixel)
+
+    var minX = width
+    var minY = height
+    var maxX = 0
+    var maxY = 0
+    var found = false
+
+    for y in 0..<height {
+      for x in 0..<width {
+        let alpha = buffer[(y * width + x) * bytesPerPixel + 3]
+        if alpha > 0 {
+          found = true
+          if x < minX { minX = x }
+          if y < minY { minY = y }
+          if x > maxX { maxX = x }
+          if y > maxY { maxY = y }
+        }
+      }
+    }
+
+    guard found else { return cgImage }
+
+    let cropRect = CGRect(
+      x: minX,
+      y: minY,
+      width: maxX - minX + 1,
+      height: maxY - minY + 1
+    )
+
+    return cgImage.cropping(to: cropRect) ?? cgImage
+  }
+
   // MARK: - Skin Card
 
   func createSkinCard(skin: SkinResponse) -> NSView {
@@ -110,7 +226,7 @@ extension AccountInfoViewController {
     // Skin preview image
     let imageView = NSImageView()
     imageView.wantsLayer = true
-    imageView.imageScaling = .scaleProportionallyUpOrDown
+    imageView.imageScaling = .scaleAxesIndependently
     imageView.layer?.cornerRadius = Radius.small
     imageView.layer?.masksToBounds = true
     imageView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
@@ -122,8 +238,36 @@ extension AccountInfoViewController {
         do {
           let (data, _) = try await URLSession.shared.data(from: url.s)
           if let image = NSImage(data: data) {
+            let targetInfo = await MainActor.run { () -> (CGSize, CGFloat) in
+              imageView.superview?.layoutSubtreeIfNeeded()
+              let size = imageView.bounds.size
+              let scale = imageView.window?.backingScaleFactor
+                ?? NSScreen.main?.backingScaleFactor
+                ?? 1
+              return (size, scale)
+            }
+
+            let targetSize = targetInfo.0
+            let scaleFactor = targetInfo.1
+            let scaledImage: NSImage?
+            if targetSize.width > 0,
+               targetSize.height > 0,
+               let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+              let pixelSize = CGSize(
+                width: targetSize.width * scaleFactor,
+                height: targetSize.height * scaleFactor
+              )
+              scaledImage = createScaledBitmap(
+                from: cgImage,
+                targetPixelSize: pixelSize,
+                pointSize: targetSize
+              )
+            } else {
+              scaledImage = nil
+            }
+
             await MainActor.run {
-              imageView.image = image
+              imageView.image = scaledImage ?? image
             }
           }
         } catch {
@@ -146,35 +290,6 @@ extension AccountInfoViewController {
     )
     card.addSubview(nameLabel)
 
-    // Active badge
-    if skin.isActive {
-      let activeBadge = NSView()
-      activeBadge.wantsLayer = true
-      activeBadge.layer?.backgroundColor = NSColor.systemGreen.cgColor
-      activeBadge.layer?.cornerRadius = 9
-
-      let activeLabel = DisplayLabel(
-        text: Localized.Account.stateActive,
-        font: .systemFont(ofSize: 9, weight: .semibold),
-        textColor: .white,
-        alignment: .center
-      )
-      activeBadge.addSubview(activeLabel)
-
-      card.addSubview(activeBadge)
-
-      activeBadge.snp.makeConstraints { make in
-        make.top.equalToSuperview().offset(Spacing.small)
-        make.right.equalToSuperview().offset(-Spacing.small)
-        make.height.equalTo(18)
-        make.width.greaterThanOrEqualTo(50)
-      }
-
-      activeLabel.snp.makeConstraints { make in
-        make.edges.equalToSuperview().inset(NSEdgeInsets(top: 2, left: Spacing.tiny, bottom: 2, right: Spacing.tiny))
-      }
-    }
-
     // Variant and State in one line
     let variantStateLabel = DisplayLabel(
       text: "\(Localized.Account.skinVariant): \(skin.variant)  •  \(Localized.Account.skinState): \(skin.state)",
@@ -186,21 +301,19 @@ extension AccountInfoViewController {
 
     // Layout - image on the left
     imageView.snp.makeConstraints { make in
-      make.left.equalToSuperview().offset(Spacing.section)
       make.top.equalToSuperview().offset(Spacing.small)
-      make.width.height.equalTo(80)
+      make.left.right.equalToSuperview().inset(Spacing.section)
+      make.height.equalTo(imageView.snp.width)
     }
 
     nameLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Spacing.small)
-      make.left.equalTo(imageView.snp.right).offset(Spacing.section)
-      make.right.equalToSuperview().offset(-80)
+      make.top.equalTo(imageView.snp.bottom).offset(Spacing.small)
+      make.left.right.equalToSuperview().inset(Spacing.section)
     }
 
     variantStateLabel.snp.makeConstraints { make in
       make.top.equalTo(nameLabel.snp.bottom).offset(Spacing.minimal)
-      make.left.equalTo(imageView.snp.right).offset(Spacing.section)
-      make.right.equalToSuperview().offset(-Spacing.section)
+      make.left.right.equalToSuperview().inset(Spacing.section)
     }
 
     // Action buttons
@@ -246,7 +359,7 @@ extension AccountInfoViewController {
     }
 
     buttonStack.snp.makeConstraints { make in
-      make.top.equalTo(imageView.snp.bottom).offset(Spacing.section)
+      make.top.greaterThanOrEqualTo(variantStateLabel.snp.bottom).offset(Spacing.section)
       make.left.right.equalToSuperview().inset(Spacing.section)
       make.bottom.equalToSuperview().offset(-Spacing.small)
       make.height.equalTo(Size.textFieldHeight)
@@ -262,10 +375,22 @@ extension AccountInfoViewController {
   // MARK: - Cape Card
 
   func createCapeCard(cape: Cape) -> NSView {
+    let imageInset = Spacing.small
+    let innerRadius = Radius.standard
+    let outerRadius = innerRadius + imageInset
+
     let card = NSView()
     card.wantsLayer = true
+    card.layer?.cornerRadius = outerRadius
+    card.layer?.masksToBounds = true
+    if cape.isActive {
+      card.layer?.borderWidth = 2
+      card.layer?.borderColor = NSColor.systemGreen.cgColor
+    } else {
+      card.layer?.borderWidth = 1
+      card.layer?.borderColor = NSColor.separatorColor.cgColor
+    }
     card.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    card.layer?.cornerRadius = Radius.standard
 
     // Set tooltip for the card
     card.toolTip = cape.alias ?? Localized.Account.unnamedCape
@@ -277,19 +402,11 @@ extension AccountInfoViewController {
     let clickGesture = NSClickGestureRecognizer(target: self, action: #selector(capeCardClicked(_:)))
     card.addGestureRecognizer(clickGesture)
 
-    // Image container - takes the full card space
-    let imageContainer = NSView()
-    imageContainer.wantsLayer = true
-    imageContainer.layer?.cornerRadius = Radius.medium
-    imageContainer.layer?.masksToBounds = true
-    imageContainer.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
-    card.addSubview(imageContainer)
-
     // Cape preview image
     let imageView = NSImageView()
     imageView.wantsLayer = true
     imageView.imageScaling = .scaleProportionallyUpOrDown
-    imageContainer.addSubview(imageView)
+    card.addSubview(imageView)
 
     // Load cape image asynchronously
     if let url = URL(string: cape.url) {
@@ -300,12 +417,20 @@ extension AccountInfoViewController {
             // Extract the front part of the cape and scale it up
             if let frontImage = extractCapeFront(from: fullImage) {
               await MainActor.run {
-                imageView.image = frontImage
+                imageView.image = composeRoundedCapeImage(
+                  frontImage,
+                  backgroundColor: NSColor.windowBackgroundColor,
+                  cornerRadius: innerRadius
+                )
               }
             } else {
               // If extraction fails, show the full image
               await MainActor.run {
-                imageView.image = fullImage
+                imageView.image = composeRoundedCapeImage(
+                  fullImage,
+                  backgroundColor: NSColor.windowBackgroundColor,
+                  cornerRadius: innerRadius
+                )
               }
             }
           }
@@ -320,46 +445,8 @@ extension AccountInfoViewController {
       }
     }
 
-    // Active indicator - small badge at top-right of image
-    if cape.isActive {
-      let activeBadge = NSView()
-      activeBadge.wantsLayer = true
-      activeBadge.layer?.backgroundColor = NSColor.systemGreen.cgColor
-      activeBadge.layer?.cornerRadius = Radius.standard
-
-      let checkIcon = NSImageView()
-      checkIcon.image = NSImage(systemSymbolName: "checkmark", accessibilityDescription: nil)
-      checkIcon.contentTintColor = .white
-      checkIcon.imageScaling = .scaleProportionallyDown
-      activeBadge.addSubview(checkIcon)
-
-      imageContainer.addSubview(activeBadge)
-
-      activeBadge.snp.makeConstraints { make in
-        make.top.equalToSuperview().offset(Spacing.micro)
-        make.right.equalToSuperview().offset(-Spacing.micro)
-        make.width.height.equalTo(Size.smallIndicator)
-      }
-
-      checkIcon.snp.makeConstraints { make in
-        make.center.equalToSuperview()
-        make.width.height.equalTo(10)
-      }
-    }
-
-    // Layout - image container takes full card space with padding
-    imageContainer.snp.makeConstraints { make in
-      make.centerX.equalToSuperview()
-      make.top.equalToSuperview().offset(Spacing.section)
-      make.bottom.equalToSuperview().offset(-Spacing.section)
-      make.left.greaterThanOrEqualToSuperview().offset(Spacing.minimal)
-      make.right.lessThanOrEqualToSuperview().offset(-Spacing.minimal)
-      // Set aspect ratio 10:16 for cape front with lower priority
-      make.width.equalTo(imageContainer.snp.height).multipliedBy(10.0 / 16.0).priority(.high)
-    }
-
     imageView.snp.makeConstraints { make in
-      make.edges.equalToSuperview()
+      make.edges.equalToSuperview().inset(imageInset)
     }
 
     return card

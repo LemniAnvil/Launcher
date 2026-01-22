@@ -590,10 +590,11 @@ class AccountInfoViewController: NSViewController {
     // Add separator before skins section
     _ = addSeparator()
 
-    // Skins section
-    _ = addSectionTitle("\(Localized.Account.allSkinsTitle) (\(account.skins?.count ?? 0))")
+    // Skins section (server returns an array, but we only display one skin)
+    let primarySkin = account.activeSkin ?? account.skins?.first
+    currentSkins = primarySkin.map { [$0] } ?? []
+    _ = addSectionTitle("\(Localized.Account.allSkinsTitle) (\(currentSkins.count))")
 
-    currentSkins = account.skins ?? []
     currentActiveCape = account.activeCape
     skinPreviewTask?.cancel()
     skinPreviewController = nil
@@ -601,18 +602,10 @@ class AccountInfoViewController: NSViewController {
     currentCapeID = currentActiveCape?.id
     currentCapePath = nil
 
-    let previewHeight: CGFloat = 200
+    let previewHeight: CGFloat = 400
     let previewWidth: CGFloat = 280
     let skinCardHeight = Height.instanceInfo
-    let skinCardSpacing = Spacing.section
-    let skinListHeight: CGFloat
-    if currentSkins.isEmpty {
-      skinListHeight = 60
-    } else {
-      skinListHeight = (CGFloat(currentSkins.count) * skinCardHeight)
-        + (CGFloat(max(currentSkins.count - 1, 0)) * skinCardSpacing)
-    }
-    let skinRowHeight = max(previewHeight, skinListHeight)
+    let skinRowHeight = max(previewHeight, skinCardHeight)
 
     let skinsRow = NSView()
     detailContainerView.addSubview(skinsRow)
@@ -638,27 +631,21 @@ class AccountInfoViewController: NSViewController {
       make.top.equalToSuperview()
       make.left.equalTo(skinPreviewCard.snp.right).offset(Spacing.section)
       make.right.equalToSuperview()
-      make.height.equalTo(skinListHeight)
+      make.height.equalTo(skinPreviewCard)
     }
 
-    if let previewSkin = account.activeSkin ?? currentSkins.first {
+    if let previewSkin = currentSkins.first {
       updateSkinPreview(with: previewSkin)
     }
 
-    if !currentSkins.isEmpty {
-      var listYOffset: CGFloat = 0
-      for (index, skin) in currentSkins.enumerated() {
-        let skinCard = createSkinCard(skin: skin)
-        registerSkinPreviewTarget(for: skinCard, skin: skin)
-        skinListContainer.addSubview(skinCard)
-        skinCard.snp.makeConstraints { make in
-          make.top.equalToSuperview().offset(listYOffset)
-          make.left.right.equalToSuperview()
-          if index == currentSkins.count - 1 {
-            make.bottom.equalToSuperview()
-          }
-        }
-        listYOffset += skinCardHeight + skinCardSpacing
+    if let skin = currentSkins.first {
+      let skinCard = createSkinCard(skin: skin)
+      registerSkinPreviewTarget(for: skinCard, skin: skin)
+      skinListContainer.addSubview(skinCard)
+      skinCard.snp.makeConstraints { make in
+        make.top.equalToSuperview()
+        make.left.right.equalToSuperview()
+        make.bottom.equalToSuperview()
       }
     } else {
       let noSkinsLabel = DisplayLabel(
@@ -734,12 +721,22 @@ class AccountInfoViewController: NSViewController {
     yOffset += 30
 
     if let capes = account.capes, !capes.isEmpty {
-      // Grid layout for capes - 4 columns
-      let columnsPerRow = 4
-      let cardWidth: CGFloat = 100
-      let cardHeight: CGFloat = 170
+      // Grid layout for capes - adaptive columns based on available width
       let horizontalSpacing: CGFloat = 8
       let verticalSpacing: CGFloat = 8
+      let minCardWidth: CGFloat = 96
+      let maxCardWidth: CGFloat = 140
+      let imagePadding = Spacing.small
+      let imageAspectRatio: CGFloat = 16.0 / 10.0
+
+      let contentWidth = max(accountInfoScrollView.contentView.bounds.width, 400)
+      let availableWidth = max(contentWidth - 40, minCardWidth)
+      let estimatedColumns = Int((availableWidth + horizontalSpacing) / (minCardWidth + horizontalSpacing))
+      let columnsPerRow = max(2, estimatedColumns)
+      let totalSpacing = CGFloat(columnsPerRow - 1) * horizontalSpacing
+      let cardWidth = min(maxCardWidth, floor((availableWidth - totalSpacing) / CGFloat(columnsPerRow)))
+      let innerWidth = max(cardWidth - (2 * imagePadding), 1)
+      let cardHeight = floor(innerWidth * imageAspectRatio + (2 * imagePadding))
 
       for (index, cape) in capes.enumerated() {
         let capeCard = createCapeCard(cape: cape)
