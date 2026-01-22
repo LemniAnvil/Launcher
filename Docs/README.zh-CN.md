@@ -4,7 +4,7 @@
 
 # Minecraft 启动器
 
-**功能完整的 Minecraft 启动器，支持实例管理、Mod 加载器、CurseForge 集成和 Microsoft 账户认证**
+**面向 macOS 的 Minecraft 启动器，提供实例管理、版本下载、CurseForge 浏览和 Microsoft 账户认证**
 
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS-blue.svg)](https://www.apple.com/macos)
@@ -28,7 +28,7 @@
   - [创建游戏实例](#创建游戏实例)
   - [添加账户](#添加账户)
   - [启动游戏](#启动游戏)
-  - [导入 CurseForge 整合包](#导入-curseforge-整合包)
+  - [CurseForge 整合包](#curseforge-整合包)
   - [配置代理](#配置代理可选)
 - [技术栈](#技术栈)
 - [开发进度](#开发进度)
@@ -42,74 +42,103 @@
 
 ## 功能特性
 
-### 🎮 游戏管理
-- **实例管理** - 创建、编辑、删除游戏实例，支持 MMC 格式（与 Prism Launcher 兼容）
-- **游戏启动** - 完整的启动引擎，支持 JVM 参数配置和 Native 库管理
-- **Java 检测** - 自动检测系统 Java 环境，智能匹配版本要求
-- **版本管理** - 下载、缓存、安装 Minecraft 各版本（正式版/快照版/Beta/Alpha）
+### 游戏管理
+- **实例管理** - 创建与删除实例，使用 MMC 格式存储（兼容 Prism Launcher）
+- **Prism Launcher 发现** - 从默认实例目录加载 Prism Launcher 外部实例
+- **游戏启动** - 生成 JVM/游戏参数、解压 Native 并启动游戏（含离线启动流程）
+- **Java 检测** - 检测已安装 Java 运行时并提供兼容性提示
+- **版本管理** - 获取 Mojang 版本清单、缓存元数据并按需下载版本
 
-### 👤 账户系统
-- **Microsoft 认证** - OAuth 2.0 + PKCE 安全流程，支持 Xbox Live 和 Minecraft Services
-- **离线账户** - 支持离线模式游戏
-- **多账户管理** - 轻松切换不同账户
-- **Token 管理** - 自动刷新认证令牌
+### 账户系统
+- **Microsoft 认证** - OAuth 2.0 + PKCE 流程，支持 Xbox Live 与 Minecraft Services
+- **离线账户** - 本地离线账户用于快速启动
+- **多账户管理** - 存储多个账户并切换当前账户
+- **令牌刷新** - 刷新 Microsoft 令牌并同步账户数据
+- **皮肤与披风管理** - 预览、激活、重置、下载与上传皮肤；浏览与管理披风；本地皮肤库管理
 
-### 🔧 Mod 与整合包
-- **Mod 加载器** - 支持 Forge、Fabric、NeoForge、Quilt
-- **CurseForge 集成** - 搜索、浏览和导入 CurseForge 整合包
-- **Modpack 管理** - 完整的整合包支持和版本管理
+### Mod 与整合包
+- **Mod 加载器选择** - 获取 Forge/Fabric/NeoForge/Quilt 的版本信息，并写入 MMC 元数据
+- **CurseForge 浏览** - 搜索与浏览整合包及其文件版本（需要配置 CurseForge API Key）
 
-### ⚙️ 高级功能
-- **代理支持** - HTTP/HTTPS/SOCKS5 代理配置
-- **并发下载** - 多线程下载系统，支持 SHA1 完整性校验
-- **国际化** - 完整支持英文和简体中文
-- **日志系统** - 完善的多级别日志记录
+### 高级功能
+- **代理支持** - HTTP/HTTPS/SOCKS5 代理配置，支持测试与系统代理检测
+- **并发下载** - 多线程下载，带重试与 SHA1 校验
+- **国际化** - 支持英文与简体中文
+- **日志系统** - 多级别日志与分类输出
 
 ---
 
 ## 截图预览
 
 ### 实例管理
-实例管理界面提供了游戏实例的创建、编辑和管理功能。
+实例管理界面提供了游戏实例的创建与管理功能。
 
 <img src="../Resources/zh-CN/instances-overview.png" alt="实例管理界面" width="800">
 
 *实例列表界面，显示所有已创建的 Minecraft 游戏实例*
 
 ### 新建实例
-通过直观的对话框创建新的游戏实例，支持选择版本和自定义配置。
+通过对话框创建新的游戏实例，支持选择版本与可选的 Mod 加载器。
 
 <img src="../Resources/zh-CN/new-instance-dialog.png" alt="新建实例对话框" width="600">
 
-*新建实例对话框，可选择游戏版本并配置实例参数*
+*新建实例对话框，可选择游戏版本与可选 Mod 加载器*
 
 ### Java 环境检测
-自动检测系统中已安装的 Java 运行环境，支持多版本 Java 管理。
+自动检测系统中已安装的 Java 运行环境，支持多版本 Java 检测并显示兼容性提示。
 
 <img src="../Resources/zh-CN/java-detection.png" alt="Java 检测" width="700">
 
 *Java 环境检测界面，显示所有可用的 Java 版本*
 
 ### 账户管理
-支持多账户管理，方便切换不同的 Minecraft 账户进行游戏。
+支持多账户管理，方便添加、删除和切换不同的 Minecraft 账户进行游戏。
 
 <img src="../Resources/zh-CN/account-management.png" alt="账户管理" width="700">
 
-*账户管理界面，支持添加、编辑和切换游戏账户*
+*账户管理界面，支持添加、删除和切换游戏账户*
+
+### 账户信息与皮肤
+在账户信息面板中预览当前皮肤并进行皮肤操作。
+
+<img src="../Resources/zh-CN/account-info.png" alt="账户信息与皮肤" width="800">
+
+*账户信息界面，包含皮肤预览与皮肤操作*
+
+### 披风收藏
+浏览已拥有的披风并管理当前装备的披风。
+
+<img src="../Resources/zh-CN/account-capes.png" alt="披风收藏" width="700">
+
+*披风展示界面，列出可用披风*
+
+### 皮肤管理
+管理本地皮肤文件，导入新皮肤并快速打开皮肤目录。
+
+<img src="../Resources/zh-CN/skin-management.png" alt="皮肤管理" width="800">
+
+*本地皮肤管理界面*
 
 ### 设置中心
-全面的设置界面，提供启动器的各项配置选项。
+存储与维护设置，用于管理启动器的数据位置与缓存。
 
 <img src="../Resources/zh-CN/settings.png" alt="设置界面" width="700">
 
-*设置界面，可配置启动器的各项参数和偏好设置*
+*设置界面展示存储位置与维护操作*
 
-### CurseForge Modpack 导入
-支持从 CurseForge 平台导入整合包（Modpack），快速创建预配置的游戏实例。
+### 运行状态
+展示启动器在系统中的运行状态与进程信息。
 
-<img src="../Resources/zh-CN/curseforge_modpack_import.png" alt="CurseForge Modpack 导入" width="800">
+<img src="../Resources/zh-CN/activity-monitor.png" alt="运行状态" width="900">
 
-*CurseForge 整合包导入界面，可以直接导入流行的 Modpack*
+*系统活动监视器中的启动器进程*
+
+### CurseForge 整合包浏览
+浏览 CurseForge 整合包并查看可用文件/版本。
+
+<img src="../Resources/zh-CN/curseforge_modpack_import.png" alt="CurseForge 整合包" width="800">
+
+*CurseForge 整合包浏览界面（搜索与版本查看）*
 
 ---
 
@@ -138,8 +167,8 @@ open Launcher/Launcher.xcodeproj
 
 1. 在 Xcode 中选择 `Launcher` scheme
 2. 按 `⌘+R` 构建并运行
-3. 在主窗口中点击"打开测试窗口"按钮
-4. 在测试窗口中测试各种功能
+3. 使用工具栏按钮打开“添加实例”“账户管理”“账户信息”“设置”“已安装版本”等窗口
+4. 创建实例并体验相关功能
 
 ---
 
@@ -156,15 +185,16 @@ open Launcher/Launcher.xcodeproj
    - Fabric
    - NeoForge
    - Quilt
+   - 说明：Mod 加载器选择会写入 MMC 元数据，尚未自动下载安装
 5. 点击"创建"完成实例创建
 
 ### 添加账户
 
 #### Microsoft 账户
 1. 打开"账户管理"界面
-2. 点击"添加 Microsoft 账户"
+2. 点击"使用 Microsoft 登录"
 3. 在浏览器中完成 Microsoft 登录
-4. 授权后自动返回启动器
+4. 返回启动器完成授权
 5. 账户添加成功，可以看到你的玩家名和皮肤
 
 #### 离线账户
@@ -180,20 +210,20 @@ open Launcher/Launcher.xcodeproj
 3. 点击"启动"按钮
 4. 等待游戏启动（首次启动会自动下载所需文件）
 
-### 导入 CurseForge 整合包
+### CurseForge 整合包
 
-1. 点击"从 CurseForge 导入"按钮
-2. 浏览或搜索想要的整合包
-3. 选择整合包版本
-4. 点击"导入"开始下载和安装
-5. 导入完成后，新实例会自动出现在实例列表中
+1. 点击"添加实例"按钮
+2. 切换到"CurseForge"分类
+3. 浏览或搜索想要的整合包
+4. 选择整合包查看可用文件/版本
+5. 说明：当前以浏览为主，尚未接入一键导入
 
 ### 配置代理（可选）
 
 如果需要使用代理访问 Minecraft 服务器：
 
 1. 打开"设置"界面
-2. 切换到"网络"标签
+2. 切换到"网络代理"标签
 3. 启用代理并选择类型（HTTP/HTTPS/SOCKS5）
 4. 输入代理服务器地址和端口
 5. 点击"测试连接"验证代理
@@ -252,29 +282,25 @@ open Launcher/Launcher.xcodeproj
 #### 实例管理
 - [x] 实例创建和删除
 - [x] MMC 格式支持（与 Prism Launcher 兼容）
-- [x] 实例配置管理
-- [x] 游戏目录隔离（mods、saves、resourcepacks 等）
 - [x] 实例列表界面
-- [x] 实例详情查看和编辑
+- [x] 实例详情查看（只读）
+- [x] 游戏目录隔离（mods、saves、resourcepacks 等）
 
 #### Mod 加载器
-- [x] Forge 支持
-- [x] Fabric 支持
-- [x] NeoForge 支持
-- [x] Quilt 支持
-- [x] Mod 加载器版本管理
+- [x] Forge/Fabric/NeoForge/Quilt 元数据支持
+- [x] Mod 加载器版本列表
 
 #### CurseForge 集成
 - [x] CurseForge API 客户端
 - [x] Modpack 搜索功能
 - [x] Modpack 详情获取
 - [x] 分页和排序支持
-- [x] CurseForge 导入界面
+- [x] CurseForge 浏览界面
 
 #### Java 环境
 - [x] Java 安装自动检测
-- [x] 多版本 Java 管理
-- [x] Java 版本匹配（根据 Minecraft 版本）
+- [x] 多版本 Java 检测
+- [x] Java 兼容性提示（基于主版本）
 - [x] Java 检测界面
 
 ### 计划功能
@@ -320,7 +346,7 @@ open Launcher/Launcher.xcodeproj
 
 欢迎贡献！请随时提交 Pull Request。
 
-> **⚠️ 重要提示**
+> **重要提示**
 > 当前项目使用的 UI 组件库尚未开源。如果您希望参与开发，请通过 [Issues](https://github.com/LemniAnvil/Launcher/issues) 或其他方式与我联系。
 
 ### 指南
