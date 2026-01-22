@@ -866,7 +866,12 @@ class AccountInfoViewController: NSViewController {
           self.currentCapeID = resolvedCapeID
           self.currentCapePath = resolvedCapePath
           guard self.currentPreviewSkinID == skin.id else { return }
-          self.applySkinPreview(path: skinPath, capePath: resolvedCapePath, imageData: data)
+          self.applySkinPreview(
+            path: skinPath,
+            capePath: resolvedCapePath,
+            imageData: data,
+            skinVariant: skin.variant
+          )
         }
       } catch {
         await MainActor.run {
@@ -884,9 +889,12 @@ class AccountInfoViewController: NSViewController {
     return tempURL.path
   }
 
-  private func applySkinPreview(path: String, capePath: String?, imageData: Data) {
+  private func applySkinPreview(path: String, capePath: String?, imageData: Data, skinVariant: String) {
     guard let container = skinPreviewContainer else { return }
 #if canImport(SkinRenderKit)
+    let normalizedVariant = skinVariant.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+    let playerModel: PlayerModel = normalizedVariant == "SLIM" ? .alex : .steve
+
     let renderer: SceneKitCharacterViewController
     if let existing = skinPreviewController as? SceneKitCharacterViewController {
       renderer = existing
@@ -894,7 +902,7 @@ class AccountInfoViewController: NSViewController {
       renderer = SceneKitCharacterViewController(
         texturePath: path,
         capeTexturePath: "",
-        playerModel: .steve,
+        playerModel: playerModel,
         rotationDuration: 15,
         backgroundColor: .windowBackgroundColor
       )
@@ -910,6 +918,7 @@ class AccountInfoViewController: NSViewController {
       }
     }
 
+    renderer.updatePlayerModel(playerModel)
     renderer.updateTexture(path: path)
     if let capePath = capePath {
       renderer.updateCapeTexture(path: capePath)
