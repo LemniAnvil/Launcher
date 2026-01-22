@@ -154,7 +154,7 @@
 
 1. 克隆仓库：
 ```bash
-git clone https://github.com/yourusername/Launcher.git
+git clone https://github.com/LemniAnvil/Launcher.git
 cd Launcher
 ```
 

@@ -154,7 +154,7 @@ Browse CurseForge modpacks and inspect available files/versions.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/Launcher.git
+git clone https://github.com/LemniAnvil/Launcher.git
 cd Launcher
 ```
 
