@@ -365,10 +365,6 @@ extension AccountInfoViewController {
       make.height.equalTo(Size.textFieldHeight)
     }
 
-    card.snp.makeConstraints { make in
-      make.height.equalTo(Height.instanceInfo)
-    }
-
     return card
   }
 
