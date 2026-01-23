@@ -218,16 +218,20 @@ extension AccountInfoViewController {
   // MARK: - Skin Card
 
   func createSkinCard(skin: SkinResponse) -> NSView {
+    let imageInset = Spacing.small
+    let innerRadius = Radius.standard
+    let outerRadius = innerRadius + imageInset
+
     let card = NSView()
     card.wantsLayer = true
     card.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-    card.layer?.cornerRadius = Radius.standard
+    card.layer?.cornerRadius = outerRadius
 
     // Skin preview image
     let imageView = NSImageView()
     imageView.wantsLayer = true
     imageView.imageScaling = .scaleAxesIndependently
-    imageView.layer?.cornerRadius = Radius.small
+    imageView.layer?.cornerRadius = innerRadius
     imageView.layer?.masksToBounds = true
     imageView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
     card.addSubview(imageView)
@@ -301,8 +305,8 @@ extension AccountInfoViewController {
 
     // Layout - image on the left
     imageView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Spacing.small)
-      make.left.right.equalToSuperview().inset(Spacing.section)
+      make.top.equalToSuperview().offset(imageInset)
+      make.left.right.equalToSuperview().inset(imageInset)
       make.height.equalTo(imageView.snp.width)
     }
 
@@ -359,8 +363,8 @@ extension AccountInfoViewController {
     }
 
     buttonStack.snp.makeConstraints { make in
-      make.top.greaterThanOrEqualTo(variantStateLabel.snp.bottom).offset(Spacing.section)
-      make.left.right.equalToSuperview().inset(Spacing.section)
+      make.top.greaterThanOrEqualTo(variantStateLabel.snp.bottom).offset(Spacing.small)
+      make.left.right.equalToSuperview().inset(Spacing.small)
       make.bottom.equalToSuperview().offset(-Spacing.small)
       make.height.equalTo(Size.textFieldHeight)
     }

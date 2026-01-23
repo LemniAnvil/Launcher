@@ -616,6 +616,7 @@ class AccountInfoViewController: NSViewController {
     }
 
     let skinPreviewCard = createInfoCard()
+    skinPreviewCard.layer?.cornerRadius = Radius.standard + Spacing.small
     skinsRow.addSubview(skinPreviewCard)
     skinPreviewCard.snp.makeConstraints { make in
       make.top.left.equalToSuperview()
@@ -913,8 +914,11 @@ class AccountInfoViewController: NSViewController {
     if renderer.view.superview == nil {
       container.subviews.forEach { $0.removeFromSuperview() }
       container.addSubview(renderer.view)
+      renderer.view.wantsLayer = true
+      renderer.view.layer?.cornerRadius = Radius.standard
+      renderer.view.layer?.masksToBounds = true
       renderer.view.snp.makeConstraints { make in
-        make.edges.equalToSuperview().inset(8)
+        make.edges.equalToSuperview().inset(Spacing.small)
       }
     }
 
@@ -930,9 +934,12 @@ class AccountInfoViewController: NSViewController {
     let imageView = NSImageView()
     imageView.imageScaling = .scaleProportionallyUpOrDown
     imageView.image = NSImage(data: imageData)
+    imageView.wantsLayer = true
+    imageView.layer?.cornerRadius = Radius.standard
+    imageView.layer?.masksToBounds = true
     container.addSubview(imageView)
     imageView.snp.makeConstraints { make in
-      make.edges.equalToSuperview().inset(8)
+      make.edges.equalToSuperview().inset(Spacing.small)
     }
 #endif
   }
