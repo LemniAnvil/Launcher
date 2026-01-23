@@ -211,12 +211,35 @@ final class AccountSkinLibraryView: NSView {
     )
     showInFinderItem.target = self
     menu.addItem(showInFinderItem)
+
+    menu.addItem(NSMenuItem.separator())
+
+    let deleteItem = NSMenuItem(
+      title: Localized.Account.deleteButton,
+      action: #selector(deleteSkin(_:)),
+      keyEquivalent: ""
+    )
+    deleteItem.target = self
+    menu.addItem(deleteItem)
     return menu
   }
 
   @objc private func showSkinInFinder(_ sender: Any?) {
     guard let skin = getClickedSkin() else { return }
     NSWorkspace.shared.activateFileViewerSelecting([skin.fileURL])
+  }
+
+  @objc private func deleteSkin(_ sender: Any?) {
+    guard let skin = getClickedSkin() else { return }
+    do {
+      try FileManager.default.trashItem(at: skin.fileURL, resultingItemURL: nil)
+      if let metadataID = skin.metadataID {
+        try? library.deleteMetadata(metadataID: metadataID, kind: skin.kind)
+      }
+      loadSkins()
+    } catch {
+      showAlert(message: "Failed to delete skin: \(error.localizedDescription)")
+    }
   }
 
   private func getClickedSkin() -> LauncherSkinAsset? {
