@@ -17,10 +17,10 @@ enum AppConstants {
   enum Auth {
 
     /// Access Token expiration time (seconds) - 24 hours
-    static let tokenExpirationSeconds: TimeInterval = 24 * 60 * 60
+    static let tokenExpirationSeconds: TimeInterval = AuthConstants.tokenExpirationSeconds
 
     /// Token refresh buffer (seconds) - refresh 1 hour early
-    static let tokenRefreshBuffer: TimeInterval = 60 * 60
+    static let tokenRefreshBuffer: TimeInterval = AuthConstants.tokenRefreshBuffer
   }
 
   // MARK: - Network

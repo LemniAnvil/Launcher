@@ -21,8 +21,9 @@ class AccountViewController: NSViewController {
 
   var microsoftAccounts: [MicrosoftAccount] = []
   var offlineAccounts: [OfflineAccount] = []
-  let accountManager = MicrosoftAccountManager.shared
-  let offlineAccountManager = OfflineAccountManager.shared
+  let accountManager: MicrosoftAccountStoring
+  let offlineAccountManager: OfflineAccountStoring
+  let defaultAccountManager: DefaultAccountManaging
   var isDeveloperMode: Bool = false {
     didSet {
       UserDefaults.standard.set(isDeveloperMode, forKey: "AccountDeveloperMode")
@@ -40,8 +41,16 @@ class AccountViewController: NSViewController {
 
   // MARK: - Initialization
 
-  init(authManager: MicrosoftAuthProtocol = MicrosoftAuthManager.shared) {
+  init(
+    authManager: MicrosoftAuthProtocol = MicrosoftAuthManager.shared,
+    accountManager: MicrosoftAccountStoring = MicrosoftAccountManager.shared,
+    offlineAccountManager: OfflineAccountStoring = OfflineAccountManager.shared,
+    defaultAccountManager: DefaultAccountManaging = DefaultAccountManager.shared
+  ) {
     self.authManager = authManager
+    self.accountManager = accountManager
+    self.offlineAccountManager = offlineAccountManager
+    self.defaultAccountManager = defaultAccountManager
     super.init(nibName: nil, bundle: nil)
   }
 

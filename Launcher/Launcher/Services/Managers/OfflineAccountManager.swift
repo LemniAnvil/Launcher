@@ -1,44 +1,16 @@
 //
-//  OfflineAccount.swift
+//  OfflineAccountManager.swift
 //  Launcher
 //
-//  Offline account model for saved accounts
+//  Offline account storage manager (UserDefaults)
 //
 
-import Foundation
 import CryptoKit
-
-struct OfflineAccount: Codable {
-  let id: String              // Player UUID (generated)
-  let name: String            // Player name
-  let timestamp: TimeInterval // Save timestamp
-
-  var displayName: String {
-    return name
-  }
-
-  var shortUUID: String {
-    return String(id.prefix(8))
-  }
-
-  // Generate a fake access token for offline mode (simulating Microsoft format)
-  var accessToken: String {
-    // Generate a base64-like token similar to Microsoft's format
-    guard let tokenData = "offline_\(id)_\(Int(timestamp))".data(using: .utf8) else {
-      return ""
-    }
-    return tokenData.base64EncodedString()
-  }
-
-  // Offline accounts don't expire
-  var isExpired: Bool {
-    return false
-  }
-}
+import Foundation
 
 // MARK: - Account Manager
 
-class OfflineAccountManager {
+class OfflineAccountManager: OfflineAccountStoring {
   static let shared = OfflineAccountManager()
 
   private let accountsKey = "OfflineAccounts"

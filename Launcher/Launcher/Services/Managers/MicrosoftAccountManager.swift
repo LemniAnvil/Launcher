@@ -1,88 +1,15 @@
 //
-//  MicrosoftAccount.swift
+//  MicrosoftAccountManager.swift
 //  Launcher
 //
-//  Microsoft account model for saved accounts
+//  Microsoft account storage manager (UserDefaults)
 //
 
 import Foundation
 
-// MARK: - Skin Model
-
-struct SkinResponse: Codable {
-  let id: String
-  let state: String
-  let url: String
-  let variant: String
-  let alias: String?
-
-  var isActive: Bool {
-    return state == "ACTIVE"
-  }
-}
-
-// MARK: - Cape Model
-
-struct Cape: Codable {
-  let id: String
-  let state: String
-  let url: String
-  let alias: String?
-
-  var isActive: Bool {
-    return state == "ACTIVE"
-  }
-}
-
-// MARK: - Microsoft Account Model
-
-struct MicrosoftAccount: Codable {
-  let id: String              // Player UUID
-  let name: String            // Player name
-  let accessToken: String     // Minecraft access token
-  let refreshToken: String    // Refresh token
-  let timestamp: TimeInterval // Save timestamp
-  let skins: [SkinResponse]?  // Player skins
-  let capes: [Cape]?          // Player capes
-
-  var isExpired: Bool {
-    // Access tokens typically expire after 24 hours
-    return Date().timeIntervalSince1970 - timestamp > AppConstants.Auth.tokenExpirationSeconds
-  }
-
-  var expirationDate: Date {
-    // Token expires 24 hours after timestamp
-    return Date(timeIntervalSince1970: timestamp + AppConstants.Auth.tokenExpirationSeconds)
-  }
-
-  var displayName: String {
-    return name
-  }
-
-  var shortUUID: String {
-    return String(id.prefix(8))
-  }
-
-  var activeSkin: SkinResponse? {
-    return skins?.first { $0.isActive }
-  }
-
-  var activeCape: Cape? {
-    return capes?.first { $0.isActive }
-  }
-
-  var hasSkins: Bool {
-    return skins?.isEmpty == false
-  }
-
-  var hasCapes: Bool {
-    return capes?.isEmpty == false
-  }
-}
-
 // MARK: - Account Manager
 
-class MicrosoftAccountManager {
+class MicrosoftAccountManager: MicrosoftAccountStoring {
   static let shared = MicrosoftAccountManager()
 
   private let accountsKey = "MicrosoftAccounts"

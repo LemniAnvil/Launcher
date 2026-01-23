@@ -33,7 +33,7 @@ extension AccountViewController: NSTableViewDelegate {
     // Determine account type and check if default
     let accountType: AccountCellView.AccountType
     let isDefault: Bool
-    let defaultManager = DefaultAccountManager.shared
+    let defaultManager = defaultAccountManager
 
     if row < microsoftAccounts.count {
       let account = microsoftAccounts[row]

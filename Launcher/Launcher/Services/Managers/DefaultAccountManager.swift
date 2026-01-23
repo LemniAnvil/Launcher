@@ -9,34 +9,39 @@ import CraftKit
 import Foundation
 
 /// Manager for handling default account settings
-class DefaultAccountManager {
+class DefaultAccountManager: DefaultAccountManaging {
   static let shared = DefaultAccountManager()
 
   private let defaultAccountSelectionKey = "DefaultAccountSelection"
 
   private let userDefaults: UserDefaults
+  private let microsoftAccountStore: MicrosoftAccountStoring
+  private let offlineAccountStore: OfflineAccountStoring
+  private let authManager: MicrosoftAuthProtocol
   private let encoder = JSONEncoder()
   private let decoder = JSONDecoder()
 
-  private init(userDefaults: UserDefaults = .standard) {
+  private init(
+    userDefaults: UserDefaults = .standard,
+    microsoftAccountStore: MicrosoftAccountStoring = MicrosoftAccountManager.shared,
+    offlineAccountStore: OfflineAccountStoring = OfflineAccountManager.shared,
+    authManager: MicrosoftAuthProtocol = MicrosoftAuthManager.shared
+  ) {
     self.userDefaults = userDefaults
-  }
-
-  /// Account type enumeration
-  enum AccountType: String, Codable {
-    case microsoft = "microsoft"
-    case offline = "offline"
+    self.microsoftAccountStore = microsoftAccountStore
+    self.offlineAccountStore = offlineAccountStore
+    self.authManager = authManager
   }
 
   private struct DefaultAccountSelection: Codable, Equatable {
     let id: String
-    let type: AccountType
+    let type: DefaultAccountType
   }
 
   // MARK: - Public Methods
 
   /// Set default account
-  func setDefaultAccount(id: String, type: AccountType) {
+  func setDefaultAccount(id: String, type: DefaultAccountType) {
     let selection = DefaultAccountSelection(id: id, type: type)
     saveSelection(selection)
 
@@ -49,7 +54,7 @@ class DefaultAccountManager {
   }
 
   /// Get default account type
-  func getDefaultAccountType() -> AccountType? {
+  func getDefaultAccountType() -> DefaultAccountType? {
     return loadSelection()?.type
   }
 
@@ -60,7 +65,7 @@ class DefaultAccountManager {
   }
 
   /// Check if specific account is default
-  func isDefaultAccount(id: String, type: AccountType) -> Bool {
+  func isDefaultAccount(id: String, type: DefaultAccountType) -> Bool {
     return loadSelection() == DefaultAccountSelection(id: id, type: type)
   }
 
@@ -73,7 +78,7 @@ class DefaultAccountManager {
 
     switch selection.type {
     case .microsoft:
-      guard let account = MicrosoftAccountManager.shared.getAccount(id: selection.id) else {
+      guard let account = microsoftAccountStore.getAccount(id: selection.id) else {
         // Account was deleted, clear default setting
         Logger.shared.warning("Default Microsoft account not found, clearing default", category: "DefaultAccount")
         clearDefaultAccount()
@@ -86,7 +91,7 @@ class DefaultAccountManager {
 
         do {
           // Attempt to refresh the account
-          let refreshedResponse = try await MicrosoftAuthManager.shared.completeRefresh(
+          let refreshedResponse = try await authManager.completeRefresh(
             refreshToken: account.refreshToken
           )
 
@@ -111,7 +116,7 @@ class DefaultAccountManager {
           }
 
           // Update the account with refreshed data
-          MicrosoftAccountManager.shared.updateAccountFromRefresh(
+          microsoftAccountStore.updateAccountFromRefresh(
             id: refreshedResponse.id,
             name: refreshedResponse.name,
             accessToken: refreshedResponse.accessToken,
@@ -138,7 +143,7 @@ class DefaultAccountManager {
       return (username: account.name, uuid: account.id, accessToken: account.accessToken)
 
     case .offline:
-      guard let account = OfflineAccountManager.shared.getAccount(id: selection.id) else {
+      guard let account = offlineAccountStore.getAccount(id: selection.id) else {
         // Account was deleted, clear default setting
         Logger.shared.warning("Default offline account not found, clearing default", category: "DefaultAccount")
         clearDefaultAccount()

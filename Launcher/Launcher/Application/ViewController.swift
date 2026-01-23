@@ -29,6 +29,7 @@ class ViewController: NSViewController {
   private let instanceManager: InstanceManaging
   private let versionManager: VersionManaging
   private let gameLauncher: GameLaunching
+  private let defaultAccountManager: DefaultAccountManaging
   var instances: [Instance] = []
 
   // UI elements
@@ -246,11 +247,13 @@ class ViewController: NSViewController {
   init(
     instanceManager: InstanceManaging = InstanceManager.shared,
     versionManager: VersionManaging = VersionManager.shared,
-    gameLauncher: GameLaunching = GameLauncher.shared
+    gameLauncher: GameLaunching = GameLauncher.shared,
+    defaultAccountManager: DefaultAccountManaging = DefaultAccountManager.shared
   ) {
     self.instanceManager = instanceManager
     self.versionManager = versionManager
     self.gameLauncher = gameLauncher
+    self.defaultAccountManager = defaultAccountManager
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -789,7 +792,7 @@ extension ViewController {
 
     // Check if there's a default account (async operation)
     Task { @MainActor in
-      if let defaultAccountInfo = await DefaultAccountManager.shared.getDefaultAccountInfo() {
+      if let defaultAccountInfo = await defaultAccountManager.getDefaultAccountInfo() {
         // Use default account to launch directly
         Logger.shared.info("Using default account: \(defaultAccountInfo.username)", category: "MainWindow")
         let accountInfo = OfflineLaunchViewController.AccountInfo(
@@ -1135,7 +1138,7 @@ extension ViewController {
 
     // Check if there's a default account (async operation)
     Task { @MainActor in
-      if let defaultAccountInfo = await DefaultAccountManager.shared.getDefaultAccountInfo() {
+      if let defaultAccountInfo = await defaultAccountManager.getDefaultAccountInfo() {
         Logger.shared.info("Using default account: \(defaultAccountInfo.username)", category: "MainWindow")
         let accountInfo = OfflineLaunchViewController.AccountInfo(
           username: defaultAccountInfo.username,

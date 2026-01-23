@@ -392,7 +392,6 @@ extension AccountViewController {
     Task { @MainActor in
       do {
         // Refresh the account using refresh token with progress callbacks
-        let authManager = MicrosoftAuthManager.shared
         let response = try await authManager.completeRefreshWithProgress(
           refreshToken: account.refreshToken
         ) { [weak self] step in
@@ -509,10 +508,9 @@ extension AccountViewController {
     }
 
     // Clear default account if this was the default
-    let defaultManager = DefaultAccountManager.shared
-    let type: DefaultAccountManager.AccountType = isOffline ? .offline : .microsoft
-    if defaultManager.isDefaultAccount(id: accountId, type: type) {
-      defaultManager.clearDefaultAccount()
+    let type: DefaultAccountType = isOffline ? .offline : .microsoft
+    if defaultAccountManager.isDefaultAccount(id: accountId, type: type) {
+      defaultAccountManager.clearDefaultAccount()
       Logger.shared.info("Cleared default account as it was deleted", category: "Account")
     }
 
@@ -532,7 +530,7 @@ extension AccountViewController {
 
     if isMicrosoftAccount {
       let account = microsoftAccounts[rowIndex]
-      DefaultAccountManager.shared.setDefaultAccount(
+      defaultAccountManager.setDefaultAccount(
         id: account.id,
         type: .microsoft
       )
@@ -544,7 +542,7 @@ extension AccountViewController {
       )
     } else {
       let account = offlineAccounts[rowIndex - microsoftAccounts.count]
-      DefaultAccountManager.shared.setDefaultAccount(
+      defaultAccountManager.setDefaultAccount(
         id: account.id,
         type: .offline
       )
@@ -561,7 +559,7 @@ extension AccountViewController {
   }
 
   @objc func clearDefaultAccount(_ sender: Any?) {
-    DefaultAccountManager.shared.clearDefaultAccount()
+    defaultAccountManager.clearDefaultAccount()
     Logger.shared.info("Cleared default account", category: "Account")
 
     showAlert(

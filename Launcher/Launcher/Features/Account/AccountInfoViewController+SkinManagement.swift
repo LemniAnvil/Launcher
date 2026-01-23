@@ -135,7 +135,7 @@ extension AccountInfoViewController {
   func refreshTokenIfNeeded(_ account: MicrosoftAccount) async throws -> String {
     // Check if token will expire within 5 minutes (300 seconds)
     // Token expires 24 hours after timestamp
-    let expirationTime = account.timestamp + AppConstants.Auth.tokenExpirationSeconds
+    let expirationTime = account.timestamp + AuthConstants.tokenExpirationSeconds
     let currentTime = Date().timeIntervalSince1970
     let needsRefresh = currentTime > (expirationTime - 300)
 

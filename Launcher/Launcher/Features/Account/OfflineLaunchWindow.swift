@@ -43,9 +43,25 @@ class OfflineLaunchViewController: NSViewController {
   var onLaunch: ((AccountInfo) -> Void)?
   private var microsoftAccounts: [MicrosoftAccount] = []
   private var offlineAccounts: [OfflineAccount] = []
-  private let accountManager = MicrosoftAccountManager.shared
-  private let offlineAccountManager = OfflineAccountManager.shared
+  private let accountManager: MicrosoftAccountStoring
+  private let offlineAccountManager: OfflineAccountStoring
   private var selectedAccountInfo: AccountInfo?
+
+  // MARK: - Initialization
+
+  init(
+    accountManager: MicrosoftAccountStoring = MicrosoftAccountManager.shared,
+    offlineAccountManager: OfflineAccountStoring = OfflineAccountManager.shared
+  ) {
+    self.accountManager = accountManager
+    self.offlineAccountManager = offlineAccountManager
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  @available(*, unavailable)
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 
   // UI components
   private let titleLabel: DisplayLabel = {
