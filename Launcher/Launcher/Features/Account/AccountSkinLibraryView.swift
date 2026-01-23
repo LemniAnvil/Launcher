@@ -21,6 +21,13 @@ final class AccountSkinLibraryView: NSView {
   private let library = SkinLibrary()
   private var skins: [LauncherSkinAsset] = []
   private var dataSource: NSCollectionViewDiffableDataSource<Int, LauncherSkinAsset>!
+  private var lastLayoutWidth: CGFloat = 0
+
+  private enum Layout {
+    static let minItemWidth: CGFloat = 170
+    static let itemHeight: CGFloat = 200
+    static let interItemSpacing: CGFloat = 16
+  }
 
   // MARK: - UI Components
 
@@ -52,9 +59,9 @@ final class AccountSkinLibraryView: NSView {
 
   private lazy var collectionView: NSCollectionView = {
     let layout = NSCollectionViewFlowLayout()
-    layout.itemSize = NSSize(width: 200, height: 200)
-    layout.minimumInteritemSpacing = 16
-    layout.minimumLineSpacing = 16
+    layout.itemSize = NSSize(width: Layout.minItemWidth, height: Layout.itemHeight)
+    layout.minimumInteritemSpacing = Layout.interItemSpacing
+    layout.minimumLineSpacing = Layout.interItemSpacing
 
     let view = NSCollectionView()
     view.collectionViewLayout = layout
@@ -141,6 +148,31 @@ final class AccountSkinLibraryView: NSView {
       make.center.equalTo(scrollView)
       make.left.right.equalTo(scrollView).inset(40)
     }
+  }
+
+  override func layout() {
+    super.layout()
+    updateCollectionLayoutIfNeeded()
+  }
+
+  private func updateCollectionLayoutIfNeeded() {
+    guard let layout = collectionView.collectionViewLayout as? NSCollectionViewFlowLayout else { return }
+    let availableWidth = scrollView.contentView.bounds.width
+    guard availableWidth > 0 else { return }
+    if abs(availableWidth - lastLayoutWidth) < 1 {
+      return
+    }
+    lastLayoutWidth = availableWidth
+
+    let columns = max(1, Int((availableWidth + Layout.interItemSpacing)
+      / (Layout.minItemWidth + Layout.interItemSpacing)))
+    let totalSpacing = Layout.interItemSpacing * CGFloat(max(0, columns - 1))
+    let itemWidth = floor((availableWidth - totalSpacing) / CGFloat(columns))
+
+    layout.itemSize = NSSize(width: itemWidth, height: Layout.itemHeight)
+    layout.minimumInteritemSpacing = Layout.interItemSpacing
+    layout.minimumLineSpacing = Layout.interItemSpacing
+    layout.invalidateLayout()
   }
 
   private func configureDataSource() {
@@ -291,9 +323,11 @@ fileprivate final class AccountSkinCollectionItem: NSCollectionViewItem {
   private lazy var uploadButton: BRImageButton = {
     let button = BRImageButton(
       symbolName: "arrow.up.circle",
-      cornerRadius: 6,
-      highlightColorProvider: {
-        NSColor.systemBlue.withAlphaComponent(0.1)
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemBlue,
       accessibilityLabel: Localized.Account.uploadToAccount
@@ -306,9 +340,11 @@ fileprivate final class AccountSkinCollectionItem: NSCollectionViewItem {
   private lazy var renameButton: BRImageButton = {
     let button = BRImageButton(
       symbolName: "pencil.circle",
-      cornerRadius: 6,
-      highlightColorProvider: {
-        NSColor.systemOrange.withAlphaComponent(0.1)
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.view.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
       },
       tintColor: .systemOrange,
       accessibilityLabel: "Rename"
@@ -323,7 +359,7 @@ fileprivate final class AccountSkinCollectionItem: NSCollectionViewItem {
     view.wantsLayer = true
 
     let padding: CGFloat = 8
-    let buttonSize: CGFloat = 24
+    let buttonSize: CGFloat = 32
     let buttonSpacing: CGFloat = 8
     let imageToTextSpacing: CGFloat = 6
 
