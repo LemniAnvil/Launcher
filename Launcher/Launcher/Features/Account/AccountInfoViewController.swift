@@ -375,17 +375,16 @@ class AccountInfoViewController: NSViewController {
     fullUUIDLabel.snp.makeConstraints { make in
       make.top.equalTo(shortUUIDLabel.snp.bottom).offset(Spacing.micro)
       make.left.right.equalToSuperview().inset(16)
-      make.bottom.equalToSuperview().offset(-16)
     }
 
-    yOffset += 150  // Approximate card height
-
-    // Status card
-    let statusCard = createInfoCard()
-    detailContainerView.addSubview(statusCard)
-    statusCard.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(yOffset)
-      make.left.right.equalToSuperview().inset(20)
+    let statusBadgeHeight: CGFloat = 28
+    let statusSectionInset = Spacing.medium
+    let statusSeparator = BRSeparator.horizontal()
+    playerCard.addSubview(statusSeparator)
+    statusSeparator.snp.makeConstraints { make in
+      make.top.equalTo(fullUUIDLabel.snp.bottom).offset(Spacing.section)
+      make.left.right.equalToSuperview().inset(statusSectionInset)
+      make.height.equalTo(1)
     }
 
     // Login timestamp
@@ -400,7 +399,6 @@ class AccountInfoViewController: NSViewController {
       textColor: .secondaryLabelColor,
       alignment: .left
     )
-    statusCard.addSubview(loginTitleLabel)
 
     let loginValueLabel = DisplayLabel(
       text: dateFormatter.string(from: loginDate),
@@ -408,7 +406,6 @@ class AccountInfoViewController: NSViewController {
       textColor: .labelColor,
       alignment: .left
     )
-    statusCard.addSubview(loginValueLabel)
 
     // Token expiration
     let expirationDate = account.expirationDate
@@ -418,7 +415,6 @@ class AccountInfoViewController: NSViewController {
       textColor: .secondaryLabelColor,
       alignment: .left
     )
-    statusCard.addSubview(expirationTitleLabel)
 
     let expirationValueLabel = DisplayLabel(
       text: dateFormatter.string(from: expirationDate),
@@ -426,7 +422,6 @@ class AccountInfoViewController: NSViewController {
       textColor: .labelColor,
       alignment: .left
     )
-    statusCard.addSubview(expirationValueLabel)
 
     // Access token status with badge
     let tokenStatusLabel = DisplayLabel(
@@ -435,7 +430,6 @@ class AccountInfoViewController: NSViewController {
       textColor: .secondaryLabelColor,
       alignment: .left
     )
-    statusCard.addSubview(tokenStatusLabel)
 
     let tokenStatus = account.isExpired ? Localized.Account.tokenExpired : Localized.Account.tokenValid
     let tokenColor: NSColor = account.isExpired ? .systemOrange : .systemGreen
@@ -443,14 +437,12 @@ class AccountInfoViewController: NSViewController {
     let statusBadge = NSView()
     statusBadge.wantsLayer = true
     statusBadge.layer?.backgroundColor = tokenColor.cgColor
-    statusBadge.layer?.cornerRadius = Radius.large
-    statusCard.addSubview(statusBadge)
+    statusBadge.layer?.cornerRadius = statusBadgeHeight / 2
 
     let statusIcon = NSImageView()
     statusIcon.image = NSImage(systemSymbolName: account.isExpired ? "exclamationmark.circle" : "checkmark.circle", accessibilityDescription: nil)
     statusIcon.contentTintColor = .white
     statusIcon.imageScaling = .scaleProportionallyDown
-    statusBadge.addSubview(statusIcon)
 
     let statusTextLabel = DisplayLabel(
       text: tokenStatus,
@@ -458,38 +450,41 @@ class AccountInfoViewController: NSViewController {
       textColor: .white,
       alignment: .left
     )
+    statusBadge.addSubview(statusIcon)
     statusBadge.addSubview(statusTextLabel)
 
-    loginTitleLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(Spacing.medium)
-      make.left.equalToSuperview().offset(Spacing.medium)
-    }
+    let loginStack = NSStackView(views: [loginTitleLabel, loginValueLabel])
+    loginStack.orientation = .vertical
+    loginStack.alignment = .leading
+    loginStack.spacing = Spacing.micro
 
-    loginValueLabel.snp.makeConstraints { make in
-      make.top.equalTo(loginTitleLabel.snp.bottom).offset(Spacing.micro)
-      make.left.right.equalToSuperview().inset(16)
-    }
+    let expirationStack = NSStackView(views: [expirationTitleLabel, expirationValueLabel])
+    expirationStack.orientation = .vertical
+    expirationStack.alignment = .leading
+    expirationStack.spacing = Spacing.micro
 
-    expirationTitleLabel.snp.makeConstraints { make in
-      make.top.equalTo(loginValueLabel.snp.bottom).offset(Spacing.section)
-      make.left.equalToSuperview().offset(Spacing.medium)
-    }
+    let statusStack = NSStackView(views: [tokenStatusLabel, statusBadge])
+    statusStack.orientation = .vertical
+    statusStack.alignment = .leading
+    statusStack.spacing = Spacing.minimal
+    statusStack.setContentHuggingPriority(.required, for: .horizontal)
+    statusStack.setContentCompressionResistancePriority(.required, for: .horizontal)
 
-    expirationValueLabel.snp.makeConstraints { make in
-      make.top.equalTo(expirationTitleLabel.snp.bottom).offset(Spacing.micro)
-      make.left.right.equalToSuperview().inset(16)
-    }
+    let statusContentStack = NSStackView(views: [loginStack, expirationStack, statusStack])
+    statusContentStack.orientation = .horizontal
+    statusContentStack.alignment = .centerY
+    statusContentStack.spacing = Spacing.medium
+    statusContentStack.distribution = .fillProportionally
+    playerCard.addSubview(statusContentStack)
 
-    tokenStatusLabel.snp.makeConstraints { make in
-      make.top.equalTo(expirationValueLabel.snp.bottom).offset(Spacing.section)
-      make.left.equalToSuperview().offset(Spacing.medium)
+    statusContentStack.snp.makeConstraints { make in
+      make.top.equalTo(statusSeparator.snp.bottom).offset(Spacing.small)
+      make.left.right.equalToSuperview().inset(statusSectionInset)
+      make.bottom.equalToSuperview().offset(-statusSectionInset)
     }
 
     statusBadge.snp.makeConstraints { make in
-      make.top.equalTo(tokenStatusLabel.snp.bottom).offset(Spacing.minimal)
-      make.left.equalToSuperview().offset(Spacing.medium)
-      make.bottom.equalToSuperview().offset(-16)
-      make.height.equalTo(32)
+      make.height.equalTo(statusBadgeHeight)
     }
 
     statusIcon.snp.makeConstraints { make in
@@ -504,7 +499,7 @@ class AccountInfoViewController: NSViewController {
       make.centerY.equalToSuperview()
     }
 
-    yOffset += 200  // Approximate card height
+    yOffset += 230  // Approximate combined card height
 
     // Helper function to add a detail row (keep for compatibility)
     func addDetailRow(label: String, value: String, valueFont: NSFont = .systemFont(ofSize: 12), valueColor: NSColor = .labelColor, selectable: Bool = false) -> NSView {
@@ -680,22 +675,34 @@ class AccountInfoViewController: NSViewController {
     capesHeaderContainer.addSubview(capesTitleLabel)
 
     // Action buttons
-    let refreshButton = NSButton(
-      image: NSImage(systemSymbolName: "arrow.clockwise", accessibilityDescription: nil)!,
-      target: self,
-      action: #selector(refreshCapesButtonClicked)
+    let buttonHighlightColor: () -> NSColor = { [weak self] in
+      self?.view.effectiveAppearance.name == .darkAqua
+        ? NSColor.white.withAlphaComponent(0.1)
+        : NSColor.black.withAlphaComponent(0.06)
+    }
+
+    let refreshButton = BRImageButton(
+      symbolName: "arrow.clockwise",
+      cornerRadius: 6,
+      highlightColorProvider: buttonHighlightColor,
+      tintColor: .secondaryLabelColor,
+      accessibilityLabel: Localized.Account.refreshCapes
     )
-    refreshButton.bezelStyle = .rounded
-    refreshButton.isBordered = false
+    refreshButton.target = self
+    refreshButton.action = #selector(refreshCapesButtonClicked)
     refreshButton.toolTip = Localized.Account.refreshCapes
     capesHeaderContainer.addSubview(refreshButton)
 
-    let hideCapeButton = NSButton(
-      title: Localized.Account.hideCape,
-      target: self,
-      action: #selector(hideCapeButtonClicked)
+    let hideCapeButton = BRImageButton(
+      symbolName: "eye.slash",
+      cornerRadius: 6,
+      highlightColorProvider: buttonHighlightColor,
+      tintColor: .secondaryLabelColor,
+      accessibilityLabel: Localized.Account.hideCape
     )
-    hideCapeButton.bezelStyle = .rounded
+    hideCapeButton.target = self
+    hideCapeButton.action = #selector(hideCapeButtonClicked)
+    hideCapeButton.toolTip = Localized.Account.hideCape
     hideCapeButton.isEnabled = account.capes?.contains(where: { $0.isActive }) ?? false
     capesHeaderContainer.addSubview(hideCapeButton)
 
@@ -712,11 +719,13 @@ class AccountInfoViewController: NSViewController {
 
     hideCapeButton.snp.makeConstraints { make in
       make.right.centerY.equalToSuperview()
+      make.width.height.equalTo(32)
     }
 
     refreshButton.snp.makeConstraints { make in
       make.right.equalTo(hideCapeButton.snp.left).offset(-8)
       make.centerY.equalToSuperview()
+      make.width.height.equalTo(32)
     }
 
     yOffset += 30

@@ -144,8 +144,8 @@ extension Localized {
     static let capesCount = String(localized: "Capes Count", comment: "[Label] Capes count.")
     static let activeSkin = String(localized: "Active Skin", comment: "[Label] Active skin.")
     static let activeCape = String(localized: "Active Cape", comment: "[Label] Active cape.")
-    static let tokenValid = String(localized: "✓ Valid", comment: "[Status] Token valid.")
-    static let tokenExpired = String(localized: "⚠️ Expired", comment: "[Status] Token expired.")
+    static let tokenValid = String(localized: "Valid", comment: "[Status] Token valid.")
+    static let tokenExpired = String(localized: "Expired", comment: "[Status] Token expired.")
     static let noActiveSkin = String(localized: "Default Skin", comment: "[Text] No active skin.")
     static let noActiveCape = String(localized: "No Cape", comment: "[Text] No active cape.")
 

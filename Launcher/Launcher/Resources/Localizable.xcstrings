@@ -195,7 +195,7 @@
       }
     },
     "⚠️ Expired" : {
-      "comment" : "[Status] Token expired status.\n[Status] Token expired.",
+      "comment" : "[Status] Token expired status.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -400,6 +400,7 @@
     },
     "✓ Valid" : {
       "comment" : "[Status] Token valid.",
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2529,6 +2530,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "错误：%@"
+          }
+        }
+      }
+    },
+    "Expired" : {
+      "comment" : "[Status] Token expired.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已过期"
           }
         }
       }
@@ -5546,6 +5558,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "UUID"
+          }
+        }
+      }
+    },
+    "Valid" : {
+      "comment" : "[Status] Token valid.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有效"
           }
         }
       }
