@@ -29,6 +29,7 @@ extension Localized {
     // Context Menu
     static let menuDelete = String(localized: "Delete Account", comment: "[Menu] Delete account.")
     static let menuRefresh = String(localized: "Refresh Account", comment: "[Menu] Refresh account menu item.")
+    static let menuShowInFinder = String(localized: "Show in Finder", comment: "[Menu] Show skin in Finder.")
 
     // Buttons
     static let signInMicrosoftButton = String(localized: "Sign in with Microsoft", comment: "[Button] Sign in with Microsoft button.")

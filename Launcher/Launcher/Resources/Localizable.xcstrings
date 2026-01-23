@@ -4829,7 +4829,7 @@
       }
     },
     "Show in Finder" : {
-      "comment" : "[Menu] Show instance in Finder.\n[Menu] Show version in Finder.",
+      "comment" : "[Menu] Show instance in Finder.\n[Menu] Show skin in Finder.\n[Menu] Show version in Finder.",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

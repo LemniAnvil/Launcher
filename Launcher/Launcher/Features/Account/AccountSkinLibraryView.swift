@@ -123,6 +123,7 @@ final class AccountSkinLibraryView: NSView {
     headerStack.spacing = 8
 
     scrollView.documentView = collectionView
+    collectionView.menu = createContextMenu()
 
     addSubview(headerStack)
     addSubview(scrollView)
@@ -197,6 +198,38 @@ final class AccountSkinLibraryView: NSView {
       }
       return item
     }
+  }
+
+  // MARK: - Context Menu
+
+  private func createContextMenu() -> NSMenu {
+    let menu = NSMenu()
+    let showInFinderItem = NSMenuItem(
+      title: Localized.Account.menuShowInFinder,
+      action: #selector(showSkinInFinder(_:)),
+      keyEquivalent: ""
+    )
+    showInFinderItem.target = self
+    menu.addItem(showInFinderItem)
+    return menu
+  }
+
+  @objc private func showSkinInFinder(_ sender: Any?) {
+    guard let skin = getClickedSkin() else { return }
+    NSWorkspace.shared.activateFileViewerSelecting([skin.fileURL])
+  }
+
+  private func getClickedSkin() -> LauncherSkinAsset? {
+    let point = collectionView.convert(window?.mouseLocationOutsideOfEventStream ?? .zero, from: nil)
+    if let indexPath = collectionView.indexPathForItem(at: point),
+       let skin = dataSource.itemIdentifier(for: indexPath) {
+      return skin
+    }
+    if let selectedIndexPath = collectionView.selectionIndexPaths.first,
+       let skin = dataSource.itemIdentifier(for: selectedIndexPath) {
+      return skin
+    }
+    return nil
   }
 
   // MARK: - Public Methods
