@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import CraftKit
 import SnapKit
 import Yatagarasu
 
@@ -19,9 +20,20 @@ final class AccountSkinLibraryView: NSView {
   weak var delegate: AccountSkinLibraryViewDelegate?
 
   private let library = SkinLibrary()
+  private let logger = Logger.shared
   private var skins: [LauncherSkinAsset] = []
+  private var onlineResults: [LauncherSkinAsset] = []
+  private var searchTask: Task<Void, Never>?
   private var dataSource: NSCollectionViewDiffableDataSource<Int, LauncherSkinAsset>!
   private var lastLayoutWidth: CGFloat = 0
+  private var searchQuery: String = ""
+
+  private enum SearchMode {
+    case local
+    case online
+  }
+
+  private var searchMode: SearchMode = .local
 
   private enum Layout {
     static let minItemWidth: CGFloat = 170
@@ -37,6 +49,49 @@ final class AccountSkinLibraryView: NSView {
     label.textColor = .secondaryLabelColor
     label.lineBreakMode = .byTruncatingMiddle
     return label
+  }()
+
+  private lazy var searchField: NSSearchField = {
+    let field = NSSearchField()
+    field.font = .systemFont(ofSize: 12)
+    field.placeholderString = Localized.Account.searchLocalSkinsPlaceholder
+    field.sendsSearchStringImmediately = false
+    field.target = self
+    field.action = #selector(handleSearch)
+    return field
+  }()
+
+  private lazy var searchModeControl: NSSegmentedControl = {
+    let control = NSSegmentedControl(
+      labels: [
+        Localized.Account.searchModeLocal,
+        Localized.Account.searchModeOnline,
+      ],
+      trackingMode: .selectOne,
+      target: self,
+      action: #selector(handleSearchModeChange(_:))
+    )
+    control.segmentStyle = .rounded
+    control.selectedSegment = 0
+    return control
+  }()
+
+  private lazy var searchButton: BRImageButton = {
+    let button = BRImageButton(
+      symbolName: "magnifyingglass",
+      cornerRadius: 8,
+      highlightColorProvider: { [weak self] in
+        self?.effectiveAppearance.name == .darkAqua
+          ? NSColor.white.withAlphaComponent(0.1)
+          : NSColor.black.withAlphaComponent(0.06)
+      },
+      tintColor: .secondaryLabelColor,
+      accessibilityLabel: Localized.Account.searchSkinsButton
+    )
+    button.target = self
+    button.action = #selector(handleSearch)
+    button.toolTip = Localized.Account.searchSkinsButton
+    return button
   }()
 
   private lazy var importButton: NSButton = {
@@ -116,7 +171,24 @@ final class AccountSkinLibraryView: NSView {
     buttonStack.alignment = .centerY
     buttonStack.spacing = 8
 
-    let headerStack = NSStackView(views: [statusLabel, buttonStack])
+    let searchStack = NSStackView(views: [searchField, searchModeControl, searchButton])
+    searchStack.orientation = .horizontal
+    searchStack.alignment = .centerY
+    searchStack.spacing = 8
+
+    let topRow = NSStackView(views: [statusLabel, NSView()])
+    topRow.orientation = .horizontal
+    topRow.alignment = .centerY
+    topRow.distribution = .fill
+    topRow.spacing = 8
+
+    let secondRow = NSStackView(views: [buttonStack, NSView(), searchStack])
+    secondRow.orientation = .horizontal
+    secondRow.alignment = .centerY
+    secondRow.distribution = .fill
+    secondRow.spacing = 8
+
+    let headerStack = NSStackView(views: [topRow, secondRow])
     headerStack.orientation = .vertical
     headerStack.alignment = .leading
     headerStack.distribution = .fill
@@ -135,8 +207,28 @@ final class AccountSkinLibraryView: NSView {
       make.right.equalToSuperview().offset(-20)
     }
 
+    topRow.snp.makeConstraints { make in
+      make.width.equalToSuperview()
+    }
+
+    secondRow.snp.makeConstraints { make in
+      make.width.equalToSuperview()
+    }
+
     statusLabel.snp.makeConstraints { make in
       make.width.lessThanOrEqualToSuperview().priority(.required)
+    }
+
+    searchField.snp.makeConstraints { make in
+      make.width.equalTo(180)
+    }
+
+    searchModeControl.snp.makeConstraints { make in
+      make.height.equalTo(24)
+    }
+
+    searchButton.snp.makeConstraints { make in
+      make.width.height.equalTo(28)
     }
 
     scrollView.snp.makeConstraints { make in
@@ -260,15 +352,11 @@ final class AccountSkinLibraryView: NSView {
   func loadSkins() {
     do {
       skins = try library.listSkins().filter { $0.kind == .skin }
-      let countText = skins.isEmpty ? Localized.Account.noLocalSkins : String(format: Localized.Account.skinCount, skins.count)
-      statusLabel.stringValue = "\(countText) • \(library.libraryDirectory.path)"
-
-      emptyLabel.isHidden = !skins.isEmpty
-
-      var snapshot = NSDiffableDataSourceSnapshot<Int, LauncherSkinAsset>()
-      snapshot.appendSections([0])
-      snapshot.appendItems(skins, toSection: 0)
-      dataSource.apply(snapshot, animatingDifferences: true)
+      if searchMode == .local {
+        applyLocalSearch()
+      } else {
+        applyOnlineResults()
+      }
     } catch {
       statusLabel.stringValue = "Error: \(error.localizedDescription)"
       emptyLabel.isHidden = false
@@ -333,6 +421,197 @@ final class AccountSkinLibraryView: NSView {
     alert.informativeText = message
     alert.alertStyle = .warning
     alert.runModal()
+  }
+
+  // MARK: - Search
+
+  @objc private func handleSearch() {
+    searchQuery = searchField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+    searchTask?.cancel()
+
+    switch searchMode {
+    case .local:
+      applyLocalSearch()
+    case .online:
+      searchOnlineSkins()
+    }
+  }
+
+  @objc private func handleSearchModeChange(_ sender: NSSegmentedControl) {
+    searchTask?.cancel()
+    searchMode = sender.selectedSegment == 0 ? .local : .online
+    updateSearchModeUI()
+
+    if searchMode == .local {
+      applyLocalSearch()
+    } else {
+      onlineResults = []
+      statusLabel.stringValue = Localized.Account.searchOnlineHint
+      applyOnlineResults()
+    }
+
+    if !searchQuery.isEmpty {
+      handleSearch()
+    }
+  }
+
+  private func updateSearchModeUI() {
+    switch searchMode {
+    case .local:
+      searchField.placeholderString = Localized.Account.searchLocalSkinsPlaceholder
+    case .online:
+      searchField.placeholderString = Localized.Account.searchOnlineSkinsPlaceholder
+    }
+  }
+
+  private func applyLocalSearch() {
+    let trimmedQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+    let filteredSkins: [LauncherSkinAsset]
+    if trimmedQuery.isEmpty {
+      filteredSkins = skins
+    } else {
+      filteredSkins = skins.filter { skin in
+        skin.displayName.localizedCaseInsensitiveContains(trimmedQuery)
+          || skin.name.localizedCaseInsensitiveContains(trimmedQuery)
+      }
+    }
+
+    let countText: String
+    if trimmedQuery.isEmpty {
+      countText = filteredSkins.isEmpty
+        ? Localized.Account.noLocalSkins
+        : String(format: Localized.Account.skinCount, filteredSkins.count)
+    } else {
+      countText = String(
+        format: Localized.Account.skinSearchCount,
+        filteredSkins.count,
+        skins.count
+      )
+    }
+
+    statusLabel.stringValue = "\(countText) • \(library.libraryDirectory.path)"
+    let emptyText = trimmedQuery.isEmpty
+      ? Localized.Account.noLocalSkins
+      : Localized.Account.searchNoResults
+    applySnapshot(filteredSkins, emptyText: emptyText)
+  }
+
+  private func searchOnlineSkins() {
+    let trimmedQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmedQuery.isEmpty else {
+      logger.debug("Online skin search skipped: empty query", category: "AccountSkinLibrary")
+      statusLabel.stringValue = Localized.Account.searchOnlineHint
+      onlineResults = []
+      applyOnlineResults()
+      return
+    }
+
+    logger.debug("Online skin search requested: \"\(trimmedQuery)\"", category: "AccountSkinLibrary")
+    statusLabel.stringValue = Localized.Account.searchOnlineSearching
+
+    searchTask = Task { [weak self] in
+      do {
+        guard let self = self else { return }
+        let client = MinecraftAPIClient()
+        let nameProfile = try await client.fetchPlayerProfile(byName: trimmedQuery)
+        try Task.checkCancellation()
+        self.logger.debug(
+          "Online skin search profile: name=\(nameProfile.name) id=\(nameProfile.id)",
+          category: "AccountSkinLibrary"
+        )
+
+        var resolvedProfile = nameProfile
+        if nameProfile.getSkinURL() == nil {
+          self.logger.debug(
+            "Online skin search: no skin in name profile, trying session server profile",
+            category: "AccountSkinLibrary"
+          )
+          resolvedProfile = try await client.fetchPlayerProfile(byUUID: nameProfile.id)
+          try Task.checkCancellation()
+          self.logger.debug(
+            "Online skin search session profile: name=\(resolvedProfile.name) id=\(resolvedProfile.id)",
+            category: "AccountSkinLibrary"
+          )
+        }
+
+        guard let skinURL = resolvedProfile.getSkinURL() else {
+          self.logger.warning(
+            "Online skin search: no skin URL for profile \(resolvedProfile.name) (\(resolvedProfile.id))",
+            category: "AccountSkinLibrary"
+          )
+          await MainActor.run {
+            self.onlineResults = []
+            self.applyOnlineResults()
+          }
+          return
+        }
+
+        let (data, _) = try await URLSession.shared.data(from: skinURL)
+        try Task.checkCancellation()
+        self.logger.debug(
+          "Online skin search downloaded \(data.count) bytes from \(skinURL.absoluteString)",
+          category: "AccountSkinLibrary"
+        )
+        let tempURL = try self.writeOnlineSkin(data: data, name: nameProfile.name)
+        self.logger.debug(
+          "Online skin search cached skin at \(tempURL.path)",
+          category: "AccountSkinLibrary"
+        )
+        let asset = LauncherSkinAsset(
+          name: nameProfile.name,
+          fileURL: tempURL,
+          fileSize: Int64(data.count),
+          lastModified: Date(),
+          kind: .skin,
+          displayName: nameProfile.name
+        )
+
+        await MainActor.run {
+          self.onlineResults = [asset]
+          self.statusLabel.stringValue = Localized.Account.searchOnlineHint
+          self.applyOnlineResults()
+        }
+      } catch {
+        if error is CancellationError {
+          self?.logger.debug("Online skin search cancelled", category: "AccountSkinLibrary")
+          return
+        }
+        self?.logger.error(
+          "Online skin search failed for \"\(trimmedQuery)\": \(error.localizedDescription)",
+          category: "AccountSkinLibrary"
+        )
+        await MainActor.run {
+          self?.onlineResults = []
+          self?.statusLabel.stringValue = Localized.Account.searchOnlineHint
+          self?.applyOnlineResults()
+        }
+      }
+    }
+  }
+
+  private func applyOnlineResults() {
+    let emptyText = searchQuery.isEmpty
+      ? Localized.Account.searchOnlineHint
+      : Localized.Account.searchNoResults
+    applySnapshot(onlineResults, emptyText: emptyText)
+  }
+
+  private func applySnapshot(_ items: [LauncherSkinAsset], emptyText: String) {
+    var snapshot = NSDiffableDataSourceSnapshot<Int, LauncherSkinAsset>()
+    snapshot.appendSections([0])
+    snapshot.appendItems(items, toSection: 0)
+    dataSource.apply(snapshot, animatingDifferences: true)
+
+    emptyLabel.stringValue = emptyText
+    emptyLabel.isHidden = !items.isEmpty
+  }
+
+  private func writeOnlineSkin(data: Data, name: String) throws -> URL {
+    let sanitized = name.replacingOccurrences(of: " ", with: "_")
+    let filename = "launcher_online_skin_\(sanitized)_\(UUID().uuidString).png"
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+    try data.write(to: url, options: .atomic)
+    return url
   }
 }
 

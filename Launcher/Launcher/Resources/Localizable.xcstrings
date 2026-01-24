@@ -3888,6 +3888,105 @@
         }
       }
     },
+    "No results" : {
+      "comment" : "[Search] No search results.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无搜索结果"
+          }
+        }
+      }
+    },
+    "Local" : {
+      "comment" : "[Search] Local search mode.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本地"
+          }
+        }
+      }
+    },
+    "Online" : {
+      "comment" : "[Search] Online search mode.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "联网"
+          }
+        }
+      }
+    },
+    "Online search" : {
+      "comment" : "[Search] Online search hint.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "联网搜索"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "comment" : "[Button] Search skins.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索"
+          }
+        }
+      }
+    },
+    "Search local skins" : {
+      "comment" : "[Search] Local skins placeholder.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索本地皮肤"
+          }
+        }
+      }
+    },
+    "Search online skins" : {
+      "comment" : "[Search] Online skins placeholder.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索联网皮肤"
+          }
+        }
+      }
+    },
+    "Searching online..." : {
+      "comment" : "[Search] Online search in progress.",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在联网搜索..."
+          }
+        }
+      }
+    },
+    "%d of %d skins" : {
+      "comment" : "[Text] Filtered skin count",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d / %d 个皮肤"
+          }
+        }
+      }
+    },
     "No Microsoft Accounts" : {
       "comment" : "[Text] No Microsoft accounts message.",
       "localizations" : {

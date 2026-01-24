@@ -180,10 +180,19 @@ extension Localized {
     static let importFromFile = String(localized: "Import from File", comment: "[Button] Import skin from file")
     static let refreshSkins = String(localized: "Refresh", comment: "[Button] Refresh skin list")
     static let openSkinsFolder = String(localized: "Open Folder", comment: "[Button] Open skins folder")
+    static let searchLocalSkinsPlaceholder = String(localized: "Search local skins", comment: "[Search] Local skins placeholder.")
+    static let searchOnlineSkinsPlaceholder = String(localized: "Search online skins", comment: "[Search] Online skins placeholder.")
+    static let searchModeLocal = String(localized: "Local", comment: "[Search] Local search mode.")
+    static let searchModeOnline = String(localized: "Online", comment: "[Search] Online search mode.")
+    static let searchSkinsButton = String(localized: "Search", comment: "[Button] Search skins.")
+    static let searchNoResults = String(localized: "No results", comment: "[Search] No search results.")
+    static let searchOnlineHint = String(localized: "Online search", comment: "[Search] Online search hint.")
+    static let searchOnlineSearching = String(localized: "Searching online...", comment: "[Search] Online search in progress.")
 
     // Skin Library
     static let noLocalSkins = String(localized: "No local skins found", comment: "[Text] No local skins")
     static let skinCount = String(localized: "%d local skins", comment: "[Text] Count of local skins")
+    static let skinSearchCount = String(localized: "%d of %d skins", comment: "[Text] Filtered skin count")
 
     // Progress Messages
     static let uploadingSkin = String(localized: "Uploading skin...", comment: "[Progress] Uploading skin")
